@@ -1,0 +1,95 @@
+body { background: #333333; }
+
+html,body { height:100%; padding:0; margin:0; }
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: url('Ubuntu.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.textder { text-align: right !important; }
+.textcent { text-align: center !important; }
+
+.container {
+  width: 1230px !important;
+  max-width: 1280px !important;
+  min-width: 1230px !important;
+  overflow: visible !important;
+}
+ 
+.fonsi46  {  font-size: 46px;  }
+.fonsi36  {  font-size: 36px;  }
+.fonsi26  {  font-size: 26px;  }
+.fonsi23  {  font-size: 23px;  }
+.fonsi20  {  font-size: 20px;  }
+.fonsi18  {  font-size: 18px;  }
+.fonsi16  {  font-size: 16px;  }
+.fonsi14  {  font-size: 14px;  }
+
+.fontwe4 {  font-weight: 400;  }
+
+.btnbig { 
+font-size: 20px;
+line-height: 1.1;
+border-radius: 6px !important;
+padding: 10px 14px; 
+}
+
+.border2px { border: 2px solid #0cedde; }
+
+.boxsha {
+-webkit-box-shadow: 0px 0px 19px -1px rgba(255,255,255,1);
+-moz-box-shadow: 0px 0px 19px -1px rgba(255,255,255,1);
+box-shadow: 0px 0px 19px -1px rgba(255,255,255,1);
+}
+
+.bgcua { 
+background: -moz-linear-gradient(45deg,  rgba(14,14,14,0.32) 0%, rgba(65,66,65,0.32) 46%, rgba(125,126,125,1) 100%);
+background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(14,14,14,0.32)), color-stop(46%,rgba(65,66,65,0.32)), color-stop(100%,rgba(125,126,125,1)));
+background: -webkit-linear-gradient(45deg,  rgba(14,14,14,0.32) 0%,rgba(65,66,65,0.32) 46%,rgba(125,126,125,1) 100%);
+background: -o-linear-gradient(45deg,  rgba(14,14,14,0.32) 0%,rgba(65,66,65,0.32) 46%,rgba(125,126,125,1) 100%);
+background: -ms-linear-gradient(45deg,  rgba(14,14,14,0.32) 0%,rgba(65,66,65,0.32) 46%,rgba(125,126,125,1) 100%);
+background: linear-gradient(45deg,  rgba(14,14,14,0.32) 0%,rgba(65,66,65,0.32) 46%,rgba(125,126,125,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', endColorstr='#7d7e7d',GradientType=1 );
+}
+
+.bgtra  { background-color: rgba(0, 0, 0, 0.66); }
+
+.boradius { 
+-webkit-border-radius: 11px;
+-moz-border-radius: 11px;
+border-radius: 11px;
+}
+
+.padlefrig { 
+padding-left: 47px;
+padding-right: 5px;
+}
+
+.mar4 { margin: 4px; }
+.mar10 { margin: 10px; }
+.mar20 { margin: 20px; }
+.mar30 { margin: 30px; }
+.mar40 { margin: 40px; }
+.mar50 { margin: 50px; }
+.mar60 { margin: 60px; }
+.mar70 { margin: 70px; }
+
+.pad4 { padding: 4px; }
+.pad10 { padding: 10px; }
+.pad20 { padding: 20px; }
+.pad30 { padding: 30px; }
+.pad40 { padding: 40px; }
+.pad60 { padding: 60px; }
+.pad80 { padding: 80px; }
+.pad110 { padding: 110px; }
+
+.fonbla { color: white; }
+.fuengrisoscu { color: rgb(20, 20, 20); }
+
+.bgblack { background-color: black; }
+.bgwi { background-color: white; }
+
+.textshadow { text-shadow:5px 5px 5px #000000; }

@@ -1,0 +1,41 @@
+@extends('layouts.main')
+
+@section('content')
+
+
+<div class="row">	<div class="col-sm-12">   <ul class="nav nav-pills bgtra mar10">
+     <li><a href="/Config"> Ajustes </a></li>   </ul>  </div> </div>
+
+
+@include('includes.messages')
+
+
+<div class="row">
+
+<div class="col-sm-3 mar10">
+	<p class="pad10"> Usuario creados: </p>
+	@foreach ($users as $user)
+		<ul>
+			<li>{{ $user->username }}</li>		
+		</ul>
+	@endforeach
+</div>
+
+  <div class="col-sm-5 mar10"> 
+  	<p class="pad10"> Crear Usuario: </p>
+  	
+  	<form role="form" class="form" action="/Usuarios" method="post">
+ 	{!! csrf_field() !!}
+ 
+ <div class="input-group"> <span class="input-group-btn pad4"> <p> &nbsp; Usuario:</p> </span>
+ <div class="col-sm-7"> <input type="text" name="uname" class="form-control" placeholder="Usuario" required> </div> </div>
+<br>
+ <div class="input-group"> <span class="input-group-btn pad4"> <p> &nbsp; Contraseña:</p> </span>
+ <div class="col-sm-7"> <input type="text" name="passwd" class="form-control" placeholder="Contraseña" required> </div>  </div>
+<br>
+ <div class="col-sm-5"> <button class="btn btn-primary" type="submit"> Crear &nbsp; <i class="fa fa-arrow-circle-right"></i></button>
+ </div> </form> </div>
+ 
+</div>
+ 
+@endsection

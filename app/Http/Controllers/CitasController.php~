@@ -1,0 +1,284 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use DB;
+use App\citas;
+use Validator;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+
+
+class CitasController extends Controller
+{
+
+    public function __construct()
+    {
+        $this->middleware('auth');    
+    }
+    
+
+    public function index(Request $request)
+    {
+        if ( $request->session()->has('idpac') ) {
+        	
+        	   $idpac = $request->session()->get('idpac');
+				$apepac = $request->session()->get('apepac');
+				$nompac = $request->session()->get('nompac');
+				$apnompac = $apepac.', '.$nompac;
+     	
+            return view('cit.index', ['request' => $request,
+	            								'idpac' => $idpac,
+		        								   'apepac' => $apepac,
+		        								   'nompac' => $nompac,
+		        								   'apnompac' => $apnompac]);
+        } else {
+
+	            return view('cit.index', ['request' => $request]);
+	     }
+    }
+    
+    public function ver(Request $request)
+    {   
+       	  
+    	  if ( $request->session()->has('idpac') ) {
+				$idpac = $request->session()->get('idpac');
+				$apepac = $request->session()->get('apepac');
+				$nompac = $request->session()->get('nompac');
+				$apnompac = $apepac.', '.$nompac;
+		  }
+		     	  
+        if ( null !== $request->input('veord') || null !== $request->input('veo')  ) {
+        
+	        $selec = $request->input('selec');
+	        
+	        if ( null !== $request->input('fechde') && null !== $request->input('fechha') ) {     
+	        
+		        $fechde = $request->input('fechde');      
+		        $fechha = $request->input('fechha');
+		        
+		        $regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';
+		        
+		        if ( preg_match($regex, $fechde) ) {  } else {
+		        		$request->session()->forget('error');
+				 	   $request->session()->put('error', 'Fecha/s incorrecta');
+						header("Location: /Citas/ver");
+				 		die(); 
+			 		}
+			 		
+			 		if ( preg_match($regex, $fechha) ) {  } else {
+		        		$request->session()->forget('error');
+				 	   $request->session()->put('error', 'Fecha/s incorrecta');
+						header("Location: /Citas/ver");
+				 		die();
+			 		}
+        
+	        }
+	        
+	        if ($selec === 'hoy') {
+				   $selfe1 = date('Y-m-d');
+				   $consulta = DB::select('SELECT * FROM `citas` WHERE (diacit=:selfe1) ORDER BY diacit ASC, horacit ASC',['selfe1' => $selfe1] );
+				      
+			 	} elseif ($selec === '1semana' ) {
+					$selfe1 = date('Y-m-d');
+					$selfe2 = date('Y-m-d', strtotime('+1 Week'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+							 	
+			 	} elseif ($selec === '1mes' ) {
+					$selfe1 = date('Y-m-d');
+					$selfe2 = date('Y-m-d', strtotime('+1 Month'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+		
+			 	} elseif ($selec === 'menos1mes' ) {
+					$selfe2 = date('Y-m-d');
+					$selfe1 = date('Y-m-d', strtotime('-1 Month'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+					
+			 	} elseif ($selec === '3mes' ) {
+					$selfe1 = date('Y-m-d');
+					$selfe2 = date('Y-m-d', strtotime('+3 Month'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+					
+			 	} elseif ($selec === 'menos3mes' ) {
+					$selfe2 = date('Y-m-d');
+					$selfe1 = date('Y-m-d', strtotime('-3 Month'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+												 		
+			 	} elseif ($selec === '1ano' ) {
+					$selfe1 = date('Y-m-d');
+					$selfe2 = date('Y-m-d', strtotime('+1 Year'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+										 		
+			 	} elseif ($selec === 'menos1ano' ) {
+					$selfe2 = date('Y-m-d');
+					$selfe1 = date('Y-m-d', strtotime('-1 Year'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+									 		
+			 	} elseif ($selec === 'menos5ano' ) {
+					$selfe2 = date('Y-m-d');
+					$selfe1 = date('Y-m-d', strtotime('-5 Year'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+						
+			 	} elseif ($selec === 'menos20ano' ) {
+					$selfe2 = date('Y-m-d');
+					$selfe1 = date('Y-m-d', strtotime('-20 Year'));
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );
+									 	
+			 	} elseif ($selec === 'todas' ) {
+					$consulta = DB::select('SELECT * FROM citas ORDER BY diacit ASC, horacit ASC');
+					
+				} elseif ($selec === 'rango' ) {
+					$selfe2 = $fechha;
+					$selfe1 = $fechde;
+					$consulta = DB::select('SELECT * FROM `citas` WHERE (diacit >= :selfe1 AND diacit <= :selfe2) ORDER BY diacit ASC, horacit ASC',
+								['selfe1' => $selfe1, 'selfe2' => $selfe2] );								 	 			 	
+			 											 	 			 	
+			 	} else {
+			 	 	die();
+			 }      
+	        
+        }
+        
+        if ( $request->session()->has('idpac') ) {
+        	
+	            return view('cit.ver', ['consulta' => $consulta,
+		        								   'idpac' => $idpac,
+		        								   'apepac' => $apepac,
+		        								   'nompac' => $nompac,
+		        								   'apnompac' => $apnompac,
+		        								   'request' => $request
+		        								   ]);
+			  } else {
+
+	            return view('cit.ver', ['consulta' => $consulta, 'request' => $request]);
+
+	     }
+    }
+
+    public function create(Request $request)
+    {  	  
+    	  if ( ! $request->session()->has('idpac') ) {
+    	  		return redirect('Pacientes');
+    	  }
+    	  
+    	  $idpac = $request->session()->get('idpac');
+    	  $apepac = $request->session()->get('apepac');
+    	  $nompac = $request->session()->get('nompac');
+    	  $apnompac = $apepac.', '.$nompac;
+    	  
+        return view('cit.create', ['request' => $request,
+	         								'idpac' => $idpac,
+	        								   'apepac' => $apepac,
+	        								   'nompac' => $nompac,
+	        								   'apnompac' => $apnompac]);
+    }
+
+
+    public function store(Request $request)
+    {
+    	
+    	  if ( ! $request->session()->has('idpac') ) {
+    	  		return redirect('Pacientes');
+    	  }    	
+    	
+    	  $idpac = trim ( $request->session()->get('idpac') );
+    	  $horacit = trim ( $request->input('horacit') );
+    	  $diacit = trim ( $request->input('diacit') );
+    	  $notas = trim ( $request->input('notas') );
+	      	  
+    	  if ( isset ($diacit) ) {
+   	  	  
+    	  	  $regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';
+    	       	  
+	    	  if ( preg_match($regex, $diacit) ) {  } else {
+			  		$request->session()->flash('error', 'Fecha incorrecta');	
+					header("Location: /Citas/create");
+					die();
+			  }
+		  }
+			
+    	  if ( isset ($horacit) ) {
+   	  	  
+    	  	  $regex = '/^([01][0-9]|2[0-3])[\:.]([012345][0-9])$/';	
+    	       	  
+	    	  if ( preg_match($regex, $horacit) ) {  } else {
+			  		$request->session()->flash('error', 'Hora incorrecta');	
+					header("Location: /Citas/create");
+					die();
+			  }
+		  }   	  
+    	  
+        $validator = Validator::make($request->all(), [
+	            'horacit' => 'required',
+	            'diacit' => 'required|date',
+	            'notas' => ''
+	     ]);
+            
+        if ($validator->fails()) {
+	         return redirect('Citas')
+	                     ->withErrors($validator)
+	                     ->withInput();
+	     } else {
+	        	
+		      citas::create([
+		          'idpac' => $idpac,
+		          'horacit' => $horacit,
+		          'diacit' => $diacit,
+		          'notas' => $notas
+		      ]);
+		      
+		      $request->session()->flash('message', 'Hecho!!!');	
+	        	        	
+	        	return redirect('Citas/create');
+        }     
+    }
+
+
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}

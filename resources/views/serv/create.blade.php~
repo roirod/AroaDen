@@ -1,0 +1,47 @@
+@extends('layouts.main')
+
+@section('content')
+
+@include('includes.messages')
+
+<?php
+ $texto = "Añadir servicio";
+ addtexto($texto);
+?>
+
+<div class="row">	<div class="col-sm-12">
+	<form role="form" id="form" class="form" action="/Servicios" method="post">
+{!! csrf_field() !!}
+ 
+ <div class="form-group col-sm-5">   <label class="control-label text-left mar10">Nombre:</label>
+  <input type="text" class="form-control" name="nom" required > 	</div>
+		
+ <div class="form-group col-sm-2">  <label class="control-label text-left mar10">Precio:</label>
+  <input type="number" min="0" step="1" class="form-control" name="precio" required > </div> 
+		
+<div class="form-group col-sm-2">  <label class="control-label text-left mar10">IVA:</label>
+ <select name="iva" class="form-control" required>
+ 
+@foreach ($ivatp as $clave => $valor) 
+	 <option value="{{$valor}}">{{$clave}}</option>
+@endforeach
+ 
+ </select> </div>	   
+   	
+<div class="form-group col-sm-11">  <label class="control-label text-left mar10">Notas:</label>
+<textarea class="form-control" name="notas" rows="3"></textarea> </div>
+	
+<br>
+ <div class="form-group">  <div class="col-sm-4 text-left">
+  <button type="submit" class="text-left btn btn-primary btn-md">Añadir <i class="fa fa-chevron-circle-right"></i> </button>
+  </div>	 </div>
+  
+ </form> </div> </div>
+
+@endsection
+
+@section('js')
+    @parent   
+	  <script type="text/javascript" src="{{ URL::asset('assets/js/areyousure.js') }}"></script>
+	  <script type="text/javascript" src="{{ URL::asset('assets/js/guarda.js') }}"></script>
+@endsection

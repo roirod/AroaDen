@@ -1,0 +1,37 @@
+<?php
+
+Route::group(['middleware' => 'web'], function () {
+	 
+	 Route::get('/', 'Auth\AuthController@getLogin');
+	 Route::get('/login', 'Auth\AuthController@getLogin');
+	 Route::post('/login', 'Auth\AuthController@postLogin');
+	 Route::get('/logout', 'Auth\AuthController@getLogout');	
+	   		 
+	
+	 Route::group(['middleware' => 'admin'], function () {
+	 	Route::get('Clientes/del', 'ClientesController@del');
+	 	
+	 	Route::delete('Clientes/destroy', 'ClientesController@destroy');
+	 	
+	 	Route::get('Usuarios/usuedit', 'UsuariosController@usuedit');
+	 	Route::post('Usuarios/saveup', 'UsuariosController@saveup');
+	 	Route::resource('Usuarios', 'UsuariosController');
+	 });
+	 
+	
+	 Route::post('Clientes/ver', 'ClientesController@ver');
+	 Route::post('Clientes/sel', 'ClientesController@sel');
+	 
+	 Route::get('Clientes/file', 'ClientesController@file');
+	 Route::get('Clientes/filerem', 'ClientesController@filerem');
+	 Route::post('Clientes/upload', 'ClientesController@upload');
+	 Route::resource('Clientes', 'ClientesController');
+	 
+	 Route::post('Programas/ver', 'ProgramasController@ver');
+	 Route::post('Programas/sel', 'ProgramasController@sel');
+	 Route::get('Programas/del', 'ProgramasController@del');
+	 Route::resource('Programas', 'ProgramasController'); 	
+	 
+	 Route::resource('test', 'testController@test');
+ 
+});
