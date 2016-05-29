@@ -13,12 +13,15 @@
   <div class="col-sm-12"> 
  	 <div class="input-group">
    	<span class="input-group-btn pad10"> <p> Presupuesto: </p> </span>
-  		 <div class="btn-toolbar pad10" role="toolbar"> 
+  		<div class="btn-toolbar pad10" role="toolbar"> 
     		<div class="btn-group">
-      		<a href="{{url("/Presup/$idpac/create")}}" role="button" class="btn btn-sm btn-primary">
-          		<i class="fa fa-plus"></i> Nuevo
-       		</a>
-</div> </div> </div>  </div> </div>
+	      		<a href="{{url("/Presup/$idpac/create")}}" role="button" class="btn btn-sm btn-primary">
+	          		<i class="fa fa-plus"></i> Nuevo
+	       		</a>
+       		</div>
+       	</div>
+     </div>
+</div> </div>
 
 
 <div class="row">
@@ -28,9 +31,9 @@
      <tr class="fonsi16 success">
      	  <td class="wid110">Fecha</td>
 		  <td class="wid180">Tratamiento</td>
-		  <td class="wid110 textcent">Cantidad</td>
-		  <td class="wid110 textcent">Precio</td>
-		  <td class="wid110 textcent">IVA</td>
+		  <td class="wid95 textcent">Cantidad</td>
+		  <td class="wid95 textcent">Precio</td>
+		  <td class="wid180"></td>
      </tr>
     </table>
    	<div class="box260">
@@ -44,16 +47,16 @@
 		    		<tr class="danger">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
-					  <td class="wid110 textcent"></td>
-					  <td class="wid110 textcent"></td>
-					  <td class="wid110 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid180 textcent"></td>
 		    		</tr> 
 		    		<tr class="info">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
-					  <td class="wid110 textcent"></td>
-					  <td class="wid110 textcent"></td>
-					  <td class="wid110 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid180 textcent"></td>
 	   			</tr>
 	   		@endif
 
@@ -62,9 +65,9 @@
 				<tr>
 		 			<td class="wid110"> {{DatTime($presu->cod)}} </td>
 		 			<td class="wid180">{{$presu->nomser}}</td>
-		 			<td class="wid110 textcent">{{$presu->canti}}</td>
-		 			<td class="wid110 textcent">{{$presu->precio}}</td>
-		 			<td class="wid110 textcent">{{$presu->iva}}</td>
+		 			<td class="wid95 textcent">{{$presu->canti}}</td>
+		 			<td class="wid95 textcent">{{$presu->precio}} €</td>
+		 			<td class="wid180"></td>
 				</tr>
 		    @endforeach
 	    
@@ -87,6 +90,8 @@
 		<form role="form" id="form" class="form" action="{{url('/Presup/presuedit')}}" method="post">
 			{!! csrf_field() !!}
 
+			<input type="hidden" name="idpac" value="{{$idpac}}">	
+
 			<div class="input-group">
 
 				<div class="col-sm-9">
@@ -103,7 +108,7 @@
 
 				<div class="col-sm-2">
 					<button class="btn btn-default" type="submit">
-							&nbsp; <i class="fa fa-arrow-circle-right"></i> &nbsp; 
+						&nbsp; <i class="fa fa-arrow-circle-right"></i> &nbsp; 
 					</button>
 				</div>	
 

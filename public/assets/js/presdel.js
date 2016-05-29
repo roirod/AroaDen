@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
-   $(document).on('submit','#nueform',function(evt){
+   $(document).on('submit','#delform',function(evt){
 
       $.ajaxSetup({
          headers: { 'X-CSRF-Token' : $('meta[name=_token]').attr('content') }
-      });    
+      });
  	   	 	   	 
-     	 var nueurl = $("#nueurl").attr("value");
+     	 var delurl = $("#delurl").attr("value");
      	 
      	 var eventrig = $(this);
      	 
@@ -15,16 +15,16 @@ $(document).ready(function() {
         $.ajax({
         	
             type     : 'POST',
-            url      : nueurl,
+            url      : delurl,
             data     : $(eventrig).serialize(),
             
         }).done(function(response) {
         	
-   		   $("#presup").html(response);
-   		   
-   		   $("input[type=submit]").removeAttr("disabled");
+       		   $("#presup").html(response);
+       		   
+       		   $("input[type=submit]").removeAttr("disabled");
    		   		   		          
-   	  }).fail(function() {
+   	    }).fail(function() {
    	  	         
             $("input[type=submit]").removeAttr("disabled");
             

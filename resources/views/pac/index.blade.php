@@ -21,7 +21,7 @@
 </div>
 	
 <div class="row">
-	<form role="form" class="form" action="{{url('/Pacientes/ver')}}" method="post">
+	<form role="form" class="form" action="{!!url('/Pacientes/ver')!!}" method="post">
 		{!! csrf_field() !!}	 
 		
 		<div class="input-group">
@@ -60,20 +60,20 @@
 				
 			<tr> 
 				<td class="wid50">
-					<a href="{{url("/Pacientes/$paciente->idpac")}}" target="_blank" class="btn btn-default" role="button">
+					<a href="{!!url("/Pacientes/$paciente->idpac")!!}" target="_blank" class="btn btn-default" role="button">
 						<i class="fa fa-hand-pointer-o"></i>
 					</a> 
 				</td>
 
 				<td class="wid290">
-					<a href="{{url("/Pacientes/$paciente->idpac")}}" class="pad4" target="_blank">
-						{{$paciente->apepac}}, {{$paciente->nompac}}
+					<a href="{!!url("/Pacientes/$paciente->idpac")!!}" class="pad4" target="_blank">
+						{!!$paciente->apepac!!}, {!!$paciente->nompac!!}
 					</a>
 				</td>
 
-				<td class="wid110">{{$paciente->dni}}</td>
-				<td class="wid110">{{$paciente->tel1}}</td>
-				<td class="wid230">{{$paciente->pobla}}</td> 
+				<td class="wid110">{!!$paciente->dni!!}</td>
+				<td class="wid110">{!!$paciente->tel1!!}</td>
+				<td class="wid230">{!!$paciente->pobla!!}</td> 
 				
 			</tr>
 						
@@ -83,7 +83,7 @@
 			<tr> 
 				<div class="textcent">
 					<hr>
-					{{$pacientes->links()}}
+					{!!$pacientes->links()!!}
 				</div>
 			</tr> 
 		</table>

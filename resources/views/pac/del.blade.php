@@ -14,7 +14,7 @@
    		Eliminar Paciente:
    	</p>
 
-	 	<form role="form" class="form" id="form" role="form" action="{{url("/Pacientes/$idpac")}}" method="POST">	
+	 	<form role="form" class="form" id="form" role="form" action="{!!url("/Pacientes/$idpac")!!}" method="POST">	
 	  		{!! csrf_field() !!}
 
 			<input type="hidden" name="_method" value="DELETE">
@@ -22,7 +22,7 @@
 			<div class="col-sm-12">
 				<span class="lead pad4"> 
 
-					<p> &nbsp;{{$paciente->apepac}}, {{$paciente->nompac}}</p>
+					<p> &nbsp;{!!$paciente->apepac!!}, {!!$paciente->nompac!!}</p>
 
 				</span>
  			</div>

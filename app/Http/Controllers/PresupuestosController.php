@@ -21,8 +21,7 @@ class PresupuestosController extends Controller
     }
 
     public function index()
-    {
-    }
+    { }
 
     public function create(Request $request,$idpac)
     {     
@@ -36,7 +35,8 @@ class PresupuestosController extends Controller
 
         $cod = date('Y-m-d H:i:s');
 
-        $posturl = url('/Presup');
+        $nueurl = url('/Presup');
+        $delurl = url('/Presup/delid');
 
         $apepac = $pacientes->apepac;
         $nompac = $pacientes->nompac;
@@ -44,7 +44,8 @@ class PresupuestosController extends Controller
         return view('presup.create', [
             'request' => $request,
             'cod' => $cod,
-            'posturl' => $posturl,
+            'nueurl' => $nueurl,
+            'delurl' => $delurl,
             'servicios' => $servicios,
             'idpac' => $idpac,
             'apepac' => $apepac,
@@ -100,11 +101,32 @@ class PresupuestosController extends Controller
             $cadena = '';
 
             foreach ($presup as $presu) {
-                $cadena .= '<tr> 
-                                <td class="wid110">'.$presu->cod.'</td> 
-                                <td class="wid180">'.$presu->nomser.'</td> 
+
+                $cadena .= '<tr>
+                                <td class="wid140">'.$presu->nomser.'</td>
                                 <td class="wid95 textcent">'.$presu->canti.'</td>
-                                <td class="wid290"></td>
+                                <td class="wid95 textcent">'.$presu->precio.' €</td>
+
+                                <td class="wid50">
+
+                                  <form id="delform">
+                                  
+                                    <input type="hidden" name="idpre" value="'.$presu->idpre.'">
+                                    <input type="hidden" name="cod" value="'.$cod.'">
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-times"></i>  <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                          <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
+                                        </ul> 
+                                    </div>
+
+                                  </form>   
+                                </td>
+
+                                <td class="wid230"> </td>                            
                             </tr> ';
             }
                              
@@ -119,8 +141,6 @@ class PresupuestosController extends Controller
         }
 
         $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
-
-        $pacientes = DB::table('pacientes')->where('idpac', $idpac)->first();
                                
         $presup = DB::table('presup')
                 ->join('servicios', 'presup.idser','=','servicios.idser')
@@ -143,24 +163,123 @@ class PresupuestosController extends Controller
         ]);       
     }
 
-    public function edit($id)
+    public function presuedit(Request $request)
     {
-        //
+        $idpac = htmlentities (trim( $request->input('idpac')),ENT_QUOTES,"UTF-8");
+        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");            
+
+        if ( null == $idpac ) {
+            return redirect('Pacientes');
+        }   
+
+        if ( null == $cod ) {
+            return redirect('Pacientes');
+        }
+
+        $delurl = url('/Presup/delid');
+
+        $presup = DB::table('presup')
+                ->join('servicios', 'presup.idser','=','servicios.idser')
+                ->select('presup.*','servicios.nomser')
+                ->where('cod', $cod)
+                ->orderBy('servicios.nomser' , 'ASC')
+                ->get();
+
+        return view('presup.edit', [
+            'request' => $request,
+            'presup' => $presup,
+            'delurl' => $delurl,
+            'cod' => $cod,
+            'idpac' => $idpac
+        ]);        
     }
 
     public function update(Request $request, $id)
+    { }
+
+    public function edit($id)
+    { }
+
+    public function delcod(Request $request)
     {
-        //
+        $cod = $request->input('cod');
+        $idpac = $request->input('idpac');
+
+        if ( null == $cod ) {
+            return redirect('Pacientes');
+        }
+        
+        if ( null == $idpac ) {
+            return redirect('Pacientes');
+        }
+
+        $presup = DB::table('presup')
+                ->where('cod','=',$cod)
+                ->delete();
+        
+        return redirect("/Presup/$idpac");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function delid(Request $request)
     {
-        //
+        $idpre = $request->input('idpre');
+
+        if ( null === $idpre ) {
+            return redirect('Pacientes');
+        }   
+
+        $cod = $request->input('cod');            
+
+        if ( null == $cod ) {
+            return redirect('Pacientes');
+        }
+         
+        $presup = presup::find($idpre);
+      
+        $presup->delete();
+        
+        $presup = DB::table('presup')
+                ->join('servicios', 'presup.idser','=','servicios.idser')
+                ->select('presup.*','servicios.nomser')
+                ->where('cod', $cod)
+                ->orderBy('servicios.nomser' , 'ASC')
+                ->get();  
+
+        $cadena = '';
+
+        foreach ($presup as $presu) {
+            $cadena .= '<tr>
+                            <td class="wid140">'.$presu->nomser.'</td>
+                            <td class="wid95 textcent">'.$presu->canti.'</td>
+                            <td class="wid95 textcent">'.$presu->precio.' €</td>
+
+                            <td class="wid50">
+
+                              <form id="delform">
+                              
+                                <input type="hidden" name="idpre" value="'.$presu->idpre.'">
+                                <input type="hidden" name="cod" value="'.$cod.'">
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-times"></i>  <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                      <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
+                                    </ul> 
+                                </div>
+
+                              </form>   
+                            </td>
+
+                            <td class="wid230"> </td>                            
+                        </tr> ';
+        }
+                         
+        return $cadena;
+    }
+
+    public function destroy(Request $request,$idpre)
+    {
     }
 }

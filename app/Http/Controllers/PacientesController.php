@@ -8,6 +8,7 @@ use App\pacientes;
 use Carbon\Carbon;
 use Storage;
 use Html;
+use Image;
 use Validator;
 
 use Illuminate\Http\Request;
@@ -16,7 +17,6 @@ use App\Http\Requests;
 
 class PacientesController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -67,6 +67,10 @@ class PacientesController extends Controller
 
         $this->dircrea($idpac);
 
+        $pacdir = "/app/pacdir/$idpac";
+
+        $fotoper = url("$pacdir/.fotoper.jpg");
+
 	    $pacientes = DB::table('pacientes')->where('idpac', $idpac)->first();
 
 		$citas = DB::table('citas')
@@ -109,6 +113,7 @@ class PacientesController extends Controller
 			'tratampacien' => $tratampacien,
 			'suma' => $suma,
 			'idpac' => $idpac,
+            'fotoper' => $fotoper,
 			'Edad' => $Edad
 		]);       
     }
@@ -214,25 +219,12 @@ class PacientesController extends Controller
 
     	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
 
-        $pacientes = DB::table('pacientes')
-                        ->orderBy('dni','ASC')
-                        ->get();
-          
-        $dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-          
-        foreach ($pacientes as $pacien) {
-           if ($pacien->dni == $dni) {
-               $request->session()->flash('errmess', 'DNI en uso, use cualquier otro.');
-               return redirect('Pacientes/create');
-           }
-        }   
-
         $validator = Validator::make($request->all(),[
     		'nompac' => 'required|max:44',
             'apepac' => 'required|max:77',
             'direc' => 'max:111',
             'pobla' => 'max:111',
-            'dni' => 'unique:pacientes|max:12',
+            'dni' => 'max:12',
             'tel1' => 'max:11',
             'tel2' => 'max:11',
             'tel3' => 'max:11',
@@ -312,6 +304,8 @@ class PacientesController extends Controller
     {	
 		$idpac = $request->input('idpac');
 
+        $fotoper = $request->input('fotoper');
+
 		if ( null === $idpac ) {
     		return redirect('Pacientes');
     	}  
@@ -321,22 +315,46 @@ class PacientesController extends Controller
         $pacdir = storage_path("app/pacdir/$idpac");
 
 		$files = $request->file('files');
+
+
+        if ($fotoper == 1) {
+            $extension = $files->getClientOriginalExtension();
+
+            if ($extension == 'jpg' || $extension == 'png') {
+
+                Image::make($files)->encode('jpg', 80)
+                    ->resize(150, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->save("$pacdir/.fotoper.jpg");
+
+                return redirect("Pacientes/$idpac");
+
+                //$files->move($pacdir, '.fotoper.jpg');
+
+            } else { 
+                $request->session()->flash('errmess', 'Formato no soportado, suba una imagen jpg o png.');
+                return redirect("Pacientes/$idpac/file");
+            }
+
+        } else {
 		  
-		$ficount = count($files);
-		$uploadcount = 0;
-		  
-		foreach($files as $file) {
-		  	$filename = $file->getClientOriginalName();
-		  	$file->move($pacdir, $filename);
-	        $uploadcount ++;  
-	    }
-	    
-	    if($uploadcount == $ficount){
-	      return redirect("Pacientes/$idpac/file");
-	    } else {
-	      $request->session()->flash('errmess', 'error!!!');
-	      return redirect("Pacientes/$idpac/file");
-	    }
+    		$ficount = count($files);
+    		$uploadcount = 0;
+    		  
+    		foreach($files as $file) {
+    		  	$filename = $file->getClientOriginalName();
+    		  	$file->move($pacdir, $filename);
+    	        $uploadcount ++;  
+    	    }
+    	    
+    	    if($uploadcount == $ficount){
+    	      return redirect("Pacientes/$idpac/file");
+    	    } else {
+    	      $request->session()->flash('errmess', 'error!!!');
+    	      return redirect("Pacientes/$idpac/file");
+    	    }
+        }
     }
 
     public function download(Request $request,$idpac,$file)
@@ -380,11 +398,14 @@ class PacientesController extends Controller
 
         $odogram = $pacdir."/.odogdir/odogram.jpg";
 
-        return view('pac.odogram',[
+        return response()->view('pac.odogram',[
             'request' => $request,
             'idpac' => $idpac,
-            'odogram' => $odogram
-        ]);
+            'odogram' => $odogram])
+                       ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
+                       ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
+                       ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
+                       ->header('Pragma', 'no-cache');
     }
 
     public function upodog(Request $request)
@@ -410,8 +431,6 @@ class PacientesController extends Controller
             $pacdir = storage_path("app/pacdir/$idpac");
 
             $odogram = $pacdir."/.odogdir/";
-
-            //unlink($odogram);
 
             $upodog->move($odogram,'odogram.jpg');
 
@@ -538,11 +557,18 @@ class PacientesController extends Controller
         }
 
         $odogram = "/$pacdir/.odogdir/odogram.jpg";
-        $img = '/img/odogram.jpg';
+        $img = '/public/assets/img/odogram.jpg';
           
         if ( ! Storage::exists($odogram) ) { 
             Storage::copy($img,$odogram);
-        }  
+        }
+
+        $fotoper = "/$pacdir/.fotoper.jpg";
+        $foto = '/public/assets/img/fotoper.jpg';
+          
+        if ( ! Storage::exists($fotoper) ) { 
+            Storage::copy($foto,$fotoper);
+        }          
 
         $thumbdir = $pacdir.'/.thumbdir';
 

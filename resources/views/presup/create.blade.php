@@ -10,7 +10,10 @@
 @include('includes.errors')
 
 
-<div id="posturl" value="{{$posturl}}"> </div>
+<meta name="_token" content="{!!csrf_token()!!}"/>
+
+<div id="nueurl" value="{{$nueurl}}"> </div>
+<div id="delurl" value="{{$delurl}}"> </div>
 
 
 <div class="row">
@@ -19,11 +22,11 @@
 
     	<table class="table">
 		     <tr class="fonsi16 success">
-					  <td class="wid180">Tratamiento</td>
-					  <td class="wid95 textcent">Precio</td>
-					  <td class="wid50 textcent">Cantidad</td>
-					  <td class="wid50"></td>
-					  <td class="wid230"></td>
+				  <td class="wid140">Tratamiento</td>
+				  <td class="wid95 textcent">Precio</td>
+				  <td class="wid50 textcent">Cantidad</td>
+				  <td class="wid50"></td>
+				  <td class="wid230"></td>
 		     </tr>
     	</table>
 
@@ -33,7 +36,7 @@
 		   		@foreach ($servicios as $servicio)
 
 						<tr>
-						 	<form>
+						 	<form id="nueform">
 
 								<input type="hidden" name="idpac" value="{{$idpac}}">
 								<input type="hidden" name="idser" value="{{$servicio->idser}}">
@@ -41,7 +44,7 @@
 								<input type="hidden" name="iva" value="{{$servicio->iva}}">
 								<input type="hidden" name="cod" value="{{$cod}}">						 	
 
-								  <td class="wid180">{{$servicio->nomser}}</td>
+								  <td class="wid140">{{$servicio->nomser}}</td>
 
 								  <td class="wid95 textcent">{{$servicio->precio}} €</td>
 
@@ -80,10 +83,11 @@
 
     	<table class="table">
 		     <tr class="fonsi16 success">
-		     		<td class="wid110">Fecha</td>
-					<td class="wid180">Tratamiento</td>
-					<td class="wid95 textcent">Cantidad</td>
-					<td class="wid290"></td>
+				  <td class="wid140">Tratamiento</td>
+				  <td class="wid95 textcent">Precio</td>
+				  <td class="wid95 textcent">Cantidad</td>
+				  <td class="wid50"></td>
+				  <td class="wid230"></td>
 		     </tr>
     	</table>
 
@@ -103,6 +107,7 @@
 @section('js')
     @parent
 
-	  	<script type="text/javascript" src="{{ URL::asset('assets/js/presnue.js') }}"></script>
+	  	<script type="text/javascript" src="{{ asset('assets/js/presnue.js') }}"></script>
+	  	<script type="text/javascript" src="{{ asset('assets/js/presdel.js') }}"></script>
 
 @endsection

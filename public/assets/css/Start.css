@@ -26,6 +26,12 @@ html,body { height:100%; padding:0; margin:0; }
 .wid70 { width: 70px !important; }
 .wid50 { width: 50px !important; }
 
+
+max150 { 
+  max-width: 150px !important;
+  max-height: 150px !important;
+}
+
 table { table-layout:fixed !important; }
 .div-table-content { height:250px; overflow-y:auto; }
 

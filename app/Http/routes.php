@@ -61,6 +61,9 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::get('Ajustes', 'AjustesController@index');
 	 
 	 Route::get('Presup/{idpac}/create', 'PresupuestosController@create');
+	 Route::post('Presup/presuedit', 'PresupuestosController@presuedit');
+	 Route::post('Presup/delcod', 'PresupuestosController@delcod');
+	 Route::post('Presup/delid', 'PresupuestosController@delid');
 	 Route::resource('Presup', 'PresupuestosController');
 
 	 Route::post('Trapac/crea','TratamientosController@crea');
