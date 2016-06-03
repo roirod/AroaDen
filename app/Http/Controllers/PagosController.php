@@ -17,14 +17,21 @@ class PagosController extends Controller
     public function index(Request $request)
     {  
 
-        $pagos = DB::raw('select `pacientes`.`apepac`, `pacientes`.`nompac`, SUM(canti*precio) as total, SUM(pagado) as pagado, 
-                            SUM(canti*precio)-sum(pagado) as resto 
-                            from `tratampacien` 
-                            inner join `pacientes` on `tratampacien`.`idpac` = `pacientes`.`idpac` 
-                            group by `tratampacien`.`idpac` 
-                            order by `resto` desc LIMIT 1000');
+        $pagos = DB::select('SELECT pac.apepac, pac.nompac, pac.idpac, 
+                            SUM(tra.canti*tra.precio) as total, 
+                            SUM(tra.pagado) as pagado, 
+                            SUM(tra.canti*tra.precio)-SUM(tra.pagado) as resto 
+                            FROM tratampacien tra
+                            INNER JOIN pacientes pac
+                            ON tra.idpac=pac.idpac 
+                            GROUP BY tra.idpac 
+                            HAVING tra.idpac=tra.idpac  
+                            ORDER BY resto DESC
+                            LIMIT 5000');
 
-        return view('pago.index', ['request' => $request,
-       							  'pagos' => $pagos]);   
+        return view('pago.index', [
+            'request' => $request,
+       		'pagos' => $pagos
+        ]);   
     }
 }

@@ -36,7 +36,7 @@
   
   	  <div class="input-group">
   	    <span class="input-group-btn pad4"> 
-  	      <p>&nbsp;&nbsp; Subir foto: &nbsp;&nbsp;</p> 
+  	      <p>&nbsp;&nbsp; Subir foto perfil: &nbsp;&nbsp;</p> 
   	    </span> 
   	    <span class="input-group-btn"> 
   	      <input type="file" class="btn btn-default" name="files" />
@@ -143,7 +143,7 @@
  			<td class="wid95">{!!$cita->horacit!!}</td>
  			<td class="wid95">{!!date('d-m-Y', strtotime($cita->diacit) )!!}</td>
  			<td class="wid50">	
-				<a href="{!!url("/Citas/$cita->idcit/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!!url("/Citas/$idpac/$cita->idcit/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
@@ -153,8 +153,8 @@
 					<i class="fa fa-times"></i>  <span class="caret"></span>  </button>
 					<ul class="dropdown-menu" role="menu"> 
 						<li>
-							<a href="{!!url("/Citas/$cita->idcit/del")!!}" class="btn btn-xs btn-danger" role="button" title="Borrar">
-								<i class="fa fa-times"></i>
+							<a href="{!!url("/Citas/$idpac/$cita->idcit/del")!!}" class="btn btn-xs btn-danger" role="button" title="Eliminar">
+								<i class="fa fa-times"></i> Eliminar
 							</a>
 						</li>
 					</ul>
@@ -218,7 +218,7 @@
 			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->fecha) )!!}</td>
 
 			<td class="wid50 textcent">
-				<a href="{!!url("/Tratramientos/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!!url("/Tratramientos/$idpac/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
@@ -229,8 +229,8 @@
 					<i class="fa fa-times"></i>  <span class="caret"></span>  </button>
 					<ul class="dropdown-menu" role="menu"> 
 						<li>
-							<a href="{!!url("/Tratramientos/$tratam->idtra/del")!!}" class="btn btn-xs btn-danger" role="button" title="Borrar">
-								<i class="fa fa-times"></i>
+							<a href="{!!url("/Tratramientos/$idpac/$tratam->idtra/del")!!}" class="btn btn-xs btn-danger" role="button" title="Eliminar">
+								<i class="fa fa-times"></i> Eliminar
 							</a>
 						</li>
 					</ul>

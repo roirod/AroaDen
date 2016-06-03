@@ -15,7 +15,7 @@
    	<span class="input-group-btn pad10"> <p> Presupuesto: </p> </span>
   		<div class="btn-toolbar pad10" role="toolbar"> 
     		<div class="btn-group">
-	      		<a href="{{url("/Presup/$idpac/create")}}" role="button" class="btn btn-sm btn-primary">
+	      		<a href="{!!url("/Presup/$idpac/create")!!}" role="button" class="btn btn-sm btn-primary">
 	          		<i class="fa fa-plus"></i> Nuevo
 	       		</a>
        		</div>
@@ -63,10 +63,10 @@
 				<?php $cod2 = $presu->cod; ?>
 
 				<tr>
-		 			<td class="wid110"> {{DatTime($presu->cod)}} </td>
-		 			<td class="wid180">{{$presu->nomser}}</td>
-		 			<td class="wid95 textcent">{{$presu->canti}}</td>
-		 			<td class="wid95 textcent">{{$presu->precio}} €</td>
+		 			<td class="wid110"> {!!DatTime($presu->cod)!!} </td>
+		 			<td class="wid180">{!!$presu->nomser!!}</td>
+		 			<td class="wid95 textcent">{!!$presu->canti!!}</td>
+		 			<td class="wid95 textcent">{!!$presu->precio!!} €</td>
 		 			<td class="wid180"></td>
 				</tr>
 		    @endforeach
@@ -87,10 +87,10 @@
 
 <div class="row">
   	<div class="col-sm-12"> 
-		<form role="form" id="form" class="form" action="{{url('/Presup/presuedit')}}" method="post">
+		<form role="form" id="form" class="form" action="{!!url('/Presup/presuedit')!!}" method="post">
 			{!! csrf_field() !!}
 
-			<input type="hidden" name="idpac" value="{{$idpac}}">	
+			<input type="hidden" name="idpac" value="{!!$idpac!!}">	
 
 			<div class="input-group">
 
@@ -99,7 +99,7 @@
 
 						@foreach ($presgroup as $presgro)
 
-							<option value="{{$presgro->cod}}">{{DatTime($presgro->cod)}}</option>
+							<option value="{!!$presgro->cod!!}">{!!DatTime($presgro->cod)!!}</option>
 									
 						@endforeach
 

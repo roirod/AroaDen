@@ -30,6 +30,8 @@ Route::group(['middleware' => 'web'], function () {
 	 
 	 Route::post('Citas/ver', 'CitasController@ver');
 	 Route::get('Citas/{idpac}/create', 'CitasController@create');
+	 Route::get('Citas/{idpac}/{idcit}/edit', 'CitasController@edit');
+	 Route::get('Citas/{idpac}/{idcit}/del', 'CitasController@del');
 	 Route::resource('Citas', 'CitasController');
 	  	  
 	 Route::post('Pacientes/ver', 'PacientesController@ver');
@@ -64,10 +66,13 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::post('Presup/presuedit', 'PresupuestosController@presuedit');
 	 Route::post('Presup/delcod', 'PresupuestosController@delcod');
 	 Route::post('Presup/delid', 'PresupuestosController@delid');
+	 Route::post('Presup/presmod', 'PresupuestosController@presmod');
 	 Route::resource('Presup', 'PresupuestosController');
 
 	 Route::post('Trapac/crea','TratamientosController@crea');
 	 Route::post('Trapac/selcrea', 'TratamientosController@selcrea');
+	 Route::get('Trapac/{idpac}/{idtra}/edit', 'TratamientosController@edit');
+	 Route::get('Trapac/{idpac}/{idtra}/del', 'TratamientosController@del');	 
 	 Route::resource('Trapac', 'TratamientosController');
 	     
 	 Route::get('Test', 'TestController@test');

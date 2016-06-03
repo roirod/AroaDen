@@ -10,13 +10,13 @@
 <div class="row">
   <div class="col-sm-12">
     <ul class="nav nav-pills bgtra mar10">
-    	<li><a href="{{url("/Pagos")}}">Pagos</a></li>
+    	<li><a href="{!!url("/Pagos")!!}">Pagos</a></li>
   	</ul>
 </div> </div>
 
-<?php
- addtexto("Pagos");
-?>
+
+ {!! addtexto("Pagos") !!}
+
  
  <div class="row">
   <div class="col-sm-12">
@@ -36,20 +36,20 @@
 	   	  	@foreach($pagos as $pago)
 		   	  	<tr>
 		   	  	  	<td class="wid50">
-						         <a href="{{url("/Pacientes/$pago->idpac")}}" target="_blank" class="btn btn-default" role="button">
+						         <a href="{!!url("/Pacientes/$pago->idpac")!!}" target="_blank" class="btn btn-default" role="button">
 							         <i class="fa fa-hand-pointer-o"></i>
 						         </a>
                 </td> 
 
                 <td class="wid290">
-                  <a href="{{url("/Pacientes/$pago->idpac")}}" class="pad4" target="_blank">
-                    {{$pago->apepac}}, {{$pago->nompac}}
+                  <a href="{!!url("/Pacientes/$pago->idpac")!!}" class="pad4" target="_blank">
+                    {!!$pago->apepac!!}, {!!$pago->nompac!!}
                   </a>
                 </td>
 
-                <td class="text-info textcent wid110">{{$pago->total}} € </td>
-                <td class="text-muted textcent wid110">{{$pago->pagado}} € </td>
-                <td class="text-danger textcent wid110">{{$pago->resto}} €</td>
+                <td class="text-info textcent wid110">{!! numformat($pago->total) !!} € </td>
+                <td class="text-muted textcent wid110">{!! numformat($pago->pagado) !!} € </td>
+                <td class="text-danger textcent wid110">{!! numformat($pago->resto) !!} €</td>
 		 	 	    </tr>
 		 	    @endforeach	
 

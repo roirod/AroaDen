@@ -67,24 +67,21 @@ class PacientesController extends Controller
 
         $this->dircrea($idpac);
 
-        $pacdir = "/app/pacdir/$idpac";
-
-        $fotoper = url("$pacdir/.fotoper.jpg");
+        $fotoper = url("/app/pacdir/$idpac/.fotoper.jpg");
 
 	    $pacientes = DB::table('pacientes')->where('idpac', $idpac)->first();
 
-		$citas = DB::table('citas')
-			       	->select('idcit','idpac','diacit','horacit','notas')
-			       	->where('idpac', $idpac)
-			       	->orderBy('diacit', 'ASC')
-					->orderBy('horacit', 'ASC')
-					->get();
+        $citas = pacientes::find($idpac)
+                    ->citas()
+                    ->orderBy('diacit', 'DESC')
+                    ->orderBy('horacit', 'DESC')
+                    ->get();
 
 		$tratampacien = DB::table('tratampacien')
 		            ->join('servicios','tratampacien.idser','=','servicios.idser')
 		            ->select('tratampacien.*','servicios.nomser')
 		            ->where('idpac', $idpac)
-		            ->orderBy('fecha','ASC')
+		            ->orderBy('fecha','DESC')
 		            ->get(); 
 	    
 	    $suma = DB::table('tratampacien')
@@ -106,16 +103,20 @@ class PacientesController extends Controller
 	  		$Edad = 0;
 	  	}
 
-	  	return view('pac.show', [
-	  		'request' => $request,
-			'pacientes' => $pacientes,
-			'citas' => $citas,
-			'tratampacien' => $tratampacien,
-			'suma' => $suma,
-			'idpac' => $idpac,
+        return response()->view('pac.show',[
+            'request' => $request,
+            'pacientes' => $pacientes,
+            'citas' => $citas,
+            'tratampacien' => $tratampacien,
+            'suma' => $suma,
+            'idpac' => $idpac,
             'fotoper' => $fotoper,
-			'Edad' => $Edad
-		]);       
+            'Edad' => $Edad
+        ])
+           ->header('Expires', 'Sun, 01 Jan 1966 00:00:00 GMT')
+           ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
+           ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
+           ->header('Pragma', 'no-cache');     
     }
 
     public function create(Request $request)
@@ -303,7 +304,6 @@ class PacientesController extends Controller
     public function upload(Request $request)
     {	
 		$idpac = $request->input('idpac');
-
         $fotoper = $request->input('fotoper');
 
 		if ( null === $idpac ) {
@@ -315,7 +315,6 @@ class PacientesController extends Controller
         $pacdir = storage_path("app/pacdir/$idpac");
 
 		$files = $request->file('files');
-
 
         if ($fotoper == 1) {
             $extension = $files->getClientOriginalExtension();
@@ -330,8 +329,6 @@ class PacientesController extends Controller
 
                 return redirect("Pacientes/$idpac");
 
-                //$files->move($pacdir, '.fotoper.jpg');
-
             } else { 
                 $request->session()->flash('errmess', 'Formato no soportado, suba una imagen jpg o png.');
                 return redirect("Pacientes/$idpac/file");
@@ -341,9 +338,24 @@ class PacientesController extends Controller
 		  
     		$ficount = count($files);
     		$uploadcount = 0;
+
+            $filedisk = Storage::files($pacdir);
     		  
     		foreach($files as $file) {
+
     		  	$filename = $file->getClientOriginalName();
+
+                foreach($filedisk as $filedi) {
+                    $filedi = basename($filedi);
+
+                    if ($filedi == $filename) {
+                        $mess = "El archivo: $filename  ---- existe ya en su carpeta";
+
+                        $request->session()->flash('errmess', $mess);
+                        return redirect("Pacientes/$idpac/file");
+                    }
+                }
+
     		  	$file->move($pacdir, $filename);
     	        $uploadcount ++;  
     	    }
@@ -401,11 +413,12 @@ class PacientesController extends Controller
         return response()->view('pac.odogram',[
             'request' => $request,
             'idpac' => $idpac,
-            'odogram' => $odogram])
-                       ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
-                       ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
-                       ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
-                       ->header('Pragma', 'no-cache');
+            'odogram' => $odogram
+        ])
+           ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
+           ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
+           ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
+           ->header('Pragma', 'no-cache');
     }
 
     public function upodog(Request $request)
@@ -423,6 +436,7 @@ class PacientesController extends Controller
             $extension = $request->file('upodog')->getClientOriginalExtension();
 
             if ( $extension != 'jpg' ) {
+                $request->session()->flash('errmess', 'No es una imagen jpg');
                 return redirect("Pacientes/$idpac/odogram");
             } 
 

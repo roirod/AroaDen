@@ -10,7 +10,7 @@
 @include('includes.errors')
 
 
-<div id="delurl" value="{{$delurl}}"> </div>
+<div id="delurl" value="{!!$delurl!!}"> </div>
 
 <meta name="_token" content="{!!csrf_token()!!}"/>
 
@@ -75,7 +75,7 @@
 
 									  <td class="wid140">{!!$presu->nomser!!}</td>
 
-									  <td class="wid95 textcent">{!!$presu->precio!!} €</td>
+									  <td class="wid95 textcent">{!! numformat($presu->precio) !!} €</td>
 
 									  <td class="wid95 textcent">{!!$presu->canti!!} €</td>
 
@@ -112,10 +112,15 @@
 <div class="row pad20">
 	<div class="col-sm-9"> </div>
 
-	<div class="col-sm-3">
-		<form class="form" role="form" action="presmod.php" method="post">
-			<button type="submit" formtarget="_blank" name="presupmod" value="2" class="btn btn-default btn-md">Imprimir</button>
-			<button type="submit" formtarget="_blank" name="presupmod" value="1" class="btn btn-primary btn-md">Crear</button>
+	<div class="col-sm-3 text-right">
+
+	 	<form role="form" class="form" role="form" action="{!!url("/Presup/presmod")!!}" method="POST">	
+	 		{!! csrf_field() !!}
+
+	 		<input type="hidden" name="cod" value="{!!$cod!!}">	
+
+			<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
+			<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Crear</button>
 		</form>
 	</div>
 </div>
@@ -126,6 +131,6 @@
 @section('js')
     @parent
 
-	  	<script type="text/javascript" src="{{ asset('assets/js/presdel.js') }}"></script>
+	  	<script type="text/javascript" src="{!! asset('assets/js/presdel.js') !!}"></script>
 
 @endsection

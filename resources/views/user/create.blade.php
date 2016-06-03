@@ -14,7 +14,7 @@
 	<p class="pad10"> Usuarios creados: </p>
 	@foreach ($users as $user)
 		<ul>
-			<li>{{ $user->username }}</li>		
+			<li>{!! $user->username !!}</li>		
 		</ul>
 	@endforeach
 </div>

@@ -22,7 +22,7 @@
     <hr>
 
     <p class="pad4">
-        {{$servicio->nomser}}, |  precio: {{$servicio->precio}}
+        {{$servicio->nomser}} | precio: {{$servicio->precio}} €
     </p>    
 
     <form role="form" id="form" class="form" action="{{url('/Trapac')}}" method="post">

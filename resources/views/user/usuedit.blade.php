@@ -12,7 +12,7 @@
 
    		<p class="pad10"> Cambiar contraseña: </p>
 	 	
-	 	<form role="form" class="form" id="form" role="form" action="{{url("/Usuarios/saveup")}}" method="POST">	
+	 	<form role="form" class="form" id="form" role="form" action="{!!url("/Usuarios/saveup")!!}" method="POST">	
 	  		{!! csrf_field() !!}
 
 			<div class="input-group"> 
@@ -22,7 +22,7 @@
  
 						@foreach ($users as $user)
 			   
-			  				<option value="{{$user->uid}}">{{$user->username}}</option> 
+			  				<option value="{!!$user->uid!!}">{!!$user->username!!}</option> 
 			
 						@endforeach
  

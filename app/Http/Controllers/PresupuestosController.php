@@ -14,7 +14,6 @@ use App\Http\Requests;
 
 class PresupuestosController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -146,13 +145,13 @@ class PresupuestosController extends Controller
                 ->join('servicios', 'presup.idser','=','servicios.idser')
                 ->select('presup.*','servicios.nomser')
                 ->where('idpac', $idpac)
-                ->orderBy('cod' , 'ASC')
+                ->orderBy('cod' , 'DESC')
                 ->get();  
 
         $presgroup = DB::table('presup')
                 ->groupBy('cod')
                 ->having('idpac','=',$idpac)
-                ->orderBy('cod' , 'ASC')
+                ->orderBy('cod' , 'DESC')
                 ->get(); 
 
         return view('presup.show', [
@@ -193,6 +192,51 @@ class PresupuestosController extends Controller
             'idpac' => $idpac
         ]);        
     }
+
+    public function presmod(Request $request)
+    {
+        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8"); 
+
+        $presmod = $request->input('presmod');     
+
+        if ( null == $cod ) {
+            return redirect('Pacientes');
+        }
+
+        $presup = DB::table('presup')
+                ->join('servicios', 'presup.idser','=','servicios.idser')
+                ->select('presup.*','servicios.nomser')
+                ->where('cod', $cod)
+                ->orderBy('servicios.nomser' , 'ASC')
+                ->get();
+
+        $sumtot = DB::table('presup')
+                    ->selectRaw('SUM(canti*precio) AS sumtot')
+                    ->where('cod', $cod)
+                    ->get();                
+
+        $empre = DB::table('empre')->where('id','1')->first();
+
+        if ($presmod == 'imp') {
+
+            return view('presup.imp', [
+                'request' => $request,
+                'presup' => $presup,
+                'presmod' => $presmod,
+                'sumtot' => $sumtot,
+                'empre' => $empre
+            ]);  
+
+        } else {
+  
+            return view('presup.mod', [
+                'request' => $request,
+                'presup' => $presup,
+                'sumtot' => $sumtot,
+                'empre' => $empre
+            ]);  
+        }      
+    } 
 
     public function update(Request $request, $id)
     { }

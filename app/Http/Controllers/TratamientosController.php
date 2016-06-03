@@ -19,11 +19,10 @@ class TratamientosController extends Controller
     }   
 
     public function index()
-    {  }
+    { }
 
     public function create(Request $request)
-    {     
-    }
+    { }
 
     public function crea(Request $request)
     {     
@@ -70,7 +69,6 @@ class TratamientosController extends Controller
 
     public function store(Request $request)
     {
-        
         $idpac = $request->input('idpac');
 
         if ( null == $idpac ) {
@@ -127,41 +125,146 @@ class TratamientosController extends Controller
     }
 
     public function show($id)
+    { }
+
+    public function edit(Request $request,$idpac,$idtra)
     {
-        //
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        }
+        
+        if ( null === $idtra ) {
+            return redirect('Pacientes');
+        }
+
+        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
+
+        $tratampa = DB::table('tratampacien')
+            ->join('servicios','tratampacien.idser','=','servicios.idser')
+            ->select('tratampacien.*','servicios.nomser')
+            ->where('idtra', $idtra)
+            ->first(); 
+
+        return view('trat.edit', [
+            'request' => $request,
+            'tratampa' => $tratampa,
+            'idtra' => $idtra,
+            'idpac' => $idpac
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(Request $request,$idtra)
     {
-        //
+        if ( null === $idtra ) {
+            return redirect('Pacientes');
+        }
+
+        $idtra = htmlentities(trim($idtra),ENT_QUOTES,"UTF-8");
+        $idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        }     
+                  
+        $validator = Validator::make($request->all(), [
+            'idpac' => 'required',
+            'idser' => 'required',
+            'precio' => 'required',
+            'canti' => 'required',
+            'pagado' => 'required',
+            'fecha' => 'required|date',
+            'iva' => 'max:12',
+            'per1' => '',
+            'per2' => '',
+            'notas' => ''
+        ]);
+            
+        if ($validator->fails()) {
+            return redirect("/Citas/$idpac/$idtra/edit")
+                         ->withErrors($validator)
+                         ->withInput();
+        } else {
+
+            $idser = htmlentities (trim($request->input('idser')),ENT_QUOTES,"UTF-8");
+            $precio = htmlentities (trim($request->input('precio')),ENT_QUOTES,"UTF-8");
+            $canti = htmlentities (trim($request->input('canti')),ENT_QUOTES,"UTF-8");
+            $pagado = htmlentities (trim($request->input('pagado')),ENT_QUOTES,"UTF-8");
+            $fecha = htmlentities (trim($request->input('fecha')),ENT_QUOTES,"UTF-8");
+            $iva = htmlentities (trim($request->input('iva')),ENT_QUOTES,"UTF-8");
+            $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
+            $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
+            $notas = htmlentities (trim($request->input('notas')),ENT_QUOTES,"UTF-8");
+    
+            $tratampacien = tratampacien::find($idtra);
+            
+            $tratampacien->idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+            $tratampacien->idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
+            $tratampacien->precio = htmlentities (trim($precio),ENT_QUOTES,"UTF-8");
+            $tratampacien->canti = htmlentities (trim($canti),ENT_QUOTES,"UTF-8");
+            $tratampacien->pagado = htmlentities (trim($pagado),ENT_QUOTES,"UTF-8");
+            $tratampacien->fecha = htmlentities (trim($fecha),ENT_QUOTES,"UTF-8");            
+            $tratampacien->iva = htmlentities (trim($iva),ENT_QUOTES,"UTF-8");
+            $tratampacien->per1 = htmlentities (trim($per1),ENT_QUOTES,"UTF-8");
+            $tratampacien->per2 = htmlentities (trim($per2),ENT_QUOTES,"UTF-8");
+            $tratampacien->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+                                                
+            $tratampacien->save();
+              
+            $request->session()->flash('sucmess', 'Hecho!!!');  
+                            
+            return redirect("/Pacientes/$idpac");
+        }     
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    public function del(Request $request,$idpac,$idtra)
+    {         
+        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
+        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+
+        if ( null === $idtra ) {
+            return redirect('Pacientes');
+        }
+
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        }
+
+        $tratampa = DB::table('tratampacien')
+            ->join('servicios','tratampacien.idser','=','servicios.idser')
+            ->select('tratampacien.*','servicios.nomser')
+            ->where('idtra', $idtra)
+            ->first(); 
+
+        return view('trat.del', [
+            'request' => $request,
+            'tratampa' => $tratampa,
+            'idtra' => $idtra,
+            'idpac' => $idpac
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function destroy(Request $request,$idtra)
+    {               
+        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
+        $idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+
+        if ( null === $idtra ) {
+            return redirect('Pacientes');
+        }
+
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        } 
+        
+        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
+        
+        $tratampacien = tratampacien::find($idtra);
+      
+        $tratampacien->delete();
+
+        $request->session()->flash('sucmess', 'Hecho!!!');
+        
+        return redirect("Pacientes/$idpac");
     }
 }

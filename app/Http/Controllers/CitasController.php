@@ -13,7 +13,6 @@ use App\Http\Requests;
 
 class CitasController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');    
@@ -21,7 +20,9 @@ class CitasController extends Controller
     
     public function index(Request $request)
     {	
-        return view('cit.index', ['request' => $request]);
+        return view('cit.index', [
+        	'request' => $request
+        ]);
     }
     
     public function ver(Request $request)
@@ -55,7 +56,7 @@ class CitasController extends Controller
 		            ->join('pacientes','citas.idpac','=','pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->where('diacit', '=', $selfe1)
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 
@@ -66,7 +67,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 							 	
@@ -77,7 +78,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 		
@@ -88,7 +89,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 					
@@ -99,7 +100,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 					
@@ -110,7 +111,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 												 		
@@ -121,7 +122,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 										 		
@@ -132,7 +133,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 									 		
@@ -143,7 +144,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 						
@@ -154,16 +155,15 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 									 	
 			} elseif ($selec === 'todas' ) {
-				$citas = DB::select('SELECT * FROM citas ORDER BY diacit ASC, horacit ASC');
 				$citas = DB::table('citas')
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
 					
@@ -174,7 +174,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
-		            ->orderBy('diacit' , 'ASC')
+		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 							 	 			 	
 			 											 	 			 	
@@ -184,8 +184,10 @@ class CitasController extends Controller
 	        
         }
         
-        return view('cit.ver', ['citas' => $citas,
-								'request' => $request]);
+        return view('cit.ver', [
+        	'citas' => $citas,
+			'request' => $request
+		]);
     }
 
     public function create(Request $request,$idpac)
@@ -199,15 +201,16 @@ class CitasController extends Controller
     	$apepac = $pacientes->apepac;
     	$nompac = $pacientes->nompac;
 
-        return view('cit.create', ['request' => $request,
-     							   'idpac' => $idpac,
-     							   'apepac' => $apepac,
-     							   'nompac' => $nompac]);
+        return view('cit.create', [
+        	'request' => $request,
+     		'idpac' => $idpac,
+     		'apepac' => $apepac,
+     		'nompac' => $nompac
+     	]);
     }
 
     public function store(Request $request)
     {
-    	
     	$idpac = $request->input('idpac');
 
     	if ( null == $idpac ) {
@@ -216,7 +219,7 @@ class CitasController extends Controller
     	
     	$horacit = trim ( $request->input('horacit') );
     	$diacit = trim ( $request->input('diacit') );
-    	$notas = trim ( $request->input('notas') );
+    	$notas = htmlentities (trim($request->input('notas')),ENT_QUOTES,"UTF-8");
 	      	  
     	if ( isset ($diacit) ) {
    	  		$regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';  	  
@@ -235,9 +238,9 @@ class CitasController extends Controller
 		}   	  
     	  
         $validator = Validator::make($request->all(), [
-	            'horacit' => 'required',
-	            'diacit' => 'required|date',
-	            'notas' => ''
+	        'horacit' => 'required',
+	        'diacit' => 'required|date',
+	        'notas' => ''
 	    ]);
             
         if ($validator->fails()) {
@@ -259,43 +262,136 @@ class CitasController extends Controller
         }     
     }
 
-
     public function show($id)
+    { }
+
+    public function edit(Request $request,$idpac,$idcit)
     {
-        //
+    	if ( null === $idpac ) {
+    		return redirect('Pacientes');
+    	}
+    	
+    	if ( null === $idcit ) {
+    		return redirect('Pacientes');
+    	}
+
+    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
+
+    	$cita = citas::find($idcit);
+
+    	return view('cit.edit', [
+    		'request' => $request,
+    		'cita' => $cita,
+    		'idcit' => $idcit,
+    		'idpac' => $idpac
+    	]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(Request $request,$idcit)
     {
-        //
+    	if ( null === $idcit ) {
+    		return redirect('Pacientes');
+    	}
+
+    	$idcit = htmlentities(trim($idcit),ENT_QUOTES,"UTF-8");
+    	$idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+
+    	if ( null === $idpac ) {
+    		return redirect('Pacientes');
+    	}
+       	  
+        $validator = Validator::make($request->all(), [
+	        'horacit' => 'required',
+	        'diacit' => 'required|date',
+	        'notas' => ''
+	    ]);
+            
+        if ($validator->fails()) {
+	        return redirect("/Citas/$idpac/$idcit/edit")
+	                     ->withErrors($validator)
+	                     ->withInput();
+	    } else {
+
+	    	$horacit = trim($request->input('horacit'));
+	    	$diacit = trim($request->input('diacit'));
+		      	  
+	    	if ( isset ($diacit) ) {
+	   	  		$regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';  	  
+		    	if ( preg_match($regex, $diacit) ) {  } else {
+				  	$request->session()->flash('errmess', 'Fecha incorrecta');	
+					return redirect("/Citas/$idpac/$idcit/edit");
+				}
+			}
+				
+	    	if ( isset ($horacit) ) {
+	    	  	$regex = '/^([01][0-9]|2[0-3])[\:.]([012345][0-9])$/';
+		    	if ( preg_match($regex, $horacit) ) {  } else {
+				  	$request->session()->flash('errmess', 'Hora incorrecta');
+					return redirect("/Citas/$idpac/$idcit/edit");
+				}
+			}  
+	
+			$citas = citas::find($idcit);
+
+	    	$notas = ucfirst(strtolower($request->input('notas')));
+	    	
+			$citas->horacit = htmlentities (trim($horacit),ENT_QUOTES,"UTF-8");
+			$citas->diacit = htmlentities (trim($diacit),ENT_QUOTES,"UTF-8");
+			$citas->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+			
+			$citas->save();
+
+			$request->session()->flash('sucmess', 'Hecho!!!');
+
+			return redirect("Pacientes/$idpac");
+		}   
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+    public function del(Request $request,$idpac,$idcit)
+    {    	  
+    	$idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
+    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        if ( null === $idcit ) {
+            return redirect('Pacientes');
+        }
+
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        }
+
+        $cita = citas::find($idcit);
+
+    	return view('cit.del', [
+            'request' => $request,
+            'cita' => $cita,
+            'idcit' => $idcit,
+    		'idpac' => $idpac
+        ]);
+    }
+ 
+    public function destroy(Request $request,$idcit)
+    {             	
+    	$idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
+    	$idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+
+        if ( null === $idcit ) {
+            return redirect('Pacientes');
+        }
+
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        } 
+        
+        $idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
+        
+        $cita = citas::find($idcit);
+      
+        $cita->delete();
+
+        $request->session()->flash('sucmess', 'Hecho!!!');
+        
+        return redirect("Pacientes/$idpac");
     }
 }

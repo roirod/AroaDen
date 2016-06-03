@@ -12,8 +12,8 @@
 
 <meta name="_token" content="{!!csrf_token()!!}"/>
 
-<div id="nueurl" value="{{$nueurl}}"> </div>
-<div id="delurl" value="{{$delurl}}"> </div>
+<div id="nueurl" value="{!!$nueurl!!}"> </div>
+<div id="delurl" value="{!!$delurl!!}"> </div>
 
 
 <div class="row">
@@ -38,15 +38,15 @@
 						<tr>
 						 	<form id="nueform">
 
-								<input type="hidden" name="idpac" value="{{$idpac}}">
-								<input type="hidden" name="idser" value="{{$servicio->idser}}">
-								<input type="hidden" name="precio" value="{{$servicio->precio}}">
-								<input type="hidden" name="iva" value="{{$servicio->iva}}">
-								<input type="hidden" name="cod" value="{{$cod}}">						 	
+								<input type="hidden" name="idpac" value="{!!$idpac!!}">
+								<input type="hidden" name="idser" value="{!!$servicio->idser!!}">
+								<input type="hidden" name="precio" value="{!!$servicio->precio!!}">
+								<input type="hidden" name="iva" value="{!!$servicio->iva!!}">
+								<input type="hidden" name="cod" value="{!!$cod!!}">						 	
 
-								  <td class="wid140">{{$servicio->nomser}}</td>
+								  <td class="wid140">{!!$servicio->nomser!!}</td>
 
-								  <td class="wid95 textcent">{{$servicio->precio}} €</td>
+								  <td class="wid95 textcent">{!!$servicio->precio!!} €</td>
 
 								  <td class="wid50 textcent">
 								  	 	<div class="form-group">
@@ -107,7 +107,7 @@
 @section('js')
     @parent
 
-	  	<script type="text/javascript" src="{{ asset('assets/js/presnue.js') }}"></script>
-	  	<script type="text/javascript" src="{{ asset('assets/js/presdel.js') }}"></script>
+	  	<script type="text/javascript" src="{!! asset('assets/js/presnue.js') !!}"></script>
+	  	<script type="text/javascript" src="{!! asset('assets/js/presdel.js') !!}"></script>
 
 @endsection

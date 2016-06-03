@@ -14,7 +14,7 @@
    		Eliminar Usuario:
    	</p>
 
-	 	<form role="form" class="form" id="form" role="form" action="{{url("/Usuarios/delete")}}" method="POST">	
+	 	<form role="form" class="form" id="form" role="form" action="{!!url("/Usuarios/delete")!!}" method="POST">	
 	  		{!! csrf_field() !!}
 
 			<div class="input-group"> 
@@ -26,7 +26,7 @@
 
 							@continue($user->username == 'admin')
 			   
-			  				<option value="{{$user->uid}}">{{$user->username}}</option> 
+			  				<option value="{!!$user->uid!!}">{!!$user->username!!}</option> 
 			
 						@endforeach
  
