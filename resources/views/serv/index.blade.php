@@ -88,14 +88,6 @@
 					  
 				  @endforeach
 
-				   <table class="table table-hover">
-						<tr> 
-							<div class="textcent">
-								<hr>
-								{{$servicios->links()}}
-							</div>
-						</tr>
-					</table>
   	  
 </table> </div> </div> </div> </div>
 

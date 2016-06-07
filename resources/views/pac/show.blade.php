@@ -56,7 +56,7 @@
     <div class="row fonsi16">
 
 <div class="col-sm-2 pad4 max150">
-	<img src="{!! $fotoper !!}">
+	<img src="{!! $fotoper !!}" class="max150">
 </div>    
 
 <div class="col-sm-6 pad4"> 
@@ -218,7 +218,7 @@
 			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->fecha) )!!}</td>
 
 			<td class="wid50 textcent">
-				<a href="{!!url("/Tratramientos/$idpac/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!!url("/Trapac/$idpac/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
@@ -229,7 +229,7 @@
 					<i class="fa fa-times"></i>  <span class="caret"></span>  </button>
 					<ul class="dropdown-menu" role="menu"> 
 						<li>
-							<a href="{!!url("/Tratramientos/$idpac/$tratam->idtra/del")!!}" class="btn btn-xs btn-danger" role="button" title="Eliminar">
+							<a href="{!!url("/Trapac/$idpac/$tratam->idtra/del")!!}" class="btn btn-xs btn-danger" role="button" title="Eliminar">
 								<i class="fa fa-times"></i> Eliminar
 							</a>
 						</li>

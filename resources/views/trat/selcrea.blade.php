@@ -9,20 +9,15 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<?php
- addtexto("Añadir Tratamientos");
-?>
+
+{{ addtexto("Añadir Tratamientos") }}
+
 
 <div class="row">
  <div class="col-sm-12 mar10">
 
     <p class="pad4">
-        {{$apepac}}, {{$nompac}}  |  id: {{$idpac}}
-    </p>
-    <hr>
-
-    <p class="pad4">
-        {{$servicio->nomser}} | precio: {{$servicio->precio}} €
+        {{ $servicio->nomser }} | precio: {{ $servicio->precio }} €
     </p>    
 
     <form role="form" id="form" class="form" action="{{url('/Trapac')}}" method="post">
@@ -77,14 +72,7 @@
            </select>
         </div>
 
-        <div class="form-group col-sm-12">   <label class="control-label text-left mar10">Notas:</label>
-         <textarea name="notas" rows="2" class="form-control"></textarea>
-        </div>  
-        <br>
-
-        <div class="form-group col-sm-12">  
-        <button type="submit" class="text-left btn btn-primary btn-md">Añadir <i class="fa fa-chevron-circle-right"></i> </button>
-        </div>
+        @include('includes.subuto')
 
     </form>
 
@@ -95,10 +83,10 @@
 
 @section('js')
     @parent   
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/modernizr.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/minified/polyfiller.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/main.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/guarda.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/calcula.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/calcula.js') }}"></script>
 @endsection

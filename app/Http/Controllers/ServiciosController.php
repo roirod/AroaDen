@@ -20,8 +20,7 @@ class ServiciosController extends Controller
 
     public function index(Request $request)
     {			
-		$numpag = 11;
-		$servicios = DB::table('servicios')->orderBy('nomser', 'ASC')->paginate($numpag);				
+		$servicios = DB::table('servicios')->orderBy('nomser', 'ASC')->get();				
 
         return view('serv.index', [
             'servicios' => $servicios,
@@ -83,8 +82,7 @@ class ServiciosController extends Controller
     	$validator = Validator::make($request->all(), [
             'nomser' => 'required|unique:servicios|max:77',
             'precio' => 'required',
-            'iva' => '',
-            'notas' => ''
+            'iva' => ''
 	    ]);
     	        
         if ($validator->fails()) {
@@ -96,8 +94,7 @@ class ServiciosController extends Controller
 		    servicios::create([
                 'nomser' => $nomser,
 		        'precio' => $precio,
-		        'iva' => $iva,
-		        'notas' => $notas
+		        'iva' => $iva
 		    ]);
 		      
 		    $request->session()->flash('sucmess', 'Hecho!!!');	
@@ -107,8 +104,7 @@ class ServiciosController extends Controller
     }
  
     public function show($id)
-    {
-    }
+    { }
 
     public function edit(Request $request,$idser)
     {
@@ -123,15 +119,16 @@ class ServiciosController extends Controller
 
         $ivatp = ["0%" => 0,"4%" => 4,"10%" => 10,"21%" => 21];      
 
-        return view('serv.edit', ['request' => $request,
-                                 'servicio' => $servicio,
-                                 'ivatp' => $ivatp,
-                                 'idser' => $idser]);
+        return view('serv.edit', [
+            'request' => $request,
+            'servicio' => $servicio,
+            'ivatp' => $ivatp,
+            'idser' => $idser
+        ]);
     }
 
     public function update(Request $request,$idser)
     {
-
         if ( null === $idser ) {
             return redirect('Servicios');
         }
@@ -139,12 +136,10 @@ class ServiciosController extends Controller
         $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
 
         $nomser = ucfirst(strtolower( $request->input('nomser') ) );
-        $notas = ucfirst(strtolower( $request->input('notas') ) );
 
         $nomser = htmlentities (trim($nomser),ENT_QUOTES,"UTF-8");
         $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
         $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");
-        $notas = htmlentities (trim( $notas),ENT_QUOTES,"UTF-8");
 
         $servicios = DB::table('servicios')
                         ->orderBy('nomser','ASC')
@@ -153,15 +148,14 @@ class ServiciosController extends Controller
         foreach ($servicios as $servi) {
            if ($servi->nomser == $nomser) {
                $request->session()->flash('errmess', 'Nombre en uso, use cualquier otro.');
-               return redirect('Servicios/create');
+               return redirect("Servicios/$idser/edit");
            }
         } 
 
         $validator = Validator::make($request->all(), [
             'nomser' => 'required|unique:servicios|max:77',
             'precio' => 'required',
-            'iva' => '',
-            'notas' => ''
+            'iva' => ''
         ]);
             
         if ($validator->fails()) {
@@ -174,23 +168,29 @@ class ServiciosController extends Controller
                  
             $servicios->nomser = $nomser;
             $servicios->precio = $precio;
-            $servicios->iva = $iva;
-            $servicios->notas = $notas;            
+            $servicios->iva = $iva;         
             
             $servicios->save();
 
             $request->session()->flash('sucmess', 'Hecho!!!');
 
-            return redirect("Servicios/$idser");
+            return redirect('Servicios');
         }   
     }
 
     public function del(Request $request,$idser)
-    {         
+    {
+        if ( null === $idser ) {
+            return redirect('Servicios');
+        }   
+
         $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
+
+        $servicio = servicios::find($idser);
 
         return view('serv.del', [
             'request' => $request,
+            'servicio' => $servicio,
             'idser' => $idser
         ]);
     }

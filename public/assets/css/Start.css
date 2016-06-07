@@ -27,9 +27,13 @@ html,body { height:100%; padding:0; margin:0; }
 .wid50 { width: 50px !important; }
 
 
-max150 { 
+.max150 { 
   max-width: 150px !important;
   max-height: 150px !important;
+}
+
+.wrap {
+    word-wrap: break-word;
 }
 
 table { table-layout:fixed !important; }

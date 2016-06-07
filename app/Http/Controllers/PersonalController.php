@@ -20,7 +20,7 @@ class PersonalController extends Controller
 
     public function index(Request $request)
     {   
-        $numpag = 11;
+        $numpag = 30;
 
         $personal = DB::table('personal')->orderBy('ape', 'ASC')->orderBy('nom', 'ASC')->paginate($numpag);
               
@@ -64,19 +64,13 @@ class PersonalController extends Controller
                 ->select('tratampacien.*','pacientes.apepac','pacientes.nompac','servicios.nomser')
                 ->where('per1', $idper)
                 ->orWhere('per2', $idper)
-                ->orderBy('fecha' , 'ASC')
+                ->orderBy('fecha' , 'DESC')
                 ->get();    
             
-        $count = DB::table('tratampacien')
-                      ->where('per1', $idper)
-                      ->orWhere('per2', $idper) 
-                      ->count(); 
-
         return view('per.show', [
             'request' => $request,
             'personal' => $personal,
             'trabajos' => $trabajos,
-            'count' => $count,
             'idper' => $idper
         ]);       
     }
@@ -89,16 +83,16 @@ class PersonalController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-                   'nom' => 'required|max:44',
-                   'ape' => 'required|max:77',
-                   'dni' => 'unique:personal|max:12',
-                   'tel1' => 'max:11',
-                   'tel2' => 'max:11',
-                   'cargo' => 'max:44',
-                   'notas' => '',
-                   'direc' => 'max:111',
-                   'pobla' => 'max:111',
-                   'fenac' => 'date'
+           'nom' => 'required|max:44',
+           'ape' => 'required|max:77',
+           'dni' => 'unique:personal|max:12',
+           'tel1' => 'max:11',
+           'tel2' => 'max:11',
+           'cargo' => 'max:44',
+           'direc' => 'max:111',
+           'pobla' => 'max:111',
+           'fenac' => 'date',
+           'notas' => ''
         ]);
             
         if ($validator->fails()) {
@@ -125,16 +119,16 @@ class PersonalController extends Controller
             $notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
                         
             personal::create([
-                  'nom' => $nom,
-                  'ape' => $ape,
-                  'dni' => $dni,
-                  'tel1' => $tel1,
-                  'tel2' => $tel2,
-                  'cargo' => $cargo,
-                  'notas' => $notas,
-                  'direc' => $direc,
-                  'pobla' => $pobla,
-                  'fenac' => $fenac
+              'nom' => $nom,
+              'ape' => $ape,
+              'dni' => $dni,
+              'tel1' => $tel1,
+              'tel2' => $tel2,
+              'cargo' => $cargo,
+              'direc' => $direc,
+              'pobla' => $pobla,
+              'fenac' => $fenac,
+              'notas' => $notas
             ]);
           
             $request->session()->flash('sucmess', 'Hecho!!!');  
@@ -151,11 +145,13 @@ class PersonalController extends Controller
 
         $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
          
-         $personal = personal::find($idper); 
+        $personal = personal::find($idper); 
 
-         return view('per.edit', ['request' => $request,
-                                  'personal' => $personal,
-                                  'idper' => $idper]);
+        return view('per.edit', [
+          'request' => $request,
+          'personal' => $personal,
+          'idper' => $idper
+        ]);
     }
 
     public function update(Request $request,$idper)
@@ -165,16 +161,16 @@ class PersonalController extends Controller
         }
 
         $validator = Validator::make($request->all(),[
-                   'nom' => 'required|max:44',
-                   'ape' => 'required|max:77',
-                   'dni' => 'unique:personal|max:12',
-                   'tel1' => 'max:11',
-                   'tel2' => 'max:11',
-                   'cargo' => 'max:44',
-                   'notas' => '',
-                   'direc' => 'max:111',
-                   'pobla' => 'max:111',
-                   'fenac' => 'date'
+            'nom' => 'required|max:44',
+            'ape' => 'required|max:77',
+            'dni' => 'required|max:12',
+            'tel1' => 'max:11',
+            'tel2' => 'max:11',
+            'cargo' => 'max:44',
+            'notas' => '',
+            'direc' => 'max:111',
+            'pobla' => 'max:111',
+            'fenac' => 'date'
         ]);
             
         if ($validator->fails()) {
@@ -187,13 +183,11 @@ class PersonalController extends Controller
             
             $regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';
             
-            if ( preg_match($regex, $fenac) ) {  } else {
+            if ( !preg_match($regex, $fenac) ) {
                $request->session()->flash('errmess', 'Fecha/s incorrecta');
                return redirect("Personal/$idper/edit");
             }
-            
-            $idper = $request->input('idper');
-
+          
             $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
             
             $personal = personal::find($idper);
@@ -265,8 +259,8 @@ class PersonalController extends Controller
         $uploadcount = 0;
           
         foreach($files as $file) {
-              $filename = $file->getClientOriginalName();
-              $file->move($perdir, $filename);
+            $filename = $file->getClientOriginalName();
+            $file->move($perdir, $filename);
             $uploadcount ++;  
         }
         
@@ -313,9 +307,12 @@ class PersonalController extends Controller
         }
 
         $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
-          
+
+        $personal = personal::find($idper);
+         
         return view('per.del', [
           'request' => $request,
+          'personal' => $personal,
           'idper' => $idper
         ]);
     }
@@ -331,6 +328,12 @@ class PersonalController extends Controller
         $personal = personal::find($idper);
       
         $personal->delete();
+
+        $perdir = "/perdir/$idper";
+
+        Storage::deleteDirectory($perdir);
+
+        $request->session()->flash('sucmess', 'Hecho!!!');
         
         return redirect('Personal');
     }

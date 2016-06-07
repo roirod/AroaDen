@@ -207,9 +207,11 @@ class PacientesController extends Controller
 
     	$pacientes = pacientes::find($idpac);
 
-    	return view('pac.edit', ['request' => $request,
-    							 'pacientes' => $pacientes,
-    							 'idpac' => $idpac]);
+    	return view('pac.edit', [
+            'request' => $request,
+    		'pacientes' => $pacientes,
+    		'idpac' => $idpac
+        ]);
     }
 
     public function update(Request $request,$idpac)
@@ -335,31 +337,26 @@ class PacientesController extends Controller
             }
 
         } else {
-		  
-    		$ficount = count($files);
-    		$uploadcount = 0;
 
-            $filedisk = Storage::files($pacdir);
-    		  
-    		foreach($files as $file) {
+            $ficount = count($files);
 
-    		  	$filename = $file->getClientOriginalName();
+            $uploadcount = 0;
 
-                foreach($filedisk as $filedi) {
-                    $filedi = basename($filedi);
+            foreach ($files as $file) {   		     		  
+       		  	$filename = $file->getClientOriginalName();
 
-                    if ($filedi == $filename) {
-                        $mess = "El archivo: $filename  ---- existe ya en su carpeta";
+                $filedisk = "/pacdir/$idpac/$filename";
 
-                        $request->session()->flash('errmess', $mess);
-                        return redirect("Pacientes/$idpac/file");
-                    }
+                if ( Storage::exists($filedisk) ) {
+                    $mess = "El archivo: $filedisk -- existe ya en su carpeta";
+                    $request->session()->flash('errmess', $mess);
+                    return redirect("Pacientes/$idpac/file");
+                } else {
+        		  	$file->move($pacdir, $filename);
+        	        $upcount ++;
                 }
-
-    		  	$file->move($pacdir, $filename);
-    	        $uploadcount ++;  
-    	    }
-    	    
+            }
+    	     
     	    if($uploadcount == $ficount){
     	      return redirect("Pacientes/$idpac/file");
     	    } else {

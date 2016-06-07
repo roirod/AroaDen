@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTratampacienTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('tratampacien', function (Blueprint $table) {
@@ -23,7 +19,6 @@ class CreateTratampacienTable extends Migration
             $table->tinyInteger('iva')->unsigned()->default(0);
             $table->tinyInteger('per1')->unsigned();
             $table->tinyInteger('per2')->unsigned();
-            $table->text('notas')->nullable();
             $table->timestamps();
             $table->index('fecha');
             $table->index('per1');

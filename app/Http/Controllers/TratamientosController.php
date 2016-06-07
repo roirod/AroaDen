@@ -144,11 +144,14 @@ class TratamientosController extends Controller
             ->join('servicios','tratampacien.idser','=','servicios.idser')
             ->select('tratampacien.*','servicios.nomser')
             ->where('idtra', $idtra)
-            ->first(); 
+            ->first();
+
+        $personal = DB::table('personal')->get();
 
         return view('trat.edit', [
             'request' => $request,
             'tratampa' => $tratampa,
+            'personal' => $personal,
             'idtra' => $idtra,
             'idpac' => $idpac
         ]);
@@ -161,20 +164,15 @@ class TratamientosController extends Controller
         }
 
         $idtra = htmlentities(trim($idtra),ENT_QUOTES,"UTF-8");
-        $idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+        $idpac = htmlentities (trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
 
         if ( null === $idpac ) {
             return redirect('Pacientes');
         }     
                   
         $validator = Validator::make($request->all(), [
-            'idpac' => 'required',
-            'idser' => 'required',
-            'precio' => 'required',
-            'canti' => 'required',
             'pagado' => 'required',
             'fecha' => 'required|date',
-            'iva' => 'max:12',
             'per1' => '',
             'per2' => '',
             'notas' => ''
@@ -186,25 +184,16 @@ class TratamientosController extends Controller
                          ->withInput();
         } else {
 
-            $idser = htmlentities (trim($request->input('idser')),ENT_QUOTES,"UTF-8");
-            $precio = htmlentities (trim($request->input('precio')),ENT_QUOTES,"UTF-8");
-            $canti = htmlentities (trim($request->input('canti')),ENT_QUOTES,"UTF-8");
             $pagado = htmlentities (trim($request->input('pagado')),ENT_QUOTES,"UTF-8");
             $fecha = htmlentities (trim($request->input('fecha')),ENT_QUOTES,"UTF-8");
-            $iva = htmlentities (trim($request->input('iva')),ENT_QUOTES,"UTF-8");
             $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
             $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
             $notas = htmlentities (trim($request->input('notas')),ENT_QUOTES,"UTF-8");
     
             $tratampacien = tratampacien::find($idtra);
             
-            $tratampacien->idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
-            $tratampacien->idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
-            $tratampacien->precio = htmlentities (trim($precio),ENT_QUOTES,"UTF-8");
-            $tratampacien->canti = htmlentities (trim($canti),ENT_QUOTES,"UTF-8");
             $tratampacien->pagado = htmlentities (trim($pagado),ENT_QUOTES,"UTF-8");
             $tratampacien->fecha = htmlentities (trim($fecha),ENT_QUOTES,"UTF-8");            
-            $tratampacien->iva = htmlentities (trim($iva),ENT_QUOTES,"UTF-8");
             $tratampacien->per1 = htmlentities (trim($per1),ENT_QUOTES,"UTF-8");
             $tratampacien->per2 = htmlentities (trim($per2),ENT_QUOTES,"UTF-8");
             $tratampacien->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");

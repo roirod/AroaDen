@@ -30,7 +30,7 @@
 
           	<div class="col-sm-2 pad4 text-center">
           	  <i class="fa fa-file fa-2x text-center"></i> 
-          	    <div class="filena text-center">
+          	    <div class="filena wrap text-center">
 
                   {!!basename($file)!!} 
 

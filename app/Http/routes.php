@@ -50,7 +50,7 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::get('Personal/{idper}/file', 'PersonalController@file');
 	 Route::post('Personal/filerem', 'PersonalController@filerem');
 	 Route::post('Personal/upload', 'PersonalController@upload');
-	 Route::get('Personal/{idpac}/{file}/down', 'PersonalController@download');
+	 Route::get('Personal/{idper}/{file}/down', 'PersonalController@download');
 	 Route::resource('Personal', 'PersonalController');
 
 	 Route::post('Servicios/ver', 'ServiciosController@ver');

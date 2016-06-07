@@ -16,10 +16,6 @@
 <div class="row">
  <div class="col-sm-12 mar10">
 
- 	<p class="pad4">
- 		{{$apepac}}, {{$nompac}}  |  id: {{$idpac}}
- 	</p>
-
     <form role="form" id="form" class="form" action="{{url('/Trapac/selcrea')}}" method="post">
 	    
 	    {!! csrf_field() !!}
@@ -42,15 +38,8 @@
 		   </select>
 		
 		</div>
-			
-		<br>
-		<div class="form-group">
-		  	<div class="col-sm-12 text-left">
-		  		<button type="submit" class="text-left btn btn-primary btn-md">Añadir
-		   			<i class="fa fa-chevron-circle-right"></i>
-		   		</button>
-			</div>
-		</div>
+
+		@include('includes.subuto')
 
 	</form>
 

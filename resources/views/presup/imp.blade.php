@@ -19,7 +19,8 @@
   			<br> 
   			{!! $empre->pobla !!}
   			<br><br>
-  			Presupuesto: {!! date('d-m-Y') !!}
+
+			Presupuesto: {!! DatTime($cod) !!}
   		</p>
   		<br>
 

@@ -221,6 +221,7 @@ class PresupuestosController extends Controller
 
             return view('presup.imp', [
                 'request' => $request,
+                'cod' => $cod,
                 'presup' => $presup,
                 'presmod' => $presmod,
                 'sumtot' => $sumtot,
@@ -231,6 +232,7 @@ class PresupuestosController extends Controller
   
             return view('presup.mod', [
                 'request' => $request,
+                'cod' => $cod,
                 'presup' => $presup,
                 'sumtot' => $sumtot,
                 'empre' => $empre

@@ -7,9 +7,8 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<?php
- addtexto("Añadir servicio");
-?>
+
+{{ addtexto("Añadir servicio") }}
 
 <div class="row">
   <div class="col-sm-12">
@@ -46,6 +45,6 @@
 
 @section('js')
     @parent   
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/guarda.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
 @endsection
