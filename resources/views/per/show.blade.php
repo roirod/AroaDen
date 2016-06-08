@@ -64,12 +64,12 @@
 
 </div> </div> </div> </div>
 
+<hr>
 <br>
 
 <div class="row">
   <div class="col-sm-12"> 
-  <hr>
-	<p> Trabajos realizados: </p> 
+ 	<p> Trabajos realizados: </p> 
 </div> </div>
 
 <div class="row">

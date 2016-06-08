@@ -46,7 +46,7 @@
             {!! ucfirst ($diactu) !!},&nbsp;
             {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;|&nbsp;
 
-            Usuario: &nbsp; <span class="label label-primary fonsi16"> {!! Auth::user()->username !!} </span>
+            Usuario:  <span class="label label-primary fonsi16"> {!! Auth::user()->username !!} </span>
 
         </div>
  	

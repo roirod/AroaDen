@@ -55,59 +55,63 @@
   <div class="col-sm-12"> 
     <div class="row fonsi16">
 
-<div class="col-sm-2 pad4 max150">
-	<img src="{!! $fotoper !!}" class="max150">
-</div>    
+		<div class="col-sm-2 pad4 max150">
+			<img src="{!! $fotoper !!}" class="max150 pad4">
+		</div>
 
-<div class="col-sm-6 pad4"> 
-<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$pacientes->apepac!!},&nbsp;{!!$pacientes->nompac!!} 
-</div>
+		<div class="col-sm-10">
 
-<div class="col-sm-2 pad4"> 
-<i class="fa fa-minus-square"></i> id: &nbsp; {!!$pacientes->idpac!!} 
-</div>
+			<div class="col-sm-8 pad4"> 
+			<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$pacientes->apepac!!},&nbsp;{!!$pacientes->nompac!!} 
+			</div>
 
-<div class="col-sm-5 pad4"> 
-<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$pacientes->pobla!!}
- </div> 
+			<div class="col-sm-3 pad4"> 
+			<i class="fa fa-minus-square"></i> id: &nbsp; {!!$pacientes->idpac!!} 
+			</div>
 
-<div class="col-sm-6 pad4">
-<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$pacientes->direc!!} 
-</div> 
+			<div class="col-sm-7 pad4"> 
+			<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$pacientes->pobla!!}
+			 </div> 
 
- <div class="col-sm-3 pad4">
-<i class="fa fa-minus-square"></i> DNI: &nbsp; {!! $pacientes->dni!!}
- </div> 
+			<div class="col-sm-8 pad4">
+			<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$pacientes->direc!!} 
+			</div> 
 
- <div class="col-sm-3 pad4">
-<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$pacientes->sexo!!} 
-</div> 
+			 <div class="col-sm-4 pad4">
+			<i class="fa fa-minus-square"></i> DNI: &nbsp; {!! $pacientes->dni!!}
+			 </div> 
 
-<div class="col-sm-3 pad4">
-<i class="fa fa-minus-square"></i> Tel&#xE9;fono1: &nbsp;{!!$pacientes->tel1!!}
- </div>
+			 <div class="col-sm-4 pad4">
+			<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$pacientes->sexo!!} 
+			</div> 
 
- <div class="col-sm-3 pad4">
-<i class="fa fa-minus-square"></i> Tel&#xE9;fono2: &nbsp; {!! $pacientes->tel2!!} 
-</div>
+			<div class="col-sm-4 pad4">
+			<i class="fa fa-minus-square"></i> Tel&#xE9;fono1: &nbsp;{!!$pacientes->tel1!!}
+			 </div>
 
- <div class="col-sm-3 pad4">
-<i class="fa fa-minus-square"></i> Tel&#xE9;fono3: &nbsp; {!!$pacientes->tel3!!}
- </div> 
+			 <div class="col-sm-4 pad4">
+			<i class="fa fa-minus-square"></i> Tel&#xE9;fono2: &nbsp; {!! $pacientes->tel2!!} 
+			</div>
 
- <div class="col-sm-3 pad4"> 
-<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($pacientes->fenac) )!!} 
-</div>
+			 <div class="col-sm-4 pad4">
+			<i class="fa fa-minus-square"></i> Tel&#xE9;fono3: &nbsp; {!!$pacientes->tel3!!}
+			 </div> 
 
- <div class="col-sm-2 pad4"> 	
-<i class="fa fa-minus-square"></i> Edad: &nbsp; {!!$Edad!!} años 
-</div> 
+			 <div class="col-sm-4 pad4"> 
+			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($pacientes->fenac) )!!} 
+			</div>
 
- <div class="col-sm-12 pad4"> 
-<i class="fa fa-minus-square"></i> Notas: <br>
- <div class="box200"> {!! nl2br(e($pacientes->notas)) !!} 
- </div>
- </div>
+			 <div class="col-sm-3 pad4"> 	
+			<i class="fa fa-minus-square"></i> Edad: &nbsp; {!!$Edad!!} años 
+			</div>
+
+		</div>
+
+		 <div class="col-sm-12 pad4"> 
+		<i class="fa fa-minus-square"></i> Notas: <br>
+		 <div class="box200"> {!! nl2br(e($pacientes->notas)) !!} 
+		 </div>
+		 </div>
 
  </div> </div> </div>
 

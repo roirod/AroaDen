@@ -10,6 +10,8 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::get('/home', 'CitasController@index');
 
 	 Route::group(['middleware' => 'admin'], function () {
+	 	Route::get('Empresa/{id}/edit', 'EmpresaController@edit');
+
 	 	Route::get('Pacientes/{id}/del', 'PacientesController@del');
 	 	Route::delete('Pacientes/{id}', 'PacientesController@destroy');
 
@@ -25,30 +27,43 @@ Route::group(['middleware' => 'web'], function () {
 	 	Route::post('Usuarios/delete', 'UsuariosController@delete');
 	 	Route::resource('Usuarios', 'UsuariosController');
 	 });
-	 
+
+	 Route::group(['middleware' => 'medio'], function () { 	
+
+	 	Route::post('Pacientes/filerem', 'PacientesController@filerem');
+		Route::post('Pacientes/upodog', 'PacientesController@upodog');
+		Route::post('Pacientes/resodog', 'PacientesController@resodog');
+
+	 	Route::post('Personal/filerem', 'PersonalController@filerem');
+
+		Route::get('Citas/{idpac}/{idcit}/edit', 'CitasController@edit');
+		Route::get('Citas/{idpac}/{idcit}/del', 'CitasController@del');
+
+		Route::get('Trapac/{idpac}/{idtra}/edit', 'TratamientosController@edit');
+		Route::get('Trapac/{idpac}/{idtra}/del', 'TratamientosController@del');			
+
+		Route::post('Presup/delcod', 'PresupuestosController@delcod');
+		Route::post('Presup/delid', 'PresupuestosController@delid');
+	 });
+
 	 Route::resource('Empresa', 'EmpresaController');
 	 
 	 Route::post('Citas/ver', 'CitasController@ver');
 	 Route::get('Citas/{idpac}/create', 'CitasController@create');
-	 Route::get('Citas/{idpac}/{idcit}/edit', 'CitasController@edit');
-	 Route::get('Citas/{idpac}/{idcit}/del', 'CitasController@del');
 	 Route::resource('Citas', 'CitasController');
 	  	  
 	 Route::post('Pacientes/ver', 'PacientesController@ver');
 	 Route::get('Pacientes/{idpac}/file', 'PacientesController@file');
-	 Route::post('Pacientes/filerem', 'PacientesController@filerem');
 	 Route::post('Pacientes/upload', 'PacientesController@upload');
 	 Route::get('Pacientes/{idpac}/{file}/down', 'PacientesController@download');
 	 Route::get('Pacientes/{idpac}/odogram', 'PacientesController@odogram');	 
 	 Route::get('Pacientes/{idpac}/downodog', 'PacientesController@downodog');
-	 Route::post('Pacientes/upodog', 'PacientesController@upodog');
-	 Route::post('Pacientes/resodog', 'PacientesController@resodog');
 	 Route::get('Pacientes/{idpac}/presup', 'PacientesController@presup');
 	 Route::resource('Pacientes', 'PacientesController');
 
 	 Route::post('Personal/ver', 'PersonalController@ver');
 	 Route::get('Personal/{idper}/file', 'PersonalController@file');
-	 Route::post('Personal/filerem', 'PersonalController@filerem');
+	 
 	 Route::post('Personal/upload', 'PersonalController@upload');
 	 Route::get('Personal/{idper}/{file}/down', 'PersonalController@download');
 	 Route::resource('Personal', 'PersonalController');
@@ -64,16 +79,11 @@ Route::group(['middleware' => 'web'], function () {
 	 
 	 Route::get('Presup/{idpac}/create', 'PresupuestosController@create');
 	 Route::post('Presup/presuedit', 'PresupuestosController@presuedit');
-	 Route::post('Presup/delcod', 'PresupuestosController@delcod');
-	 Route::post('Presup/delid', 'PresupuestosController@delid');
 	 Route::post('Presup/presmod', 'PresupuestosController@presmod');
 	 Route::resource('Presup', 'PresupuestosController');
 
 	 Route::post('Trapac/crea','TratamientosController@crea');
-	 Route::post('Trapac/selcrea', 'TratamientosController@selcrea');
-	 Route::get('Trapac/{idpac}/{idtra}/edit', 'TratamientosController@edit');
-	 Route::get('Trapac/{idpac}/{idtra}/del', 'TratamientosController@del');	 
+	 Route::post('Trapac/selcrea', 'TratamientosController@selcrea'); 
 	 Route::resource('Trapac', 'TratamientosController');
-	     
-	 Route::get('Test', 'TestController@test');
+
 });

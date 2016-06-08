@@ -11,8 +11,8 @@ class AdminMiddleware
     {    	  
     	$username = Auth::user()->username;
     	  
-    	if ( $username !== 'admin' ) {
-	    	return redirect('/home');
+    	if ( $username != 'admin' ) {
+	    	return redirect('/Ajustes');
         }	    	  
     	
         return $next($request);       

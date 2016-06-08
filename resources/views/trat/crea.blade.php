@@ -29,8 +29,7 @@
 		   <label class="control-label text-left mar10">Selecciona servicio:</label> 
 		   
 		   <select name="idser" class="form-control" required>
-			     <option value="0" selected> </option>
-
+		   
 			     @foreach($servicios as $servici)
 					<option value="{{$servici->idser}}">{{$servici->nomser}} | precio: {{$servici->precio}}</option>
 			 	 @endforeach	
