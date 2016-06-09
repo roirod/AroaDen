@@ -14,9 +14,9 @@
       {!! csrf_field() !!}
 
       <input type="hidden" name="idpac" value="{!!$idpac!!}">
-  
-      <input type="hidden" type="file" name="files" />
 
+      <input type="hidden" type="file" name="files" multiple />
+        
   </form>
 </div>
 

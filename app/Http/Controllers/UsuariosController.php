@@ -37,6 +37,7 @@ class UsuariosController extends Controller
     	  
     	$password = trim( $request->input('password') );
     	$username = htmlentities (trim($request->input('username')),ENT_QUOTES,"UTF-8");
+        $tipo = htmlentities (trim($request->input('tipo')),ENT_QUOTES,"UTF-8");
     	  
     	foreach ($users as $user) {
     	   if ($user->username == $username) {
@@ -47,7 +48,8 @@ class UsuariosController extends Controller
     	 	
         $validator = Validator::make($request->all(),[
             'username' => 'required|unique:users|max:44',
-            'password' => 'required|max:44'
+            'password' => 'required|max:44',
+            'tipo' => 'required|max:44'
         ]);
             
         if ($validator->fails()) {
@@ -63,7 +65,8 @@ class UsuariosController extends Controller
         	     	        	
 	        User::create([
 	          'username' => $username,
-	          'password' => bcrypt($password)
+	          'password' => bcrypt($password),
+              'tipo' => $tipo
             ]);
 	      
             $request->session()->flash('sucmess', 'Hecho!!!');	

@@ -17,4 +17,5 @@ class MedioMiddleware
         }             
         
         return $next($request);
+    }
 }

@@ -9,7 +9,9 @@ Route::group(['middleware' => 'web'], function () {
 
 	 Route::get('/home', 'CitasController@index');
 
+
 	 Route::group(['middleware' => 'admin'], function () {
+
 	 	Route::get('Empresa/{id}/edit', 'EmpresaController@edit');
 
 	 	Route::get('Pacientes/{id}/del', 'PacientesController@del');
@@ -28,13 +30,17 @@ Route::group(['middleware' => 'web'], function () {
 	 	Route::resource('Usuarios', 'UsuariosController');
 	 });
 
-	 Route::group(['middleware' => 'medio'], function () { 	
+	 Route::group(['middleware' => 'medio'], function () {
 
+	 	Route::get('Pacientes/{idpac}/edit', 'PacientesController@edit');
 	 	Route::post('Pacientes/filerem', 'PacientesController@filerem');
 		Route::post('Pacientes/upodog', 'PacientesController@upodog');
 		Route::post('Pacientes/resodog', 'PacientesController@resodog');
 
+		Route::get('Personal/{id}/edit', 'PersonalController@edit');
 	 	Route::post('Personal/filerem', 'PersonalController@filerem');
+
+	 	Route::get('Servicios/{id}/edit', 'ServiciosController@edit');
 
 		Route::get('Citas/{idpac}/{idcit}/edit', 'CitasController@edit');
 		Route::get('Citas/{idpac}/{idcit}/del', 'CitasController@del');
@@ -45,6 +51,7 @@ Route::group(['middleware' => 'web'], function () {
 		Route::post('Presup/delcod', 'PresupuestosController@delcod');
 		Route::post('Presup/delid', 'PresupuestosController@delid');
 	 });
+
 
 	 Route::resource('Empresa', 'EmpresaController');
 	 

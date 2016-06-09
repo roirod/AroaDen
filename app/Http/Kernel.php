@@ -25,9 +25,13 @@ class Kernel extends HttpKernel
         ],
         
         'admin' => [
-            \App\Http\Middleware\AdminMiddleware::class
-        ] 
-        
+            \App\Http\Middleware\AdminMiddleware::class,
+            \App\Http\Middleware\MedioMiddleware::class
+        ],
+
+        'medio' => [
+            \App\Http\Middleware\MedioMiddleware::class
+        ]        
     ];
 
     protected $routeMiddleware = [

@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@include('includes.other')
+
 @section('content')
 
 @include('includes.pacnav')
@@ -25,7 +27,7 @@
 				<span class="lead pad4"> 
 
 					<p>
-						Día: {!! $cita->diacit !!}
+						Día: {!! date ('d-m-Y', strtotime ($cita->diacit)) !!} 
 						<br>
 						Hora: {!! $cita->horacit !!}
 						<br>

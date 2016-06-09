@@ -228,15 +228,7 @@ class CitasController extends Controller
 				return redirect("/Citas/$idpac/create");
 			}
 		}
-			
-    	if ( isset ($horacit) ) {
-    	  	$regex = '/^([01][0-9]|2[0-3])[\:.]([012345][0-9])$/';
-	    	if ( preg_match($regex, $horacit) ) {  } else {
-			  	$request->session()->flash('errmess', 'Hora incorrecta');
-				return redirect("/Citas/$idpac/create");
-			}
-		}   	  
-    	  
+	    	  
         $validator = Validator::make($request->all(), [
 	        'horacit' => 'required',
 	        'diacit' => 'required|date',
@@ -323,15 +315,7 @@ class CitasController extends Controller
 					return redirect("/Citas/$idpac/$idcit/edit");
 				}
 			}
-				
-	    	if ( isset ($horacit) ) {
-	    	  	$regex = '/^([01][0-9]|2[0-3])[\:.]([012345][0-9])$/';
-		    	if ( preg_match($regex, $horacit) ) {  } else {
-				  	$request->session()->flash('errmess', 'Hora incorrecta');
-					return redirect("/Citas/$idpac/$idcit/edit");
-				}
-			}  
-	
+					
 			$citas = citas::find($idcit);
 
 	    	$notas = ucfirst(strtolower($request->input('notas')));
