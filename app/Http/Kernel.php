@@ -25,8 +25,7 @@ class Kernel extends HttpKernel
         ],
         
         'admin' => [
-            \App\Http\Middleware\AdminMiddleware::class,
-            \App\Http\Middleware\MedioMiddleware::class
+            \App\Http\Middleware\AdminMiddleware::class
         ],
 
         'medio' => [

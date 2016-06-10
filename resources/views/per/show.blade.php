@@ -79,8 +79,9 @@
    	 <tr class="fonsi16 success">
 	   	 	<td class="wid180">Paciente</td>
 	   	 	<td class="wid180">Tratamiento</td>
+	   	 	<td class="wid95 textcent">Cantidad</td>
 	   	 	<td class="wid95">Fecha</td>
-	   	 	<td class="wid180">Notas</td>
+	   	 	<td class="wid95"> </td>
    	 </tr>
    </table>
    <div class="box500">
@@ -96,9 +97,10 @@
 						</td>
 
 					   	<td class="wid180"> {{$traba->nomser}} </td>
+					   	<td class="wid95 textcent"> {{$traba->canti}} </td>
 					   	<td class="wid95"> {{date('d-m-Y',strtotime ($traba->fecha))}} </td>
-					   	<td class="wid180"> {{$traba->notas}} </td>
-			   	</tr>						
+					   	<td class="wid95"> </td>
+			   		</tr>						
 				@endforeach
 	
 

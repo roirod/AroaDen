@@ -12,7 +12,7 @@ class MedioMiddleware
     {         
         $tipo = Auth::user()->tipo;
           
-        if ( $tipo != 'medio' ) {
+        if ($tipo != 'medio') {
             return redirect('/Ajustes');
         }             
         

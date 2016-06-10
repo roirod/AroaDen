@@ -32,21 +32,26 @@ Route::group(['middleware' => 'web'], function () {
 
 	 Route::group(['middleware' => 'medio'], function () {
 
-	 	Route::get('Pacientes/{idpac}/edit', 'PacientesController@edit');
+	 	Route::get('Pacientes/{id}/edit', 'PacientesController@edit');
+	 	Route::put('Pacientes/{id}', 'PacientesController@update');
 	 	Route::post('Pacientes/filerem', 'PacientesController@filerem');
 		Route::post('Pacientes/upodog', 'PacientesController@upodog');
 		Route::post('Pacientes/resodog', 'PacientesController@resodog');
 
 		Route::get('Personal/{id}/edit', 'PersonalController@edit');
+		Route::put('Personal/{id}', 'PersonalController@update');
 	 	Route::post('Personal/filerem', 'PersonalController@filerem');
 
 	 	Route::get('Servicios/{id}/edit', 'ServiciosController@edit');
+	 	Route::put('Servicios/{id}', 'ServiciosController@update');
 
 		Route::get('Citas/{idpac}/{idcit}/edit', 'CitasController@edit');
 		Route::get('Citas/{idpac}/{idcit}/del', 'CitasController@del');
+		Route::delete('Citas/{idcit}', 'CitasController@destroy');	
 
 		Route::get('Trapac/{idpac}/{idtra}/edit', 'TratamientosController@edit');
-		Route::get('Trapac/{idpac}/{idtra}/del', 'TratamientosController@del');			
+		Route::get('Trapac/{idpac}/{idtra}/del', 'TratamientosController@del');
+		Route::delete('Trapac/{idtra}', 'TratamientosController@destroy');	
 
 		Route::post('Presup/delcod', 'PresupuestosController@delcod');
 		Route::post('Presup/delid', 'PresupuestosController@delid');
