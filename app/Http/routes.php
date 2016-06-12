@@ -33,7 +33,9 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::group(['middleware' => 'medio'], function () {
 
 	 	Route::get('Pacientes/{id}/edit', 'PacientesController@edit');
-	 	Route::put('Pacientes/{id}', 'PacientesController@update');
+	 	Route::put('Pacientes/{idpac}', 'PacientesController@update');
+	 	Route::get('Pacientes/{idpac}/fiedit', 'PacientesController@fiedit');
+	 	Route::put('Pacientes/{idpac}/fisave', 'PacientesController@fisave');
 	 	Route::post('Pacientes/filerem', 'PacientesController@filerem');
 		Route::post('Pacientes/upodog', 'PacientesController@upodog');
 		Route::post('Pacientes/resodog', 'PacientesController@resodog');
@@ -65,6 +67,7 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::resource('Citas', 'CitasController');
 	  	  
 	 Route::post('Pacientes/ver', 'PacientesController@ver');
+	 Route::get('Pacientes/{idpac}/ficha', 'PacientesController@ficha');
 	 Route::get('Pacientes/{idpac}/file', 'PacientesController@file');
 	 Route::post('Pacientes/upload', 'PacientesController@upload');
 	 Route::get('Pacientes/{idpac}/{file}/down', 'PacientesController@download');

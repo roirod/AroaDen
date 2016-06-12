@@ -1,7 +1,5 @@
 @extends('layouts.main')
 
-@include('includes.other')
-
 @section('content')
 
 @include('includes.pacnav')
@@ -53,8 +51,8 @@
     	<table class="table">
 		     <tr class="fonsi16 success">
 				  <td class="wid140">Tratamiento</td>
-				  <td class="wid95 textcent">Precio</td>
-				  <td class="wid95 textcent">Cantidad</td>
+				  <td class="wid95 textcent"> Cantidad </td>
+				  <td class="wid95 textcent"> Precio </td>
 				  <td class="wid50"></td>
 				  <td class="wid230"></td>
 		     </tr>
@@ -75,9 +73,9 @@
 
 									  <td class="wid140">{!!$presu->nomser!!}</td>
 
-									  <td class="wid95 textcent">{!! numformat($presu->precio) !!} €</td>
+									  <td class="wid95 textcent">{!!$presu->canti!!} </td>
 
-									  <td class="wid95 textcent">{!!$presu->canti!!} €</td>
+									  <td class="wid95 textcent">{!! numformat($presu->precio) !!} €</td>
 
 									  <td class="wid50">
 									    <div class="btn-group"> 

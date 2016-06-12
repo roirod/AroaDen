@@ -10,6 +10,11 @@ class pacientes extends Model
     protected $fillable = ['nompac','apepac','dni','tel1','tel2','tel3','sexo','notas','direc','pobla','fenac'];
     protected $primaryKey = 'idpac';
 
+    public function ficha()
+    {
+        return $this->hasOne('App\ficha', 'idpac', 'idpac');
+    }
+
     public function tratampacien()
     {
         return $this->hasMany('App\tratampacien', 'idpac', 'idpac');

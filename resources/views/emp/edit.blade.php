@@ -1,7 +1,5 @@
 @extends('layouts.main')
 
-@include('includes.other')
-
 @section('content')
 
 @include('includes.empnav')

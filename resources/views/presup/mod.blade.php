@@ -1,7 +1,5 @@
 @extends('layouts.presmod')
 
-@include('includes.other')
-
 @section('content')
 
 @include('includes.messages')
@@ -12,7 +10,10 @@
 		<div class="fonsi26">
   			{!! $empre->nom !!}
   		</div> 
+
   		<p class="fonsi16">
+  			NIF: {!! $empre->nif !!}
+  			<br> 
   			Telf.: {!! $empre->tel1 !!}
   			<br> 
   			{!! $empre->direc !!}
@@ -23,7 +24,6 @@
 			Presupuesto: {!! DatTime($cod) !!}
   		</p>
   		<br>
-
   	</div>
 </div>
 
@@ -54,12 +54,32 @@
 					<td class="wid95">&nbsp;</td>
 				</tr>
 
+				@foreach ($totiva as $totiv)
+
+					<tr>
+						<td class="wid230"></td>
+						<td class="wid95 textder">Total iva:</td>
+						<td class="wid95 textcent"> {!! numformat($totiv->tot) !!} € </td> 
+					</tr>
+
+				@endforeach				
+
+				@foreach ($siniva as $sini)
+
+					<tr>
+						<td class="wid230"></td>
+						<td class="wid95 textder">Total sin iva:</td>
+						<td class="wid95 textcent"> {!! numformat($sini->tot) !!} € </td> 
+					</tr>
+
+				@endforeach
+
 				@foreach ($sumtot as $sum)
 
 					<tr>
 						<td class="wid230"></td>
-						<td class="wid95 textder">TOTAL:</td>
-						<td class="wid95 textcent"> {!! numformat($sum->sumtot) !!} € </td> 
+						<td class="wid95 textder">Total:</td>
+						<td class="wid95 textcent"> {!! numformat($sum->tot) !!} € </td> 
 					</tr>
 
 				@endforeach

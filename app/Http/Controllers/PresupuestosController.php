@@ -210,10 +210,20 @@ class PresupuestosController extends Controller
                 ->orderBy('servicios.nomser' , 'ASC')
                 ->get();
 
+        $totiva = DB::table('presup')
+                ->selectRaw('SUM((canti*precio*iva)/100) AS tot')
+                ->where('cod', $cod)
+                ->get();
+
+        $siniva = DB::table('presup')
+                ->selectRaw('SUM(canti*precio)-SUM((canti*precio*iva)/100) AS tot')
+                ->where('cod', $cod)
+                ->get();                
+
         $sumtot = DB::table('presup')
-                    ->selectRaw('SUM(canti*precio) AS sumtot')
-                    ->where('cod', $cod)
-                    ->get();                
+                ->selectRaw('SUM(canti*precio) AS tot')
+                ->where('cod', $cod)
+                ->get();                
 
         $empre = DB::table('empre')->where('id','1')->first();
 
@@ -224,6 +234,8 @@ class PresupuestosController extends Controller
                 'cod' => $cod,
                 'presup' => $presup,
                 'presmod' => $presmod,
+                'totiva' => $totiva,
+                'siniva' => $siniva,
                 'sumtot' => $sumtot,
                 'empre' => $empre
             ]);  
@@ -234,6 +246,8 @@ class PresupuestosController extends Controller
                 'request' => $request,
                 'cod' => $cod,
                 'presup' => $presup,
+                'totiva' => $totiva,
+                'siniva' => $siniva,
                 'sumtot' => $sumtot,
                 'empre' => $empre
             ]);  

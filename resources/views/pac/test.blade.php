@@ -1,10 +1,6 @@
 @extends('layouts.main')
 
-@include('includes.other')
-
 @section('content')
-
-@include('includes.pacnav')
 
 @include('includes.messages')
 @include('includes.errors')

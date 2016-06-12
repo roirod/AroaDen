@@ -3,8 +3,8 @@
 @section('content')
 
 @include('includes.messages')
+@include('includes.errors')
 
-@include('includes.usermenu')
 
 @if( $username === 'admin' )
 

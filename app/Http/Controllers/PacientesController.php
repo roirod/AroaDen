@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\pacientes;
+use App\ficha;
 
 use Carbon\Carbon;
 use Storage;
@@ -177,7 +178,8 @@ class PacientesController extends Controller
 			$pobla = htmlentities (trim($pobla),ENT_QUOTES,"UTF-8");
 			$fenac = htmlentities (trim($request->input('fenac')),ENT_QUOTES,"UTF-8");
         	        	
-	        pacientes::create([
+
+            $insertGetId = pacientes::insertGetId([
 	          'nompac' => $nompac,
 	          'apepac' => $apepac,
 	          'dni' => $dni,
@@ -190,6 +192,10 @@ class PacientesController extends Controller
 	          'pobla' => $pobla,
 	          'fenac' => $fenac
 		    ]);
+
+            ficha::create([
+              'idpac' => $insertGetId
+            ]);
 	      
 	        $request->session()->flash('sucmess', 'Hecho!!!');	
         	        	
@@ -278,6 +284,61 @@ class PacientesController extends Controller
 			return redirect("Pacientes/$idpac");
 		}   
     }
+
+    public function ficha(Request $request,$idpac)
+    {   
+        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+
+        $ficha = ficha::find($idpac);
+
+        return view('pac.ficha', [
+            'request' => $request,
+            'idpac' => $idpac,
+            'ficha' => $ficha
+        ]);
+    } 
+
+    public function fiedit(Request $request,$idpac)
+    {   
+        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+
+        $ficha = ficha::find($idpac);
+
+        return view('pac.fiedit', [
+            'request' => $request,
+            'idpac' => $idpac,
+            'ficha' => $ficha
+        ]);
+    }
+
+    public function fisave(Request $request,$idpac)
+    {   
+        if ( null === $idpac ) {
+            return redirect('Pacientes');
+        }
+
+        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");     
+       
+        $ficha = ficha::find($idpac);
+                
+        $histo = ucfirst(strtolower( $request->input('histo') ) );
+        $enfer = ucfirst(strtolower( $request->input('enfer') ) );
+        $medic = ucfirst(strtolower( $request->input('medic') ) );
+        $aler = ucfirst(strtolower( $request->input('aler') ) );
+        $notas = ucfirst(strtolower( $request->input('notas') ) );
+        
+        $ficha->histo = htmlentities (trim($histo),ENT_QUOTES,"UTF-8");
+        $ficha->enfer = htmlentities (trim($enfer),ENT_QUOTES,"UTF-8");
+        $ficha->medic = htmlentities (trim($medic),ENT_QUOTES,"UTF-8");
+        $ficha->aler = htmlentities (trim($aler),ENT_QUOTES,"UTF-8");
+        $ficha->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+        
+        $ficha->save();
+
+        $request->session()->flash('sucmess', 'Hecho!!!');
+
+        return redirect("Pacientes/$idpac"); 
+    }  
 
     public function file(Request $request,$idpac)
     {

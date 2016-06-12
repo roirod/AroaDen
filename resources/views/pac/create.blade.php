@@ -1,15 +1,13 @@
 @extends('layouts.main')
 
-@include('includes.other')
-
 @section('content')
 
 @include('includes.messages')
 @include('includes.errors')
 
-<?php
- addtexto("Añadir Paciente");
-?>
+
+{!! addtexto("Añadir Paciente") !!}
+
 
 <div class="row">
 	<div class="col-sm-12">
