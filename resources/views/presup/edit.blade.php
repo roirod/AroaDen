@@ -107,20 +107,23 @@
 </div> </div> </div> </div>
 
 
-<div class="row pad20">
-	<div class="col-sm-9"> </div>
+<div class="col-sm-12">
 
-	<div class="col-sm-3 text-right">
+	<form role="form" class="form" role="form" action="{!!url("/Presup/presmod")!!}" method="POST">	
+	 	{!! csrf_field() !!}
 
-	 	<form role="form" class="form" role="form" action="{!!url("/Presup/presmod")!!}" method="POST">	
-	 		{!! csrf_field() !!}
+		<div class="form-group">    <label class="control-label text-left mar10">Texto:</label>
+		    <textarea class="form-control" name="texto" rows="4"></textarea> 		</div>
+</div>
 
-	 		<input type="hidden" name="cod" value="{!!$cod!!}">	
+<div class="col-sm-12 text-right">
 
-			<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
-			<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Crear</button>
-		</form>
-	</div>
+		<input type="hidden" name="cod" value="{!!$cod!!}">	
+
+		<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
+		<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Crear</button>
+	</form>
+	
 </div>
 
 

@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePacientesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('pacientes', function (Blueprint $table) {
@@ -26,6 +22,7 @@ class CreatePacientesTable extends Migration
             $table->date('fenac')->default('1950-01-01')->nullable();
             $table->text('notas')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->index('apepac');
             $table->index('nompac');
             $table->unique('dni'); 	

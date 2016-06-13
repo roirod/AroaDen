@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class pacientes extends Model
 {
+    use SoftDeletes;
+    
 	protected $table = 'pacientes';
+    protected $dates = ['deleted_at'];
     protected $fillable = ['nompac','apepac','dni','tel1','tel2','tel3','sexo','notas','direc','pobla','fenac'];
     protected $primaryKey = 'idpac';
 

@@ -34,32 +34,36 @@
 	  		<table class="table table-striped">
 			  	 <tr>
 					<td class="wid230">Tratamiento</td>
-					<td class="wid95 textcent">Cantidad</td>
-					<td class="wid95 textcent">Precio</td>			
+					<td class="wid70 textcent">IVA</td>
+					<td class="wid70 textcent">Cantidad</td>
+					<td class="wid70 textcent">Precio</td>				
 				 </tr>
 
 				@foreach ($presup as $pres)
 						
 					<tr> 
 						<td class="wid230"> {!! $pres->nomser !!} </td>
-						<td class="wid95 textcent"> {!! $pres->canti !!} </td>
-						<td class="wid95 textcent"> {!! numformat($pres->precio) !!} € </td>
+						<td class="wid70 textcent"> {!! $pres->iva !!} % </td>
+						<td class="wid70 textcent"> {!! $pres->canti !!} </td>
+						<td class="wid70 textcent"> {!! numformat($pres->precio) !!} € </td>
 					</tr>
 								
 				@endforeach
 
 				<tr>
 					<td class="wid230">&nbsp;</td>
-					<td class="wid95">&nbsp;</td>
-					<td class="wid95">&nbsp;</td>
+					<td class="wid70">&nbsp;</td>
+					<td class="wid70">&nbsp;</td>
+					<td class="wid70">&nbsp;</td>
 				</tr>
 				
 				@foreach ($totiva as $totiv)
 
 					<tr>
 						<td class="wid230"></td>
-						<td class="wid95 textder">Total iva:</td>
-						<td class="wid95 textcent"> {!! numformat($totiv->tot) !!} € </td> 
+						<td class="wid70">&nbsp;</td>
+						<td class="wid70 textder">Total iva:</td>
+						<td class="wid70 textcent"> {!! numformat($totiv->tot) !!} € </td> 
 					</tr>
 
 				@endforeach				
@@ -68,8 +72,9 @@
 
 					<tr>
 						<td class="wid230"></td>
-						<td class="wid95 textder">Total sin iva:</td>
-						<td class="wid95 textcent"> {!! numformat($sini->tot) !!} € </td> 
+						<td class="wid70">&nbsp;</td>
+						<td class="wid70 textder">Total sin iva:</td>
+						<td class="wid70 textcent"> {!! numformat($sini->tot) !!} € </td> 
 					</tr>
 
 				@endforeach
@@ -78,8 +83,9 @@
 
 					<tr>
 						<td class="wid230"></td>
-						<td class="wid95 textder">Total:</td>
-						<td class="wid95 textcent"> {!! numformat($sum->tot) !!} € </td> 
+						<td class="wid70">&nbsp;</td>
+						<td class="wid70 textder">Total:</td>
+						<td class="wid70 textcent"> {!! numformat($sum->tot) !!} € </td> 
 					</tr>
 
 				@endforeach
@@ -89,6 +95,10 @@
 		</div> 
 
    <br><br>
+
+   <p class="fonsi18">
+   	{!! nl2br(e($texto)) !!}
+   </p>
 
    <p class="lead">
    	{!! nl2br(e($empre->presutex)) !!}

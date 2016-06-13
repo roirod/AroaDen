@@ -21,6 +21,7 @@ class CreatePersonalTable extends Migration
             $table->text('notas')->nullable();
             $table->date('fenac')->default('1950-01-01')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->index('ape');
             $table->index('nom');
             $table->unique('dni');

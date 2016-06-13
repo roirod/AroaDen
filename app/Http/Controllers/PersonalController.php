@@ -22,7 +22,8 @@ class PersonalController extends Controller
     {   
         $numpag = 30;
 
-        $personal = DB::table('personal')->orderBy('ape', 'ASC')->orderBy('nom', 'ASC')->paginate($numpag);
+        $personal = DB::table('personal')->whereNull('deleted_at')
+                        ->orderBy('ape', 'ASC')->orderBy('nom', 'ASC')->paginate($numpag);
               
         return view('per.index', [
           'personal' => $personal,
@@ -36,7 +37,8 @@ class PersonalController extends Controller
     
         if ( isset($busca) ) {
           $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-          $personal = DB::table('personal')->where('ape','LIKE','%'.$busca.'%')->orderBy('ape','ASC')->orderBy('nom','ASC')->get();
+          $personal = DB::table('personal')->where('ape','LIKE','%'.$busca.'%')->whereNull('deleted_at')
+                            ->orderBy('ape','ASC')->orderBy('nom','ASC')->get();
         } 
         
         return view('per.ver', [
@@ -325,13 +327,7 @@ class PersonalController extends Controller
 
         $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");    
         
-        $personal = personal::find($idper);
-      
-        $personal->delete();
-
-        $perdir = "/perdir/$idper";
-
-        Storage::deleteDirectory($perdir);
+        personal::destroy($idper);     
 
         $request->session()->flash('sucmess', 'Hecho!!!');
         

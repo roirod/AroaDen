@@ -197,7 +197,9 @@ class PresupuestosController extends Controller
     {
         $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8"); 
 
-        $presmod = $request->input('presmod');     
+        $presmod = $request->input('presmod');
+
+        $texto = htmlentities (trim( $request->input('texto')),ENT_QUOTES,"UTF-8");
 
         if ( null == $cod ) {
             return redirect('Pacientes');
@@ -232,6 +234,7 @@ class PresupuestosController extends Controller
             return view('presup.imp', [
                 'request' => $request,
                 'cod' => $cod,
+                'texto' => $texto,
                 'presup' => $presup,
                 'presmod' => $presmod,
                 'totiva' => $totiva,
@@ -245,6 +248,7 @@ class PresupuestosController extends Controller
             return view('presup.mod', [
                 'request' => $request,
                 'cod' => $cod,
+                'texto' => $texto,
                 'presup' => $presup,
                 'totiva' => $totiva,
                 'siniva' => $siniva,

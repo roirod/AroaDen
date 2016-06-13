@@ -19,6 +19,28 @@
 </div>
 
 
+<div class="row pad10">
+  <form role="form" action="{!!url('/Pacientes/upload')!!}" method="post" enctype="multipart/form-data">
+      {!! csrf_field() !!}
+
+       <input type="hidden" name="idpac" value="{!!$idpac!!}">
+  
+      <div class="input-group">
+        <span class="input-group-btn pad4"> 
+          <p>&nbsp;&nbsp; Archivos: &nbsp;&nbsp;</p> 
+        </span> 
+        <span class="input-group-btn"> 
+          <input type="file" class="btn btn-default" name="files[]" multiple />
+        </span> 
+        &nbsp;&nbsp;&nbsp;
+        <span class="pad10"> 
+          <button type="submit" class="btn btn-info">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
+        </span>
+      </div>
+  </form>
+</div>
+
+
 <div class="row visfile mar10 pad20">
   <div class="col-lg-12">
   

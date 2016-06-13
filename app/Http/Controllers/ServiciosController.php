@@ -20,7 +20,7 @@ class ServiciosController extends Controller
 
     public function index(Request $request)
     {			
-		$servicios = DB::table('servicios')->orderBy('nomser', 'ASC')->get();				
+		$servicios = DB::table('servicios')->whereNull('deleted_at')->orderBy('nomser', 'ASC')->get();				
 
         return view('serv.index', [
             'servicios' => $servicios,
@@ -36,6 +36,7 @@ class ServiciosController extends Controller
             $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
             $servicios = DB::table('servicios')
                         ->where('nomser','LIKE','%'.$busca.'%')
+                        ->whereNull('deleted_at')
                         ->orderBy('nomser','ASC')
                         ->get();
         } 
@@ -99,7 +100,7 @@ class ServiciosController extends Controller
 		      
 		    $request->session()->flash('sucmess', 'Hecho!!!');	
 	        	        	
-	        return redirect('Servicios');
+	        return redirect('Servicios/create');
         }     
     }
  
@@ -191,10 +192,8 @@ class ServiciosController extends Controller
         }   
         
         $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
-        
-        $servicios = servicios::find($idser);
-      
-        $servicios->delete();
+
+        servicios::destroy($idser); 
 
         $request->session()->flash('sucmess', 'Hecho!!!');
         

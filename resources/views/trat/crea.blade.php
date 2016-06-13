@@ -29,7 +29,7 @@
 		   <select name="idser" class="form-control" required>
 		   
 			     @foreach($servicios as $servici)
-					<option value="{{$servici->idser}}">{{$servici->nomser}} | precio: {{$servici->precio}}</option>
+					<option value="{{$servici->idser}}">{{$servici->nomser}} | precio: {{$servici->precio}} €</option>
 			 	 @endforeach	
 		   
 		   </select>
@@ -47,6 +47,6 @@
 
 @section('js')
     @parent  
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ URL::asset('assets/js/guarda.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
 @endsection

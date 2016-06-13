@@ -28,6 +28,7 @@ class PacientesController extends Controller
     	$numpag = 100;
 
     	$pacientes = DB::table('pacientes')
+        ->whereNull('deleted_at')
                     ->orderBy('apepac', 'ASC')
                     ->orderBy('nompac', 'ASC')
                     ->paginate($numpag);
@@ -46,6 +47,7 @@ class PacientesController extends Controller
 		  $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8"); 		  
   		  $pacientes = DB::table('pacientes')
                     ->where('apepac','LIKE','%'.$busca.'%')
+                    ->whereNull('deleted_at')
                     ->orderBy('apepac','ASC')
                     ->orderBy('nompac','ASC')
                     ->get();
@@ -337,7 +339,7 @@ class PacientesController extends Controller
 
         $request->session()->flash('sucmess', 'Hecho!!!');
 
-        return redirect("Pacientes/$idpac"); 
+        return redirect("Pacientes/$idpac/ficha"); 
     }  
 
     public function file(Request $request,$idpac)
@@ -401,7 +403,7 @@ class PacientesController extends Controller
 
             $ficount = count($files);
 
-            $uploadcount = 0;
+            $upcount = 0;
 
             foreach ($files as $file) {   		     		  
        		  	$filename = $file->getClientOriginalName();
@@ -418,7 +420,7 @@ class PacientesController extends Controller
                 }
             }
     	     
-    	    if($uploadcount == $ficount){
+    	    if($upcount == $ficount){
     	      return redirect("Pacientes/$idpac/file");
     	    } else {
     	      $request->session()->flash('errmess', 'error!!!');
@@ -601,14 +603,8 @@ class PacientesController extends Controller
         
         $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
         
-        $pacientes = pacientes::find($idpac);
+        pacientes::destroy($idpac);
       
-        $pacientes->delete();
-
-        $pacdir = "/pacdir/$idpac";
-
-        Storage::deleteDirectory($pacdir);
-
         $request->session()->flash('sucmess', 'Hecho!!!');
         
         return redirect('Pacientes');
