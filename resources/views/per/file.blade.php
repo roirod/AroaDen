@@ -9,13 +9,23 @@
 
 
 <div class="row pad10">
-  <form class="dropzone" id="dropzone" action="{!!url('/Personal/upload')!!}" method="post" enctype="multipart/form-data">
+  <form role="form" action="{!!url('/Personal/upload')!!}" method="post" enctype="multipart/form-data">
       {!! csrf_field() !!}
 
       <input type="hidden" name="idper" value="{!!$idper!!}">
   
-      <input type="hidden" type="file" name="files" />
-
+      <div class="input-group">
+        <span class="input-group-btn pad4"> 
+          <p>&nbsp;&nbsp; Archivos: &nbsp;&nbsp;</p> 
+        </span> 
+        <span class="input-group-btn"> 
+          <input type="file" class="btn btn-default" name="files[]" multiple />
+        </span> 
+        &nbsp;&nbsp;&nbsp;
+        <span class="pad10"> 
+          <button type="submit" class="btn btn-info">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
+        </span>
+      </div>
   </form>
 </div>
 
@@ -45,8 +55,7 @@
                         </a>
                     </li>
 
-                    <br>
-                    <hr>
+                    <br>  <hr>
                   	      
                     <li>
                         <form action="{{url('/Personal/filerem')}}" method="post"> 
@@ -69,13 +78,4 @@
   </div>
 </div>
 	 
-@endsection
-
-@section('js')
-    @parent
-
-      <link href="{!! asset('assets/css/dropzone.css') !!}" rel="stylesheet" type="text/css" >
-
-      <script type="text/javascript" src="{!! asset('assets/js/dropzone.js') !!}"></script>
-
 @endsection

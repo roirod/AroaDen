@@ -407,11 +407,20 @@ class PacientesController extends Controller
 
             foreach ($files as $file) {   		     		  
        		  	$filename = $file->getClientOriginalName();
+                $size = $file->getClientSize();
 
+                $max = 1024 * 1024 * 11;
+ 
                 $filedisk = "/pacdir/$idpac/$filename";
 
+                if ( $size > $max ) {
+                    $mess = "El archivo: - $filename - es superior a 11MB";
+                    $request->session()->flash('errmess', $mess);
+                    return redirect("Pacientes/$idpac/file");
+                }                
+
                 if ( Storage::exists($filedisk) ) {
-                    $mess = "El archivo: $filedisk -- existe ya en su carpeta";
+                    $mess = "El archivo: $filename -- existe ya en su carpeta";
                     $request->session()->flash('errmess', $mess);
                     return redirect("Pacientes/$idpac/file");
                 } else {

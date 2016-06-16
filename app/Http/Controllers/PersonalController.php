@@ -258,15 +258,25 @@ class PersonalController extends Controller
         $files = $request->file('files');
           
         $ficount = count($files);
-        $uploadcount = 0;
+        $upcount = 0;
           
         foreach($files as $file) {
             $filename = $file->getClientOriginalName();
+            $size = $file->getClientSize();
+
+            $max = 1024 * 1024 * 11;
+
+            if ( $size > $max ) {
+                $mess = "El archivo: - $filename - es superior a 11MB";
+                $request->session()->flash('errmess', $mess);
+                return redirect("Personal/$idper/file");
+            }  
+
             $file->move($perdir, $filename);
-            $uploadcount ++;  
+            $upcount ++;  
         }
         
-        if($uploadcount == $ficount){
+        if($upcount == $ficount){
             return redirect("Personal/$idper/file");
         } else {
             $request->session()->flash('error', 'error!!!');

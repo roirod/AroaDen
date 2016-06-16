@@ -30,7 +30,7 @@
 		<input type="text" class="form-control" name="direc" value="{!!$pacientes->direc!!}" maxlength="111">  	</div>
 				
 		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">DNI:</label>
-		<input type="text" class="form-control" name="dni" value="{!!$pacientes->dni!!}" maxlength="9" required>  </div>
+		<input type="text" class="form-control" name="dni" value="{!!$pacientes->dni!!}" pattern="[A-Z0-9]{9}" maxlength="9" required>  </div>
 			
 		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">Sexo:</label>
 		 <select name="sexo" class="form-control" required>    

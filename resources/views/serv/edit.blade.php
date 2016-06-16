@@ -31,11 +31,11 @@
 			<label class="control-label text-left mar10">IVA:</label>
 			<select name="iva" class="form-control" required>
 
-			 	<option value="{{$servicio->iva}}" selected> {{$servicio->iva}} % </option>
+			 	<option value="{{$servicio->iva}}" selected> {{$servicio->iva}}% </option>
 			 
 				@foreach ($ivatp as $clave => $valor) 
 					@continue($valor == $servicio->iva)
-					 <option value="{{$valor}}">{{$clave}} % </option>
+					 <option value="{{$valor}}">{{$clave}} </option>
 				@endforeach
 			 
 			</select>

@@ -13,7 +13,7 @@
   	 	<span class="input-group-btn pad4"> Odontograma: &nbsp; </span>
   		<div class="btn-toolbar pad4" role="toolbar">
   			<div class="btn-group">
-  				<a href="url("/Pacientes/$idpac/downodog")!!}" class="btn btn-sm btn-primary" role="button"> 
+  				<a href="{!! url("/Pacientes/$idpac/downodog") !!}" class="btn btn-sm btn-primary" role="button"> 
          		<i class="fa fa-download" aria-hidden="true"></i> Descargar
             </a>
          </div>

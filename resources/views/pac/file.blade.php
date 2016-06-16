@@ -7,17 +7,6 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<div class="row pad10">
-  <form class="dropzone" id="dropzone" action="{!!url('/Pacientes/upload')!!}" method="post" enctype="multipart/form-data">
-      {!! csrf_field() !!}
-
-      <input type="hidden" name="idpac" value="{!!$idpac!!}">
-
-      <input type="hidden" type="file" name="files" multiple />
-        
-  </form>
-</div>
-
 
 <div class="row pad10">
   <form role="form" action="{!!url('/Pacientes/upload')!!}" method="post" enctype="multipart/form-data">
@@ -91,13 +80,4 @@
   </div>
 </div>
 	 
-@endsection
-
-@section('js')
-    @parent
-
-      <link href="{!! asset('assets/css/dropzone.css') !!}" rel="stylesheet" type="text/css" >
-
-      <script type="text/javascript" src="{!! asset('assets/js/dropzone.js') !!}"></script>
-
 @endsection
