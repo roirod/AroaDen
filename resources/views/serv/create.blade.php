@@ -15,7 +15,7 @@
 		{!! csrf_field() !!}
 		 
 		 <div class="form-group col-sm-5">   <label class="control-label text-left mar10">Nombre:</label>
-		  	<input type="text" class="form-control" name="nomser" maxlength="111" required >
+		  	<input type="text" class="form-control" name="nomser" maxlength="111" autofocus required >
 		 </div>
 				
 		 <div class="form-group col-sm-2">  <label class="control-label text-left mar10">Precio:</label>

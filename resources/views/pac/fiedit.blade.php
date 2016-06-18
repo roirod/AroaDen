@@ -19,7 +19,7 @@
 
 
 		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Historial Médico:</label>
-		<textarea class="form-control" name="histo" rows="4"> {!! $ficha->histo !!} </textarea> 	</div> 	
+		<textarea class="form-control" name="histo" autofocus rows="4"> {!! $ficha->histo !!} </textarea> 	</div> 	
 
 		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Enfermedades:</label>
 		<textarea class="form-control" name="enfer" rows="4"> {!! $ficha->enfer !!} </textarea> 	</div> 

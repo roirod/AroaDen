@@ -21,7 +21,7 @@
 		<input type="hidden" name="idpac" value="{{$idpac}}">
 
 		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Hora:</label> 
-		<input type="time" step="300" class="form-control" name="horacit" value="{{$cita->horacit}}" required>  </div>
+		<input type="time" step="300" class="form-control" name="horacit" value="{{$cita->horacit}}" autofocus required>  </div>
 				
 		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Día:</label>		 	
 		<input type="date" class="form-control" name="diacit" value="{{$cita->diacit}}" required>  </div>

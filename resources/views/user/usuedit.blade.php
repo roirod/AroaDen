@@ -35,7 +35,7 @@
 	 		<div class="input-group">
 	 			<span class="input-group-btn pad4"> <p> &nbsp; Contraseña nueva:</p> </span>
 	 			<div class="col-sm-3">
-	 				<input type="text" name="password" class="form-control" placeholder="Contraseña" required> 
+	 				<input type="text" name="password" class="form-control" placeholder="Contraseña" autofocus required> 
 	 			</div> 
 	  		</div>
 

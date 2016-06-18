@@ -37,7 +37,7 @@
 
          <div class="form-group col-sm-2">
             <label class="control-label text-left mar10">Pagado:</label>            
-            <input type="text" name="pagado" value="{{$tratampa->pagado}}" pattern="[0-9]{1,10}" class="form-control" required> 
+            <input type="text" name="pagado" value="{{$tratampa->pagado}}" pattern="[0-9]{1,10}" class="form-control" autofocus required> 
          </div>
    
          <div class="form-group col-sm-4">   <label class="control-label text-left mar10">Fecha:</label>            

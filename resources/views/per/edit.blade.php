@@ -20,12 +20,12 @@
   	  <input type="hidden" name="_method" value="PUT">
 
 		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Apellidos:</label>
-		<input type="text" class="form-control" name="ape" value="{{$personal->ape}}" maxlength="77" required > 	</div>
+		<input type="text" class="form-control" name="ape" value="{{$personal->ape}}" maxlength="77" autofocus required > 	</div>
 				
 		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Nombre:</label>
 		<input type="text" class="form-control" name="nom" value="{{$personal->nom}}" maxlength="44" required >  </div>
 
-		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">Cargo:</label>
+		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Cargo:</label>
 		<input type="text" class="form-control" name="cargo" value="{{$personal->cargo}}" maxlength="44" required >  </div>
 				
 		<div class="form-group col-sm-3"> <label class="control-label text-left mar10">Poblaci&#xF3;n:</label>

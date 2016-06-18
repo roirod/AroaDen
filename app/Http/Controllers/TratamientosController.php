@@ -84,8 +84,7 @@ class TratamientosController extends Controller
             'fecha' => 'required|date',
             'iva' => 'max:12',
             'per1' => '',
-            'per2' => '',
-            'notas' => ''
+            'per2' => ''
         ]);
             
         if ($validator->fails()) {
@@ -103,7 +102,6 @@ class TratamientosController extends Controller
             $iva = htmlentities (trim($request->input('iva')),ENT_QUOTES,"UTF-8");
             $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
             $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
-            $notas = htmlentities (trim($request->input('notas')),ENT_QUOTES,"UTF-8");
 
             tratampacien::create([
                 'idpac' => $idpac,
@@ -114,8 +112,7 @@ class TratamientosController extends Controller
                 'fecha' => $fecha,
                 'iva' => $iva,
                 'per1' => $per1,
-                'per2' => $per2,
-                'notas' => $notas
+                'per2' => $per2
             ]);
               
             $request->session()->flash('sucmess', 'Hecho!!!');  
@@ -174,8 +171,7 @@ class TratamientosController extends Controller
             'pagado' => 'required',
             'fecha' => 'required|date',
             'per1' => '',
-            'per2' => '',
-            'notas' => ''
+            'per2' => ''
         ]);
             
         if ($validator->fails()) {
@@ -188,7 +184,6 @@ class TratamientosController extends Controller
             $fecha = htmlentities (trim($request->input('fecha')),ENT_QUOTES,"UTF-8");
             $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
             $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
-            $notas = htmlentities (trim($request->input('notas')),ENT_QUOTES,"UTF-8");
     
             $tratampacien = tratampacien::find($idtra);
             
@@ -196,7 +191,6 @@ class TratamientosController extends Controller
             $tratampacien->fecha = htmlentities (trim($fecha),ENT_QUOTES,"UTF-8");            
             $tratampacien->per1 = htmlentities (trim($per1),ENT_QUOTES,"UTF-8");
             $tratampacien->per2 = htmlentities (trim($per2),ENT_QUOTES,"UTF-8");
-            $tratampacien->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
                                                 
             $tratampacien->save();
               

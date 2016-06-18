@@ -22,7 +22,7 @@
 	<input type="hidden" name="idpac" value="{{$idpac}}">
 
 	<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Hora:</label> 
-	<input type="time" name="horacit" step="300" class="form-control" required>  </div>
+	<input type="time" name="horacit" step="300" class="form-control" autofocus required>  </div>
 			
 	<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Dia:</label>		 	
 	<input type="date" name="diacit" class="form-control" required>  </div>

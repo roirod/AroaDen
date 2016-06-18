@@ -17,13 +17,13 @@
 		{!! csrf_field() !!}
 		<input type="hidden" name="_method" value="put">
 		
-		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Nombre:</label>
-		<input type="text" class="form-control" name="nom" value="{!!$empre->nom!!}" required >  </div>
+		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Nombre:</label>
+		<input type="text" class="form-control" name="nom" value="{!!$empre->nom!!}" autofocus required >  </div>
 				
-		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Poblaci&#xF3;n:</label>
+		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Poblaci&#xF3;n:</label>
 		<input type="text" class="form-control" name="pobla" value="{!!$empre->pobla!!}" >  </div>  
 				  
-		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Direcci&#xF3;n:</label>
+		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Direcci&#xF3;n:</label>
 		<input type="text" class="form-control" name="direc" value="{!!$empre->direc!!}" >  	</div>
 				
 		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">NIF:</label>
@@ -38,10 +38,10 @@
 		<div class="form-group col-sm-2">    <label class="control-label text-left mar10">Tel&#xE9;fono:</label>
 		<input type="text" class="form-control" name="tel3" value="{!!$empre->tel3!!}" > 	</div>
 						
-		<div class="form-group col-sm-11">      <label class="control-label text-left mar10">Notas:</label>
+		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Notas:</label>
 		<textarea class="form-control" name="notas" rows="4"> {!!$empre->notas!!} </textarea> 	</div> 	<br>
 
-		<div class="form-group col-sm-11">      <label class="control-label text-left mar10">Texto de presupuestos: </label>
+		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Texto de presupuestos: </label>
 		<textarea class="form-control" name="presutex" rows="4"> {!!$empre->presutex!!} </textarea> 	</div> 	<br>
 		
 	@include('includes.subuto')
