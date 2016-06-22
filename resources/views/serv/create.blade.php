@@ -8,6 +8,7 @@
 
 {{ addtexto("Añadir servicio") }}
 
+
 <div class="row">
   <div class="col-sm-12">
   
@@ -15,11 +16,11 @@
 		{!! csrf_field() !!}
 		 
 		 <div class="form-group col-sm-5">   <label class="control-label text-left mar10">Nombre:</label>
-		  	<input type="text" class="form-control" name="nomser" maxlength="111" autofocus required >
+		  	<input type="text" class="form-control" name="nomser" maxlength="111" value="{{ old('nomser') }}" autofocus required >
 		 </div>
 				
 		 <div class="form-group col-sm-2">  <label class="control-label text-left mar10">Precio:</label>
-		  	<input type="number" min="0" step="1" class="form-control" name="precio" maxlength="11" required >
+		  	<input type="number" min="0" step="1" class="form-control" name="precio" maxlength="11" value="{{ old('precio') }}" required >
 		 </div> 
 				
 		<div class="form-group col-sm-2">
@@ -33,7 +34,7 @@
 			</select>
 		</div>	   
 		   	
-@include('includes.subuto')
+		@include('includes.subuto')
   
  	</form>
 

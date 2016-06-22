@@ -22,8 +22,11 @@ class PersonalController extends Controller
     {   
         $numpag = 30;
 
-        $personal = DB::table('personal')->whereNull('deleted_at')
-                        ->orderBy('ape', 'ASC')->orderBy('nom', 'ASC')->paginate($numpag);
+        $personal = DB::table('personal')
+                        ->whereNull('deleted_at')
+                        ->orderBy('ape', 'ASC')
+                        ->orderBy('nom', 'ASC')
+                        ->paginate($numpag);
               
         return view('per.index', [
           'personal' => $personal,
@@ -34,12 +37,29 @@ class PersonalController extends Controller
     public function ver(Request $request)
     {   
         $busca = $request->input('busca');
+        $busen = $request->input('busen');
     
         if ( isset($busca) ) {
-          $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-          $personal = DB::table('personal')->where('ape','LIKE','%'.$busca.'%')->whereNull('deleted_at')
-                            ->orderBy('ape','ASC')->orderBy('nom','ASC')->get();
-        } 
+
+            if ( $busen == 'ape' ) {
+              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
+              $personal = DB::table('personal')
+                            ->whereNull('deleted_at')
+                            ->where('ape','LIKE','%'.$busca.'%')
+                            ->orderBy('ape','ASC')
+                            ->orderBy('nom','ASC')
+                            ->get();
+
+            } elseif ($busen == 'dni') {
+                
+              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
+              $personal = DB::table('personal')
+                            ->whereNull('deleted_at')
+                            ->where('dni','LIKE','%'.$busca.'%')
+                            ->orderBy('dni','ASC')
+                            ->get();
+            }
+        }
         
         return view('per.ver', [
           'request' => $request,
@@ -64,6 +84,7 @@ class PersonalController extends Controller
                 ->join('pacientes', 'tratampacien.idpac','=','pacientes.idpac')
                 ->join('servicios', 'tratampacien.idser','=','servicios.idser')
                 ->select('tratampacien.*','pacientes.apepac','pacientes.nompac','servicios.nomser')
+                ->whereNull('pacientes.deleted_at')
                 ->where('per1', $idper)
                 ->orWhere('per2', $idper)
                 ->orderBy('fecha' , 'DESC')
@@ -84,13 +105,27 @@ class PersonalController extends Controller
 
     public function store(Request $request)
     {
+        $personal = DB::table('personal')
+                        ->orderBy('dni','ASC')
+                        ->get();
+          
+        $dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
+          
+        foreach ($personal as $person) {
+           if ($person->dni == $dni) {
+                $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->ape.', '.$person->nom;
+                $request->session()->flash('errmess', $messa);
+                return redirect('/Personal/create')->withInput();
+           }
+        } 
+
         $validator = Validator::make($request->all(),[
-           'nom' => 'required|max:44',
-           'ape' => 'required|max:77',
+           'nom' => 'required|max:111',
+           'ape' => 'required|max:111',
            'dni' => 'unique:personal|max:12',
            'tel1' => 'max:11',
            'tel2' => 'max:11',
-           'cargo' => 'max:44',
+           'cargo' => 'max:66',
            'direc' => 'max:111',
            'pobla' => 'max:111',
            'fenac' => 'date',
@@ -160,6 +195,25 @@ class PersonalController extends Controller
     {
         if ( null === $idper ) {
             return redirect('Personal');
+        }
+
+        $idper = htmlentities(trim($idper),ENT_QUOTES,"UTF-8");
+        $dni = htmlentities(trim($request->input('dni')),ENT_QUOTES,"UTF-8");
+
+        $personal = DB::table('personal')
+                        ->orderBy('dni','ASC')
+                        ->get();
+        
+        $perso = personal::find($idper);
+              
+        if ($dni != $perso->dni) {
+            foreach ($personal as $person) {
+               if ($person->dni == $dni) {
+                    $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->ape.', '.$person->nom;
+                    $request->session()->flash('errmess', $messa);
+                    return redirect("Personal/$idper/edit")->withInput();
+               }
+            }
         }
 
         $validator = Validator::make($request->all(),[
@@ -259,22 +313,31 @@ class PersonalController extends Controller
           
         $ficount = count($files);
         $upcount = 0;
-          
-        foreach($files as $file) {
+
+        foreach ($files as $file) {                       
             $filename = $file->getClientOriginalName();
             $size = $file->getClientSize();
 
-            $max = 1024 * 1024 * 11;
+            $max = 1024 * 1024 * 22;
+
+            $filedisk = storage_path("app/perdir/$idper/$filename");
 
             if ( $size > $max ) {
-                $mess = "El archivo: - $filename - es superior a 11MB";
+                $mess = "El archivo: - $filename - es superior a 22 MB";
                 $request->session()->flash('errmess', $mess);
                 return redirect("Personal/$idper/file");
-            }  
+            }                
 
-            $file->move($perdir, $filename);
-            $upcount ++;  
-        }
+            if ( file_exists($filedisk) ) {
+                $mess = "El archivo: $filename -- existe ya en su carpeta";
+                $request->session()->flash('errmess', $mess);
+                return redirect("Personal/$idper/file");
+
+            } else {
+                $file->move($perdir, $filename);
+                $upcount ++;
+            }
+        }  
         
         if($upcount == $ficount){
             return redirect("Personal/$idper/file");

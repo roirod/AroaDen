@@ -19,23 +19,37 @@
 		</div> 
 	</div>
 </div>
-	
+
+
 <div class="row">
-	<form role="form" class="form" action="{!!url('/Pacientes/ver')!!}" method="post">
-		{!! csrf_field() !!}	 
-		
-		<div class="input-group">
-			<span class="input-group-btn pad4"> <p> &nbsp; Buscar apellido:</p> </span>
-			<div class="col-sm-4">
-				<input type="search" name="busca" class="form-control" placeholder="buscar..." required>
-			</div>
-			<div class="col-sm-1">
-				<button class="btn btn-default" type="submit"> 
-					<i class="fa fa-arrow-circle-right"></i>
-				</button>
-			</div>
-		</div>
-	</form>
+	 <form role="form" class="form" action="{!!url("/Pacientes/ver")!!}" method="post">
+
+		 	{!! csrf_field() !!}
+	
+			 <div class="input-group">
+
+				  <span class="input-group-btn pad4"> <p> &nbsp; Buscar en:</p> </span>
+
+				  <div class="col-sm-2">
+
+	      			<select name="busen" class="form-control" required>
+
+	      				<option value="apepac" selected> Apellido/s </option>
+	      				<option value="dni"> DNI </option>
+
+					</select>
+
+				  </div>
+
+				  <div class="col-sm-4">
+				   		<input type="search" name="busca" class="form-control" placeholder="buscar..." autofocus required>
+				  </div>				  
+
+				  <div class="col-sm-1">
+				   <button class="btn btn-default" type="submit"> <i class="fa fa-arrow-circle-right"></i></button>
+				  </div> 
+			 </div>
+	 </form>
 </div>
 
 	

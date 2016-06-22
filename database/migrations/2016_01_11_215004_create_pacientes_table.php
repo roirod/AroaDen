@@ -19,7 +19,7 @@ class CreatePacientesTable extends Migration
             $table->string('tel2', 18)->nullable();
             $table->string('tel3', 18)->nullable();
             $table->string('sexo', 9)->nullable();
-            $table->date('fenac')->default('1950-01-01')->nullable();
+            $table->date('fenac')->nullable();
             $table->text('notas')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -131,7 +131,7 @@
     <table class="table">
      <tr class="fonsi16 success">
 		  <td class="wid95">Hora</td>
-		  <td class="wid95">Dia</td>
+		  <td class="wid95">Día</td>
 		  <td class="wid50"></td>
 		  <td class="wid50"></td> 		  
 		  <td class="wid290">Notas</td>

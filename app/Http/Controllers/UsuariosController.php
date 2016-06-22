@@ -96,12 +96,10 @@ class UsuariosController extends Controller
     }
 
     public function show($id)
-    {
-    }
+    { }
 
     public function edit($id)
-    {
-    }
+    { }
 
     public function saveup(Request $request)
     {
@@ -131,7 +129,7 @@ class UsuariosController extends Controller
               
             $request->session()->flash('sucmess', 'Hecho!!!');
                         
-            return redirect('/Usuarios/usuedit');
+            return redirect('/Usuarios/create');
         }  
     }
      
@@ -152,7 +150,7 @@ class UsuariosController extends Controller
 
         $request->session()->flash('sucmess', 'Hecho!!!');
         
-        return redirect('Ajustes');
+        return redirect('/Usuarios/create');
     }
 
     public function destroy(Request $request,$uid)

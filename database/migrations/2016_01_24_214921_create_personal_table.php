@@ -11,7 +11,7 @@ class CreatePersonalTable extends Migration
         Schema::create('personal', function (Blueprint $table) {
             $table->increments('idper');
             $table->string('ape', 111);
-            $table->string('nom', 88);
+            $table->string('nom', 111);
             $table->string('cargo', 66)->nullable();
             $table->string('dni', 11);      
             $table->string('tel1', 11)->nullable();
@@ -19,7 +19,7 @@ class CreatePersonalTable extends Migration
             $table->string('direc', 111)->nullable();
             $table->string('pobla', 111)->nullable();
             $table->text('notas')->nullable();
-            $table->date('fenac')->default('1950-01-01')->nullable();
+            $table->date('fenac')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index('ape');

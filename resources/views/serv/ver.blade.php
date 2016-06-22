@@ -40,7 +40,7 @@
 
 <div class="row">
   <div class="col-sm-12 pad4 text-success fonsi16">
-	&nbsp;&nbsp; Texto buscado: {{$busca}}
+	&nbsp;&nbsp; Has buscado: {{$busca}}
  </div> </div>
 
 
@@ -69,21 +69,21 @@
 						  <td class="wid95 textcent">{{$servicio->iva}} %</td>
 
 						  <td class="wid50">
-						  	<a class="btn btn-sm btn-success" type="button" href="{{url("Servicios/$servicio->idser/edit")}}">
+						  	<a class="btn btn-xs btn-success" type="button" href="{{url("Servicios/$servicio->idser/edit")}}">
 						  		<i class="fa fa-edit"></i>
 						  	</a>
 						  </td>
 						  
 						  <td class="wid50"> 
 						    <div class="btn-group"> 
-						    	<button type="button" class="btn btn-sm btn-danger btn-md dropdown-toggle" data-toggle="dropdown">
+						    	<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
 						    	  <i class="fa fa-times"></i>
 						    	  <span class="caret"></span>
 						    	</button>
 						    	<ul class="dropdown-menu" role="menu">
 						  			<li>
 						  				<a role="button" href="{{url("Servicios/$servicio->idser/del")}}">
-						  					<i class="fa fa-times"></i> Borrar
+						  					<i class="fa fa-times"></i> Eliminar
 						  				</a>
 						  			</li>
 						  		</ul>  

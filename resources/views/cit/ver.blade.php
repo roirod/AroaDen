@@ -69,7 +69,7 @@
 					   <td class="wid50"></td>
 					   <td class="wid290">Paciente</td>
 					   <td class="wid110">Hora</td>
-					   <td class="wid110">Dia</td>
+					   <td class="wid110">Día</td>
 					   <td class="wid230">Notas</td>
 				 </tr>
 			 </table>

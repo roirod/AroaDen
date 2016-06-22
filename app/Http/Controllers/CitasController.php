@@ -56,6 +56,7 @@ class CitasController extends Controller
 		            ->join('pacientes','citas.idpac','=','pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->where('diacit', '=', $selfe1)
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -67,6 +68,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -78,6 +80,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -89,6 +92,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -100,6 +104,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -111,6 +116,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -122,6 +128,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -133,6 +140,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -144,6 +152,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -155,6 +164,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -163,6 +173,7 @@ class CitasController extends Controller
 				$citas = DB::table('citas')
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 
@@ -174,6 +185,7 @@ class CitasController extends Controller
 		            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
 		            ->select('citas.*','pacientes.apepac','pacientes.nompac')
 		            ->whereBetween('diacit', [$selfe1, $selfe2])
+		            ->whereNull('pacientes.deleted_at')
 		            ->orderBy('diacit' , 'DESC')
 		            ->orderBy('horacit' , 'ASC')
 		            ->get(); 							 	 			 	

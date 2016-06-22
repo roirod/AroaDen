@@ -62,12 +62,10 @@ class ServiciosController extends Controller
     public function store(Request $request)
     {          
         $nomser = ucfirst(strtolower( $request->input('nomser') ) );
-        $notas = ucfirst(strtolower( $request->input('notas') ) );
 
         $nomser = htmlentities (trim($nomser),ENT_QUOTES,"UTF-8");
         $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
-        $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");
-        $notas = htmlentities (trim( $notas),ENT_QUOTES,"UTF-8");        
+        $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");     
 
         $servicios = DB::table('servicios')
                         ->orderBy('nomser','ASC')
@@ -75,8 +73,8 @@ class ServiciosController extends Controller
           
         foreach ($servicios as $servi) {
            if ($servi->nomser == $nomser) {
-               $request->session()->flash('errmess', 'Nombre en uso, use cualquier otro.');
-               return redirect('Servicios/create');
+               $request->session()->flash('errmess', "Nombre: $nomser - ya en uso, use cualquier otro.");
+               return redirect('Servicios/create')->withInput();
            }
         } 
 
@@ -150,8 +148,7 @@ class ServiciosController extends Controller
             
         if ($validator->fails()) {
             return redirect("Servicios/$idser/edit")
-                         ->withErrors($validator)
-                         ->withInput();
+                         ->withErrors($validator);
         } else {        
             
             $servicios = servicios::find($idser);

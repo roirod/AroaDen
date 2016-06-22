@@ -41,17 +41,30 @@ class PacientesController extends Controller
   
     public function ver(Request $request)
     {  	
-    	$busca = $request->input('busca');
-   	
-	  	if ( isset($busca) ) {
-		  $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8"); 		  
-  		  $pacientes = DB::table('pacientes')
-                    ->where('apepac','LIKE','%'.$busca.'%')
-                    ->whereNull('deleted_at')
-                    ->orderBy('apepac','ASC')
-                    ->orderBy('nompac','ASC')
-                    ->get();
-  		} 
+        $busca = $request->input('busca');
+        $busen = $request->input('busen');
+    
+        if ( isset($busca) ) {
+
+            if ( $busen == 'apepac' ) {
+              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
+              $pacientes = DB::table('pacientes')
+                            ->whereNull('deleted_at')
+                            ->where('apepac','LIKE','%'.$busca.'%')
+                            ->orderBy('apepac','ASC')
+                            ->orderBy('nompac','ASC')
+                            ->get();
+
+            } elseif ($busen == 'dni') {
+                
+              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
+              $pacientes = DB::table('pacientes')
+                            ->whereNull('deleted_at')
+                            ->where('dni','LIKE','%'.$busca.'%')
+                            ->orderBy('dni','ASC')
+                            ->get();
+            }
+        } 
   		     
     	return view('pac.ver', [
     		'pacientes' => $pacientes,
@@ -137,14 +150,15 @@ class PacientesController extends Controller
           
         foreach ($pacientes as $pacien) {
            if ($pacien->dni == $dni) {
-               $request->session()->flash('errmess', 'DNI en uso, use cualquier otro.');
-               return redirect('Pacientes/create');
+                $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$pacien->apepac.', '.$pacien->nompac;
+                $request->session()->flash('errmess', $messa);
+                return redirect('Pacientes/create')->withInput();
            }
         }   
 
         $validator = Validator::make($request->all(),[
-    		'nompac' => 'required|max:44',
-            'apepac' => 'required|max:77',
+    		'nompac' => 'required|max:111',
+            'apepac' => 'required|max:111',
             'direc' => 'max:111',
             'pobla' => 'max:111',
             'dni' => 'unique:pacientes|max:12',
@@ -228,11 +242,30 @@ class PacientesController extends Controller
     		return redirect('Pacientes');
     	}
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$idpac = htmlentities(trim($idpac),ENT_QUOTES,"UTF-8");
+        $dni = htmlentities(trim($request->input('dni')),ENT_QUOTES,"UTF-8");
+
+        $pacientes = DB::table('pacientes')
+                        ->orderBy('dni','ASC')
+                        ->get();
+        
+        $pac = pacientes::find($idpac);
+              
+        $dnipac = $pac->dni;
+
+        if ($dni != $dnipac) {
+            foreach ($pacientes as $pacien) {
+               if ($pacien->dni == $dni) {
+                    $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$pacien->apepac.', '.$pacien->nompac;
+                    $request->session()->flash('errmess', $messa);
+                    return redirect("Pacientes/$idpac/edit")->withInput();
+               }
+            }
+        }
 
         $validator = Validator::make($request->all(),[
-    		'nompac' => 'required|max:44',
-            'apepac' => 'required|max:77',
+    		'nompac' => 'required|max:111',
+            'apepac' => 'required|max:111',
             'direc' => 'max:111',
             'pobla' => 'max:111',
             'dni' => 'max:12',
@@ -249,15 +282,6 @@ class PacientesController extends Controller
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {		
-
-			$fenac = $request->input('fenac');
-			
-			$regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';
-			
-			if ( preg_match($regex, $fenac) ) {  } else {
-		 	   $request->session()->flash('errmess', 'Fecha/s incorrecta');
-		 	   return redirect("Pacientes/$idpac/edit");
-		 	}
 			
 			$pacientes = pacientes::find($idpac);
 			  		
@@ -284,7 +308,7 @@ class PacientesController extends Controller
 			$request->session()->flash('sucmess', 'Hecho!!!');
 
 			return redirect("Pacientes/$idpac");
-		}   
+		}    
     }
 
     public function ficha(Request $request,$idpac)
@@ -402,32 +426,32 @@ class PacientesController extends Controller
         } else {
 
             $ficount = count($files);
-
             $upcount = 0;
 
-            foreach ($files as $file) {   		     		  
-       		  	$filename = $file->getClientOriginalName();
+            foreach ($files as $file) {                       
+                $filename = $file->getClientOriginalName();
                 $size = $file->getClientSize();
 
-                $max = 1024 * 1024 * 11;
+                $max = 1024 * 1024 * 22;
  
-                $filedisk = "/pacdir/$idpac/$filename";
+                $filedisk = storage_path("app/pacdir/$idpac/$filename");
 
                 if ( $size > $max ) {
-                    $mess = "El archivo: - $filename - es superior a 11MB";
+                    $mess = "El archivo: - $filename - es superior a 22 MB";
                     $request->session()->flash('errmess', $mess);
                     return redirect("Pacientes/$idpac/file");
                 }                
 
-                if ( Storage::exists($filedisk) ) {
+                if ( file_exists($filedisk) ) {
                     $mess = "El archivo: $filename -- existe ya en su carpeta";
                     $request->session()->flash('errmess', $mess);
                     return redirect("Pacientes/$idpac/file");
+
                 } else {
-        		  	$file->move($pacdir, $filename);
-        	        $upcount ++;
+                    $file->move($pacdir, $filename);
+                    $upcount ++;
                 }
-            }
+            }            
     	     
     	    if($upcount == $ficount){
     	      return redirect("Pacientes/$idpac/file");

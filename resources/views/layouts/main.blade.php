@@ -53,6 +53,10 @@
         <div class="col-sm-2 text-right">	
 
           <a class="btn btn-default btn-sm" role="button" href="{!!url("/Ajustes")!!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
+      
+          <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="Manuales">
+            <i class="fa fa-question" aria-hidden="true"></i>
+          </a>
 
           <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span> &nbsp; <i class="fa fa-close"></i>

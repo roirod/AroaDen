@@ -48,14 +48,20 @@
 	 <div class="col-sm-3 pad10">
 	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; {{$empre->tel3}}
 	 </div>
+
+   <br>
 	 <div class="col-sm-12 pad10">
-		<i class="fa fa-minus-square"></i> Notas: <br>
-	 	<div class="box200"> {!! nl2br(e($empre->notas)) !!} </div>
-   	 </div>
-     <div class="row mar10"> 
-		<div class="col-sm-12 pad10"> <hr> <br><br> 
-			<i class="fa fa-minus-square"></i> Texto de presupuestos: <br> 
-			<div class="box200">  {!! nl2br(e($empre->presutex)) !!} </div> 
+  		<i class="fa fa-minus-square"></i> Notas: <br>
+  	 	<div class="box200"> {!! nl2br(e($empre->notas)) !!} </div>
+
+      <hr> <br>
+   </div>
+
+
+    <div class="row"> 
+		  <div class="col-sm-12 pad20"> 
+			   <i class="fa fa-minus-square"></i> Texto de presupuestos: <br> 
+			   <div class="box200">  {!! nl2br(e($empre->presutex)) !!} </div> 
      	</div>
   	 </div>
 
