@@ -32,8 +32,15 @@ class TratamientosController extends Controller
             return redirect('Pacientes');
         }
         
-        $servicios = DB::table('servicios')->orderBy('nomser', 'ASC')->get();
-        $pacientes = pacientes::find($idpac);
+        $servicios = DB::table('servicios')
+                    ->whereNull('deleted_at')
+                    ->orderBy('nomser', 'ASC')
+                    ->get();
+
+        $pacientes = DB::table('pacientes')
+                    ->where('idpac', $idpac)
+                    ->whereNull('deleted_at')
+                    ->first();
 
         $apepac = $pacientes->apepac;
         $nompac = $pacientes->nompac;
@@ -54,8 +61,15 @@ class TratamientosController extends Controller
         $apepac = $request->input('apepac');
         $nompac = $request->input('nompac');     
 
-        $servicio = servicios::find($idser);
-        $personal = DB::table('personal')->orderBy('ape', 'ASC')->get();
+        $servicio = DB::table('servicios')
+                    ->where('idser', $idser)
+                    ->whereNull('deleted_at')
+                    ->first();
+        
+        $personal = DB::table('personal')
+                    ->whereNull('deleted_at')
+                    ->orderBy('ape', 'ASC')
+                    ->get();
         
         return view('trat.selcrea', [
             'request' => $request,
@@ -143,7 +157,7 @@ class TratamientosController extends Controller
             ->where('idtra', $idtra)
             ->first();
 
-        $personal = DB::table('personal')->get();
+        $personal = DB::table('personal')->whereNull('deleted_at')->get();
 
         return view('trat.edit', [
             'request' => $request,

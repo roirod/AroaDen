@@ -217,12 +217,12 @@ class PersonalController extends Controller
         }
 
         $validator = Validator::make($request->all(),[
-            'nom' => 'required|max:44',
-            'ape' => 'required|max:77',
+            'nom' => 'required|max:111',
+            'ape' => 'required|max:111',
             'dni' => 'required|max:12',
             'tel1' => 'max:11',
             'tel2' => 'max:11',
-            'cargo' => 'max:44',
+            'cargo' => 'max:66',
             'notas' => '',
             'direc' => 'max:111',
             'pobla' => 'max:111',

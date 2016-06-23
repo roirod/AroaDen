@@ -28,7 +28,7 @@ class PacientesController extends Controller
     	$numpag = 100;
 
     	$pacientes = DB::table('pacientes')
-        ->whereNull('deleted_at')
+                    ->whereNull('deleted_at')
                     ->orderBy('apepac', 'ASC')
                     ->orderBy('nompac', 'ASC')
                     ->paginate($numpag);

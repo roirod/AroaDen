@@ -7,9 +7,10 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<?php
- addtexto("Añadir Tratamientos al Paciente");
-?>
+
+
+{!! addtexto("Añadir Tratamientos al Paciente") !!}
+
 
 <div class="row">
  <div class="col-sm-12 mar10">

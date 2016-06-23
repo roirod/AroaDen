@@ -58,7 +58,6 @@ class ServiciosController extends Controller
         ]);	
     }
  
-
     public function store(Request $request)
     {          
         $nomser = ucfirst(strtolower( $request->input('nomser') ) );
@@ -140,10 +139,25 @@ class ServiciosController extends Controller
         $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
         $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");
 
+        $servicios = DB::table('servicios')
+                        ->orderBy('nomser','ASC')
+                        ->get();
+
+        $servi = servicios::find($idser);
+
+        if ($servi->nomser != $nomser) { 
+            foreach ($servicios as $servi) {
+               if ($servi->nomser == $nomser) {
+                   $request->session()->flash('errmess', "Nombre: $nomser - ya en uso, use cualquier otro.");
+                   return redirect("Servicios/$idser/edit");
+               }
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             'nomser' => 'required|max:111',
             'precio' => 'required',
-            'iva' => ''
+            'iva' => 'required'
         ]);
             
         if ($validator->fails()) {
