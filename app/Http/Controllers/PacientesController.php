@@ -85,7 +85,12 @@ class PacientesController extends Controller
 
         $fotoper = url("/app/pacdir/$idpac/.fotoper.jpg");
 
-	    $pacientes = DB::table('pacientes')->where('idpac', $idpac)->first();
+	    $pacientes = DB::table('pacientes')->where('idpac', $idpac)->whereNull('deleted_at')->first();
+
+        if (is_null($pacientes)) {
+            $request->session()->flash('errmess', 'Has borrado a este paciente.');    
+            return redirect('Pacientes');
+        }
 
         $citas = pacientes::find($idpac)
                     ->citas()

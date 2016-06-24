@@ -77,8 +77,15 @@ class PersonalController extends Controller
         $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
           
         $this->dircrea($idper);
-           
-        $personal = DB::table('personal')->where('idper', $idper)->first();
+
+        $personal = personal::where('idper', $idper)
+                    ->whereNull('deleted_at')
+                    ->first();
+
+        if (is_null($personal)) {
+            $request->session()->flash('errmess', 'Has borrado a este profesional.');    
+            return redirect('Personal');
+        }
                        
         $trabajos = DB::table('tratampacien')
                 ->join('pacientes', 'tratampacien.idpac','=','pacientes.idpac')

@@ -24,6 +24,7 @@ class PagosController extends Controller
                             FROM tratampacien tra
                             INNER JOIN pacientes pac
                             ON tra.idpac=pac.idpac 
+                            WHERE pac.deleted_at IS NULL 
                             GROUP BY tra.idpac 
                             HAVING tra.idpac=tra.idpac  
                             ORDER BY resto DESC
