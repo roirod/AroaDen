@@ -16,66 +16,73 @@
 <div class="jumbotron container bgwi pad20">
   <div class="row">
   
+
     <div class="col-sm-1 wid180">
-      <h3 class="pad10">
-        <i class="fa fa-child"></i> Aroa<small>Den</small>
-      </h3>
-      <nav class="navbar navbar-default" role="navigation">   
-        <ul class="nav nav-pills nav-stacked bgtra fonsi16"> 
-          <li><a href="{!!url("/Empresa")!!}"><i class="fa fa-home"></i> Empresa</a></li>  
-          <li><a href="{!!url("/Citas")!!}"><i class="fa fa-calendar"></i> Citas</a></li> 
-          <li><a href="{!!url("/Pacientes")!!}"><i class="fa fa-users"></i> Pacientes </a></li>
-          <li><a href="{!!url("/Personal")!!}"><i class="fa fa-user-md"></i> Personal</a></li> 
-          <li><a href="{!!url("/Servicios")!!}"><i class="fa fa-tasks"> </i> Servicios</a></li> 
-          <li><a href="{!!url("/Contable")!!}"><i class="fa fa-pie-chart"></i> Contable</a></li> 
-        </ul>
-      </nav>
+      <div class="affix">
+
+        <h3 class="pad10">
+          <i class="fa fa-child"></i> Aroa<small>Den</small>
+        </h3>
+        <nav class="navbar navbar-default" role="navigation">   
+          <ul class="nav nav-pills nav-stacked bgtra fonsi16"> 
+            <li><a href="{!!url("/Empresa")!!}"><i class="fa fa-home"></i> Empresa</a></li>  
+            <li><a href="{!!url("/Citas")!!}"><i class="fa fa-calendar"></i> Citas</a></li> 
+            <li><a href="{!!url("/Pacientes")!!}"><i class="fa fa-users"></i> Pacientes </a></li>
+            <li><a href="{!!url("/Personal")!!}"><i class="fa fa-user-md"></i> Personal</a></li> 
+            <li><a href="{!!url("/Servicios")!!}"><i class="fa fa-tasks"> </i> Servicios</a></li> 
+            <li><a href="{!!url("/Contable")!!}"><i class="fa fa-pie-chart"></i> Contable</a></li> 
+          </ul>
+        </nav>
+
+      </div>  
     </div>
     
     <div class="col-sm-10">
+
       <div class="row">
-        <div class="col-sm-10 fonsi16 pad4"> 
 
-            <?php
-            setlocale(LC_ALL,'es_ES.UTF-8');
+          <div class="col-sm-10 fonsi16 pad4">
 
-            $Carbon = new Carbon\Carbon;
-            $diactu = $Carbon::now()->formatLocalized('%A');
-            ?>
+              <?php
+              setlocale(LC_ALL,'es_ES.UTF-8');
 
-            {!! ucfirst ($diactu) !!},&nbsp;
-            {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;|&nbsp;
+              $Carbon = new Carbon\Carbon;
+              $diactu = $Carbon::now()->formatLocalized('%A');
+              ?>
 
-            Usuario:  <span class="label label-primary fonsi16"> {!! Auth::user()->username !!} </span>
+              {!! ucfirst ($diactu) !!},&nbsp;
+              {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;|&nbsp;
 
-        </div>
- 	
-        <div class="col-sm-2 text-right">	
+              Usuario:  <span class="label label-primary fonsi16"> {!! Auth::user()->username !!} </span>
 
-          <a class="btn btn-default btn-sm" role="button" href="{!!url("/Ajustes")!!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
-      
-          <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="Manuales">
-            <i class="fa fa-question" aria-hidden="true"></i>
-          </a>
+          </div>
+   	
+          <div class="col-sm-2 text-right">	
 
-          <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span> &nbsp; <i class="fa fa-close"></i>
-          </button> 
-          <ul class="dropdown-menu" role="menu">
-  		      <li><a href="{!!url("/logout")!!}" class="btn btn-default btn-md" role="button"> Cerrar </a></li>
-          </ul>
-        </div>
+            <a class="btn btn-default btn-sm" role="button" href="{!!url("/Ajustes")!!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
+        
+            <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="Manuales">
+              <i class="fa fa-question" aria-hidden="true"></i>
+            </a>
 
-        <div class="row">
-          <div class="col-sm-12">
-            <hr> 
+            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span> &nbsp; <i class="fa fa-close"></i>
+            </button> 
+            <ul class="dropdown-menu" role="menu">
+    		      <li><a href="{!!url("/logout")!!}" class="btn btn-default btn-md" role="button"> Cerrar </a></li>
+            </ul>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <hr> 
+            </div> 
           </div> 
-        </div> 
 
       </div>
- 
 
-	@yield('content')
+	
+      @yield('content')
 	
 
  </div> </div> </div>

@@ -12,6 +12,8 @@
   	</ul>
 </div> </div>
 
+<hr>
+
 
  {!! addtexto("Pagos") !!}
 

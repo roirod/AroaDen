@@ -35,10 +35,13 @@
 				</span>
  			</div>
 
-	@include('includes.delbuto')
+			
+			@include('includes.delbuto')
  			
  		</form>
  	</div>
  </div>
+
+  <br> <br> <br> <br> <br> <br> 
  
  @endsection

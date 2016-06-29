@@ -39,10 +39,16 @@
 	 			</div> 
 	  		</div>
 
-@include('includes.subuto')
+
+
+			@include('includes.subuto')
 	 			
  		</form>
  	</div>
  </div>
  
+
+ <br> <br> <br> <br> <br> <br> <br> <br>
+
+
  @endsection
