@@ -18,8 +18,7 @@ class UsuariosController extends Controller
     }
     
     public function index(Request $request)
-    {  	
-    }
+    { }
     
     public function create(Request $request)
     {
