@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\presup;
+use App\prestex;
 use App\pacientes;
 use App\servicios;
 
@@ -165,7 +166,7 @@ class PresupuestosController extends Controller
     public function presuedit(Request $request)
     {
         $idpac = htmlentities (trim( $request->input('idpac')),ENT_QUOTES,"UTF-8");
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");            
+        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");          
 
         if ( null == $idpac ) {
             return redirect('Pacientes');
@@ -174,6 +175,31 @@ class PresupuestosController extends Controller
         if ( null == $cod ) {
             return redirect('Pacientes');
         }
+
+        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->first();
+
+        if (is_null($prestex)) {
+
+            $validator = Validator::make($request->all(),[
+                'idpac' => 'required',
+                'cod' => 'required',
+                'texto' => ''
+            ]);
+                    
+            if ($validator->fails()) {
+                return redirect('Servicios/create')
+                             ->withErrors($validator)
+                             ->withInput();
+             } else {
+                    
+                prestex::create([
+                    'idpac' => $idpac,
+                    'cod' => $cod
+                ]);
+            }   
+        }
+
+        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->first();
 
         $delurl = url('/Presup/delid');
 
@@ -189,7 +215,8 @@ class PresupuestosController extends Controller
             'presup' => $presup,
             'delurl' => $delurl,
             'cod' => $cod,
-            'idpac' => $idpac
+            'idpac' => $idpac,
+            'prestex' => $prestex
         ]);        
     }
 
@@ -204,6 +231,11 @@ class PresupuestosController extends Controller
         if ( null == $cod ) {
             return redirect('Pacientes');
         }
+
+        $prestex = prestex::where('cod', $cod)->first();
+
+        $prestex->texto = $texto;            
+        $prestex->save();
 
         $presup = DB::table('presup')
                 ->join('servicios', 'presup.idser','=','servicios.idser')
@@ -278,8 +310,11 @@ class PresupuestosController extends Controller
         }
 
         $presup = DB::table('presup')
-                ->where('cod','=',$cod)
+                ->where('cod', $cod)
+                ->where('idpac', $idpac)
                 ->delete();
+
+        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->delete();
         
         return redirect("/Presup/$idpac");
     }
@@ -296,6 +331,15 @@ class PresupuestosController extends Controller
 
         if ( null == $cod ) {
             return redirect('Pacientes');
+        }       
+
+        $presup = DB::table('presup')
+                ->where('cod', $cod)
+                ->first();
+
+        if (is_null($presup)) {
+            $prestex = DB::table('prestex')->where('cod', $cod)->first();
+            $prestex->delete();
         }
          
         $presup = presup::find($idpre);

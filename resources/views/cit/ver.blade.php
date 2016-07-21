@@ -45,7 +45,7 @@
       <div class="input-group pad10"> 
         <span class="input-group-btn pad4">  <p> Fecha de: </p> </span>
         <div class="col-sm-4"> 
-          <input name="fechde" type="date" required>
+          <input name="fechde" type="date" autofocus required>
         </div>
         <div class="col-sm-1">
           <span class="input-group-btn pad4">  <p> hasta: </p> </span> 

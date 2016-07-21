@@ -112,8 +112,10 @@
 	<form role="form" class="form" role="form" action="{!!url("/Presup/presmod")!!}" method="POST">	
 	 	{!! csrf_field() !!}
 
-		<div class="form-group">    <label class="control-label text-left mar10">Texto:</label>
-		    <textarea class="form-control" name="texto" rows="4"></textarea> 		</div>
+		<div class="form-group"> 
+		    <label class="control-label text-left mar10">Texto:</label>
+		    <textarea class="form-control" name="texto" rows="4"> {!! $prestex->texto !!} </textarea> 
+		</div>
 </div>
 
 <div class="col-sm-12 text-right">
