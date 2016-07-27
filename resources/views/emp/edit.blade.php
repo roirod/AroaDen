@@ -41,6 +41,9 @@
 		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Notas:</label>
 		<textarea class="form-control" name="notas" rows="4"> {!!$empre->notas!!} </textarea> 	</div> 	<br>
 
+		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Texto de facturas: </label>
+		<textarea class="form-control" name="factutex" rows="4"> {!!$empre->factutex!!} </textarea> 	</div> 	<br>
+
 		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Texto de presupuestos: </label>
 		<textarea class="form-control" name="presutex" rows="4"> {!!$empre->presutex!!} </textarea> 	</div> 	<br>
 		

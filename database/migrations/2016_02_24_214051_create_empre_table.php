@@ -22,7 +22,10 @@ class CreateEmpreTable extends Migration
             $table->string('tel2',11)->nullable();
             $table->string('tel3',11)->nullable();
             $table->text('notas')->nullable();
+            $table->bigInteger('factumun')->default(1);
+            $table->text('factutex')->nullable();
             $table->text('presutex')->nullable();
+
             $table->timestamps();
             $table->primary('id');     
         });

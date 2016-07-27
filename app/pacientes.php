@@ -29,6 +29,11 @@ class pacientes extends Model
         return $this->hasMany('App\citas', 'idpac', 'idpac');
     }
 
+    public function facturas()
+    {
+        return $this->hasMany('App\facturas', 'idpac', 'idpac');
+    }
+
     public function presup()
     {
         return $this->hasMany('App\presup', 'idpac', 'idpac');

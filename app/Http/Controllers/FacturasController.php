@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\presup;
-use App\prestex;
-use App\pacientes;
-use App\servicios;
+use App\facturas;
+use App\factutex;
+
+use App\empre;
 
 use Validator;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class PresupuestosController extends Controller
+
+class FacturasController extends Controller
 {
     public function __construct()
     {
@@ -31,25 +32,35 @@ class PresupuestosController extends Controller
         
         $pacientes = pacientes::find($idpac);
 
-        $servicios = servicios::all();        
+        $tratampac = DB::table('tratampacien')
+                    ->join('servicios','tratampacien.idser','=','servicios.idser')
+                    ->select('tratampacien.*','servicios.nomser')
+                    ->where('idpac', $idpac)
+                    ->orderBy('fecha','DESC')
+                    ->get();
+  
+
+        $empre = empre::find('1');
+                
+        $factumun = $empre->factumun + 1;
+
+        $empre->factumun = $factumun;
+
+        $empre->save();
+
+        $empre = empre::find('1');
 
         $cod = date('Y-m-d H:i:s');
 
-        $nueurl = url('/Presup');
-        $delurl = url('/Presup/delid');
-
-        $apepac = $pacientes->apepac;
-        $nompac = $pacientes->nompac;
+        $nueurl = url('/Facturas');
 
         return view('presup.create', [
             'request' => $request,
             'cod' => $cod,
             'nueurl' => $nueurl,
-            'delurl' => $delurl,
-            'servicios' => $servicios,
-            'idpac' => $idpac,
-            'apepac' => $apepac,
-            'nompac' => $nompac
+            'tratampac' => $tratampac,
+            'empre' => $empre,
+            'idpac' => $idpac
         ]);
     }
 
@@ -59,6 +70,7 @@ class PresupuestosController extends Controller
         $idser = htmlentities (trim( $request->input('idser')),ENT_QUOTES,"UTF-8");
         $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
         $canti = htmlentities (trim( $request->input('canti')),ENT_QUOTES,"UTF-8");
+        $factumun = htmlentities (trim( $request->input('factumun')),ENT_QUOTES,"UTF-8");
         $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");
         $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");            
 
@@ -71,28 +83,30 @@ class PresupuestosController extends Controller
             'idser' => 'required',
             'precio' => 'required',
             'canti' => 'required',
+            'factumun' => 'factumun',
             'cod' => 'required',
             'iva' => 'required',            
         ]);
             
         if ($validator->fails()) {
-            return redirect("/Presup/$idpac/create")
+            return redirect("/Facturas/$idpac/create")
                          ->withErrors($validator)
                          ->withInput();
         } else {
                 
-            presup::create([
+            facturas::create([
                 'idpac' => $idpac,
                 'idser' => $idser,
                 'precio' => $precio,
                 'canti' => $canti,
+                'factumun' => $factumun,
                 'cod' => $cod,
                 'iva' => $iva,
             ]);
 
-            $presup = DB::table('presup')
-                    ->join('servicios', 'presup.idser','=','servicios.idser')
-                    ->select('presup.*','servicios.nomser')
+            $facturas = DB::table('facturas')
+                    ->join('servicios', 'facturas.idser','=','servicios.idser')
+                    ->select('facturas.*','servicios.nomser')
                     ->where('idpac', $idpac)
                     ->where('cod', $cod)
                     ->orderBy('nomser' , 'ASC')
@@ -100,18 +114,18 @@ class PresupuestosController extends Controller
 
             $cadena = '';
 
-            foreach ($presup as $presu) {
+            foreach ($facturas as $factu) {
 
                 $cadena .= '<tr>
-                                <td class="wid140">'.$presu->nomser.'</td>
-                                <td class="wid95 textcent">'.$presu->canti.'</td>
-                                <td class="wid95 textcent">'.$presu->precio.' €</td>
+                                <td class="wid140">'.$factu->nomser.'</td>
+                                <td class="wid95 textcent">'.$factu->canti.'</td>
+                                <td class="wid95 textcent">'.$factu->precio.' €</td>
 
                                 <td class="wid50">
 
                                   <form id="delform">
                                   
-                                    <input type="hidden" name="idpre" value="'.$presu->idpre.'">
+                                    <input type="hidden" name="idpre" value="'.$factu->idpre.'">
                                     <input type="hidden" name="cod" value="'.$cod.'">
 
                                     <div class="btn-group">
@@ -391,3 +405,6 @@ class PresupuestosController extends Controller
     {
     }
 }
+
+
+

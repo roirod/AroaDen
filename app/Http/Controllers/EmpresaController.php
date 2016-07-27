@@ -11,7 +11,6 @@ use App\Http\Requests;
 
 class EmpresaController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -22,8 +21,10 @@ class EmpresaController extends Controller
 
        $empre = DB::table('empre')->where('id', '1')->first();
 
-       return view('emp.index', ['request' => $request,
-                                 'empre' => $empre]);
+       return view('emp.index', [
+            'request' => $request,
+            'empre' => $empre
+        ]);
     }
 
     public function create()
@@ -39,23 +40,26 @@ class EmpresaController extends Controller
     {
         $empre = DB::table('empre')->where('id', '1')->first();
 
-        return view('emp.edit', ['request' => $request,
-                                 'empre' => $empre]);
+        return view('emp.edit', [
+            'request' => $request,
+            'empre' => $empre
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-
         $validator = Validator::make($request->all(),[
-                'nom' => 'required|max:88',
-                'direc' => 'max:77',
-                'pobla' => 'max:55',
+                'nom' => 'required|max:111',
+                'direc' => 'max:111',
+                'pobla' => 'max:111',
                 'nif' => 'max:22',
                 'tel1' => 'max:11',
                 'tel2' => 'max:11',
                 'tel3' => 'max:11',                
                 'notas' => '',
-                'presutex' => '']);
+                'factutex' => '',
+                'presutex' => ''
+        ]);
             
         if ($validator->fails()) {
              return redirect("Empresa/1/edit")
@@ -69,7 +73,8 @@ class EmpresaController extends Controller
             $direc = ucfirst(strtolower( $request->input('direc') ) );
             $pobla = ucfirst(strtolower( $request->input('pobla') ) );
             $notas = ucfirst(strtolower( $request->input('notas') ) );
-            $presutex = ucfirst(strtolower( $request->input('presutex') ) );            
+            $factutex = ucfirst(strtolower( $request->input('factutex') ) );   
+            $presutex = ucfirst(strtolower( $request->input('presutex') ) );           
 
             $empre->nom = htmlentities (trim($nom),ENT_QUOTES,"UTF-8");
             $empre->direc = htmlentities (trim($direc),ENT_QUOTES,"UTF-8");
@@ -79,6 +84,7 @@ class EmpresaController extends Controller
             $empre->tel2 = htmlentities (trim($request->input('tel2')),ENT_QUOTES,"UTF-8");
             $empre->tel3 = htmlentities (trim($request->input('tel3')),ENT_QUOTES,"UTF-8");
             $empre->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+            $empre->factutex = htmlentities (trim($factutex),ENT_QUOTES,"UTF-8");
             $empre->presutex = htmlentities (trim($presutex),ENT_QUOTES,"UTF-8");
 
             $empre->save();

@@ -57,6 +57,13 @@
       <hr> <br>
    </div>
 
+   <br>
+   <div class="col-sm-12 pad10">
+      <i class="fa fa-minus-square"></i> Texto de facturas: <br>
+      <div class="box200"> {!! nl2br(e($empre->factutex)) !!} </div>
+
+      <hr> <br>
+   </div>
 
     <div class="row"> 
 		  <div class="col-sm-12 pad20"> 
