@@ -69,17 +69,19 @@
 						  
 						  <td class="wid50"> 
 						    <div class="btn-group"> 
-						    	<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-						    	  <i class="fa fa-times"></i>
-						    	  <span class="caret"></span>
-						    	</button>
-						    	<ul class="dropdown-menu" role="menu">
-						  			<li>
-						  				<a role="button" href="{{url("Servicios/$servicio->idser/del")}}">
-						  					<i class="fa fa-times"></i> Eliminar
-						  				</a>
-						  			</li>
-						  		</ul>  
+						    	<form role="form" class="form" id="form" role="form" action="{!!url("/Servicios/$servicio->idser")!!}" method="POST">		
+							  		{!! csrf_field() !!}
+
+									<input type="hidden" name="_method" value="DELETE">
+
+									<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+									<i class="fa fa-times"></i> <span class="caret"></span>  </button>
+									<ul class="dropdown-menu" role="menu"> 
+										<li>
+											@include('includes.delbuto')
+										</li>
+									</ul>			
+						 		</form>
 						  	</div>	
 						   </td>
 

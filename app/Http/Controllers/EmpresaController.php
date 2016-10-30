@@ -18,7 +18,6 @@ class EmpresaController extends Controller
 
     public function index(Request $request)
     {  
-
        $empre = DB::table('empre')->where('id', '1')->first();
 
        return view('emp.index', [

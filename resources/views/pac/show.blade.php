@@ -18,9 +18,21 @@
 	    </a>
 	 </div>	
 	<div class="btn-group">
-	    <a href="{!!url("/Pacientes/$idpac/del")!!}" role="button" class="btn btn-sm btn-danger">
-	    	<i class="fa fa-times"></i> Eliminar
-	    </a> 
+
+	 	<form role="form" class="form" id="form" role="form" action="{!!url("/Pacientes/$idpac")!!}" method="POST">	
+	  		{!! csrf_field() !!}
+
+			<input type="hidden" name="_method" value="DELETE">
+
+			<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
+			<ul class="dropdown-menu" role="menu"> 
+				<li>
+					@include('includes.delbuto')
+				</li>
+			</ul>			
+ 			
+ 		</form>
 
 </div> </div> </div> </div> </div>
 
@@ -151,15 +163,22 @@
 			</td>
 			<td class="wid50"> 	
 				<div class="btn-group">
-					<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-					<i class="fa fa-times"></i>  <span class="caret"></span>  </button>
-					<ul class="dropdown-menu" role="menu"> 
-						<li>
-							<a href="{!!url("/Citas/$idpac/$cita->idcit/del")!!}" class="btn btn-xs btn-danger" role="button" title="Eliminar">
-								<i class="fa fa-times"></i> Eliminar
-							</a>
-						</li>
-					</ul>
+
+				 	<form role="form" class="form" id="form" role="form" action="{!!url("/Citas/$cita->idcit")!!}" method="POST">		
+				  		{!! csrf_field() !!}
+
+						<input type="hidden" name="_method" value="DELETE">
+						<input type="hidden" name="idpac" value="{{$idpac}}">
+
+						<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-times"></i> <span class="caret"></span>  </button>
+						<ul class="dropdown-menu" role="menu"> 
+							<li>
+								@include('includes.delbuto')
+							</li>
+						</ul>			
+			 		</form>
+
 				</div> 
 			</td>
 			<td class="wid290">{!!$cita->notas!!}</td>
@@ -208,8 +227,8 @@
 	   </tr> 
    </table> 
    <div class="box260">
-   <table class="table table-striped">	
- 
+   <table class="table table-striped">
+
     @foreach($tratampacien as $tratam)		
     	<tr>
     		<td class="wid140">{!!$tratam->nomser!!}</td> 
@@ -227,15 +246,23 @@
 
 			<td class="wid50 textcent"> 	
 				<div class="btn-group">
-					<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-					<i class="fa fa-times"></i>  <span class="caret"></span>  </button>
-					<ul class="dropdown-menu" role="menu"> 
-						<li>
-							<a href="{!!url("/Trapac/$idpac/$tratam->idtra/del")!!}" class="btn btn-xs btn-danger" role="button" title="Eliminar">
-								<i class="fa fa-times"></i> Eliminar
-							</a>
-						</li>
-					</ul>
+
+				 	<form role="form" class="form" id="form" role="form" action="{!!url("/Trapac/$tratam->idtra")!!}" method="POST">	
+				  		{!! csrf_field() !!}
+
+						<input type="hidden" name="_method" value="DELETE">
+						<input type="hidden" name="idpac" value="{{$idpac}}">
+
+						<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-times"></i> <span class="caret"></span>  </button>
+						<ul class="dropdown-menu" role="menu"> 
+							<li>
+								@include('includes.delbuto')
+							</li>
+						</ul>			
+			 			
+			 		</form>
+
 				</div> 
 			</td>  			
 			

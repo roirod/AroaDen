@@ -15,6 +15,7 @@ class empreTableSeeder extends Seeder
             'tel2' => 'none',
             'tel3' => 'none',
             'notas' => 'none',
+            'factutex' => 'none',
             'presutex' => 'none'
         ]);
     }

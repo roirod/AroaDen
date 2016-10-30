@@ -18,9 +18,20 @@
 					</a>
 				</div>	
 			<div class="btn-group">
- 				<a href="{{url("/Personal/$idper/del")}}" role="button" class="btn btn-sm btn-danger">
-						<i class="fa fa-times"></i> Eliminar
-				</a> 
+			 	<form role="form" class="form" id="form" role="form" action="{!!url("/Personal/$idper")!!}" method="POST">	
+			  		{!! csrf_field() !!}
+
+					<input type="hidden" name="_method" value="DELETE">
+
+					<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
+					<ul class="dropdown-menu" role="menu"> 
+						<li>
+							@include('includes.delbuto')
+						</li>
+					</ul>			
+		 			
+		 		</form>
 
 </div> </div> </div> </div> </div>
 
