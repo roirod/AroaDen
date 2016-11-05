@@ -15,9 +15,10 @@ class PagosController extends Controller
     }
 
     public function index(Request $request)
-    {  
+    {
+        $num_mostrado = 5000;
 
-        $pagos = DB::select('SELECT pac.apepac, pac.nompac, pac.idpac, 
+        $pagos = DB::select("SELECT pac.apepac, pac.nompac, pac.idpac, 
                             SUM(tra.canti*tra.precio) as total, 
                             SUM(tra.pagado) as pagado, 
                             SUM(tra.canti*tra.precio)-SUM(tra.pagado) as resto 
@@ -28,11 +29,12 @@ class PagosController extends Controller
                             GROUP BY tra.idpac 
                             HAVING tra.idpac=tra.idpac  
                             ORDER BY resto DESC
-                            LIMIT 5000');
+                            LIMIT $num_mostrado");
 
         return view('pago.index', [
             'request' => $request,
-       		'pagos' => $pagos
+       		'pagos' => $pagos,
+            'num_mostrado' => $num_mostrado
         ]);   
     }
 }

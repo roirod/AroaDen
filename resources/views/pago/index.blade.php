@@ -14,10 +14,12 @@
 
 <hr>
 
-
  {!! addtexto("Pagos") !!}
 
- 
+ <span>
+   * Muestra los primeros {!! $num_mostrado !!} pacientes que mas deben, de mas a menos.
+</span>
+
  <div class="row">
   <div class="col-sm-12">
    <div class="panel panel-default">
