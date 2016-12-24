@@ -28,51 +28,40 @@ class PacientesController extends Controller
     	$numpag = 100;
 
     	$pacientes = DB::table('pacientes')
+                        ->select('idpac', 'apepac', 'nompac', 'dni', 'tel1', 'pobla')
+                        ->whereNull('deleted_at')
+                        ->orderBy('apepac', 'ASC')
+                        ->orderBy('nompac', 'ASC')
+                        ->paginate($numpag);
+
+        $count = DB::table('pacientes')
                     ->whereNull('deleted_at')
-                    ->orderBy('apepac', 'ASC')
-                    ->orderBy('nompac', 'ASC')
-                    ->paginate($numpag);
-                    
+                    ->count();
+
     	return view('pac.index', [
     		'pacientes' => $pacientes,
-         	'request' => $request
+         	'request' => $request,
+            'count' => $count
         ]);   
     }
   
-    public function ver(Request $request)
-    {  	
+    public function list(Request $request)
+    {   
         $busca = $request->input('busca');
         $busen = $request->input('busen');
-    
-        if ( isset($busca) ) {
 
-            if ( $busen == 'apepac' ) {
-              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-              $pacientes = DB::table('pacientes')
-                            ->whereNull('deleted_at')
-                            ->where('apepac','LIKE','%'.$busca.'%')
-                            ->orderBy('apepac','ASC')
-                            ->orderBy('nompac','ASC')
-                            ->get();
+        $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
+        $busen = htmlentities (trim($busen),ENT_QUOTES,"UTF-8");
 
-            } elseif ($busen == 'dni') {
-                
-              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-              $pacientes = DB::table('pacientes')
-                            ->whereNull('deleted_at')
-                            ->where('dni','LIKE','%'.$busca.'%')
-                            ->orderBy('dni','ASC')
-                            ->get();
-            }
-        } 
-  		     
-    	return view('pac.ver', [
-    		'pacientes' => $pacientes,
-            'busca' => $busca,
-         	'request' => $request
-        ]);    
-    }   
-  
+        $data = $this->consultaItems($busen, $busca);
+
+        header('Content-type: application/json; charset=utf-8');
+
+        echo json_encode($data);
+
+        exit();
+    } 
+
     public function show(Request $request,$idpac)
     {
 	    if ( null == $idpac ) {
@@ -85,9 +74,12 @@ class PacientesController extends Controller
 
         $fotoper = url("/app/pacdir/$idpac/.fotoper.jpg");
 
-	    $pacientes = DB::table('pacientes')->where('idpac', $idpac)->whereNull('deleted_at')->first();
+	    $paciente = DB::table('pacientes')
+                        ->where('idpac', $idpac)
+                        ->whereNull('deleted_at')
+                        ->first();
 
-        if (is_null($pacientes)) {
+        if (is_null($paciente)) {
             $request->session()->flash('errmess', 'Has borrado a este paciente.');    
             return redirect('Pacientes');
         }
@@ -110,7 +102,7 @@ class PacientesController extends Controller
 				    ->where('idpac', $idpac)
 				    ->get();
 
-	  	$fenac = trim($pacientes->fenac);
+	  	$fenac = trim($paciente->fenac);
 
 	  	if (isset($fenac)) {
 		  	$Fecha = explode("-",$fenac,3);
@@ -126,7 +118,7 @@ class PacientesController extends Controller
 
         return response()->view('pac.show',[
             'request' => $request,
-            'pacientes' => $pacientes,
+            'paciente' => $paciente,
             'citas' => $citas,
             'tratampacien' => $tratampacien,
             'suma' => $suma,
@@ -198,8 +190,7 @@ class PacientesController extends Controller
 			$direc = htmlentities (trim($direc),ENT_QUOTES,"UTF-8");
 			$pobla = htmlentities (trim($pobla),ENT_QUOTES,"UTF-8");
 			$fenac = htmlentities (trim($request->input('fenac')),ENT_QUOTES,"UTF-8");
-        	        	
-
+    
             $insertGetId = pacientes::insertGetId([
 	          'nompac' => $nompac,
 	          'apepac' => $apepac,
@@ -681,5 +672,58 @@ class PacientesController extends Controller
         if ( ! Storage::exists($thumbdir) ) { 
             Storage::makeDirectory($thumbdir,0770,true);
         }
-    }    
+    }
+
+    public function consultaItems($busen, $busca)
+    {
+        $count = DB::table('pacientes')
+                    ->whereNull('deleted_at')
+                    ->count();
+
+        if ($count === 0) {
+
+            $data['pacientes'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay pacientes en la base de datos. ';
+
+            return $data;
+
+        }
+
+        $pacientes = DB::table('pacientes')
+                        ->select('idpac', 'apepac', 'nompac', 'dni', 'tel1', 'pobla')
+                        ->whereNull('deleted_at')
+                        ->where($busen,'LIKE','%'.$busca.'%')
+                        ->orderBy('apepac','ASC')
+                        ->orderBy('nompac','ASC')
+                        ->get();
+
+        $count = DB::table('pacientes')
+                    ->whereNull('deleted_at')
+                    ->where($busen,'LIKE','%'.$busca.'%')
+                    ->count();
+
+        return $this->recorrerItems($pacientes, $count);
+    }
+
+    public function recorrerItems($pacientes, $count)
+    {
+        $data = [];
+
+        if ($count === 0) {
+
+            $data['pacientes'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay resultados. ';
+
+        } else {
+
+            $data['pacientes'] = $pacientes;
+            $data['count'] = $count;        
+            $data['msg'] = false;
+
+        }
+
+        return $data;
+    }
 }

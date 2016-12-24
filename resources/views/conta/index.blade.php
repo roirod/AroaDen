@@ -8,8 +8,6 @@
 @include('includes.errors')
 
 
-<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
-<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
 
 
 @endsection

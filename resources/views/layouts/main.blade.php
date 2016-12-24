@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   @section('head')
-    <meta charset="utf-8">
+    <meta charset="UTF-8"/>
     <title>AroaDen</title>
     <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css" >
     <link href="{!! asset('assets/css/Start.css') !!}" rel="stylesheet" type="text/css" >
@@ -14,7 +14,7 @@
   @section('js')
     <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
-    <script src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
+    <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/confirm.js') !!}"></script>
   @show
 
@@ -23,8 +23,7 @@
 <body> <br>
 
 <div class="jumbotron container bgwi pad20">
-  <div class="row">
-  
+  <div class="row">  
 
     <div class="col-sm-1 wid180">
       <div class="affix">
@@ -96,7 +95,7 @@
 
  </div> </div> </div>
   
-  @yield('script')
+  @yield('footer_script')
      
 </body>
 </html>

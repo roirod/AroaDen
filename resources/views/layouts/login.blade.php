@@ -12,7 +12,7 @@
 
 <body> <br>
 
-<div class="jumbotron container pad20">
+<div class="container pad20">
  <div class="row">
  
     @yield('content')

@@ -66,7 +66,7 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::get('Citas/{idpac}/create', 'CitasController@create');
 	 Route::resource('Citas', 'CitasController');
 	  	  
-	 Route::post('Pacientes/ver', 'PacientesController@ver');
+	 Route::post('Pacientes/list', 'PacientesController@list');
 	 Route::get('Pacientes/{idpac}/ficha', 'PacientesController@ficha');
 	 Route::get('Pacientes/{idpac}/file', 'PacientesController@file');
 	 Route::post('Pacientes/upload', 'PacientesController@upload');
@@ -76,14 +76,13 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::get('Pacientes/{idpac}/presup', 'PacientesController@presup');
 	 Route::resource('Pacientes', 'PacientesController');
 
-	 Route::post('Personal/ver', 'PersonalController@ver');
-	 Route::get('Personal/{idper}/file', 'PersonalController@file');
-	 
+	 Route::post('Personal/list', 'PersonalController@list');
+	 Route::get('Personal/{idper}/file', 'PersonalController@file');	 
 	 Route::post('Personal/upload', 'PersonalController@upload');
 	 Route::get('Personal/{idper}/{file}/down', 'PersonalController@download');
 	 Route::resource('Personal', 'PersonalController');
 
-	 Route::post('Servicios/ver', 'ServiciosController@ver');
+	 Route::post('Servicios/list', 'ServiciosController@list');
 	 Route::resource('Servicios', 'ServiciosController');
 
 	 Route::resource('Contable', 'ContableController');

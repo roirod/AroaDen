@@ -46,6 +46,7 @@ table { table-layout:fixed !important; }
   width: 1230px !important;
   max-width: 1280px !important;
   min-width: 1230px !important;
+  min-height: 550px !important;
   overflow: visible !important;
 }
 

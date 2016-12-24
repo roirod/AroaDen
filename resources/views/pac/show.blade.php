@@ -72,43 +72,43 @@
 		<div class="col-sm-10">
 
 			<div class="col-sm-8 pad4"> 
-			<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$pacientes->apepac!!},&nbsp;{!!$pacientes->nompac!!} 
+			<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$paciente->apepac!!},&nbsp;{!!$paciente->nompac!!} 
 			</div>
 
 			<div class="col-sm-3 pad4"> 
-			<i class="fa fa-minus-square"></i> id: &nbsp; {!!$pacientes->idpac!!} 
+			<i class="fa fa-minus-square"></i> id: &nbsp; {!!$paciente->idpac!!} 
 			</div>
 
 			<div class="col-sm-7 pad4"> 
-			<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$pacientes->pobla!!}
+			<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$paciente->pobla!!}
 			 </div> 
 
 			<div class="col-sm-8 pad4">
-			<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$pacientes->direc!!} 
+			<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$paciente->direc!!} 
 			</div> 
 
 			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> DNI: &nbsp; {!! $pacientes->dni!!}
+			<i class="fa fa-minus-square"></i> DNI: &nbsp; {!! $paciente->dni!!}
 			 </div> 
 
 			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$pacientes->sexo!!} 
+			<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$paciente->sexo!!} 
 			</div> 
 
 			<div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Tel&#xE9;fono1: &nbsp;{!!$pacientes->tel1!!}
+			<i class="fa fa-minus-square"></i> Tel&#xE9;fono1: &nbsp;{!!$paciente->tel1!!}
 			 </div>
 
 			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Tel&#xE9;fono2: &nbsp; {!! $pacientes->tel2!!} 
+			<i class="fa fa-minus-square"></i> Tel&#xE9;fono2: &nbsp; {!! $paciente->tel2!!} 
 			</div>
 
 			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Tel&#xE9;fono3: &nbsp; {!!$pacientes->tel3!!}
+			<i class="fa fa-minus-square"></i> Tel&#xE9;fono3: &nbsp; {!!$paciente->tel3!!}
 			 </div> 
 
 			 <div class="col-sm-4 pad4"> 
-			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($pacientes->fenac) )!!} 
+			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($paciente->fenac) )!!} 
 			</div>
 
 			 <div class="col-sm-3 pad4"> 	
@@ -119,7 +119,7 @@
 
 		 <div class="col-sm-12 pad4"> 
 		<i class="fa fa-minus-square"></i> Notas: <br>
-		 <div class="box200"> {!! nl2br(e($pacientes->notas)) !!} 
+		 <div class="box200"> {!! nl2br(e($paciente->notas)) !!} 
 		 </div>
 		 </div>
 

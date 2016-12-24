@@ -27,46 +27,36 @@ class PersonalController extends Controller
                         ->orderBy('ape', 'ASC')
                         ->orderBy('nom', 'ASC')
                         ->paginate($numpag);
-              
+
+        $count = DB::table('personal')
+                        ->whereNull('deleted_at')
+                        ->orderBy('ape', 'ASC')
+                        ->orderBy('nom', 'ASC')
+                        ->count();
+
         return view('per.index', [
           'personal' => $personal,
           'request' => $request,
+          'count' => $count          
         ]);   
     }
   
-    public function ver(Request $request)
-    {   
+    public function list(Request $request)
+    {                                    
         $busca = $request->input('busca');
         $busen = $request->input('busen');
-    
-        if ( isset($busca) ) {
 
-            if ( $busen == 'ape' ) {
-              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-              $personal = DB::table('personal')
-                            ->whereNull('deleted_at')
-                            ->where('ape','LIKE','%'.$busca.'%')
-                            ->orderBy('ape','ASC')
-                            ->orderBy('nom','ASC')
-                            ->get();
+        $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
+        $busen = htmlentities (trim($busen),ENT_QUOTES,"UTF-8");
 
-            } elseif ($busen == 'dni') {
-                
-              $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-              $personal = DB::table('personal')
-                            ->whereNull('deleted_at')
-                            ->where('dni','LIKE','%'.$busca.'%')
-                            ->orderBy('dni','ASC')
-                            ->get();
-            }
-        }
-        
-        return view('per.ver', [
-          'request' => $request,
-          'personal' => $personal,
-          'busca' => $busca
-        ]);   
-    }   
+        $data = $this->consultaItems($busen, $busca);
+
+        header('Content-type: application/json; charset=utf-8');
+
+        echo json_encode($data);
+
+        exit();
+    } 
 
     public function show(Request $request,$idper)
     {
@@ -427,5 +417,53 @@ class PersonalController extends Controller
         if ( ! Storage::exists($thumbdir) ) { 
             Storage::makeDirectory($thumbdir, 0770, true);
         }
-    }  
+    }
+
+    public function consultaItems($busen, $busca)
+    {
+        $count = DB::table('personal')
+                    ->whereNull('deleted_at')
+                    ->count();
+
+        if ($count === 0) {
+            $data['personal'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay personal en la base de datos. ';
+
+            return $data;
+        }
+
+        $personal = DB::table('personal')
+                    ->select('idper', 'ape', 'nom', 'dni', 'tel1', 'cargo')
+                    ->whereNull('deleted_at')
+                    ->where($busen,'LIKE','%'.$busca.'%')
+                    ->orderBy('ape','ASC')
+                    ->orderBy('nom','ASC')
+                    ->get();
+
+        $count = DB::table('personal')
+                    ->select('idper', 'ape', 'nom', 'dni', 'tel1', 'cargo')
+                    ->whereNull('deleted_at')
+                    ->where($busen,'LIKE','%'.$busca.'%')
+                    ->count();      
+                    
+        return $this->recorrerItems($personal, $count);
+    }
+
+    public function recorrerItems($personal, $count)
+    {
+        $data = [];
+
+        if ($count === 0) {
+            $data['personal'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay resultados. ';
+        } else {
+            $data['personal'] = $personal;
+            $data['count'] = $count;        
+            $data['msg'] = false;
+        }
+
+        return $data;
+    }
 }

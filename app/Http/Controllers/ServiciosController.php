@@ -10,7 +10,6 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-
 class ServiciosController extends Controller
 {
     public function __construct()
@@ -20,38 +19,40 @@ class ServiciosController extends Controller
 
     public function index(Request $request)
     {			
-		$servicios = DB::table('servicios')->whereNull('deleted_at')->orderBy('nomser', 'ASC')->get();				
+		$servicios = DB::table('servicios')
+                        ->whereNull('deleted_at')
+                        ->orderBy('nomser', 'ASC')
+                        ->get();		
+
+        $count = DB::table('servicios')
+                        ->whereNull('deleted_at')
+                        ->count();
 
         return view('serv.index', [
             'servicios' => $servicios,
-            'request' => $request
+            'request' => $request,
+            'count' => $count
         ]);          
     }
 
-    public function ver(Request $request)
+    public function list(Request $request)
     {   
         $busca = $request->input('busca');
-    
-        if ( isset($busca) ) {
-            $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");        
-            $servicios = DB::table('servicios')
-                        ->where('nomser','LIKE','%'.$busca.'%')
-                        ->whereNull('deleted_at')
-                        ->orderBy('nomser','ASC')
-                        ->get();
-        } 
-             
-        return view('serv.ver', [
-            'servicios' => $servicios,
-            'busca' => $busca,
-            'request' => $request
-        ]);    
-    }     
+        $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
+
+        $data = $this->consultaItems($busca);
+
+        header('Content-type: application/json; charset=utf-8');
+
+        echo json_encode($data);
+
+        exit();
+    }  
 
     public function create(Request $request)
     {
-    	$ivatp = ["0%" => 0,"4%" => 4,"10%" => 10,"21%" => 21]; 
-    	 
+        $ivatp = require(base_path().'/config/iva.php');
+   	 
     	return view('serv.create', [
             'request' => $request,
             'ivatp' => $ivatp
@@ -115,7 +116,7 @@ class ServiciosController extends Controller
 
         $servicio = servicios::find($idser);
 
-        $ivatp = ["0%" => 0,"4%" => 4,"10%" => 10,"21%" => 21];      
+        $ivatp = require(base_path().'/config/iva.php');      
 
         return view('serv.edit', [
             'request' => $request,
@@ -209,5 +210,51 @@ class ServiciosController extends Controller
         $request->session()->flash('sucmess', 'Hecho!!!');
         
         return redirect('Servicios');
+    }
+
+    public function consultaItems($busca)
+    {
+        $count = DB::table('servicios')
+                    ->whereNull('deleted_at')
+                    ->count();
+
+        if ($count === 0) {
+            $data['servicios'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay servicios en la base de datos. ';
+
+            return $data;
+        }
+
+        $servicios = DB::table('servicios')
+                        ->select('idser', 'nomser', 'precio', 'iva')
+                        ->whereNull('deleted_at')
+                        ->where('nomser','LIKE','%'.$busca.'%')
+                        ->orderBy('nomser','ASC')
+                        ->get();
+
+        $count = DB::table('servicios')
+                    ->whereNull('deleted_at')
+                    ->where('nomser','LIKE','%'.$busca.'%')
+                    ->count();
+
+        return $this->recorrerItems($servicios, $count);
+    }
+
+    public function recorrerItems($servicios, $count)
+    {
+        $data = [];
+
+        if ($count === 0) {
+            $data['servicios'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay resultados. ';
+        } else {
+            $data['servicios'] = $servicios;
+            $data['count'] = $count;        
+            $data['msg'] = false;
+        }
+
+        return $data;
     }
 }

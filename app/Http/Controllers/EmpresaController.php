@@ -17,13 +17,31 @@ class EmpresaController extends Controller
     }
 
     public function index(Request $request)
-    {  
-       $empre = DB::table('empre')->where('id', '1')->first();
+    { 
+		$empre = DB::table('empre')->where('id', '1')->first();
 
-       return view('emp.index', [
-            'request' => $request,
-            'empre' => $empre
-        ]);
+		if ($empre === null) {
+	        DB::table('empre')->insert([
+	        	'id' => 1,
+	            'nom' => 'none',
+	            'direc' => 'none',
+	            'pobla' => 'none',
+	            'nif' => 'none',
+	            'tel1' => 'none',
+	            'tel2' => 'none',
+	            'tel3' => 'none',
+	            'notas' => 'none',
+	            'factutex' => 'none',
+	            'presutex' => 'none'
+	        ]);
+
+	        return redirect("/Empresa");
+		}
+
+		return view('emp.index', [
+		   'request' => $request,
+		   'empre' => $empre
+		]);
     }
 
     public function create()

@@ -11,10 +11,10 @@ class pacSeeder extends Seeder
     {
     	$faker = Faker::create('es_ES');
 
-    	foreach (range(1,500) as $index) {
+    	foreach (range(1,1500) as $index) {
 	        DB::table('pacientes')->insert([
-	            'apepac' => $faker->lastName.' '.$faker->lastName,
-	            'nompac' => $faker->firstName,
+	            'apepac' => htmlentities ($faker->lastName, ENT_QUOTES, "UTF-8").' '.htmlentities ($faker->lastName, ENT_QUOTES, "UTF-8"),
+	            'nompac' => htmlentities ($faker->firstName, ENT_QUOTES, "UTF-8"),
 	            'dni' => $faker->numberBetween($min = 10000000, $max = 99999999),
 	            'fenac' => $faker->date,
 	            'direc' => $faker->address,
