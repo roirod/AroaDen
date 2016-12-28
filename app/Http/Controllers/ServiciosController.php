@@ -12,8 +12,12 @@ use App\Http\Requests;
 
 class ServiciosController extends Controller
 {
+    private $iva_tipos;
+
     public function __construct()
     {
+        $this->iva_tipos = require(base_path().'/config/iva_tipos.php');
+
         $this->middleware('auth');
     }
 
@@ -51,11 +55,11 @@ class ServiciosController extends Controller
 
     public function create(Request $request)
     {
-        $ivatp = require(base_path().'/config/iva.php');
+        $iva_tipos = $this->iva_tipos;
    	 
     	return view('serv.create', [
             'request' => $request,
-            'ivatp' => $ivatp
+            'ivatp' => $iva_tipos
         ]);	
     }
  
@@ -116,12 +120,12 @@ class ServiciosController extends Controller
 
         $servicio = servicios::find($idser);
 
-        $ivatp = require(base_path().'/config/iva.php');      
+        $iva_tipos = $this->iva_tipos;    
 
         return view('serv.edit', [
             'request' => $request,
             'servicio' => $servicio,
-            'ivatp' => $ivatp,
+            'ivatp' => $iva_tipos,
             'idser' => $idser
         ]);
     }
