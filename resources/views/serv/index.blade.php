@@ -108,6 +108,27 @@
 @section('footer_script')
 
 	<script>
+
+		function showAlert() {
+			var form = $('#form');
+
+			swal({
+		        title: 'Estás seguro?',
+	            type: 'warning',
+	            showCancelButton: true,
+		        allowOutsideClick: true,
+	            confirmButtonColor: '#3085d6',
+	            cancelButtonColor: '#d33',
+	            confirmButtonText: 'Si',
+	            cancelButtonText: 'No',
+	            confirmButtonClass: 'confirm-class',
+	            cancelButtonClass: 'cancel-class',
+			}).then(
+				function(isConfirm) {
+				  if (isConfirm) form.submit();
+				}
+			);
+		}
 		
 		$(document).ready(function() {
 			$.ajaxSetup({
@@ -159,14 +180,14 @@
 					    		html += '    </td>';
 					    		html += '    <td class="wid50">';
 					    		html += '      <div class="btn-group">';
-					    		html += '        <form role="form" class="form" id="form" role="form" action="/Servicios/'+object.idser+'" method="POST">';
+					    		html += '        <form class="form" id="form" action="/Servicios/'+object.idser+'" method="POST">';
 					    		html += '          {!! csrf_field() !!}';
 					    		html += '          <input type="hidden" name="_method" value="DELETE">';
 					    		html += '          <button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">';
 					    		html += '            <i class="fa fa-times"></i> <span class="caret"></span>  </button>';
 					    		html += '             <ul class="dropdown-menu" role="menu">';
 					    		html += '               <li>';
-					    		html += '                  <button type="submit" class="btn btn-sm btn-danger confirm"> <i class="fa fa-times"></i> Eliminar </button>';
+					    		html += '                  <button onclick="showAlert(); return false;" class="btn btn-sm btn-danger"> <i class="fa fa-times"></i> Eliminar </button>';
 					    		html += '               </li>';
 					    		html += '             </ul>';
 					    		html += '         </form>';

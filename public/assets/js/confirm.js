@@ -1,13 +1,7 @@
 
 $( document ).ready(function() {
-
-	//console.log('pagina cargada');
-
 	$( ".confirm" ).click(function(e) {
-
 		e.preventDefault();
-
-		//console.log('boton submit');
 
 		var form = $(this).parents('form');
 
@@ -25,8 +19,7 @@ $( document ).ready(function() {
 		}).then(
 			function(isConfirm) {
 			  if (isConfirm) form.submit();
-			  //console.log('form submit');
 			}
-		)
+		);
 	});
 });
