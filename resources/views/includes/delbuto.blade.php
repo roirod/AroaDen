@@ -1,2 +1,4 @@
 
-	<button type="submit" class="btn btn-sm btn-danger confirm"> <i class="fa fa-times"></i> Eliminar </button>
+	<button onclick="showAlert(); return false;" class="btn btn-sm btn-danger"> 
+		<i class="fa fa-times"></i> Eliminar
+	</button>
