@@ -327,6 +327,14 @@ class PacientesController extends BaseController
 
         $ficha = ficha::find($idpac);
 
+        if (is_null($ficha)) {
+            ficha::create([
+              'idpac' => $idpac
+            ]);
+
+            return redirect("Pacientes/$idpac/ficha");
+        }
+
         return view('pac.ficha', [
             'request' => $request,
             'idpac' => $idpac,
