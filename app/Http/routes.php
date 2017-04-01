@@ -62,7 +62,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	 Route::resource('Empresa', 'EmpresaController');
 	 
-	 Route::post('Citas/ver', 'CitasController@ver');
+	 Route::post('Citas/list', 'CitasController@list');
 	 Route::get('Citas/{idpac}/create', 'CitasController@create');
 	 Route::resource('Citas', 'CitasController');
 	  	  

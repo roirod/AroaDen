@@ -11,7 +11,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class PersonalController extends Controller
+class PersonalController extends BaseController
 {
     public function __construct()
     {

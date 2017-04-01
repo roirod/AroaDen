@@ -10,7 +10,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class ServiciosController extends Controller
+class ServiciosController extends BaseController
 {
     private $iva_tipos;
 

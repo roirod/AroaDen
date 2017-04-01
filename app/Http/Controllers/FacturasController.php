@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 
-class FacturasController extends Controller
+class FacturasController extends BaseController
 {
     public function __construct()
     {

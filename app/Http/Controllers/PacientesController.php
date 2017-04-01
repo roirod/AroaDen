@@ -13,10 +13,8 @@ use Image;
 use Validator;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
 
-
-class PacientesController extends Controller
+class PacientesController extends BaseController
 {
     public function __construct()
     {
@@ -47,13 +45,29 @@ class PacientesController extends Controller
   
     public function list(Request $request)
     {   
-        $busca = $request->input('busca');
-        $busen = $request->input('busen');
+        $data = [];
 
-        $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
-        $busen = htmlentities (trim($busen),ENT_QUOTES,"UTF-8");
+        $count = DB::table('pacientes')
+                    ->whereNull('deleted_at')
+                    ->count();
 
-        $data = $this->consultaItems($busen, $busca);
+        if ($count === 0) {
+
+            $data['pacientes'] = false;
+            $data['count'] = false;       
+            $data['msg'] = ' No hay pacientes en la base de datos. ';
+
+        } else {
+
+            $busca = $request->input('busca');
+            $busen = $request->input('busen');
+
+            $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
+            $busen = htmlentities (trim($busen),ENT_QUOTES,"UTF-8");
+
+            $data = $this->getItems($busen, $busca);
+
+        }
 
         header('Content-type: application/json; charset=utf-8');
 
@@ -70,7 +84,7 @@ class PacientesController extends Controller
 
     	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
 
-        $this->dircrea($idpac);
+        $this->createDir($idpac);
 
         $fotoper = url("/app/pacdir/$idpac/.fotoper.jpg");
 
@@ -370,7 +384,7 @@ class PacientesController extends Controller
 
     	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
 
-        $this->dircrea($idpac);
+        $this->createDir($idpac);
 
         $pacdir = "/pacdir/$idpac";
 
@@ -639,7 +653,7 @@ class PacientesController extends Controller
         return redirect('Pacientes');
     }
 
-    public function dircrea($idpac)
+    public function createDir($idpac)
     {               
         $pacdir = "/pacdir/$idpac";
 
@@ -674,21 +688,9 @@ class PacientesController extends Controller
         }
     }
 
-    public function consultaItems($busen, $busca)
+    public function getItems($busen, $busca)
     {
-        $count = DB::table('pacientes')
-                    ->whereNull('deleted_at')
-                    ->count();
-
-        if ($count === 0) {
-
-            $data['pacientes'] = false;
-            $data['count'] = false;       
-            $data['msg'] = ' No hay pacientes en la base de datos. ';
-
-            return $data;
-
-        }
+        $data = [];
 
         $pacientes = DB::table('pacientes')
                         ->select('idpac', 'apepac', 'nompac', 'dni', 'tel1', 'pobla')
@@ -703,18 +705,11 @@ class PacientesController extends Controller
                     ->where($busen,'LIKE','%'.$busca.'%')
                     ->count();
 
-        return $this->recorrerItems($pacientes, $count);
-    }
-
-    public function recorrerItems($pacientes, $count)
-    {
-        $data = [];
-
         if ($count === 0) {
 
             $data['pacientes'] = false;
             $data['count'] = false;       
-            $data['msg'] = ' No hay resultados. ';
+            $data['msg'] = ' No hay resultados para la búsqueda. ';
 
         } else {
 
@@ -726,4 +721,5 @@ class PacientesController extends Controller
 
         return $data;
     }
+
 }

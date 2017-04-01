@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class ContableController extends Controller
+class ContableController extends BaseController
 {
     public function __construct()
     {

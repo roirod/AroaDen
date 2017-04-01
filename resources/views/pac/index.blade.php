@@ -32,7 +32,7 @@
 
 				  <div class="col-sm-2">
 
-	      			<select name="busen" class="form-control" required>
+	      			<select name="busen" class="form-control busca_class" required>
 
 	      				<option value="apepac" selected> Apellido/s </option>
 	      				<option value="dni"> DNI </option>
@@ -42,7 +42,7 @@
 				  </div>
 
 				  <div class="col-sm-4">
-				   		<input type="search" name="busca" id="busca" class="form-control" placeholder="Buscar..." autofocus required>
+				   		<input type="search" name="busca" id="busca" class="form-control busca_class" placeholder="Buscar..." autofocus required>
 				  </div>				  
 			 </div>
 	 </form>
@@ -129,7 +129,7 @@
 			   	}
 			}); 
 
-			$("#busca").on('keyup change', function(evt) {
+			$(".busca_class").on('keyup change', function(evt) {
 			    if (evt.which <= 90 && evt.which >= 48 || evt.which == 8 || evt.which == 46 || evt.which == 173) {
 					$('#item_list').html('<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>');
 				    var data = $("form").serialize();

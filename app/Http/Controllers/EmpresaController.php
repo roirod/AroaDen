@@ -9,7 +9,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class EmpresaController extends Controller
+class EmpresaController extends BaseController
 {
     public function __construct()
     {

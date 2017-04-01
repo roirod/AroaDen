@@ -11,7 +11,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class TratamientosController extends Controller
+class TratamientosController extends BaseController
 {
     public function __construct()
     {

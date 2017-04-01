@@ -7,7 +7,7 @@ use DB;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class PagosController extends Controller
+class PagosController extends BaseController
 {
     public function __construct()
     {

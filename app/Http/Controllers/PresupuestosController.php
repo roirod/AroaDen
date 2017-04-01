@@ -13,7 +13,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class PresupuestosController extends Controller
+class PresupuestosController extends BaseController
 {
     public function __construct()
     {

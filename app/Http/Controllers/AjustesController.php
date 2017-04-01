@@ -7,7 +7,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class AjustesController extends Controller
+class AjustesController extends BaseController
 {
     public function __construct()
     {
