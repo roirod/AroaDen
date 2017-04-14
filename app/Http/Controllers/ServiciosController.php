@@ -16,9 +16,11 @@ class ServiciosController extends BaseController
 
     public function __construct()
     {
-        $this->iva_tipos = require(base_path().'/config/iva_tipos.php');
+        parent::__construct();
 
         $this->middleware('auth');
+
+        $this->iva_tipos = require(base_path().'/config/iva_tipos.php');
     }
 
     public function index(Request $request)

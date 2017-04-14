@@ -131,7 +131,8 @@
 
 			$(".busca_class").on('keyup change', function(evt) {
 			    if (evt.which <= 90 && evt.which >= 48 || evt.which == 8 || evt.which == 46 || evt.which == 173) {
-					$('#item_list').html('<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>');
+			    	var buscando = '<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
+					$('#item_list').html(buscando);
 				    var data = $("form").serialize();
 	     
 				    $.ajax({

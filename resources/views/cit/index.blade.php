@@ -101,7 +101,7 @@
                 </td>
 
                 <td class="wid110"> {{ substr( $cita->horacit, 0, -3 ) }} </td>
-                <td class="wid110"> {{date('d-m-Y', strtotime($cita->diacit) )}} </td>
+                <td class="wid110"> {{date( 'd-m-Y', strtotime($cita->diacit) )}} </td>
                 <td class="wid230"> {{$cita->notas}} </td>
             </tr>
           @endforeach
@@ -144,17 +144,19 @@
 
         if (selec == 'rango') {
 
-          if (fechde == '' || fechha == '' || typeof fechde == 'undefined' || typeof fechha == 'undefined') {
+          if (fechha !== '' || !typeof fechha == 'undefined') {
+            if (fechde == '' || fechha == '' || typeof fechde == 'undefined' || typeof fechha == 'undefined') {
 
-            var message = '<h3 class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </h3>';
-            $('#item_list').html(message);
-            return;
+              var message = '<h3 class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </h3>';
+              $('#item_list').hide().html(message).fadeIn('slow');
+              return;
 
-          } else {
+            } else {
 
-            sendAjaxRequest(data);
-            
-          }
+              sendAjaxRequest(data);
+              
+            }
+          }  
 
         } else {
 
@@ -184,7 +186,7 @@
             html = '<h3 class="text-danger">' + response.msg + '</h3>';
 
           } else {
-            html = '<p class="text-muted">' + response.citas_de + '.</p>';
+            html = '<p class="text-muted">' + response.citas_de + '</p>';
             html += '<div class="panel panel-default">';
             html += '   <table class="table">';
             html += '     <tr class="fonsi16 success">';
@@ -221,9 +223,9 @@
             html += ' </div> </div>';               
           }
 
-          $("#item_list").html(html);                 
+          $('#item_list').hide().html(html).fadeIn('slow');         
         }).fail(function() {
-          $("#item_list").html('<h3> Hubo un problema. </h3>');
+          $("#item_list").hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
         });
 
       }

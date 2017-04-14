@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use DB;
 use Validator;
+use Config;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -21,43 +22,37 @@ class AuthController extends Controller
     
     public function __construct()
     {
-        $this->checkIfAdminExists();
+        $this->checkIfUserExists();
 
         $this->middleware('guest', ['except' => 'logout']);
     }
 
-    private function checkIfAdminExists()
+    private function checkIfUserExists()
     {
-        $admin = User::where('username', 'admin')->first();
+        $default_users = Config::get('default_users');
 
-        if ($admin === null) {
-            DB::table('users')->insert([
-                'username' => 'admin',
-                'password' => bcrypt('admin'),
-                'tipo' => 'medio'
-            ]);
-            
-            DB::table('users')->insert([
-                'username' => 'normal',
-                'password' => bcrypt('normal'),
-                'tipo' => 'normal'
-            ]);
+        foreach ($default_users as $user) {
 
-            DB::table('users')->insert([
-                'username' => 'medio',
-                'password' => bcrypt('medio'),
-                'tipo' => 'medio'
-            ]); 
+            $exits = User::where('username', $user["username"])->first();
 
-            return redirect("/login");
+            if ($exits === null) {
+
+                DB::table('users')->insert([
+                    'username' => $user["username"],
+                    'password' => bcrypt($user["password"]),
+                    'tipo' => $user["tipo"]
+                ]);                
+                
+            }
+
         }
+
+        return redirect("/login");
+
     }
 
-    protected function validator(array $data)
-    {
-    }
+    protected function validator(array $data) {}
 
-    protected function create(array $data)
-    {
-    }
+    protected function create(array $data) {}
+
 }

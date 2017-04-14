@@ -1,10 +1,10 @@
-### AroaDen
+## AroaDen
 
 Dental clinic software
 
-#### Official Documentation
+#### Install
 
-Documentation 
+Made using laravel 5.2 
 
 #### License
 

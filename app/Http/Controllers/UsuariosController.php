@@ -11,9 +11,10 @@ use App\Http\Requests;
 
 class UsuariosController extends BaseController
 {
-
     public function __construct()
     {
+        parent::__construct();
+
         $this->middleware('auth');
     }
     

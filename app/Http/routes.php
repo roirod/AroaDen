@@ -12,7 +12,8 @@ Route::group(['middleware' => 'web'], function () {
 
 	 Route::group(['middleware' => 'admin'], function () {
 
-	 	Route::get('Empresa/{id}/edit', 'EmpresaController@edit');
+	 	Route::get('Empresa/editData', 'EmpresaController@editData');
+	 	Route::post('Empresa/saveData', 'EmpresaController@saveData');
 
 	 	Route::get('Pacientes/{id}/del', 'PacientesController@del');
 	 	Route::delete('Pacientes/{id}', 'PacientesController@destroy');
@@ -27,7 +28,7 @@ Route::group(['middleware' => 'web'], function () {
 	 	Route::get('Usuarios/usudel', 'UsuariosController@usudel');
 	 	Route::post('Usuarios/saveup', 'UsuariosController@saveup');
 	 	Route::post('Usuarios/delete', 'UsuariosController@delete');
-	 	Route::resource('Usuarios', 'UsuariosController');
+	 	Route::resource('Usuarios', 'UsuariosController', ['except' => ['index', 'update', 'edit', 'destroy']]);
 	 });
 
 	 Route::group(['middleware' => 'medio'], function () {
@@ -60,11 +61,11 @@ Route::group(['middleware' => 'web'], function () {
 	 });
 
 
-	 Route::resource('Empresa', 'EmpresaController');
+	 Route::get('Empresa', 'EmpresaController@index');
 	 
 	 Route::post('Citas/list', 'CitasController@list');
 	 Route::get('Citas/{idpac}/create', 'CitasController@create');
-	 Route::resource('Citas', 'CitasController');
+	 Route::resource('Citas', 'CitasController', ['except' => ['show']]);
 	  	  
 	 Route::post('Pacientes/list', 'PacientesController@list');
 	 Route::get('Pacientes/{idpac}/ficha', 'PacientesController@ficha');
@@ -89,15 +90,15 @@ Route::group(['middleware' => 'web'], function () {
 
 	 Route::resource('Pagos', 'PagosController@index');
 
-	 Route::get('Ajustes', 'AjustesController@index');
+	 Route::get('Settings', 'SettingsController@index');
 	 
 	 Route::get('Presup/{idpac}/create', 'PresupuestosController@create');
 	 Route::post('Presup/presuedit', 'PresupuestosController@presuedit');
 	 Route::post('Presup/presmod', 'PresupuestosController@presmod');
-	 Route::resource('Presup', 'PresupuestosController');
+	 Route::resource('Presup', 'PresupuestosController', ['except' => ['index', 'update', 'edit', 'destroy']]);
 
 	 Route::post('Trapac/crea','TratamientosController@crea');
 	 Route::post('Trapac/selcrea', 'TratamientosController@selcrea'); 
-	 Route::resource('Trapac', 'TratamientosController');
+	 Route::resource('Trapac', 'TratamientosController', ['except' => ['index', 'create', 'show']]);
 
 });

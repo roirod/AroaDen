@@ -67,7 +67,7 @@
    	
           <div class="col-sm-2 text-right">	
 
-            <a class="btn btn-default btn-sm" role="button" href="{!!url("/Ajustes")!!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
+            <a class="btn btn-default btn-sm" role="button" href="{!!url("/Settings")!!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
         
             <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="Manuales">
               <i class="fa fa-question" aria-hidden="true"></i>
