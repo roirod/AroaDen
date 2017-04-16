@@ -58,7 +58,9 @@
 
 	@else
 
-		  <p class="text-muted"> {!! $count !!} Pacientes.</p>
+		<p>
+		  <span class="label label-success"> {!! $count !!} Pacientes </span>
+		</p>
 
 		  <div class="panel panel-default">
 			 <table class="table">
@@ -123,6 +125,7 @@
 	<script>
 		
 		$(document).ready(function() {
+
 			$.ajaxSetup({
 			   	headers: { 
 			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
@@ -130,71 +133,96 @@
 			}); 
 
 			$(".busca_class").on('keyup change', function(evt) {
-			    if (evt.which <= 90 && evt.which >= 48 || evt.which == 8 || evt.which == 46 || evt.which == 173) {
-			    	var buscando = '<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-					$('#item_list').html(buscando);
-				    var data = $("form").serialize();
-	     
-				    $.ajax({
-				        type : 'POST',
-				        url  : '/Pacientes/list',
-				        dataType: "json",
-				        data : data,     
-				    }).done(function(response) {
-				    	var html = '';
+				var event = evt;
 
-				    	if (response.msg !== false) {
-				    		html = '<h3>' + response.msg + '</h3>';
-				    	} else {
-				    		html = '<p class="text-muted">' + response.count + ' Pacientes.</p>';
-				    		html += '<div class="panel panel-default">';
-				    		html += '   <table class="table">';
-				    		html += '     <tr class="fonsi16 success">';
-				    		html += '       <td class="wid50">&nbsp;</td>';
-				    		html += '       <td class="wid290">Nombre</td>';
-				    		html += '       <td class="wid110">DNI</td>';
-				    		html += '       <td class="wid110">Tel&#xE9;fono1</td>';
-				    		html += '       <td class="wid230">Poblaci&#xF3;n</td>';
-				    		html += '     </tr>';
-				    		html += '   </table>';
-				    		html += '  <div class="box400">';
-				    		html += '    <table class="table table-hover">';
+		        Module.run(event);
 
-				    		$.each(response.pacientes, function(index, object){
-					    		html += '  <tr>';
-					    		html += '    <td class="wid50">';
-					    		html += '      <a href="/Pacientes/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
-					    		html += '        <i class="fa fa-hand-pointer-o"></i>';
-					    		html += '      </a>';
-					    		html += '    </td>';
-					    		html += '    <td class="wid290">';
-					    		html += '      <a href="/Pacientes/'+object.idpac+'" class="pad4" target="_blank">';
-					    		html += 		  object.apepac + ', ' + object.nompac;
-					    		html += '      </a>';
-					    		html += '    </td>';
-					    		html += '    <td class="wid110">' + object.dni + '</td>';
- 					    		html += '    <td class="wid110">' + object.tel1 + '</td>';
-					    		html += '    <td class="wid230">' + object.pobla + '</td>';
-					    		html += '  </tr>';
-				    		});
+		        evt.preventDefault();
+		        evt.stopPropagation();
+      		});
 
-					    	html += '    </table>';
-				    		html += '  </div> </div>';
-				    		html += ' </div> </div>';				    		
-				    	}
+			var Module = (function( window, undefined ){
 
-				        $("#item_list").html(html);	   		          
-				    }).fail(function() {
-				    	$("#item_list").html('<h3> Hubo un problema. </h3>');
-				    });
-			    }
+				function runApp(event) {
 
-				evt.preventDefault();
-				evt.stopPropagation();
-			});
+				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
+				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
+						$('#item_list').hide().html(buscando).fadeIn('slow');
 
-		});
+					    var data = $("form").serialize();
+		     
+					    $.ajax({
 
-	</script>
+					        type : 'POST',
+					        url  : '/Pacientes/list',
+					        dataType: "json",
+					        data : data,
+
+					    }).done(function(response) {
+					    	var html = '';
+
+					    	if (response.msg !== false) {
+
+					    		html = '<h3>' + response.msg + '</h3>';
+
+					    	} else {
+
+					    		html = '<p> <span class="label label-success">' + response.count + ' Pacientes</span></p>';
+
+					    		html += '<div class="panel panel-default">';
+					    		html += '   <table class="table">';
+					    		html += '     <tr class="fonsi16 success">';
+					    		html += '       <td class="wid50">&nbsp;</td>';
+					    		html += '       <td class="wid290">Nombre</td>';
+					    		html += '       <td class="wid110">DNI</td>';
+					    		html += '       <td class="wid110">Tel&#xE9;fono1</td>';
+					    		html += '       <td class="wid230">Poblaci&#xF3;n</td>';
+					    		html += '     </tr>';
+					    		html += '   </table>';
+					    		html += '  <div class="box400">';
+					    		html += '    <table class="table table-hover">';
+
+					    		$.each(response.pacientes, function(index, object){
+						    		html += '  <tr>';
+						    		html += '    <td class="wid50">';
+						    		html += '      <a href="/Pacientes/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
+						    		html += '        <i class="fa fa-hand-pointer-o"></i>';
+						    		html += '      </a>';
+						    		html += '    </td>';
+						    		html += '    <td class="wid290">';
+						    		html += '      <a href="/Pacientes/'+object.idpac+'" class="pad4" target="_blank">';
+						    		html += 		  object.apepac + ', ' + object.nompac;
+						    		html += '      </a>';
+						    		html += '    </td>';
+						    		html += '    <td class="wid110">' + object.dni + '</td>';
+	 					    		html += '    <td class="wid110">' + object.tel1 + '</td>';
+						    		html += '    <td class="wid230">' + object.pobla + '</td>';
+						    		html += '  </tr>';
+					    		});
+
+						    	html += '    </table>';
+					    		html += '  </div> </div>';
+					    		html += ' </div> </div>';				    		
+					    	}
+
+					        $('#item_list').hide().html(html).fadeIn('slow');	          
+					    }).fail(function() {
+
+					    	$('#item_list').hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
+					    });
+				    }
+				}
+
+		        return {
+		          run: function(event) {
+		            runApp(event);
+		          }
+		        }
+
+		    })(window);
+
+    	});
+
+  	</script>
 
 @endsection

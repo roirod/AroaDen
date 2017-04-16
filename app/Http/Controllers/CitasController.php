@@ -111,7 +111,8 @@ class CitasController extends BaseController
     {
     	if ( $selec === 'todas' ) {
 
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> todas </span> ';
+            $citas_de = 'todas';
+            $msg_type = true;
 
 			$citas = DB::table('citas')
 	            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
@@ -124,7 +125,8 @@ class CitasController extends BaseController
     	} elseif ( $selec === 'hoy' ) {
 
     		$selfe1 = date('Y-m-d');
-			$citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> hoy </span> ';
+			$citas_de = 'hoy';
+            $msg_type = true;
 
 		    $citas = DB::table('citas')
 	            ->join('pacientes','citas.idpac','=','pacientes.idpac')
@@ -139,7 +141,8 @@ class CitasController extends BaseController
 
 			$selfe1 = date('Y-m-d');
 			$selfe2 = date('Y-m-d', strtotime('+1 Week'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> +1 semana </span> ';
+            $citas_de = '+1 semana';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 					 	
@@ -147,7 +150,8 @@ class CitasController extends BaseController
 
 			$selfe1 = date('Y-m-d');
 			$selfe2 = date('Y-m-d', strtotime('+1 Month'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> +1 mes </span> ';
+            $citas_de = '+1 mes';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -155,7 +159,8 @@ class CitasController extends BaseController
 
 			$selfe1 = date('Y-m-d');
 			$selfe2 = date('Y-m-d', strtotime('+3 Month'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> +3 meses </span> ';
+            $citas_de = '+3 meses';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -163,7 +168,8 @@ class CitasController extends BaseController
 
 			$selfe1 = date('Y-m-d');
 			$selfe2 = date('Y-m-d', strtotime('+1 Year'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> +1 año </span> ';
+            $citas_de = '+1 año';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -171,7 +177,8 @@ class CitasController extends BaseController
 
 			$selfe2 = date('Y-m-d');
 			$selfe1 = date('Y-m-d', strtotime('-1 Month'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> -1 mes </span> ';
+            $citas_de = '-1 mes';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -179,7 +186,8 @@ class CitasController extends BaseController
 
 			$selfe2 = date('Y-m-d');
 			$selfe1 = date('Y-m-d', strtotime('-3 Month'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> -3 meses </span> ';
+            $citas_de = '-3 meses';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -187,7 +195,8 @@ class CitasController extends BaseController
 
 			$selfe2 = date('Y-m-d');
 			$selfe1 = date('Y-m-d', strtotime('-1 Year'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> -1 año </span> ';
+            $citas_de = '-1 año';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -195,7 +204,8 @@ class CitasController extends BaseController
 
 			$selfe2 = date('Y-m-d');
 			$selfe1 = date('Y-m-d', strtotime('-5 Year'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> -5 años </span> ';
+            $citas_de = '-5 años';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -203,7 +213,8 @@ class CitasController extends BaseController
 
 			$selfe2 = date('Y-m-d');
 			$selfe1 = date('Y-m-d', strtotime('-20 Year'));
-            $citas_de = ' <span class="text-muted"> Citas de: </span> <span class="label label-success fonsi16"> -20 años </span> ';
+            $citas_de = '-20 años';
+            $msg_type = true;
 
 			$citas = $this->getQueryResults($selfe1, $selfe2);
 
@@ -212,13 +223,15 @@ class CitasController extends BaseController
 			$selfe2 = $fechha;
 			$selfe1 = $fechde;
 			$citas_de = "Citas entre ".$this->convertYmdToDmY($fechde)." y ".$this->convertYmdToDmY($fechha);
-
+            $msg_type = false;
+            
 			$citas = $this->getQueryResults($selfe1, $selfe2);		 											 	 			 	
 		}
 
         $data['citas'] = $citas;
         $data['citas_de'] = $citas_de;       
         $data['msg'] = false;
+        $data['msg_type'] = $msg_type;
 
     	return $data;
     }

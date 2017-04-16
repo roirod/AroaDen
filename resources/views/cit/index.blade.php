@@ -67,8 +67,8 @@
   @else
 
     <p>
-      <span class="text-muted"> Citas de: </span>
-      <span class="label label-success fonsi16"> hoy </span>
+      <span class="text-muted"> Citas de </span>
+      <span class="label label-success"> hoy </span>
     </p>
 
     <div class="panel panel-default"> 
@@ -129,6 +129,7 @@
   <script>
     
     $(document).ready(function() {
+
       $.ajaxSetup({
           headers: { 
             'X-CSRF-Token' : $('meta[name=_token]').attr('content')
@@ -136,99 +137,128 @@
       }); 
 
       $(".busca_class").on('change', function(evt) {
-        var data = $(this).parents('form').serialize();
 
-        var selec = $(this).parents('form').find("input[name=selec]").val();
-        var fechde = $(this).parents('form').find("input[name=fechde]").val();
-        var fechha = $(this).parents('form').find("input[name=fechha]").val();
+        var $this = $(this);
 
-        if (selec == 'rango') {
-
-          if (fechha !== '' || !typeof fechha == 'undefined') {
-            if (fechde == '' || fechha == '' || typeof fechde == 'undefined' || typeof fechha == 'undefined') {
-
-              var message = '<h3 class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </h3>';
-              $('#item_list').hide().html(message).fadeIn('slow');
-              return;
-
-            } else {
-
-              sendAjaxRequest(data);
-              
-            }
-          }  
-
-        } else {
-
-          sendAjaxRequest(data);
-        }
+        Module.run($this);
 
         evt.preventDefault();
         evt.stopPropagation();
+
       });
 
+      var Module = (function( window, undefined ){
 
-      function sendAjaxRequest(data) {
+        function runApp($this) {
+        
+          var data = $this.parents('form').serialize();
 
-        var message = '<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Cargando... </span>';
-        $('#item_list').html(message);
+          var selec = $this.parents('form').find("input[name=selec]").val();
+          var fechde = $this.parents('form').find("input[name=fechde]").val();
+          var fechha = $this.parents('form').find("input[name=fechha]").val();
 
-        $.ajax({
-            type : 'POST',
-            url  : '/Citas/list',
-            dataType: "json",
-            data : data,
+          if (selec == 'rango') {
 
-        }).done(function(response) {
-          var html = '';
+            if (fechha !== '' || !typeof fechha == 'undefined') {
 
-          if (response.msg !== false) {
-            html = '<h3 class="text-danger">' + response.msg + '</h3>';
+              if (fechde == '' || fechha == '' || typeof fechde == 'undefined' || typeof fechha == 'undefined') {
+
+                var message = '<h3 class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </h3>';
+                $('#item_list').hide().html(message).fadeIn('slow');
+                return;
+
+              } else {
+
+                return sendAjaxRequest(data);               
+              }
+            }  
 
           } else {
-            html = '<p class="text-muted">' + response.citas_de + '</p>';
-            html += '<div class="panel panel-default">';
-            html += '   <table class="table">';
-            html += '     <tr class="fonsi16 success">';
-            html += '       <td class="wid50"> &nbsp; </td>';
-            html += '       <td class="wid290"> Paciente </td>';
-            html += '       <td class="wid110"> Hora </td>';
-            html += '       <td class="wid110"> Día </td>';
-            html += '       <td class="wid230"> Notas </td>';
-            html += '     </tr>';
-            html += '   </table>';
-            html += '  <div class="box400">';
-            html += '    <table class="table table-hover">';
 
-            $.each(response.citas, function(index, object){
-              html += '  <tr>';
-              html += '    <td class="wid50">';
-              html += '      <a href="/Pacientes/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
-              html += '        <i class="fa fa-hand-pointer-o"></i>';
-              html += '      </a>';
-              html += '    </td>';
-              html += '    <td class="wid290">';
-              html += '      <a href="/Pacientes/'+object.idpac+'" class="pad4" target="_blank">';
-              html +=           object.apepac + ', ' + object.nompac;
-              html += '      </a>';
-              html += '    </td>';
-              html += '    <td class="wid110">' + object.horacit.slice(0, -3); + '</td>';
-              html += '    <td class="wid110">' + object.diacit.split("-").reverse().join("-") + '</td>';
-              html += '    <td class="wid230">' + object.notas + '</td>';
-              html += '  </tr>';
-            });
-
-            html += '    </table>';
-            html += '  </div> </div>';
-            html += ' </div> </div>';               
+            return sendAjaxRequest(data);
           }
 
-          $('#item_list').hide().html(html).fadeIn('slow');         
-        }).fail(function() {
-          $("#item_list").hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
-        });
+        }
 
-      }
+        function sendAjaxRequest(data) {
+       
+          var message = '<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Cargando... </span>';
+          $('#item_list').html(message);
+
+          $.ajax({
+              type : 'POST',
+              url  : '/Citas/list',
+              dataType: "json",
+              data : data,
+
+          }).done(function(response) {
+            var html = '';
+
+            if (response.msg !== false) {
+              html = '<h3 class="text-danger">' + response.msg + '</h3>';
+
+            } else {
+
+              if (response.msg_type) {
+
+                html = '<p> <span class="text-muted">Citas de </span> <span class="label label-success">'+response.citas_de+'</span> </p>';
+
+              } else {
+
+                html = '<p class="text-muted">' + response.citas_de + '</p>';
+
+              }
+
+              html += '<div class="panel panel-default">';
+              html += '   <table class="table">';
+              html += '     <tr class="fonsi16 success">';
+              html += '       <td class="wid50"> &nbsp; </td>';
+              html += '       <td class="wid290"> Paciente </td>';
+              html += '       <td class="wid110"> Hora </td>';
+              html += '       <td class="wid110"> Día </td>';
+              html += '       <td class="wid230"> Notas </td>';
+              html += '     </tr>';
+              html += '   </table>';
+              html += '  <div class="box400">';
+              html += '    <table class="table table-hover">';
+
+              $.each(response.citas, function(index, object){
+                html += '  <tr>';
+                html += '    <td class="wid50">';
+                html += '      <a href="/Pacientes/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
+                html += '        <i class="fa fa-hand-pointer-o"></i>';
+                html += '      </a>';
+                html += '    </td>';
+                html += '    <td class="wid290">';
+                html += '      <a href="/Pacientes/'+object.idpac+'" class="pad4" target="_blank">';
+                html +=           object.apepac + ', ' + object.nompac;
+                html += '      </a>';
+                html += '    </td>';
+                html += '    <td class="wid110">' + object.horacit.slice(0, -3); + '</td>';
+                html += '    <td class="wid110">' + object.diacit.split("-").reverse().join("-") + '</td>';
+                html += '    <td class="wid230">' + object.notas + '</td>';
+                html += '  </tr>';
+              });
+
+              html += '    </table>';
+              html += '  </div> </div>';
+              html += ' </div> </div>';               
+            }
+
+            $('#item_list').hide().html(html).fadeIn('slow');         
+          }).fail(function() {
+            $("#item_list").hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
+          });
+
+        }
+             
+        return {
+          run: function($this) {
+            runApp($this);
+          }
+        }
+
+      })(window);
 
     });
 
