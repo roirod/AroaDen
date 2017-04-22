@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\presup;
-use App\prestex;
-use App\pacientes;
-use App\servicios;
+use App\Models\Presup;
+use App\Models\Prestex;
+use App\Models\Pacientes;
+use App\Models\Servicios;
 
 use Validator;
-
 use Illuminate\Http\Request;
 use App\Http\Requests;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ficha extends Model
+class Ficha extends Model
 {
 	protected $table = 'ficha';
     protected $fillable = ['idpac','histo','enfer','medic','aler','notas'];
@@ -12,6 +12,6 @@ class ficha extends Model
 
     public function pacientes()
     {
-        return $this->belongsTo('App\pacientes');
+        return $this->belongsTo('App\Models\Pacientes');
     }    
 }

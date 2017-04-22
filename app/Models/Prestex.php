@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class prestex extends Model
+class Prestex extends Model
 {
 
 	protected $table = 'prestex';

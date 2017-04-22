@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\pacientes;
-use App\ficha;
+use App\Models\Pacientes;
+use App\Models\Ficha;
 
 use Carbon\Carbon;
 use Storage;

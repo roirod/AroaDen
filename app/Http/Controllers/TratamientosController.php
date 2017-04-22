@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\pacientes;
-use App\servicios;
-use App\tratampacien;
+use App\Models\Pacientes;
+use App\Models\Servicios;
+use App\Models\Tratampacien;
 
 use Validator;
 use Illuminate\Http\Request;

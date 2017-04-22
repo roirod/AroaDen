@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\personal;
+use App\Models\Personal;
 
 use Carbon\Carbon;
 use Storage;

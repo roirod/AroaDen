@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class pacientes extends Model
+class Pacientes extends Model
 {
     use SoftDeletes;
     
@@ -16,27 +16,27 @@ class pacientes extends Model
 
     public function ficha()
     {
-        return $this->hasOne('App\ficha', 'idpac', 'idpac');
+        return $this->hasOne('App\Models\Ficha', 'idpac', 'idpac');
     }
 
     public function tratampacien()
     {
-        return $this->hasMany('App\tratampacien', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Tratampacien', 'idpac', 'idpac');
     }
 
     public function citas()
     {
-        return $this->hasMany('App\citas', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Citas', 'idpac', 'idpac');
     }
 
     public function facturas()
     {
-        return $this->hasMany('App\facturas', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Facturas', 'idpac', 'idpac');
     }
 
     public function presup()
     {
-        return $this->hasMany('App\presup', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Presup', 'idpac', 'idpac');
     }
     
 }

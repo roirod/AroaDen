@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\citas;
-use App\pacientes;
+use App\Models\Citas;
+use App\Models\Pacientes;
 
 use Validator;
 use Illuminate\Http\Request;

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\facturas;
-use App\factutex;
-
-use App\empre;
+use App\Models\Factutex;
+use App\Models\Facturas;
+use App\Models\Empre;
 
 use Validator;
 

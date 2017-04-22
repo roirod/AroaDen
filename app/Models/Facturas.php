@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class facturas extends Model
+class Facturas extends Model
 {
 	protected $table = 'facturas';
     protected $fillable = ['idpac','idser','precio','canti','factumun','cod','iva'];
@@ -12,6 +12,6 @@ class facturas extends Model
 
     public function pacientes()
     {
-        return $this->belongsTo('App\pacientes');
+        return $this->belongsTo('App\Models\Pacientes');
     }
 }

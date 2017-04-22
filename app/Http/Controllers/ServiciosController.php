@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\servicios;
+use App\Models\Servicios;
 
 use Auth;
 use Validator;
@@ -252,13 +252,17 @@ class ServiciosController extends BaseController
         $data = [];
 
         if ($count === 0) {
+
             $data['servicios'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay resultados. ';
+
         } else {
+
             $data['servicios'] = $servicios;
             $data['count'] = $count;        
             $data['msg'] = false;
+            
         }
 
         return $data;

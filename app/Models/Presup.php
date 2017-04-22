@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class presup extends Model
+class Presup extends Model
 {
 	protected $table = 'presup';
     protected $fillable = ['idpac','idser','precio','canti','cod','iva'];
@@ -12,7 +12,7 @@ class presup extends Model
 
     public function pacientes()
     {
-        return $this->belongsTo('App\pacientes');
+        return $this->belongsTo('App\Models\Pacientes');
     }
     
 }
