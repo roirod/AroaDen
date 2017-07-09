@@ -28,31 +28,31 @@
   <div class="col-sm-12 fonsi16">
 
   	 <div class="col-sm-5 pad10">
-  		<i class="fa fa-minus-square"></i> Nombre: &nbsp; <span class="text-muted"> {{$empre->empre_nom}} </span>  
+  		<i class="fa fa-minus-square"></i> Nombre: &nbsp; <span class="text-muted"> {{$empre->company_name}} </span>  
   	 </div> 
   	 <div class="col-sm-4 pad10"> 
- 		<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; <span class="text-muted"> {{$empre->empre_pobla}} </span> 
+ 		<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; <span class="text-muted"> {{$empre->company_city}} </span> 
  	 </div>
  	 <div class="col-sm-5 pad10"> 
- 	 	<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; <span class="text-muted"> {{$empre->empre_direc}} </span>
+ 	 	<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; <span class="text-muted"> {{$empre->company_address}} </span>
  	 </div>
  	 <div class="col-sm-3 pad10">
- 	 	<i class="fa fa-minus-square"></i> NIF: &nbsp; <span class="text-muted"> {{$empre->empre_nif}} </span>
+ 	 	<i class="fa fa-minus-square"></i> NIF: &nbsp; <span class="text-muted"> {{$empre->company_nif}} </span>
  	 </div>
  	 <div class="col-sm-3 pad10">
- 	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->empre_tel1}} </span>
+ 	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->company_tel1}} </span>
  	 </div>
  	 <div class="col-sm-3 pad10">
-	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->empre_tel2}} </span>
+	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->company_tel2}} </span>
 	 </div> 
 	 <div class="col-sm-3 pad10">
-	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->empre_tel3}} </span>
+	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->company_tel3}} </span>
 	 </div>
 
    <br>
 	 <div class="col-sm-12 pad10">
   		<i class="fa fa-minus-square"></i> Notas: <br>
-  	 	<div class="box200"> {!! nl2br(e($empre->empre_notas)) !!} </div>
+  	 	<div class="box200"> {!! nl2br(e($empre->company_notes)) !!} </div>
 
       <hr> <br>
    </div>
@@ -60,7 +60,7 @@
    <br>
    <div class="col-sm-12 pad10">
       <i class="fa fa-minus-square"></i> Texto de facturas: <br>
-      <div class="box200"> {!! nl2br(e($empre->factutex)) !!} </div>
+      <div class="box200"> {!! nl2br(e($empre->invoice_text)) !!} </div>
 
       <hr> <br>
    </div>
@@ -68,7 +68,7 @@
     <div class="row"> 
 		  <div class="col-sm-12 pad20"> 
 			   <i class="fa fa-minus-square"></i> Texto de presupuestos: <br> 
-			   <div class="box200">  {!! nl2br(e($empre->presutex)) !!} </div> 
+			   <div class="box200">  {!! nl2br(e($empre->budget_text)) !!} </div> 
      	</div>
   	 </div>
 

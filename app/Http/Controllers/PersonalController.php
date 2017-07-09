@@ -9,35 +9,53 @@ use Carbon\Carbon;
 use Storage;
 use Validator;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use Lang;
+use App\Interfaces\BaseInterface;
 
-class PersonalController extends BaseController
+class PersonalController extends BaseController implements BaseInterface
 {
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Personal';
+        $this->views_folder = 'per';
+
+        $fields = [
+            'surname' => true,
+            'name' => true,
+            'position' => true,
+            'address' => true,
+            'city' => true,
+            'birth' => true,
+            'dni' => true,
+            'tel1' => true,
+            'tel2' => true,
+            'notes' => true,
+            'save' => true,
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
     }
 
     public function index(Request $request)
     {   
         $numpag = 30;
 
-        $personal = DB::table('personal')
-                        ->whereNull('deleted_at')
-                        ->orderBy('ape', 'ASC')
-                        ->orderBy('nom', 'ASC')
-                        ->paginate($numpag);
+        $main_loop = DB::table('personal')
+                    ->whereNull('deleted_at')
+                    ->orderBy('surname', 'ASC')
+                    ->orderBy('name', 'ASC')
+                    ->paginate($numpag);
 
         $count = DB::table('personal')
-                        ->whereNull('deleted_at')
-                        ->orderBy('ape', 'ASC')
-                        ->orderBy('nom', 'ASC')
-                        ->count();
+                    ->whereNull('deleted_at')
+                    ->count();
 
-        return view('per.index', [
-          'personal' => $personal,
+        return view($this->views_folder.'.index', [
+          'personal' => $main_loop,
           'request' => $request,
           'count' => $count          
         ]);   
@@ -45,13 +63,10 @@ class PersonalController extends BaseController
   
     public function list(Request $request)
     {                                    
-        $busca = $request->input('busca');
-        $busen = $request->input('busen');
+        $busca = $this->sanitizeData($request->input('busca'));
+        $busen = $this->sanitizeData($request->input('busen'));
 
-        $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
-        $busen = htmlentities (trim($busen),ENT_QUOTES,"UTF-8");
-
-        $data = $this->consultaItems($busen, $busca);
+        $data = $this->getResults($busen, $busca);
 
         header('Content-type: application/json; charset=utf-8');
 
@@ -60,237 +75,224 @@ class PersonalController extends BaseController
         exit();
     } 
 
-    public function show(Request $request,$idper)
+    public function show(Request $request, $id)
     {
-        if (empty($idper)) {
-          return redirect("/Personal"); 
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
           
-        $this->dircrea($idper);
+        $this->createDir($id);
 
-        $personal = personal::where('idper', $idper)
+        $personal = Personal::where('idper', $id)
                     ->whereNull('deleted_at')
                     ->first();
 
         if (is_null($personal)) {
-            $request->session()->flash('errmess', 'Has borrado a este profesional.');    
-            return redirect('Personal');
+            $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
+            return redirect($this->main_route);
         }
                        
         $trabajos = DB::table('tratampacien')
                 ->join('pacientes', 'tratampacien.idpac','=','pacientes.idpac')
                 ->join('servicios', 'tratampacien.idser','=','servicios.idser')
-                ->select('tratampacien.*','pacientes.apepac','pacientes.nompac','servicios.nomser')
+                ->select('tratampacien.*','pacientes.surname','pacientes.name','servicios.name as servicio_name')
                 ->whereNull('pacientes.deleted_at')
-                ->where('per1', $idper)
-                ->orWhere('per2', $idper)
-                ->orderBy('fecha' , 'DESC')
+                ->where('per1', $id)
+                ->orWhere('per2', $id)
+                ->orderBy('date' , 'DESC')
                 ->get();    
             
-        return view('per.show', [
+        return view($this->views_folder.'.show', [
             'request' => $request,
             'personal' => $personal,
             'trabajos' => $trabajos,
-            'idper' => $idper
+            'idper' => $id
         ]);       
     }
 
-    public function create(Request $request)
-    {
-          return view('per.create', ['request' => $request]);   
+    public function create(Request $request, $id = false)
+    {     
+        $this->view_data = [
+            'request' => $request,
+            'form_fields' => $this->form_fields
+        ];
+
+        return parent::create($request, $id);  
     }
 
     public function store(Request $request)
     {
-        $personal = DB::table('personal')
-                        ->orderBy('dni','ASC')
-                        ->get();
-          
-        $dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-          
-        foreach ($personal as $person) {
-           if ($person->dni == $dni) {
-                $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->ape.', '.$person->nom;
-                $request->session()->flash('errmess', $messa);
-                return redirect('/Personal/create')->withInput();
-           }
-        } 
+        $dni = $this->sanitizeData($request->input('dni'));
+
+        $person = DB::table('personal')
+                        ->where('dni', $dni)
+                        ->first();
+
+        if ($person != null) {
+            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->surname.', '.$person->name;
+            $request->session()->flash($this->error_message_name, $messa);
+            return redirect("/$this->main_route/create")->withInput();
+        }
 
         $validator = Validator::make($request->all(),[
-           'nom' => 'required|max:111',
-           'ape' => 'required|max:111',
+           'name' => 'required|max:111',
+           'surname' => 'required|max:111',
            'dni' => 'unique:personal|max:12',
            'tel1' => 'max:11',
            'tel2' => 'max:11',
-           'cargo' => 'max:66',
-           'direc' => 'max:111',
-           'pobla' => 'max:111',
-           'fenac' => 'date',
-           'notas' => ''
+           'position' => 'max:66',
+           'address' => 'max:111',
+           'city' => 'max:111',
+           'birth' => 'date',
+           'notes' => ''
         ]);
             
         if ($validator->fails()) {
-             return redirect('/Personal/create')
+             return redirect("/$this->main_route/create")
                          ->withErrors($validator)
                          ->withInput();
         } else {
 
-            $nom = ucfirst(strtolower( $request->input('nom') ) );
-            $ape = ucwords(strtolower( $request->input('ape') ) );
-            $direc = ucfirst(strtolower( $request->input('direc') ) );
-            $pobla = ucfirst(strtolower( $request->input('pobla') ) );
-            $notas = ucfirst(strtolower( $request->input('notas') ) );
+            $name = ucfirst(strtolower( $request->input('name') ) );
+            $surname = ucwords(strtolower( $request->input('surname') ) );
+            $address = ucfirst(strtolower( $request->input('address') ) );
+            $city = ucfirst(strtolower( $request->input('city') ) );
+            $notes = ucfirst(strtolower( $request->input('notes') ) );
             
-            $nom = htmlentities (trim($nom),ENT_QUOTES,"UTF-8");
-            $ape = htmlentities (trim($ape),ENT_QUOTES,"UTF-8");
-            $cargo = htmlentities (trim($request->input('cargo')),ENT_QUOTES,"UTF-8");
-            $dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-            $tel1 = htmlentities (trim($request->input('tel1')),ENT_QUOTES,"UTF-8");
-            $tel2 = htmlentities (trim($request->input('tel2')),ENT_QUOTES,"UTF-8");
-            $direc = htmlentities (trim($direc),ENT_QUOTES,"UTF-8");
-            $pobla = htmlentities (trim($pobla),ENT_QUOTES,"UTF-8");
-            $fenac = htmlentities (trim($request->input('fenac')),ENT_QUOTES,"UTF-8");
-            $notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+            $name = $this->sanitizeData($name);
+            $surname = $this->sanitizeData($surname);
+            $position = $this->sanitizeData($request->input('position'));
+            $dni = $this->sanitizeData($request->input('dni'));
+            $tel1 = $this->sanitizeData($request->input('tel1'));
+            $tel2 = $this->sanitizeData($request->input('tel2'));
+            $address = $this->sanitizeData($address);
+            $city = $this->sanitizeData($city);
+            $birth = $this->sanitizeData($request->input('birth'));
+            $notes = $this->sanitizeData($notes);
                         
-            personal::create([
-              'nom' => $nom,
-              'ape' => $ape,
+            Personal::create([
+              'name' => $name,
+              'surname' => $surname,
               'dni' => $dni,
               'tel1' => $tel1,
               'tel2' => $tel2,
-              'cargo' => $cargo,
-              'direc' => $direc,
-              'pobla' => $pobla,
-              'fenac' => $fenac,
-              'notas' => $notas
+              'position' => $position,
+              'address' => $address,
+              'city' => $city,
+              'birth' => $birth,
+              'notes' => $notes
             ]);
           
-            $request->session()->flash('sucmess', 'Hecho!!!');  
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
                         
-            return redirect('Personal/create');
+            return redirect("/$this->main_route/create");
         }      
     }
   
-    public function edit(Request $request,$idper)
+    public function edit(Request $request, $id, $idcit = false)
     {
-        if (empty($idper)) {
-          return redirect("/Personal"); 
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
          
-        $personal = personal::find($idper); 
+        $personal = Personal::find($id); 
 
-        return view('per.edit', [
+        return view($this->views_folder.'.edit', [
           'request' => $request,
           'personal' => $personal,
-          'idper' => $idper
+          'idper' => $id
         ]);
     }
 
-    public function update(Request $request,$idper)
+    public function update(Request $request, $id)
     {
-        if ( null === $idper ) {
-            return redirect('Personal');
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idper = htmlentities(trim($idper),ENT_QUOTES,"UTF-8");
-        $dni = htmlentities(trim($request->input('dni')),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
+        $dni = $this->sanitizeData($request->input('dni'));
 
-        $personal = DB::table('personal')
-                        ->orderBy('dni','ASC')
-                        ->get();
-        
-        $perso = personal::find($idper);
+        $person = Personal::find($id); 
+       
+        $exists = Personal::where('idper', '!=', $id)
+                        ->where('dni', $person->dni)
+                        ->first();
               
-        if ($dni != $perso->dni) {
-            foreach ($personal as $person) {
-               if ($person->dni == $dni) {
-                    $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->ape.', '.$person->nom;
-                    $request->session()->flash('errmess', $messa);
-                    return redirect("Personal/$idper/edit")->withInput();
-               }
-            }
+        if ($exists == null) {
+            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->surname.', '.$person->name;
+            $request->session()->flash($this->error_message_name, $messa);
+            return redirect("/$this->main_route/$id/edit")->withInput();
         }
 
         $validator = Validator::make($request->all(),[
-            'nom' => 'required|max:111',
-            'ape' => 'required|max:111',
+            'name' => 'required|max:111',
+            'surname' => 'required|max:111',
             'dni' => 'required|max:12',
             'tel1' => 'max:11',
             'tel2' => 'max:11',
-            'cargo' => 'max:66',
-            'notas' => '',
-            'direc' => 'max:111',
-            'pobla' => 'max:111',
-            'fenac' => 'date'
+            'position' => 'max:66',
+            'notes' => '',
+            'address' => 'max:111',
+            'city' => 'max:111',
+            'birth' => 'date'
         ]);
             
         if ($validator->fails()) {
-             return redirect("Personal/$idper/edit")
+             return redirect("/$this->main_route/$id/edit")
                          ->withErrors($validator)
                          ->withInput();
         } else {        
 
-            $fenac = $request->input('fenac');
-            
-            $regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';
-            
-            if ( !preg_match($regex, $fenac) ) {
-               $request->session()->flash('errmess', 'Fecha/s incorrecta');
-               return redirect("Personal/$idper/edit");
+            $birth = $request->input('birth');
+                      
+            if ( $this->validateDate($birth) ) {
+               $request->session()->flash($this->error_message_name, 'Fecha/s incorrecta');
+               return redirect("/$this->main_route/$id/edit");
             }
           
-            $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+            $id = $this->sanitizeData($id);
             
-            $personal = personal::find($idper);
+            $personal = Personal::find($id);
                     
-            $nom = ucfirst(strtolower( $request->input('nom') ) );
-            $ape = ucwords(strtolower( $request->input('ape') ) );
-            $notas = ucfirst(strtolower( $request->input('notas') ) );
-            $direc = ucfirst(strtolower( $request->input('direc') ) );
-            $pobla = ucfirst(strtolower( $request->input('pobla') ) );
+            $name = ucfirst(strtolower( $request->input('name') ) );
+            $surname = ucwords(strtolower( $request->input('surname') ) );
+            $notes = ucfirst(strtolower( $request->input('notes') ) );
+            $address = ucfirst(strtolower( $request->input('address') ) );
+            $city = ucfirst(strtolower( $request->input('city') ) );
             
-            $personal->nom = htmlentities (trim($nom),ENT_QUOTES,"UTF-8");
-            $personal->ape = htmlentities (trim($ape),ENT_QUOTES,"UTF-8");
-            $personal->dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-            $personal->tel1 = htmlentities (trim($request->input('tel1')),ENT_QUOTES,"UTF-8");
-            $personal->tel2 = htmlentities (trim($request->input('tel2')),ENT_QUOTES,"UTF-8");
-            $personal->cargo = htmlentities (trim($request->input('cargo')),ENT_QUOTES,"UTF-8");
-            $personal->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
-            $personal->direc = htmlentities (trim($direc),ENT_QUOTES,"UTF-8");
-            $personal->pobla = htmlentities (trim($pobla),ENT_QUOTES,"UTF-8");
-            $personal->fenac = htmlentities (trim($request->input('fenac')),ENT_QUOTES,"UTF-8");
+            $personal->name = $this->sanitizeData($name);
+            $personal->surname = $this->sanitizeData($surname);
+            $personal->dni = $this->sanitizeData($request->input('dni'));
+            $personal->tel1 = $this->sanitizeData($request->input('tel1'));
+            $personal->tel2 = $this->sanitizeData($request->input('tel2'));
+            $personal->position = $this->sanitizeData($request->input('position'));
+            $personal->notes = $this->sanitizeData($notes);
+            $personal->address = $this->sanitizeData($address);
+            $personal->city = $this->sanitizeData($city);
+            $personal->birth = $this->sanitizeData($request->input('birth'));
             
             $personal->save();
 
-            $request->session()->flash('sucmess', 'Hecho!!!');
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
-            return redirect("Personal/$idper");
+            return redirect("/$this->main_route/$id");
         }   
     }
 
-    public function file(Request $request,$idper)
+    public function file(Request $request, $id)
     {
-        if (empty($idper)) {
-          return redirect("/Personal"); 
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
 
-        $this->dircrea($idper);
+        $this->createDir($id);
 
-        $perdir = "/perdir/$idper/";
+        $files = Storage::files("/perdir/$id/");
 
-        $files = Storage::files($perdir);
-
-        $url = url("Personal/$idper");
+        $url = url("$this->main_route/$id");
         
-        return view('per.file', [
+        return view($this->views_folder.'.file', [
           'request' => $request,
-          'idper' => $idper,
+          'idper' => $id,
           'files' => $files,
           'url' => $url
         ]);
@@ -298,15 +300,13 @@ class PersonalController extends BaseController
 
     public function upload(Request $request)
     {
-        $idper = $request->input('idper');
+        $id = $request->input('idper');
 
-        if (empty($idper)) {
-          return redirect("/Personal"); 
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
 
-        $perdir = storage_path("app/perdir/$idper");
+        $perdir = storage_path("app/perdir/$id");
          
         $files = $request->file('files');
           
@@ -319,18 +319,18 @@ class PersonalController extends BaseController
 
             $max = 1024 * 1024 * 22;
 
-            $filedisk = storage_path("app/perdir/$idper/$filename");
+            $filedisk = storage_path("app/perdir/$id/$filename");
 
             if ( $size > $max ) {
                 $mess = "El archivo: - $filename - es superior a 22 MB";
-                $request->session()->flash('errmess', $mess);
-                return redirect("Personal/$idper/file");
+                $request->session()->flash($this->error_message_name, $mess);
+                return redirect("/$this->main_route/$id/file");
             }                
 
             if ( file_exists($filedisk) ) {
                 $mess = "El archivo: $filename -- existe ya en su carpeta";
-                $request->session()->flash('errmess', $mess);
-                return redirect("Personal/$idper/file");
+                $request->session()->flash($this->error_message_name, $mess);
+                return redirect("/$this->main_route/$id/file");
 
             } else {
                 $file->move($perdir, $filename);
@@ -339,18 +339,20 @@ class PersonalController extends BaseController
         }  
         
         if($upcount == $ficount){
-            return redirect("Personal/$idper/file");
+            return redirect("/$this->main_route/$id/file");
         } else {
-            $request->session()->flash('error', 'error!!!');
-            return redirect("Personal/$idper/file");
+            $request->session()->flash($this->error_message_name, 'error!!!');
+            return redirect("/$this->main_route/$id/file");
         }
     }
     
-    public function download(Request $request,$idper,$file)
+    public function download(Request $request, $id, $file)
     {   
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $perdir = storage_path("app/perdir/$idper");
+        $id = $this->sanitizeData($id);
+
+        $perdir = storage_path("app/perdir/$id");
 
         $filedown = $perdir.'/'.$file;
 
@@ -359,11 +361,13 @@ class PersonalController extends BaseController
 
     public function filerem(Request $request)
     {
-        $idper = $request->input('idper');
+        $id = $request->input('idper');
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");     
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $perdir = storage_path("app/perdir/$idper");
+        $id = $this->sanitizeData($id);     
+
+        $perdir = storage_path("app/perdir/$id");
 
         $file = $request->input('filerem');
 
@@ -371,44 +375,40 @@ class PersonalController extends BaseController
           
         unlink($filerem);   
           
-        return redirect("Personal/$idper/file");
+        return redirect("/$this->main_route/$id/file");
     }  
    
-    public function del(Request $request,$idper)
+    public function del(Request $request, $id)
     {
-        if (empty($idper)) {
-          return redirect("/Personal"); 
-        }
+        $this->redirectIfIdIsNull($idser, $this->main_route);
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
 
-        $personal = personal::find($idper);
+        $personal = Personal::find($id);
          
-        return view('per.del', [
+        return view($this->views_folder.'.del', [
           'request' => $request,
           'personal' => $personal,
-          'idper' => $idper
+          'idper' => $id
         ]);
     }
  
-    public function destroy(Request $request,$idper)
+    public function destroy(Request $request, $id)
     {      
-        if (empty($idper)) {
-          return redirect("/Personal"); 
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idper = htmlentities (trim($idper),ENT_QUOTES,"UTF-8");    
+        $id = $this->sanitizeData($id);    
         
-        personal::destroy($idper);     
+        Personal::destroy($id);     
 
-        $request->session()->flash('sucmess', 'Hecho!!!');
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect('Personal');
+        return redirect($this->main_route);
     }
 
-    public function dircrea($idper)
+    public function createDir($id)
     {               
-        $perdir = "/perdir/$idper/";
+        $perdir = "/perdir/$id/";
 
         if ( ! Storage::exists($perdir) ) { 
             Storage::makeDirectory($perdir, 0770, true);
@@ -421,47 +421,47 @@ class PersonalController extends BaseController
         }
     }
 
-    public function consultaItems($busen, $busca)
+    private function getResults($busen, $busca)
     {
         $count = DB::table('personal')
                     ->whereNull('deleted_at')
                     ->count();
 
         if ($count === 0) {
-            $data['personal'] = false;
+            $data['main_loop'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay personal en la base de datos. ';
 
             return $data;
         }
 
-        $personal = DB::table('personal')
-                    ->select('idper', 'ape', 'nom', 'dni', 'tel1', 'cargo')
+        $main_loop = DB::table('personal')
+                    ->select('idper', 'surname', 'name', 'dni', 'tel1', 'position')
                     ->whereNull('deleted_at')
                     ->where($busen,'LIKE','%'.$busca.'%')
-                    ->orderBy('ape','ASC')
-                    ->orderBy('nom','ASC')
+                    ->orderBy('surname','ASC')
+                    ->orderBy('name','ASC')
                     ->get();
 
         $count = DB::table('personal')
-                    ->select('idper', 'ape', 'nom', 'dni', 'tel1', 'cargo')
+                    ->select('idper', 'surname', 'name', 'dni', 'tel1', 'position')
                     ->whereNull('deleted_at')
                     ->where($busen,'LIKE','%'.$busca.'%')
                     ->count();      
                     
-        return $this->recorrerItems($personal, $count);
+        return $this->getOutputData($main_loop, $count);
     }
 
-    public function recorrerItems($personal, $count)
+    private function getOutputData($main_loop, $count)
     {
         $data = [];
 
-        if ($count === 0) {
-            $data['personal'] = false;
+        if ($count == 0) {
+            $data['main_loop'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay resultados. ';
         } else {
-            $data['personal'] = $personal;
+            $data['main_loop'] = $main_loop;
             $data['count'] = $count;        
             $data['msg'] = false;
         }

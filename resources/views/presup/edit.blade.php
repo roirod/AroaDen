@@ -19,7 +19,7 @@
 	 	<form role="form" class="form" role="form" action="{!!url("/Presup/delcod")!!}" method="POST">	
 	 		{!! csrf_field() !!}
 
-			<input type="hidden" name="cod" value="{!!$cod!!}">	
+			<input type="hidden" name="code" value="{!!$code!!}">	
 			<input type="hidden" name="idpac" value="{!!$idpac!!}">	
 
 			<div class="input-group"> 
@@ -69,13 +69,13 @@
 							 	<form id="delform">
 
 									<input type="hidden" name="idpre" value="{!!$presu->idpre!!}">
-									<input type="hidden" name="cod" value="{!!$cod!!}">
+									<input type="hidden" name="code" value="{!!$code!!}">
 
-									  <td class="wid140">{!!$presu->nomser!!}</td>
+									  <td class="wid140">{!!$presu->name!!}</td>
 
-									  <td class="wid95 textcent">{!!$presu->canti!!} </td>
+									  <td class="wid95 textcent">{!!$presu->units!!} </td>
 
-									  <td class="wid95 textcent">{!! numformat($presu->precio) !!} €</td>
+									  <td class="wid95 textcent">{!! numformat($presu->price) !!} €</td>
 
 									  <td class="wid50">
 									    <div class="btn-group"> 
@@ -120,7 +120,7 @@
 
 <div class="col-sm-12 text-right">
 
-		<input type="hidden" name="cod" value="{!!$cod!!}">	
+		<input type="hidden" name="code" value="{!!$code!!}">	
 
 		<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
 		<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Crear</button>

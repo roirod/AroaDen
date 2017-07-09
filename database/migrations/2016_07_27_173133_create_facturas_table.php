@@ -9,16 +9,17 @@ class CreateFacturasTable extends Migration
     public function up()
     {
         Schema::create('facturas', function (Blueprint $table) {
+            $table->engine = 'InnoDB';            
             $table->bigIncrements('idfac');
             $table->Integer('idpac')->unsigned();
             $table->Integer('idser')->unsigned();
-            $table->smallInteger('precio')->unsigned();
-            $table->tinyInteger('iva')->unsigned()->default(0);
-            $table->tinyInteger('canti')->unsigned()->default(1);   
-            $table->bigInteger('factumun');
-            $table->dateTime('cod');
+            $table->smallInteger('price')->unsigned();
+            $table->tinyInteger('tax')->unsigned()->default(0);
+            $table->tinyInteger('units')->unsigned()->default(1);   
+            $table->bigInteger('invoice_number');
+            $table->dateTime('code');
             $table->timestamps();
-            $table->index('cod');
+            $table->index('code');
             $table->foreign('idpac')
                       ->references('idpac')->on('pacientes')
                       ->onDelete('cascade');

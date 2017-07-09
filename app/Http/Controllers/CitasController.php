@@ -5,87 +5,96 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Citas;
 use App\Models\Pacientes;
-
 use Validator;
 use Illuminate\Http\Request;
+use Lang;
+use App\Interfaces\BaseInterface;
 
-
-class CitasController extends BaseController
+class CitasController extends BaseController implements BaseInterface
 {
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Citas';
+        $this->views_folder = 'cit';
+        $this->other_route = 'Pacientes';
+
+        $fields = [
+            'hour' => true,
+            'day' => true,
+            'notes' => true,
+            'save' => true,
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
     }
     
     public function index(Request $request)
     {	
 	    $today = date('Y-m-d');
 
-	    $citas = DB::table('citas')
+	    $main_loop = DB::table('citas')
             ->join('pacientes','citas.idpac','=','pacientes.idpac')
-            ->select('citas.*','pacientes.apepac','pacientes.nompac')
-            ->where('citas.diacit', $today)
+            ->select('citas.*','pacientes.surname','pacientes.name')
+            ->where('citas.day', $today)
             ->whereNull('pacientes.deleted_at')
-            ->orderBy('citas.diacit' , 'DESC')
-            ->orderBy('citas.horacit' , 'ASC')
+            ->orderBy('citas.day' , 'DESC')
+            ->orderBy('citas.hour' , 'ASC')
             ->get();
 
         $count = DB::table('citas')
             ->join('pacientes','citas.idpac','=','pacientes.idpac')
-            ->select('citas.*','pacientes.apepac','pacientes.nompac')
-            ->where('citas.diacit', $today)
+            ->select('citas.*','pacientes.surname','pacientes.name')
+            ->where('citas.day', $today)
             ->whereNull('pacientes.deleted_at')
             ->count();
 
-        return view('cit.index', [
+        return view($this->views_folder.'.index', [
         	'request' => $request,
-        	'citas' => $citas,
+        	'main_loop' => $main_loop,
         	'count' => $count
         ]);
     }
     
     public function list(Request $request)
     {
-        $selec = $request->input('selec');
-        $selec = htmlentities (trim($selec),ENT_QUOTES,"UTF-8");
+        $selec = $this->sanitizeData($request->input('selec'));
 
         $data = [];
 
         $count = DB::table('citas')
             ->join('pacientes','citas.idpac','=','pacientes.idpac')
-            ->select('citas.*','pacientes.apepac','pacientes.nompac')
+            ->select('citas.*','pacientes.surname','pacientes.name')
             ->whereNull('pacientes.deleted_at')
             ->count();
 
-        if ($count === 0) {
+        if ($count == 0) {
 
-            $data['citas'] = false;
-            $data['citas_de'] = false;       
+            $data['main_loop'] = false;
+            $data['appointments_of'] = false;       
             $data['msg'] = ' No hay citas en la base de datos. ';
 
         } else {
 
-	        $fechde = $request->input('fechde');
-	        $fechha = $request->input('fechha');
+            $fechde = $this->sanitizeData($request->input('fechde'));
+            $fechha = $this->sanitizeData($request->input('fechha'));
 
-        	if ( $selec === 'rango' ) {
+        	if ( $selec == 'rango' ) {
 
-		        $fechde = htmlentities (trim($fechde),ENT_QUOTES,"UTF-8");
-		        $fechha = htmlentities (trim($fechha),ENT_QUOTES,"UTF-8");
-		        
-		        if ( $this->validateDate($fechde) === false || $this->validateDate($fechha) === false ) {
+		        if ( $this->validateDate($fechde) == false || $this->validateDate($fechha) == false ) {
 
-		            $data['citas'] = false;
-		            $data['citas_de'] = false;       
-		            $data['msg'] = ' Fecha/s incorrecta, introduzca fechas válidas y en formato 14/04/2017. ';
+		            $data['main_loop'] = false;
+		            $data['appointments_of'] = false;       
+		            $data['msg'] = ' Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14/04/2017. ';
 
 			 	} elseif ( $fechde > $fechha ) {
 
-		            $data['citas'] = false;
-		            $data['citas_de'] = false;       
-		            $data['msg'] = "La fecha ". $this->convertYmdToDmY($fechha) ." es anterior a ". $this->convertYmdToDmY($fechde) .".";
+		            $data['main_loop'] = false;
+		            $data['appointments_of'] = false;       
+		            $data['msg'] = "La fecha ".$this->convertYmdToDmY($fechha)." es anterior a ".$this->convertYmdToDmY($fechde) .".";
 
 		        } else {
 
@@ -107,336 +116,315 @@ class CitasController extends BaseController
         exit();
     }
 
-    private function getItemsByDate($selec, $fechde, $fechha)
-    {
-    	if ( $selec === 'todas' ) {
-
-            $citas_de = 'todas';
-            $msg_type = true;
-
-			$citas = DB::table('citas')
-	            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
-	            ->select('citas.*','pacientes.apepac','pacientes.nompac')
-	            ->whereNull('pacientes.deleted_at')
-	            ->orderBy('diacit' , 'DESC')
-	            ->orderBy('horacit' , 'ASC')
-	            ->get();
-
-    	} elseif ( $selec === 'hoy' ) {
-
-    		$selfe1 = date('Y-m-d');
-			$citas_de = 'hoy';
-            $msg_type = true;
-
-		    $citas = DB::table('citas')
-	            ->join('pacientes','citas.idpac','=','pacientes.idpac')
-	            ->select('citas.*','pacientes.apepac','pacientes.nompac')
-	            ->where('diacit', $selfe1)
-	            ->whereNull('pacientes.deleted_at')
-	            ->orderBy('diacit' , 'DESC')
-	            ->orderBy('horacit' , 'ASC')
-	            ->get(); 
-
-		} elseif ($selec === '1semana' ) {
-
-			$selfe1 = date('Y-m-d');
-			$selfe2 = date('Y-m-d', strtotime('+1 Week'));
-            $citas_de = '+1 semana';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-					 	
-		} elseif ($selec === '1mes' ) {
-
-			$selfe1 = date('Y-m-d');
-			$selfe2 = date('Y-m-d', strtotime('+1 Month'));
-            $citas_de = '+1 mes';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === '3mes' ) {
-
-			$selfe1 = date('Y-m-d');
-			$selfe2 = date('Y-m-d', strtotime('+3 Month'));
-            $citas_de = '+3 meses';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === '1ano' ) {
-
-			$selfe1 = date('Y-m-d');
-			$selfe2 = date('Y-m-d', strtotime('+1 Year'));
-            $citas_de = '+1 año';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === 'menos1mes' ) {
-
-			$selfe2 = date('Y-m-d');
-			$selfe1 = date('Y-m-d', strtotime('-1 Month'));
-            $citas_de = '-1 mes';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === 'menos3mes' ) {
-
-			$selfe2 = date('Y-m-d');
-			$selfe1 = date('Y-m-d', strtotime('-3 Month'));
-            $citas_de = '-3 meses';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === 'menos1ano' ) {
-
-			$selfe2 = date('Y-m-d');
-			$selfe1 = date('Y-m-d', strtotime('-1 Year'));
-            $citas_de = '-1 año';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === 'menos5ano' ) {
-
-			$selfe2 = date('Y-m-d');
-			$selfe1 = date('Y-m-d', strtotime('-5 Year'));
-            $citas_de = '-5 años';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === 'menos20ano' ) {
-
-			$selfe2 = date('Y-m-d');
-			$selfe1 = date('Y-m-d', strtotime('-20 Year'));
-            $citas_de = '-20 años';
-            $msg_type = true;
-
-			$citas = $this->getQueryResults($selfe1, $selfe2);
-
-		} elseif ($selec === 'rango' ) {
-
-			$selfe2 = $fechha;
-			$selfe1 = $fechde;
-			$citas_de = "Citas entre ".$this->convertYmdToDmY($fechde)." y ".$this->convertYmdToDmY($fechha);
-            $msg_type = false;
-            
-			$citas = $this->getQueryResults($selfe1, $selfe2);		 											 	 			 	
-		}
-
-        $data['citas'] = $citas;
-        $data['citas_de'] = $citas_de;       
-        $data['msg'] = false;
-        $data['msg_type'] = $msg_type;
-
-    	return $data;
-    }
-
-    private function getQueryResults($selfe1, $selfe2)
-    {
-	    $citas = DB::table('citas')
-            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
-            ->select('citas.*','pacientes.apepac','pacientes.nompac')
-            ->whereBetween('diacit', [$selfe1, $selfe2])
-            ->whereNull('pacientes.deleted_at')
-            ->orderBy('diacit' , 'DESC')
-            ->orderBy('horacit' , 'ASC')
-            ->get(); 
-
-    	return $citas;
-    }
-
-    public function create(Request $request,$idpac)
+    public function create(Request $request, $id = false)
     {  	  
-    	if ( null == $idpac ) {
-    	  	return redirect('Pacientes');
-    	}
+        $this->redirectIfIdIsNull($id, $this->other_route);
     	
-    	$pacientes = pacientes::find($idpac);
+    	$object = Pacientes::find($id);
 
-    	$apepac = $pacientes->apepac;
-    	$nompac = $pacientes->nompac;
+        $this->view_data = [
+            'request' => $request,
+            'idpac' => $id,
+            'form_fields' => $this->form_fields,
+            'surname' => $object->surname,
+            'name' => $object->name
+        ];
 
-        return view('cit.create', [
-        	'request' => $request,
-     		'idpac' => $idpac,
-     		'apepac' => $apepac,
-     		'nompac' => $nompac
-     	]);
+        return parent::create($request, $id);  
     }
 
     public function store(Request $request)
     {
-    	$idpac = $request->input('idpac');
+    	$id = $request->input('idpac');
 
-    	if ( null == $idpac ) {
-    	  	return redirect('Pacientes');
-    	}    	
+        $this->redirectIfIdIsNull($id, $this->other_route);  	
     	
-    	$horacit = trim ( $request->input('horacit') );
-    	$diacit = trim ( $request->input('diacit') );
-    	$notas = htmlentities (trim($request->input('notas')),ENT_QUOTES,"UTF-8");
-	      	  
-    	if ( isset ($diacit) ) {
-   	  		$regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';  	  
-	    	if ( preg_match($regex, $diacit) ) {  } else {
-			  	$request->session()->flash('errmess', 'Fecha incorrecta');	
-				return redirect("/Citas/$idpac/create");
-			}
+    	$hour = trim ( $request->input('hour') );
+    	$day = trim ( $request->input('day') );
+        $notes = $this->sanitizeData($request->input('notes'));
+
+        if ( !$this->validateDate($day) || !$this->validateTime($hour) ) {
+		  	$request->session()->flash($this->error_message_name, 'Fecha o hora incorrecta.');	
+			return redirect("/$this->main_route/$id/create");
 		}
 	    	  
         $validator = Validator::make($request->all(), [
-	        'horacit' => 'required',
-	        'diacit' => 'required|date',
-	        'notas' => ''
+	        'hour' => 'required',
+	        'day' => 'required',
+	        'notes' => 'nullable'
 	    ]);
             
         if ($validator->fails()) {
-	        return redirect("/Citas/$idpac/create")
+	        return redirect("/$this->main_route/$id/create")
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {
 	        	
-		    citas::create([
-		        'idpac' => $idpac,
-		        'horacit' => $horacit,
-		        'diacit' => $diacit,
-		        'notas' => $notas
+		    Citas::create([
+		        'idpac' => $id,
+		        'hour' => $hour,
+		        'day' => $day,
+		        'notes' => $notes
 		    ]);
 		      
-		    $request->session()->flash('sucmess', 'Hecho!!!');	
+		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
 	        	        	
-	        return redirect("/Citas/$idpac/create");
+	        return redirect("/$this->main_route/$id/create");
         }     
     }
 
-    public function show($id)
-    { }
-
-    public function edit(Request $request,$idpac,$idcit)
+    public function edit(Request $request, $id, $idcit = false)
     {
-    	if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}
+        $this->redirectIfIdIsNull($id, $this->other_route);
+        $this->redirectIfIdIsNull($idcit, $this->other_route);
+
+        $id = $this->sanitizeData($id);
+        $idcit = $this->sanitizeData($idcit);
     	
-    	if ( null === $idcit ) {
-    		return redirect('Pacientes');
-    	}
+    	$object = Citas::find($idcit);
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
-    	$idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
+        $this->form_fields = [
+            'hour' => true,
+            'day' => true,
+            'notes' => true,
+        ];
 
-    	$cita = citas::find($idcit);
-
-    	return view('cit.edit', [
+    	return view($this->views_folder.'.edit', [
     		'request' => $request,
-    		'cita' => $cita,
+    		'object' => $object,
+            'form_fields' => $this->form_fields,            
     		'idcit' => $idcit,
-    		'idpac' => $idpac
+    		'idpac' => $id
     	]);
     }
 
-    public function update(Request $request,$idcit)
+    public function update(Request $request, $idcit)
     {
-    	if ( null === $idcit ) {
-    		return redirect('Pacientes');
-    	}
+        $idcit = $this->sanitizeData($idcit);
+        $id = $this->sanitizeData($request->input('idpac'));
 
-    	$idcit = htmlentities(trim($idcit),ENT_QUOTES,"UTF-8");
-    	$idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+        $exists = Citas::where('idcit', $idcit)->where('idpac', $id)->exists();
 
-    	if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}
+        if ($exists != true) {
+            $request->session()->flash($this->error_message_name, 'Error');  
+            return redirect("/$this->main_route/$id/$idcit/edit");
+        }
+
+        $this->redirectIfIdIsNull($idcit, $this->other_route);
+        $this->redirectIfIdIsNull($id, $this->other_route);
        	  
         $validator = Validator::make($request->all(), [
-	        'horacit' => 'required',
-	        'diacit' => 'required|date',
-	        'notas' => ''
+            'hour' => 'required|date_format:H:i',
+            'day' => 'required|date_format:Y:m:d',
+            'notes' => 'nullable'
 	    ]);
             
         if ($validator->fails()) {
-	        return redirect("/Citas/$idpac/$idcit/edit")
+	        return redirect("/$this->main_route/$id/$idcit/edit")
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {
 
-	    	$horacit = trim($request->input('horacit'));
-	    	$diacit = trim($request->input('diacit'));
-		      	  
-	    	if ( isset ($diacit) ) {
-	   	  		$regex = '/^(18|19|20)\d\d[\/\-.](0[1-9]|1[012])[\/\-.](0[1-9]|[12][0-9]|3[01])$/';  	  
-		    	if ( preg_match($regex, $diacit) ) {  } else {
-				  	$request->session()->flash('errmess', 'Fecha incorrecta');	
-					return redirect("/Citas/$idpac/$idcit/edit");
-				}
-			}
-					
-			$citas = citas::find($idcit);
+	    	$hour = trim($request->input('hour'));
+	    	$day = trim($request->input('day'));
 
-	    	$notas = ucfirst(strtolower($request->input('notas')));
-	    	
-			$citas->horacit = htmlentities (trim($horacit),ENT_QUOTES,"UTF-8");
-			$citas->diacit = htmlentities (trim($diacit),ENT_QUOTES,"UTF-8");
-			$citas->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+            if ( !$this->validateTime($hour) || !$this->validateDate($day) ) {
+                $request->session()->flash($this->error_message_name, 'Fecha o hora incorrecta');  
+                return redirect("/$this->main_route/$id/$idcit/edit");
+            }
+				
+			$object = Citas::find($idcit);
+
+	    	$notes = ucfirst(strtolower($request->input('notes')));
+
+            $object->hour = $this->sanitizeData($hour);
+            $object->day = $this->sanitizeData($day);
+            $object->notes = $this->sanitizeData($notes);
 			
-			$citas->save();
+			$object->save();
 
-			$request->session()->flash('sucmess', 'Hecho!!!');
+			$request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
-			return redirect("Pacientes/$idpac");
+			return redirect("$this->other_route/$id");
 		}   
     }
 
-    public function del(Request $request,$idpac,$idcit)
+    public function del(Request $request, $id, $idcit)
     {    	  
-    	$idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $idcit = $this->sanitizeData($idcit);
+        $id = $this->sanitizeData($id);
 
-        if ( null === $idcit ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($idcit, $this->other_route);
+        $this->redirectIfIdIsNull($id, $this->other_route);
 
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        }
+        $object = Citas::find($idcit);
 
-        $cita = citas::find($idcit);
-
-    	return view('cit.del', [
+    	return view($this->views_folder.'.del', [
             'request' => $request,
-            'cita' => $cita,
+            'object' => $object,
             'idcit' => $idcit,
-    		'idpac' => $idpac
+    		'idpac' => $id
         ]);
     }
  
-    public function destroy(Request $request,$idcit)
-    {             	
-    	$idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
-    	$idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+    public function destroy(Request $request, $idcit)
+    {       
+        $id = $this->sanitizeData($request->input('idpac'));
+        $idcit = $this->sanitizeData($idcit);
 
-        if ( null === $idcit ) {
-            return redirect('Pacientes');
+        $this->redirectIfIdIsNull($idcit, $this->other_route);
+        $this->redirectIfIdIsNull($id, $this->other_route);
+       
+        $object = Citas::find($idcit);
+      
+        $object->delete();
+
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+        
+        return redirect("$this->other_route/$id");
+    }
+
+    private function getItemsByDate($selec, $fechde, $fechha)
+    {
+        if ( $selec == 'todas' ) {
+
+            $appointments_of = 'todas';
+            $msg_type = true;
+
+            $main_loop = DB::table('citas')
+                ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
+                ->select('citas.*','pacientes.surname','pacientes.name')
+                ->whereNull('pacientes.deleted_at')
+                ->orderBy('day' , 'DESC')
+                ->orderBy('hour' , 'ASC')
+                ->get();
+
+        } elseif ( $selec == 'hoy' ) {
+
+            $selfe1 = date('Y-m-d');
+            $appointments_of = 'hoy';
+            $msg_type = true;
+
+            $main_loop = DB::table('citas')
+                ->join('pacientes','citas.idpac','=','pacientes.idpac')
+                ->select('citas.*','pacientes.surname','pacientes.name')
+                ->where('day', $selfe1)
+                ->whereNull('pacientes.deleted_at')
+                ->orderBy('day' , 'DESC')
+                ->orderBy('hour' , 'ASC')
+                ->get(); 
+
+        } elseif ($selec == '1semana' ) {
+
+            $selfe1 = date('Y-m-d');
+            $selfe2 = date('Y-m-d', strtotime('+1 Week'));
+            $appointments_of = '+1 semana';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+                        
+        } elseif ($selec == '1mes' ) {
+
+            $selfe1 = date('Y-m-d');
+            $selfe2 = date('Y-m-d', strtotime('+1 Month'));
+            $appointments_of = '+1 mes';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == '3mes' ) {
+
+            $selfe1 = date('Y-m-d');
+            $selfe2 = date('Y-m-d', strtotime('+3 Month'));
+            $appointments_of = '+3 meses';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == '1ano' ) {
+
+            $selfe1 = date('Y-m-d');
+            $selfe2 = date('Y-m-d', strtotime('+1 Year'));
+            $appointments_of = '+1 año';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == 'menos1mes' ) {
+
+            $selfe2 = date('Y-m-d');
+            $selfe1 = date('Y-m-d', strtotime('-1 Month'));
+            $appointments_of = '-1 mes';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == 'menos3mes' ) {
+
+            $selfe2 = date('Y-m-d');
+            $selfe1 = date('Y-m-d', strtotime('-3 Month'));
+            $appointments_of = '-3 meses';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == 'menos1ano' ) {
+
+            $selfe2 = date('Y-m-d');
+            $selfe1 = date('Y-m-d', strtotime('-1 Year'));
+            $appointments_of = '-1 año';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == 'menos5ano' ) {
+
+            $selfe2 = date('Y-m-d');
+            $selfe1 = date('Y-m-d', strtotime('-5 Year'));
+            $appointments_of = '-5 años';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == 'menos20ano' ) {
+
+            $selfe2 = date('Y-m-d');
+            $selfe1 = date('Y-m-d', strtotime('-20 Year'));
+            $appointments_of = '-20 años';
+            $msg_type = true;
+
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);
+
+        } elseif ($selec == 'rango' ) {
+
+            $selfe2 = $fechha;
+            $selfe1 = $fechde;
+            $appointments_of = "Citas entre ".$this->convertYmdToDmY($fechde)." y ".$this->convertYmdToDmY($fechha);
+            $msg_type = false;
+            
+            $main_loop = $this->getQueryResults($selfe1, $selfe2);                                                                      
         }
 
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        } 
-        
-        $idcit = htmlentities (trim($idcit),ENT_QUOTES,"UTF-8");
-        
-        $cita = citas::find($idcit);
-      
-        $cita->delete();
+        $data['main_loop'] = $main_loop;
+        $data['appointments_of'] = $appointments_of;       
+        $data['msg'] = false;
+        $data['msg_type'] = $msg_type;
 
-        $request->session()->flash('sucmess', 'Hecho!!!');
-        
-        return redirect("Pacientes/$idpac");
+        return $data;
+    }
+
+    private function getQueryResults($selfe1, $selfe2)
+    {
+        $main_loop = DB::table('citas')
+            ->join('pacientes', 'citas.idpac', '=', 'pacientes.idpac')
+            ->select('citas.*','pacientes.surname','pacientes.name')
+            ->whereBetween('day', [$selfe1, $selfe2])
+            ->whereNull('pacientes.deleted_at')
+            ->orderBy('day' , 'DESC')
+            ->orderBy('hour' , 'ASC')
+            ->get(); 
+
+        return $main_loop;
     }
 
 }

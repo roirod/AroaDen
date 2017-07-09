@@ -39,13 +39,13 @@
 
                 <td class="wid290">
                   <a href="{!!url("/Pacientes/$pago->idpac")!!}" class="pad4" target="_blank">
-                    {!!$pago->apepac!!}, {!!$pago->nompac!!}
+                    {!!$pago->surname!!}, {!!$pago->name!!}
                   </a>
                 </td>
 
                 <td class="text-info textcent wid110">{!! numformat($pago->total) !!} € </td>
-                <td class="text-muted textcent wid110">{!! numformat($pago->pagado) !!} € </td>
-                <td class="text-danger textcent wid110">{!! numformat($pago->resto) !!} €</td>
+                <td class="text-muted textcent wid110">{!! numformat($pago->paid) !!} € </td>
+                <td class="text-danger textcent wid110">{!! numformat($pago->rest) !!} €</td>
 		 	 	    </tr>
 		 	    @endforeach	
 

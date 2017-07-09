@@ -18,6 +18,10 @@ class TratamientosController extends BaseController
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Pacientes';
+        $this->other_route = 'Citas';        
+        $this->views_folder = 'trat';
     }   
 
     public function index()
@@ -30,10 +34,8 @@ class TratamientosController extends BaseController
     {     
         $idpac = $request->input('idpac');
 
-        if ( empty($idpac) ) {
-            return redirect('Pacientes');
-        }
-        
+        $this->redirectIfIdIsNull($idpac, $this->main_route);
+
         $servicios = DB::table('servicios')
                     ->whereNull('deleted_at')
                     ->orderBy('nomser', 'ASC')
@@ -44,15 +46,15 @@ class TratamientosController extends BaseController
                     ->whereNull('deleted_at')
                     ->first();
 
-        $apepac = $pacientes->apepac;
-        $nompac = $pacientes->nompac;
+        $surname = $pacientes->surname;
+        $name = $pacientes->name;
 
-        return view('trat.crea', [
+        return view($this->views_folder.'.crea', [
             'request' => $request,
             'servicios' => $servicios,
             'idpac' => $idpac,
-            'apepac' => $apepac,
-            'nompac' => $nompac
+            'surname' => $surname,
+            'name' => $name
         ]);
     }
 
@@ -60,8 +62,10 @@ class TratamientosController extends BaseController
     {     
         $idser = $request->input('idser');
         $idpac = $request->input('idpac');
-        $apepac = $request->input('apepac');
-        $nompac = $request->input('nompac');     
+        $surname = $request->input('surname');
+        $name = $request->input('name');     
+
+        $this->redirectIfIdIsNull($idpac, $this->main_route);
 
         $servicio = DB::table('servicios')
                     ->where('idser', $idser)
@@ -73,13 +77,13 @@ class TratamientosController extends BaseController
                     ->orderBy('ape', 'ASC')
                     ->get();
         
-        return view('trat.selcrea', [
+        return view($this->views_folder.'.selcrea', [
             'request' => $request,
             'servicio' => $servicio,
             'personal' => $personal,
             'idpac' => $idpac,
-            'apepac' => $apepac,
-            'nompac' => $nompac
+            'surname' => $surname,
+            'name' => $name
         ]);
     }
 
@@ -87,72 +91,65 @@ class TratamientosController extends BaseController
     {
         $idpac = $request->input('idpac');
 
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }       
+        $this->redirectIfIdIsNull($idpac, $this->main_route);   
                   
         $validator = Validator::make($request->all(), [
             'idpac' => 'required',
             'idser' => 'required',
-            'precio' => 'required',
-            'canti' => 'required',
-            'pagado' => 'required',
-            'fecha' => 'required|date',
-            'iva' => 'max:12',
+            'price' => 'required',
+            'units' => 'required',
+            'paid' => 'required',
+            'date' => 'required|date',
+            'tax' => 'max:12',
             'per1' => '',
             'per2' => ''
         ]);
             
         if ($validator->fails()) {
-            return redirect("/Pacientes/$idpac")
+            return redirect("/$this->main_route/$idpac")
                          ->withErrors($validator)
                          ->withInput();
         } else {
 
-            $idpac = htmlentities (trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
-            $idser = htmlentities (trim($request->input('idser')),ENT_QUOTES,"UTF-8");
-            $precio = htmlentities (trim($request->input('precio')),ENT_QUOTES,"UTF-8");
-            $canti = htmlentities (trim($request->input('canti')),ENT_QUOTES,"UTF-8");
-            $pagado = htmlentities (trim($request->input('pagado')),ENT_QUOTES,"UTF-8");
-            $fecha = htmlentities (trim($request->input('fecha')),ENT_QUOTES,"UTF-8");
-            $iva = htmlentities (trim($request->input('iva')),ENT_QUOTES,"UTF-8");
-            $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
-            $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
+            $idpac = $this->sanitizeData( $request->input('idpac') );
+            $idser = $this->sanitizeData( $request->input('idser') );
+            $price = $this->sanitizeData( $request->input('price') );
+            $units = $this->sanitizeData( $request->input('units') );
+            $paid = $this->sanitizeData( $request->input('paid') );
+            $date = $this->sanitizeData( $request->input('date') );
+            $tax = $this->sanitizeData( $request->input('tax') );
+            $per1 = $this->sanitizeData( $request->input('per1') );
+            $per2 = $this->sanitizeData( $request->input('per2') );      
 
-            tratampacien::create([
+            Tratampacien::create([
                 'idpac' => $idpac,
                 'idser' => $idser,
-                'precio' => $precio,
-                'canti' => $canti,
-                'pagado' => $pagado,
-                'fecha' => $fecha,
-                'iva' => $iva,
+                'price' => $price,
+                'units' => $units,
+                'paid' => $paid,
+                'date' => $date,
+                'tax' => $tax,
                 'per1' => $per1,
                 'per2' => $per2
             ]);
               
-            $request->session()->flash('sucmess', 'Hecho!!!');  
+            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );  
                             
-            return redirect("/Pacientes/$idpac");
+            return redirect("/$this->main_route/$idpac");
         }     
     }
 
     public function show($id)
     { }
 
-    public function edit(Request $request,$idpac,$idtra)
+    public function edit(Request $request, $idpac, $idtra)
     {
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        }
-        
-        if ( null === $idtra ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($idpac, $this->main_route);
+        $this->redirectIfIdIsNull($idtra, $this->main_route);
 
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
-        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
-
+        $idpac = $this->sanitizeData($idpac);
+        $idtra = $this->sanitizeData($idtra);
+    
         $tratampa = DB::table('tratampacien')
             ->join('servicios','tratampacien.idser','=','servicios.idser')
             ->select('tratampacien.*','servicios.nomser')
@@ -161,7 +158,7 @@ class TratamientosController extends BaseController
 
         $personal = DB::table('personal')->whereNull('deleted_at')->get();
 
-        return view('trat.edit', [
+        return view($this->views_folder.'.edit', [
             'request' => $request,
             'tratampa' => $tratampa,
             'personal' => $personal,
@@ -170,64 +167,54 @@ class TratamientosController extends BaseController
         ]);
     }
 
-    public function update(Request $request,$idtra)
+    public function update(Request $request, $idtra)
     {
-        if ( null === $idtra ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($request->input('idpac'), $this->main_route);
+        $this->redirectIfIdIsNull($idtra, $this->main_route);
 
-        $idtra = htmlentities(trim($idtra),ENT_QUOTES,"UTF-8");
-        $idpac = htmlentities (trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
-
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        }     
+        $idpac = $this->sanitizeData($request->input('idpac'));
+        $idtra = $this->sanitizeData($idtra);  
                   
         $validator = Validator::make($request->all(), [
-            'pagado' => 'required',
-            'fecha' => 'required|date',
+            'paid' => 'required',
+            'date' => 'required|date',
             'per1' => '',
             'per2' => ''
         ]);
             
         if ($validator->fails()) {
-            return redirect("/Citas/$idpac/$idtra/edit")
+            return redirect("/$this->other_route/$idpac/$idtra/edit")
                          ->withErrors($validator)
                          ->withInput();
         } else {
 
-            $pagado = htmlentities (trim($request->input('pagado')),ENT_QUOTES,"UTF-8");
-            $fecha = htmlentities (trim($request->input('fecha')),ENT_QUOTES,"UTF-8");
+            $paid = htmlentities (trim($request->input('paid')),ENT_QUOTES,"UTF-8");
+            $date = htmlentities (trim($request->input('date')),ENT_QUOTES,"UTF-8");
             $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
             $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
     
-            $tratampacien = tratampacien::find($idtra);
+            $tratampacien = Tratampacien::find($idtra);
             
-            $tratampacien->pagado = htmlentities (trim($pagado),ENT_QUOTES,"UTF-8");
-            $tratampacien->fecha = htmlentities (trim($fecha),ENT_QUOTES,"UTF-8");            
+            $tratampacien->paid = htmlentities (trim($paid),ENT_QUOTES,"UTF-8");
+            $tratampacien->date = htmlentities (trim($date),ENT_QUOTES,"UTF-8");            
             $tratampacien->per1 = htmlentities (trim($per1),ENT_QUOTES,"UTF-8");
             $tratampacien->per2 = htmlentities (trim($per2),ENT_QUOTES,"UTF-8");
                                                 
             $tratampacien->save();
               
-            $request->session()->flash('sucmess', 'Hecho!!!');  
+            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );  
                             
-            return redirect("/Pacientes/$idpac");
+            return redirect("/$this->main_route/$idpac");
         }     
     }
 
-    public function del(Request $request,$idpac,$idtra)
+    public function del(Request $request, $idpac, $idtra)
     {         
-        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $idpac = $this->sanitizeData($idpac); 
+        $idtra = $this->sanitizeData($idtra);  
 
-        if ( null === $idtra ) {
-            return redirect('Pacientes');
-        }
-
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($idtra, $this->main_route);
+        $this->redirectIfIdIsNull($idpac, $this->main_route);
 
         $tratampa = DB::table('tratampacien')
             ->join('servicios','tratampacien.idser','=','servicios.idser')
@@ -235,7 +222,7 @@ class TratamientosController extends BaseController
             ->where('idtra', $idtra)
             ->first(); 
 
-        return view('trat.del', [
+        return view($this->views_folder.'.del', [
             'request' => $request,
             'tratampa' => $tratampa,
             'idtra' => $idtra,
@@ -243,27 +230,20 @@ class TratamientosController extends BaseController
         ]);
     }
 
-    public function destroy(Request $request,$idtra)
+    public function destroy(Request $request, $idtra)
     {               
-        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
-        $idpac = htmlentities(trim($request->input('idpac')),ENT_QUOTES,"UTF-8");
+        $idpac = $this->sanitizeData($request->input('idpac'));
+        $idtra = $this->sanitizeData($idtra);  
 
-        if ( null === $idtra ) {
-            return redirect('Pacientes');
-        }
-
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        } 
-        
-        $idtra = htmlentities (trim($idtra),ENT_QUOTES,"UTF-8");
-        
-        $tratampacien = tratampacien::find($idtra);
+        $this->redirectIfIdIsNull($idtra, $this->main_route);
+        $this->redirectIfIdIsNull($idpac, $this->main_route);
+                
+        $tratampacien = Tratampacien::find($idtra);
       
         $tratampacien->delete();
 
-        $request->session()->flash('sucmess', 'Hecho!!!');
+        $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect("Pacientes/$idpac");
+        return redirect("$this->main_route/$idpac");
     }
 }

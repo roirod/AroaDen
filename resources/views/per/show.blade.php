@@ -27,7 +27,7 @@
 					<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
 					<ul class="dropdown-menu" role="menu"> 
 						<li>
-							@include('includes.delbuto')
+							@include('includes.delete_button')
 						</li>
 					</ul>			
 		 			
@@ -41,19 +41,19 @@
 <div class="row fonsi16">
 
 <div class="col-sm-6 pad4"> 
-<i class="fa fa-minus-square"></i> Paciente: &nbsp; {{$personal->ape}},&nbsp;{{$personal->nom}} </div>
+<i class="fa fa-minus-square"></i> Paciente: &nbsp; {{$personal->surname}},&nbsp;{{$personal->name}} </div>
 
 <div class="col-sm-2 pad4"> 
 <i class="fa fa-minus-square"></i> id: &nbsp; {{$personal->idper}} </div>
 
 <div class="col-sm-3 pad4">
-<i class="fa fa-minus-square"></i> Cargo: &nbsp;{{$personal->cargo}} </div>
+<i class="fa fa-minus-square"></i> Cargo: &nbsp;{{$personal->position}} </div>
 
 <div class="col-sm-5 pad4"> 
-<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {{$personal->pobla}} </div> 
+<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {{$personal->city}} </div> 
 
 <div class="col-sm-6 pad4">
-<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {{$personal->direc}} </div> 
+<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {{$personal->address}} </div> 
 
  <div class="col-sm-3 pad4">
 <i class="fa fa-minus-square"></i> DNI: &nbsp; {{ $personal->dni}} </div> 
@@ -65,11 +65,11 @@
 <i class="fa fa-minus-square"></i> Tel&#xE9;fono2: &nbsp; {{ $personal->tel2}} </div>
 
  <div class="col-sm-3 pad4"> 
-<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {{date ('d-m-Y', strtotime ($personal->fenac) )}} </div>
+<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {{date ('d-m-Y', strtotime ($personal->birth) )}} </div>
 
  <div class="col-sm-12 pad4"> 
 <i class="fa fa-minus-square"></i> Notas: <br>
- <div class="box200"> {!! nl2br(e($personal->notas)) !!} </div>
+ <div class="box200"> {!! nl2br(e($personal->notes)) !!} </div>
 
 </div> </div> </div> </div>
 
@@ -101,13 +101,13 @@
 
 						<td class="wid180">
 							<a href="{{url("/Pacientes/$traba->idpac")}}" class="pad4" target="_blank">
-								{{$traba->apepac}}, {{$traba->nompac}}
+								{{$traba->surname}}, {{$traba->name}}
 							</a>
 						</td>
 
-					   	<td class="wid180"> {{$traba->nomser}} </td>
-					   	<td class="wid95 textcent"> {{$traba->canti}} </td>
-					   	<td class="wid95"> {{date('d-m-Y',strtotime ($traba->fecha))}} </td>
+					   	<td class="wid180"> {{$traba->servicio_name}} </td>
+					   	<td class="wid95 textcent"> {{$traba->units}} </td>
+					   	<td class="wid95"> {{date('d-m-Y',strtotime ($traba->date))}} </td>
 					   	<td class="wid95"> </td>
 			   		</tr>						
 				@endforeach

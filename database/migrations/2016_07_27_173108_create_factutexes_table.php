@@ -5,26 +5,24 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateFactutexesTable extends Migration
 {
-
     public function up()
     {
         Schema::create('factutex', function (Blueprint $table) {
+            $table->engine = 'InnoDB';            
             $table->increments('idfactex');
             $table->Integer('idpac')->unsigned();
-            $table->bigInteger('factumun');
-            $table->dateTime('cod');
-            $table->text('texto')->nullable();
-
+            $table->bigInteger('invoice_number');
+            $table->dateTime('code');
+            $table->text('text')->nullable();
             $table->timestamps();
-
-            $table->unique('cod');  
-            $table->unique('factumun');
+            $table->unique('code');  
+            $table->unique('invoice_number');
 
             $table->foreign('idpac')
                   ->references('idpac')->on('pacientes')
                   ->onDelete('cascade');
-            $table->foreign('cod')
-                  ->references('cod')->on('presup')
+            $table->foreign('code')
+                  ->references('code')->on('presup')
                   ->onDelete('cascade');                  
         });
     }

@@ -24,13 +24,13 @@
 
 		 	 <table class="table table-striped table-bordered table-hover">
 				
-				@foreach ($users as $user)
+				@foreach ($main_loop as $user)
 
 					@continue($user->username == 'admin')
 						
 					<tr> 
 						<td class="wid110">{!! $user->username !!}</td>
-						<td class="wid110">{!! $user->tipo !!}</td>				
+						<td class="wid110">{!! $user->type !!}</td>				
 					</tr>
 								
 				@endforeach
@@ -46,38 +46,16 @@
 	  	<form role="form" class="form" action="/Usuarios" method="post">
 			{!! csrf_field() !!}
 			 
-			 <div class="input-group"> 
-			 	<span class="input-group-btn pad4"> <p> &nbsp; Usuario:</p> </span>
-			 	<div class="col-sm-7">
-			 		<input type="text" name="username" class="form-control" placeholder="Usuario" autofocus required>
-			 </div> </div>
+			@include('form_fields.create.user')
 
-			<br>
+			@include('form_fields.create.password')
 
-			 <div class="input-group"> 
-			 	<span class="input-group-btn pad4"> <p> &nbsp; Contraseña:</p> </span>
-			 	<div class="col-sm-7">
-			 		<input type="text" name="password" class="form-control" placeholder="Contraseña" required> </div>  </div>
+			@include('form_fields.create.scopes')
 
-			<br>
+			@include('includes.submit_button')
 
-			<div class="form-group col-lg-6">
-			   
-			   <label class="control-label text-left mar10">Permisos:</label> 
-			   
-			   <select name="tipo" class="form-control" required>
-			  
-			  		<option value="normal" selected>normal</option>
-			  		<option value="medio">medio</option>
-
-			   </select>
-			
-			</div>
-
-			@include('includes.subuto')
-
-	 </form>
-  </div>
+		</form>
+	</div>
  
 </div>
  

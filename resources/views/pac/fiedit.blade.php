@@ -10,7 +10,6 @@
 
 {!! addtexto("Editar Ficha") !!}
 
-
 <div class="row">
  <div class="col-sm-12">
   	<form class="form" id="form" role="form" action="{!!url("/Pacientes/$idpac/fisave")!!}" method="POST">
@@ -33,9 +32,9 @@
 
 
 		<div class="form-group col-sm-12">      <label class="control-label text-left mar10">Notas:</label>
-		<textarea class="form-control" name="notas" rows="4"> {!! $ficha->notas !!} </textarea> 	</div> 
+		<textarea class="form-control" name="notes" rows="4"> {!! $ficha->notes !!} </textarea> 	</div> 
 		
-		@include('includes.subuto')
+		@include('includes.submit_button')
 
  	</form>
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ficha extends Model
 {
 	protected $table = 'ficha';
-    protected $fillable = ['idpac','histo','enfer','medic','aler','notas'];
+    protected $fillable = ['idpac','histo','enfer','medic','aler','notes'];
     protected $primaryKey = 'idpac';
 
     public function pacientes()

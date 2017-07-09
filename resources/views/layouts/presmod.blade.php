@@ -17,7 +17,7 @@
    <div class="row mar30">
     
 
-	@yield('content')
+	   @yield('content')
 	
 
  </div> </div> 

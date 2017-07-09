@@ -10,22 +10,21 @@
 
 {{ addtexto("Editar Tratamiento") }}
 
-
 <div class="row">
  <div class="col-sm-12 mar10">
 
     <p class="pad4">
-        {{ $tratampa->nomser }}
+        {{ $tratampa->name }}
         <br>
-        precio: {{ $tratampa->precio }} €.
+        Precio: {{ $tratampa->price }} €.
         <br>
-        cantidad: {{ $tratampa->canti }}.
+        Cantidad: {{ $tratampa->units }}.
         <br>
-        total: {{ numformat($tratampa->canti * $tratampa->precio) }} €.      
+        Total: {{ numformat($tratampa->units * $tratampa->price) }} €.      
         <br>
-        Pagado: {{ $tratampa->pagado }} €.
+        Pagado: {{ $tratampa->paid }} €.
         <br>
-        Fecha: {{ date('d-m-Y', strtotime ($tratampa->fecha) ) }}.        
+        Fecha: {{ date('d-m-Y', strtotime ($tratampa->date) ) }}.        
     </p>    
 
     <form role="form" id="form" class="form" action="{{url("/Trapac/$idtra")}}" method="POST">
@@ -37,11 +36,11 @@
 
          <div class="form-group col-sm-2">
             <label class="control-label text-left mar10">Pagado:</label>            
-            <input type="text" name="pagado" value="{{$tratampa->pagado}}" pattern="[0-9]{1,10}" class="form-control" autofocus required> 
+            <input type="text" name="paid" value="{{$tratampa->paid}}" pattern="[0-9]{1,10}" class="form-control" autofocus required> 
          </div>
    
          <div class="form-group col-sm-4">   <label class="control-label text-left mar10">Fecha:</label>            
-             <input type="date" name="fecha" value="{!!$tratampa->fecha!!}" class="form-control" required> 
+             <input type="date" name="date" value="{!!$tratampa->date!!}" class="form-control" required> 
         </div>
         
         <div class="col-sm-12">
@@ -59,9 +58,9 @@
                     @foreach($personal as $person)
 
                         @if($person->idper == $tratampa->per1)
-                            <option value="{{$person->idper}}" selected>{{$person->ape}}, {{$person->nom}} - id: {{$person->idper}} - {{$person->cargo}} </option>
+                            <option value="{{$person->idper}}" selected>{{$person->surname}}, {{$person->name}} - id: {{$person->idper}} - {{$person->position}} </option>
                         @else
-                            <option value="{{$person->idper}}">{{$person->ape}}, {{$person->nom}} - id: {{$person->idper}} - {{$person->cargo}} </option>
+                            <option value="{{$person->idper}}">{{$person->surname}}, {{$person->name}} - id: {{$person->idper}} - {{$person->position}} </option>
                         @endif
 
                     @endforeach    
@@ -82,9 +81,9 @@
                      @foreach($personal as $person)
 
                         @if($person->idper == $tratampa->per2)
-                            <option value="{{$person->idper}}" selected>{{$person->ape}}, {{$person->nom}} - id: {{$person->idper}} - {{$person->cargo}} </option>
+                            <option value="{{$person->idper}}" selected>{{$person->surname}}, {{$person->name}} - id: {{$person->idper}} - {{$person->position}} </option>
                         @else
-                            <option value="{{$person->idper}}">{{$person->ape}}, {{$person->nom}} - id: {{$person->idper}} - {{$person->cargo}} </option>
+                            <option value="{{$person->idper}}">{{$person->surname}}, {{$person->name}} - id: {{$person->idper}} - {{$person->position}} </option>
                         @endif
                         
                      @endforeach     
@@ -94,7 +93,7 @@
 
         </div>    
 
-      @include('includes.subuto')
+      @include('includes.submit_button')
 
     </form>
 

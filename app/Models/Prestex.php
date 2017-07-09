@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prestex extends Model
 {
-
 	protected $table = 'prestex';
-    protected $fillable = ['idpac','cod','texto'];
+    protected $fillable = ['idpac','code','text'];
     protected $primaryKey = 'idprestex';
-
 }

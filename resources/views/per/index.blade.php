@@ -34,7 +34,7 @@
 
 	      			<select name="busen" class="form-control" required>
 
-	      				<option value="ape" selected> Apellido/s </option>
+	      				<option value="surname" selected> Apellido/s </option>
 	      				<option value="dni"> DNI </option>
 
 					</select>
@@ -85,12 +85,12 @@
 
 					<td class="wid290">
 						<a href="{{url("/Personal/$persona->idper")}}" class="pad4" target="_blank">
-							{{$persona->ape}}, {{$persona->nom}}
+							{{$persona->surname}}, {{$persona->name}}
 						</a>
 					</td>
 
 					<td class="wid110">{{$persona->dni}}</td>
-					<td class="wid110">{{$persona->cargo}}</td> 
+					<td class="wid110">{{$persona->position}}</td> 
 					<td class="wid110 textcent">{{$persona->tel1}}</td>
 				</tr>		
 			@endforeach
@@ -141,7 +141,7 @@
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
 				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-						$('#item_list').hide().html(buscando).fadeIn('slow');
+						$('#item_list').html(buscando);
 
 					    var data = $("form").serialize();
 		     
@@ -183,11 +183,11 @@
 						    		html += '    </td>';
 						    		html += '    <td class="wid290">';
 						    		html += '      <a href="/Personal/'+object.idper+'" class="pad4" target="_blank">';
-						    		html += 		  object.ape + ' ' + object.nom;
+						    		html += 		  object.surname + ' ' + object.name;
 						    		html += '      </a>';
 						    		html += '    </td>';
 						    		html += '    <td class="wid110">' + object.dni + '</td>';
-	 					    		html += '    <td class="wid110">' + object.cargo + '</td>';
+	 					    		html += '    <td class="wid110">' + object.position + '</td>';
 						    		html += '    <td class="wid110 textcent">' + object.tel1 + '</td>';
 						    		html += '  </tr>';
 								});

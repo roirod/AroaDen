@@ -5,41 +5,62 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Pacientes;
 use App\Models\Ficha;
-
 use Carbon\Carbon;
 use Storage;
 use Html;
 use Image;
 use Validator;
-
+use Lang;
 use Illuminate\Http\Request;
+use App\Interfaces\BaseInterface;
 
-class PacientesController extends BaseController
+class PacientesController extends BaseController implements BaseInterface
 {
+    /**
+     * 
+     */
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Pacientes';
+        $this->views_folder = 'pac';
+
+        $fields = [
+            'surname' => true,
+            'name' => true,
+            'address' => true,
+            'city' => true,
+            'birth' => true,
+            'dni' => true,
+            'sex' => true,            
+            'tel1' => true,
+            'tel2' => true,
+            'tel3' => true,
+            'notes' => true,
+            'save' => true,
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
     }
 
     public function index(Request $request)
     {  	
     	$numpag = 100;
 
-    	$pacientes = DB::table('pacientes')
-                        ->select('idpac', 'apepac', 'nompac', 'dni', 'tel1', 'pobla')
+    	$main_loop = DB::table('pacientes')
+                        ->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
-                        ->orderBy('apepac', 'ASC')
-                        ->orderBy('nompac', 'ASC')
+                        ->orderBy('surname', 'ASC')
+                        ->orderBy('name', 'ASC')
                         ->paginate($numpag);
 
-        $count = DB::table('pacientes')
-                    ->whereNull('deleted_at')
-                    ->count();
+        $count = $this->getPatientsCount();
 
-    	return view('pac.index', [
-    		'pacientes' => $pacientes,
+    	return view($this->views_folder.'.index', [
+    		'main_loop' => $main_loop,
          	'request' => $request,
             'count' => $count
         ]);   
@@ -49,23 +70,18 @@ class PacientesController extends BaseController
     {   
         $data = [];
 
-        $count = DB::table('pacientes')
-                    ->whereNull('deleted_at')
-                    ->count();
+        $count = $this->getPatientsCount();
 
-        if ($count === 0) {
+        if ($count == 0) {
 
-            $data['pacientes'] = false;
+            $data['main_loop'] = false;
             $data['count'] = false;       
-            $data['msg'] = ' No hay pacientes en la base de datos. ';
+            $data['msg'] = Lang::get('aroaden.no_patients_on_db');
 
         } else {
 
-            $busca = $request->input('busca');
-            $busen = $request->input('busen');
-
-            $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
-            $busen = htmlentities (trim($busen),ENT_QUOTES,"UTF-8");
+            $busca = $this->sanitizeData($request->input('busca'));
+            $busen = $this->sanitizeData($request->input('busen'));
 
             $data = $this->getItems($busen, $busca);
 
@@ -78,69 +94,67 @@ class PacientesController extends BaseController
         exit();
     } 
 
-    public function show(Request $request,$idpac)
+    public function show(Request $request, $id)
     {
-	    if ( null == $idpac ) {
-    	    return redirect('Pacientes');
-    	}
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$id = $this->sanitizeData($id);
 
-        $this->createDir($idpac);
+        $this->createDir($id);
 
-        $fotoper = url("/app/pacdir/$idpac/.fotoper.jpg");
+        $profile_photo = url("/app/pacdir/$id/.profile_photo.jpg");
 
 	    $paciente = DB::table('pacientes')
-                        ->where('idpac', $idpac)
+                        ->where('idpac', $id)
                         ->whereNull('deleted_at')
                         ->first();
 
         if (is_null($paciente)) {
-            $request->session()->flash('errmess', 'Has borrado a este paciente.');    
-            return redirect('Pacientes');
+            $request->session()->flash($this->error_message_name, 'Has borrado a este paciente.');    
+            return redirect($this->main_route);
         }
 
-        $citas = pacientes::find($idpac)
+        $citas = Pacientes::find($id)
                     ->citas()
-                    ->orderBy('diacit', 'DESC')
-                    ->orderBy('horacit', 'DESC')
+                    ->orderBy('day', 'DESC')
+                    ->orderBy('hour', 'DESC')
                     ->get();
 
 		$tratampacien = DB::table('tratampacien')
 		            ->join('servicios','tratampacien.idser','=','servicios.idser')
-		            ->select('tratampacien.*','servicios.nomser')
-		            ->where('idpac', $idpac)
-		            ->orderBy('fecha','DESC')
+		            ->select('tratampacien.*','servicios.name as servicios_name')
+		            ->where('idpac', $id)
+		            ->orderBy('date','DESC')
 		            ->get(); 
 	    
 	    $suma = DB::table('tratampacien')
-				    ->selectRaw('SUM(canti*precio) AS sumtot, SUM(pagado) AS totpaga, SUM(canti*precio)-SUM(pagado) AS resto')
-				    ->where('idpac', $idpac)
+				    ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
+				    ->where('idpac', $id)
 				    ->get();
 
-	  	$fenac = trim($paciente->fenac);
+	  	$birth = trim($paciente->birth);
 
-	  	if (isset($fenac)) {
-		  	$Fecha = explode("-",$fenac,3);
+	  	if (isset($birth)) {
+            $date = explode("-",$birth,3);
 
-		  	$Fecha0 = $Fecha[0];
-		  	$Fecha1 = $Fecha[1];
-		  	$Fecha2 = $Fecha[2];
+            $date0 = $date[0];
+            $date1 = $date[1];
+            $date2 = $date[2];
 		  	  
-		  	$Edad = Carbon::createFromDate($Fecha0,$Fecha1,$Fecha2)->age;
+            $edad = Carbon::createFromDate($date0,$date1,$date2)->age;
 	  	} else {
-	  		$Edad = 0;
+            $edad = 0;
 	  	}
 
-        return response()->view('pac.show',[
+        return response()->view($this->views_folder.'.show',[
             'request' => $request,
             'paciente' => $paciente,
             'citas' => $citas,
             'tratampacien' => $tratampacien,
             'suma' => $suma,
-            'idpac' => $idpac,
-            'fotoper' => $fotoper,
-            'Edad' => $Edad
+            'idpac' => $id,
+            'profile_photo' => $profile_photo,
+            'edad' => $edad
         ])
            ->header('Expires', 'Sun, 01 Jan 1966 00:00:00 GMT')
            ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
@@ -148,263 +162,266 @@ class PacientesController extends BaseController
            ->header('Pragma', 'no-cache');     
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $id = false)
     {
-		return view('pac.create', ['request' => $request]);	
+        $this->autofocus = 'surname';
+
+        $this->view_data = [
+            'request' => $request,
+            'main_route' => $this->main_route,
+            'autofocus' => $this->autofocus,
+            'form_fields' => $this->form_fields
+        ];
+
+        return parent::create($request, $id);  
     }
 
     public function store(Request $request)
-    {
-        $pacientes = DB::table('pacientes')
-                        ->orderBy('dni','ASC')
-                        ->get();
-          
-        $dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-          
-        foreach ($pacientes as $pacien) {
-           if ($pacien->dni == $dni) {
-                $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$pacien->apepac.', '.$pacien->nompac;
-                $request->session()->flash('errmess', $messa);
-                return redirect('Pacientes/create')->withInput();
-           }
-        }   
+    {        
+        $dni = $this->sanitizeData($request->input('dni'));
+    
+        $patient = DB::table('pacientes')
+                        ->where('dni', $dni)
+                        ->first();
+
+        if ($patient != null) {
+            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$patient->surname.', '.$patient->name.'.';
+            $request->session()->flash($this->error_message_name, $messa);
+            return redirect($this->main_route.'/create')->withInput();
+        }
 
         $validator = Validator::make($request->all(),[
-    		'nompac' => 'required|max:111',
-            'apepac' => 'required|max:111',
-            'direc' => 'max:111',
-            'pobla' => 'max:111',
+    		'name' => 'required|max:111',
+            'surname' => 'required|max:111',
+            'address' => 'max:111',
+            'city' => 'max:111',
             'dni' => 'unique:pacientes|max:12',
             'tel1' => 'max:11',
             'tel2' => 'max:11',
             'tel3' => 'max:11',
-            'sexo' => 'max:12',
-            'fenac' => 'date',
-            'notas' => ''
+            'sex' => 'max:12',
+            'birth' => 'date',
+            'notes' => ''
 	    ]);
             
         if ($validator->fails()) {
-	         return redirect('/Pacientes/create')
+	         return redirect($this->main_route.'/create')
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {
 
-        	$nompac = ucfirst(strtolower( $request->input('nompac') ) );
-        	$apepac = ucwords(strtolower( $request->input('apepac') ) );
-        	$notas = ucfirst(strtolower( $request->input('notas') ) );
-        	$direc = ucfirst(strtolower( $request->input('direc') ) );
-        	$pobla = ucfirst(strtolower( $request->input('pobla') ) );
-        	
-			$nompac = htmlentities (trim($nompac),ENT_QUOTES,"UTF-8");
-			$apepac = htmlentities (trim($apepac),ENT_QUOTES,"UTF-8");
-			$dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-			$tel1 = htmlentities (trim($request->input('tel1')),ENT_QUOTES,"UTF-8");
-			$tel2 = htmlentities (trim($request->input('tel2')),ENT_QUOTES,"UTF-8");
-			$tel3 = htmlentities (trim($request->input('tel3')),ENT_QUOTES,"UTF-8");
-			$sexo = htmlentities (trim($request->input('sexo')),ENT_QUOTES,"UTF-8");
-			$notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
-			$direc = htmlentities (trim($direc),ENT_QUOTES,"UTF-8");
-			$pobla = htmlentities (trim($pobla),ENT_QUOTES,"UTF-8");
-			$fenac = htmlentities (trim($request->input('fenac')),ENT_QUOTES,"UTF-8");
-    
-            $insertGetId = pacientes::insertGetId([
-	          'nompac' => $nompac,
-	          'apepac' => $apepac,
+        	$name = ucfirst(strtolower( $request->input('name') ) );
+        	$surname = ucwords(strtolower( $request->input('surname') ) );
+        	$address = ucfirst(strtolower( $request->input('address') ) );
+        	$city = ucfirst(strtolower( $request->input('city') ) );
+            $notes = ucfirst(strtolower( $request->input('notes') ) );
+
+			$name = $this->sanitizeData($name);
+            $surname = $this->sanitizeData($surname);
+			$dni = $this->sanitizeData($request->input('dni'));
+            $tel1 = $this->sanitizeData($request->input('tel1'));
+            $tel2 = $this->sanitizeData($request->input('tel2'));
+            $tel3 = $this->sanitizeData($request->input('tel3'));
+            $sex = $this->sanitizeData($request->input('sex'));
+            $address = $this->sanitizeData($address);
+            $city = $this->sanitizeData($city);
+            $birth = $this->sanitizeData($request->input('birth'));
+            $notes = $this->sanitizeData($notes);
+            $created_at = date('Y-m-d H:i:s');
+               
+            $insertGetId = Pacientes::insertGetId([
+	          'name' => $name,
+	          'surname' => $surname,
 	          'dni' => $dni,
 	          'tel1' => $tel1,
 	          'tel2' => $tel2,
 	          'tel3' => $tel3,
-	          'sexo' => $sexo,
-	          'notas' => $notas,
-	          'direc' => $direc,
-	          'pobla' => $pobla,
-	          'fenac' => $fenac
+	          'sex' => $sex,
+	          'notes' => $notes,
+	          'address' => $address,
+	          'city' => $city,
+	          'birth' => $birth,
+              'created_at' => $created_at,
 		    ]);
 
             ficha::create([
               'idpac' => $insertGetId
             ]);
 	      
-	        $request->session()->flash('sucmess', 'Hecho!!!');	
+	        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
         	        	
-        	return redirect('Pacientes/create');
+        	return redirect($this->main_route.'/create');
         }      
     }
-  
-    public function edit(Request $request,$idpac)
+
+    public function edit(Request $request, $id, $idcit = false)
     {
-    	if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
 
-    	$pacientes = pacientes::find($idpac);
+        $object = Pacientes::find($id);
 
-    	return view('pac.edit', [
+        $this->view_data = [
             'request' => $request,
-    		'pacientes' => $pacientes,
-    		'idpac' => $idpac
-        ]);
+            'id' => $id,
+            'object' => $object,
+            'main_route' => $this->main_route,
+            'autofocus' => $this->autofocus,
+            'form_fields' => $this->form_fields
+        ];
+
+        return parent::edit($request, $id);
     }
 
-    public function update(Request $request,$idpac)
+    public function update(Request $request, $id)
     {
-    	if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-    	$idpac = htmlentities(trim($idpac),ENT_QUOTES,"UTF-8");
-        $dni = htmlentities(trim($request->input('dni')),ENT_QUOTES,"UTF-8");
+    	$id = $this->sanitizeData($id);   
+        $dni = $this->sanitizeData($dni);   
 
-        $pacientes = DB::table('pacientes')
-                        ->orderBy('dni','ASC')
-                        ->get();
+        $patient = Pacientes::find($id);
+
+        $patient_exits = DB::table('pacientes')
+                        ->where('dni', $patient->dni)
+                        ->where('idpac', '!=', $id)
+                        ->first();
         
-        $pac = pacientes::find($idpac);
-              
-        $dnipac = $pac->dni;
-
-        if ($dni != $dnipac) {
-            foreach ($pacientes as $pacien) {
-               if ($pacien->dni == $dni) {
-                    $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$pacien->apepac.', '.$pacien->nompac;
-                    $request->session()->flash('errmess', $messa);
-                    return redirect("Pacientes/$idpac/edit")->withInput();
-               }
-            }
+        if ($dni != null) {
+            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$patient_exits->surname.', '.$patient_exits->name;
+            $request->session()->flash($this->error_message_name, $messa);
+            return redirect("$this->main_route/$id/edit")->withInput();
         }
 
         $validator = Validator::make($request->all(),[
-    		'nompac' => 'required|max:111',
-            'apepac' => 'required|max:111',
-            'direc' => 'max:111',
-            'pobla' => 'max:111',
+    		'name' => 'required|max:111',
+            'surname' => 'required|max:111',
+            'address' => 'max:111',
+            'city' => 'max:111',
             'dni' => 'max:12',
             'tel1' => 'max:11',
             'tel2' => 'max:11',
             'tel3' => 'max:11',
-            'sexo' => 'max:12',
-            'fenac' => 'date',
-            'notas' => ''
+            'sex' => 'max:12',
+            'birth' => 'date',
+            'notes' => ''
 	    ]);
             
         if ($validator->fails()) {
-	        return redirect("Pacientes/$idpac/edit")
+	        return redirect("$this->main_route/$id/edit")
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {		
-			
-			$pacientes = pacientes::find($idpac);
-			  		
-	    	$nompac = ucfirst(strtolower( $request->input('nompac') ) );
-	    	$apepac = ucwords(strtolower( $request->input('apepac') ) );
-	    	$notas = ucfirst(strtolower( $request->input('notas') ) );
-	    	$direc = ucfirst(strtolower( $request->input('direc') ) );
-	    	$pobla = ucfirst(strtolower( $request->input('pobla') ) );
-	    	
-			$pacientes->nompac = htmlentities (trim($nompac),ENT_QUOTES,"UTF-8");
-			$pacientes->apepac = htmlentities (trim($apepac),ENT_QUOTES,"UTF-8");
-			$pacientes->dni = htmlentities (trim($request->input('dni')),ENT_QUOTES,"UTF-8");
-			$pacientes->tel1 = htmlentities (trim($request->input('tel1')),ENT_QUOTES,"UTF-8");
-			$pacientes->tel2 = htmlentities (trim($request->input('tel2')),ENT_QUOTES,"UTF-8");
-			$pacientes->tel3 = htmlentities (trim($request->input('tel3')),ENT_QUOTES,"UTF-8");
-			$pacientes->sexo = htmlentities (trim($request->input('sexo')),ENT_QUOTES,"UTF-8");
-			$pacientes->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
-			$pacientes->direc = htmlentities (trim($direc),ENT_QUOTES,"UTF-8");
-			$pacientes->pobla = htmlentities (trim($pobla),ENT_QUOTES,"UTF-8");
-			$pacientes->fenac = htmlentities (trim($request->input('fenac')),ENT_QUOTES,"UTF-8");
-			
-			$pacientes->save();
+					  		
+            $name = ucfirst(strtolower( $request->input('name') ) );
+            $surname = ucwords(strtolower( $request->input('surname') ) );
+            $address = ucfirst(strtolower( $request->input('address') ) );
+            $city = ucfirst(strtolower( $request->input('city') ) );
+            $notes = ucfirst(strtolower( $request->input('notes') ) );
 
-			$request->session()->flash('sucmess', 'Hecho!!!');
+            $patient->name = $this->sanitizeData($name);
+            $patient->surname = $this->sanitizeData($surname);
+            $patient->dni = $this->sanitizeData($request->input('dni'));
+            $patient->tel1 = $this->sanitizeData($request->input('tel1'));
+            $patient->tel2 = $this->sanitizeData($request->input('tel2'));
+            $patient->tel3 = $this->sanitizeData($request->input('tel3'));
+            $patient->sex = $this->sanitizeData($request->input('sex'));
+            $patient->address = $this->sanitizeData($address);
+            $patient->city = $this->sanitizeData($city);
+            $patient->birth = $this->sanitizeData($request->input('birth'));
+            $patient->notes = $this->sanitizeData($notes);
+            $patient->updated_at = date('Y-m-d H:i:s');
+			$patient->save();
 
-			return redirect("Pacientes/$idpac");
+			$request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+
+			return redirect("$this->main_route/$id");
 		}    
     }
 
-    public function ficha(Request $request,$idpac)
-    {   
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    public function ficha(Request $request, $id)
+    {  
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $ficha = ficha::find($idpac);
+        $id = $this->sanitizeData($id);
+
+        $ficha = ficha::find($id);
 
         if (is_null($ficha)) {
             ficha::create([
-              'idpac' => $idpac
+              'idpac' => $id
             ]);
 
-            return redirect("Pacientes/$idpac/ficha");
+            return redirect("$this->main_route/$id/ficha");
         }
 
-        return view('pac.ficha', [
+        return view($this->views_folder.'.ficha', [
             'request' => $request,
-            'idpac' => $idpac,
+            'idpac' => $id,
             'ficha' => $ficha
         ]);
     } 
 
-    public function fiedit(Request $request,$idpac)
-    {   
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    public function fiedit(Request $request, $id)
+    {
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $ficha = ficha::find($idpac);
+        $id = $this->sanitizeData($id);
 
-        return view('pac.fiedit', [
+        $ficha = ficha::find($id);
+
+        return view($this->views_folder.'.fiedit', [
             'request' => $request,
-            'idpac' => $idpac,
+            'idpac' => $id,
             'ficha' => $ficha
         ]);
     }
 
-    public function fisave(Request $request,$idpac)
+    public function fisave(Request $request, $id)
     {   
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");     
+        $id = $this->sanitizeData($id);     
        
-        $ficha = ficha::find($idpac);
+        $ficha = ficha::find($id);
                 
         $histo = ucfirst(strtolower( $request->input('histo') ) );
         $enfer = ucfirst(strtolower( $request->input('enfer') ) );
         $medic = ucfirst(strtolower( $request->input('medic') ) );
         $aler = ucfirst(strtolower( $request->input('aler') ) );
-        $notas = ucfirst(strtolower( $request->input('notas') ) );
+        $notes = ucfirst(strtolower( $request->input('notes') ) );
         
-        $ficha->histo = htmlentities (trim($histo),ENT_QUOTES,"UTF-8");
-        $ficha->enfer = htmlentities (trim($enfer),ENT_QUOTES,"UTF-8");
-        $ficha->medic = htmlentities (trim($medic),ENT_QUOTES,"UTF-8");
-        $ficha->aler = htmlentities (trim($aler),ENT_QUOTES,"UTF-8");
-        $ficha->notas = htmlentities (trim($notas),ENT_QUOTES,"UTF-8");
+        $ficha->histo = $this->sanitizeData($histo);   
+        $ficha->enfer = $this->sanitizeData($enfer);   
+        $ficha->medic = $this->sanitizeData($medic);   
+        $ficha->aler = $this->sanitizeData($aler);   
+        $ficha->notes = $this->sanitizeData($notes);   
         
         $ficha->save();
 
-        $request->session()->flash('sucmess', 'Hecho!!!');
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
-        return redirect("Pacientes/$idpac/ficha"); 
+        return redirect("$this->main_route/$id/ficha"); 
     }  
 
-    public function file(Request $request,$idpac)
+    public function file(Request $request, $id)
     {
-    	if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$id = $this->sanitizeData($id);
 
-        $this->createDir($idpac);
+        $this->createDir($id);
 
-        $pacdir = "/pacdir/$idpac";
+        $pacdir = "/pacdir/$id";
 
         $files = Storage::files($pacdir);
 
-        $url = url("Pacientes/$idpac");
+        $url = url("$this->main_route/$id");
 
-		return view('pac.file', [
+		return view($this->views_folder.'.file', [
             'request' => $request,
-    	  	'idpac' => $idpac,
+    	  	'idpac' => $id,
     	  	'files' => $files,
             'url' => $url
         ]);
@@ -412,35 +429,33 @@ class PacientesController extends BaseController
 
     public function upload(Request $request)
     {	
-		$idpac = $request->input('idpac');
-        $fotoper = $request->input('fotoper');
+		$id = $request->input('idpac');
+        $profile_photo = $request->input('profile_photo');
 
-		if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}  
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$id = $this->sanitizeData($id);
 
-        $pacdir = storage_path("app/pacdir/$idpac");
+        $pacdir = storage_path("app/pacdir/$id");
 
 		$files = $request->file('files');
 
-        if ($fotoper == 1) {
+        if ($profile_photo == 1) {
             $extension = $files->getClientOriginalExtension();
 
             if ($extension == 'jpg' || $extension == 'png') {
 
-                Image::make($files)->encode('jpg', 80)
+                Image::make($files)->encode('jpg', 60)
                     ->resize(150, null, function ($constraint) {
                         $constraint->aspectRatio();
                     })
-                    ->save("$pacdir/.fotoper.jpg");
+                    ->save("$pacdir/.profile_photo.jpg");
 
-                return redirect("Pacientes/$idpac");
+                return redirect("$this->main_route/$id");
 
             } else { 
-                $request->session()->flash('errmess', 'Formato no soportado, suba una imagen jpg o png.');
-                return redirect("Pacientes/$idpac/file");
+                $request->session()->flash($this->error_message_name, 'Formato no soportado, suba una imagen jpg o png.');
+                return redirect("$this->main_route/$id/file");
             }
 
         } else {
@@ -452,20 +467,21 @@ class PacientesController extends BaseController
                 $filename = $file->getClientOriginalName();
                 $size = $file->getClientSize();
 
-                $max = 1024 * 1024 * 22;
+                $max_size = 2;
+                $max = 1024 * 1024 * $max_size;
  
-                $filedisk = storage_path("app/pacdir/$idpac/$filename");
+                $filedisk = storage_path("app/pacdir/$id/$filename");
 
                 if ( $size > $max ) {
-                    $mess = "El archivo: - $filename - es superior a 22 MB";
-                    $request->session()->flash('errmess', $mess);
-                    return redirect("Pacientes/$idpac/file");
+                    $mess = "El archivo: - $filename - es superior a $max_size MB";
+                    $request->session()->flash($this->error_message_name, $mess);
+                    return redirect("$this->main_route/$id/file");
                 }                
 
                 if ( file_exists($filedisk) ) {
                     $mess = "El archivo: $filename -- existe ya en su carpeta";
-                    $request->session()->flash('errmess', $mess);
-                    return redirect("Pacientes/$idpac/file");
+                    $request->session()->flash($this->error_message_name, $mess);
+                    return redirect("$this->main_route/$id/file");
 
                 } else {
                     $file->move($pacdir, $filename);
@@ -474,19 +490,22 @@ class PacientesController extends BaseController
             }            
     	     
     	    if($upcount == $ficount){
-    	      return redirect("Pacientes/$idpac/file");
+    	      return redirect("$this->main_route/$id/file");
     	    } else {
-    	      $request->session()->flash('errmess', 'error!!!');
-    	      return redirect("Pacientes/$idpac/file");
+    	      $request->session()->flash($this->error_message_name, 'error!!!');
+    	      return redirect("$this->main_route/$id/file");
     	    }
         }
     }
 
-    public function download(Request $request,$idpac,$file)
+    public function download(Request $request, $id, $file)
     {   
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
 
-        $pacdir = storage_path("app/pacdir/$idpac");
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $this->redirectIfIdIsNull($file, $this->main_route);
+        
+        $pacdir = storage_path("app/pacdir/$id");
 
         $filedown = $pacdir.'/'.$file;
 
@@ -495,12 +514,15 @@ class PacientesController extends BaseController
 
     public function filerem(Request $request)
     {  	  
-    	$idpac = $request->input('idpac');
+    	$id = $request->input('idpac');
     	$filerem = $request->input('filerem');
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $this->redirectIfIdIsNull($filerem, $this->main_route);
 
-        $pacdir = storage_path("app/pacdir/$idpac");
+    	$id = $this->sanitizeData($id);
+
+        $pacdir = storage_path("app/pacdir/$id");
 
         $file = $request->input('filerem');
 
@@ -508,24 +530,22 @@ class PacientesController extends BaseController
           
         unlink($filerem);    
     	  
-    	return redirect("Pacientes/$idpac/file");
+    	return redirect("$this->main_route/$id/file");
     }  
    
-    public function odogram(Request $request,$idpac)
+    public function odogram(Request $request, $id)
     {
-		if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	} 
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$id = $this->sanitizeData($id);
 
-        $pacdir = "/app/pacdir/$idpac";
+        $pacdir = "/app/pacdir/$id";
 
         $odogram = $pacdir."/.odogdir/odogram.jpg";
 
-        return response()->view('pac.odogram',[
+        return response()->view($this->views_folder.'.odogram',[
             'request' => $request,
-            'idpac' => $idpac,
+            'idpac' => $id,
             'odogram' => $odogram
         ])
            ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
@@ -538,41 +558,41 @@ class PacientesController extends BaseController
     {   
         if ($request->file('upodog')->isValid()) {
 
-            $idpac = $request->input('idpac');
+            $id = $request->input('idpac');
 
             $upodog = $request->file('upodog');
 
-            if ( null === $idpac ) {
-                return redirect('Pacientes');
-            }  
+            $this->redirectIfIdIsNull($id, $this->main_route);
 
             $extension = $request->file('upodog')->getClientOriginalExtension();
 
             if ( $extension != 'jpg' ) {
-                $request->session()->flash('errmess', 'No es una imagen jpg');
-                return redirect("Pacientes/$idpac/odogram");
+                $request->session()->flash($this->error_message_name, 'No es una imagen jpg');
+                return redirect("$this->main_route/$id/odogram");
             } 
 
-            $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+            $id = $this->sanitizeData($id);
 
-            $pacdir = storage_path("app/pacdir/$idpac");
+            $pacdir = storage_path("app/pacdir/$id");
 
             $odogram = $pacdir."/.odogdir/";
 
             $upodog->move($odogram,'odogram.jpg');
 
-            return redirect("Pacientes/$idpac/odogram");
+            return redirect("$this->main_route/$id/odogram");
 
         } else {
-            return redirect("Pacientes/$idpac/odogram");
+            return redirect("$this->main_route/$id/odogram");
         }    
     }   
 
-    public function downodog(Request $request,$idpac)
-    {   
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    public function downodog(Request $request, $id)
+    {
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $pacdir = storage_path("app/pacdir/$idpac");
+        $id = $this->sanitizeData($id);
+
+        $pacdir = storage_path("app/pacdir/$id");
 
         $odogram = $pacdir."/.odogdir/odogram.jpg";
 
@@ -581,18 +601,16 @@ class PacientesController extends BaseController
     
     public function resodog(Request $request)
     {  
-    	$idpac = $request->input('idpac');
+    	$id = $request->input('idpac');
 
-		if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}     	
+        $this->redirectIfIdIsNull($id, $this->main_route); 	
 
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+    	$id = $this->sanitizeData($id);
  
 		$resodog = $request->input('resodog');
 		 
 		if ( $resodog == 1 ) {
-            $pacdir = "/pacdir/$idpac";
+            $pacdir = "/pacdir/$id";
 
             $odogram = "/$pacdir/.odogdir/odogram.jpg";
             $img = '/img/odogram.jpg'; 
@@ -601,71 +619,65 @@ class PacientesController extends BaseController
 
 	    	Storage::copy($img, $odogram);
 	    	  
-	    	return redirect("/Pacientes/$idpac/odogram");
+	    	return redirect("/Pacientes/$id/odogram");
 
 		} else {
-		 	$request->session()->flash('errmess', 'Error');
-		 	return redirect("/Pacientes/$idpac/odogram");
+		 	$request->session()->flash($this->error_message_name, 'Error');
+		 	return redirect("/Pacientes/$id/odogram");
 		}	
     }
 
-    public function presup(Request $request,$idpac)
+    public function presup(Request $request, $id)
     {
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        } 
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
 
         $presup = DB::table('presup')
                     ->join('servicios','presup.idser','=','servicios.idser')
-                    ->select('presup.*','servicios.nomser')
-                    ->where('idpac', $idpac)
+                    ->select('presup.*','servicios.name')
+                    ->where('idpac', $id)
                     ->orderBy('cod','ASC')
                     ->get(); 
           
-        return view('pac.presup', [
+        return view($this->views_folder.'.presup', [
             'request' => $request,
-            'idpac' => $idpac,
+            'idpac' => $id,
             'presup' => $presup
         ]);
     }    
 
-    public function del(Request $request,$idpac)
+    public function del(Request $request, $id)
     {    	  
-    	$idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        
+    	$id = $this->sanitizeData($id);
 
-        if ( null === $idpac ) {
-            return redirect('Pacientes');
-        }
+        $paciente = Pacientes::find($id);
 
-        $paciente = pacientes::find($idpac);
-
-    	return view('pac.del', [
+    	return view($this->views_folder.'.del', [
             'request' => $request,
             'paciente' => $paciente,
-    		'idpac' => $idpac
+    		'idpac' => $id
         ]);
     }
  
-    public function destroy(Request $request,$idpac)
+    public function destroy(Request $request, $id)
     {             	
-		if ( null === $idpac ) {
-    		return redirect('Pacientes');
-    	}    
+        $this->redirectIfIdIsNull($id, $this->main_route);
         
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
+        $id = $this->sanitizeData($id);
         
-        pacientes::destroy($idpac);
+        Pacientes::destroy($id);
       
-        $request->session()->flash('sucmess', 'Hecho!!!');
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect('Pacientes');
+        return redirect($this->main_route);
     }
 
-    public function createDir($idpac)
+    public function createDir($id)
     {               
-        $pacdir = "/pacdir/$idpac";
+        $pacdir = "/pacdir/$id";
 
         if ( ! Storage::exists($pacdir) ) { 
             Storage::makeDirectory($pacdir,0770,true);
@@ -684,11 +696,11 @@ class PacientesController extends BaseController
             Storage::copy($img,$odogram);
         }
 
-        $fotoper = "/$pacdir/.fotoper.jpg";
-        $foto = '/public/assets/img/fotoper.jpg';
+        $profile_photo = "/$pacdir/.profile_photo.jpg";
+        $foto = '/public/assets/img/profile_photo.jpg';
           
-        if ( ! Storage::exists($fotoper) ) { 
-            Storage::copy($foto,$fotoper);
+        if ( ! Storage::exists($profile_photo) ) { 
+            Storage::copy($foto,$profile_photo);
         }          
 
         $thumbdir = $pacdir.'/.thumbdir';
@@ -702,12 +714,12 @@ class PacientesController extends BaseController
     {
         $data = [];
 
-        $pacientes = DB::table('pacientes')
-                        ->select('idpac', 'apepac', 'nompac', 'dni', 'tel1', 'pobla')
+        $main_loop = DB::table('pacientes')
+                        ->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
                         ->where($busen,'LIKE','%'.$busca.'%')
-                        ->orderBy('apepac','ASC')
-                        ->orderBy('nompac','ASC')
+                        ->orderBy('surname','ASC')
+                        ->orderBy('name','ASC')
                         ->get();
 
         $count = DB::table('pacientes')
@@ -715,21 +727,30 @@ class PacientesController extends BaseController
                     ->where($busen,'LIKE','%'.$busca.'%')
                     ->count();
 
-        if ($count === 0) {
+        if ($count == 0) {
 
-            $data['pacientes'] = false;
+            $data['main_loop'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay resultados para la búsqueda. ';
 
         } else {
 
-            $data['pacientes'] = $pacientes;
+            $data['main_loop'] = $main_loop;
             $data['count'] = $count;        
             $data['msg'] = false;
 
         }
 
         return $data;
+    }
+
+    public function getPatientsCount()
+    {
+        $patients_count = DB::table('pacientes')
+                            ->whereNull('deleted_at')
+                            ->count();
+
+        return $patients_count;
     }
 
 }

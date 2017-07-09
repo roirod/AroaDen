@@ -63,7 +63,7 @@
     	<br> <br>
 		<i class="fa fa-minus-square"></i> Notas:
 		<br> 
-		<div class="box200"> {!! nl2br(e($ficha->notas)) !!} </div>
+		<div class="box200"> {!! nl2br(e($ficha->notes)) !!} </div>
     </div> 	 
 
  </div>

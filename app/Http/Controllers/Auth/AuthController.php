@@ -29,26 +29,27 @@ class AuthController extends Controller
 
     private function checkIfUserExists()
     {
-        $default_users = Config::get('default_users');
+        if ( env('CREATE_DEFAULT_USERS') ) {
+            $default_users = Config::get('default_users');
 
-        foreach ($default_users as $user) {
+            foreach ($default_users as $user) {
 
-            $exits = User::where('username', $user["username"])->first();
+                $exits = User::where('username', $user["username"])->first();
 
-            if ($exits === null) {
+                if ($exits == null) {
 
-                DB::table('users')->insert([
-                    'username' => $user["username"],
-                    'password' => bcrypt($user["password"]),
-                    'tipo' => $user["tipo"]
-                ]);                
-                
+                    DB::table('users')->insert([
+                        'username' => $user["username"],
+                        'password' => bcrypt($user["password"]),
+                        'type' => $user["type"]
+                    ]);                
+                    
+                }
+
             }
 
+            return redirect("/login");
         }
-
-        return redirect("/login");
-
     }
 
     protected function validator(array $data) {}

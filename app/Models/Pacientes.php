@@ -11,7 +11,7 @@ class Pacientes extends Model
     
 	protected $table = 'pacientes';
     protected $dates = ['deleted_at'];
-    protected $fillable = ['nompac','apepac','dni','tel1','tel2','tel3','sexo','notas','direc','pobla','fenac'];
+    protected $fillable = ['surname','name','dni','tel1','tel2','tel3','sex','address','city','birth','notes'];
     protected $primaryKey = 'idpac';
 
     public function ficha()

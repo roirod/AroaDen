@@ -7,10 +7,7 @@
 @include('includes.messages')
 @include('includes.errors')
 
-
-
 {!! addtexto("Añadir Tratamientos al Paciente") !!}
-
 
 <div class="row">
  <div class="col-sm-12 mar10">
@@ -20,8 +17,8 @@
 	    {!! csrf_field() !!}
 
 		<input type="hidden" name="idpac" value="{{$idpac}}">
-		<input type="hidden" name="apepac" value="{{$apepac}}">
-		<input type="hidden" name="nompac" value="{{$nompac}}">
+		<input type="hidden" name="surname" value="{{$surname}}">
+		<input type="hidden" name="name" value="{{$name}}">
 
 		<div class="form-group col-lg-6">
 		   
@@ -30,14 +27,14 @@
 		   <select name="idser" class="form-control" required>
 		   
 			     @foreach($servicios as $servici)
-					<option value="{{$servici->idser}}">{{$servici->nomser}} | precio: {{$servici->precio}} €</option>
+					<option value="{{$servici->idser}}">{{$servici->name}} | precio: {{$servici->price}} €</option>
 			 	 @endforeach	
 		   
 		   </select>
 		
 		</div>
 
-		@include('includes.subuto')
+		@include('includes.submit_button')
 
 	</form>
 

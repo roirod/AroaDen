@@ -5,19 +5,19 @@ return [
     [
         'username' => 'admin',
         'password' => 'admin',
-        'tipo' => 'medio'
+        'type' => 'medio'
     ],
 
     [
         'username' => 'normal',
         'password' => 'normal',
-        'tipo' => 'normal'
+        'type' => 'normal'
     ],
 
     [
         'username' => 'medio',
         'password' => 'medio',
-        'tipo' => 'medio'
+        'type' => 'medio'
     ],
 
 ];

@@ -39,9 +39,9 @@
 
 		    @foreach($presup as $presu)
 
-		    	<?php $cod = $presu->cod; ?>
+		    	<?php $code = $presu->code; ?>
 
-		    	@if( isset($cod2) && $cod != $cod2 )
+		    	@if( isset($code2) && $code != $code2 )
 		    		<tr class="danger">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
@@ -55,18 +55,19 @@
 					  <td class="wid95 textcent"></td>
 					  <td class="wid95 textcent"></td>
 					  <td class="wid180 textcent"></td>
-	   			</tr>
-	   		@endif
+	   				</tr>
+	   			@endif
 
-				<?php $cod2 = $presu->cod; ?>
+				<?php $code2 = $presu->code; ?>
 
 				<tr>
-		 			<td class="wid110"> {!!DatTime($presu->cod)!!} </td>
-		 			<td class="wid180">{!!$presu->nomser!!}</td>
-		 			<td class="wid95 textcent">{!!$presu->canti!!}</td>
-		 			<td class="wid95 textcent">{!!$presu->precio!!} €</td>
+		 			<td class="wid110"> {!!DatTime($presu->code)!!} </td>
+		 			<td class="wid180">{!!$presu->name!!}</td>
+		 			<td class="wid95 textcent">{!!$presu->units!!}</td>
+		 			<td class="wid95 textcent">{!!$presu->price!!} €</td>
 		 			<td class="wid180"></td>
 				</tr>
+				
 		    @endforeach
 	    
 	 	</table>
@@ -93,11 +94,11 @@
 			<div class="input-group">
 
 				<div class="col-sm-9">
-					<select name="cod" class="form-control">
+					<select name="code" class="form-control">
 
 						@foreach ($presgroup as $presgro)
 
-							<option value="{!!$presgro->cod!!}">{!!DatTime($presgro->cod)!!}</option>
+							<option value="{!!$presgro->code!!}">{!!DatTime($presgro->code)!!}</option>
 									
 						@endforeach
 

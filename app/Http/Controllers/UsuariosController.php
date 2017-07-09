@@ -7,7 +7,6 @@ use DB;
 use Validator;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
 
 class UsuariosController extends BaseController
 {
@@ -16,99 +15,89 @@ class UsuariosController extends BaseController
         parent::__construct();
 
         $this->middleware('auth');
-    }
-    
-    public function index(Request $request)
-    { }
-    
-    public function create(Request $request)
-    {
-    	$users = DB::table('users')->orderBy('username','ASC')->get();
 
-    	return view('user.create',[
+        $this->main_route = 'Usuarios';
+        $this->views_folder = 'user';
+    }
+      
+    public function create(Request $request, $id = false)
+    {
+        $main_loop = User::orderBy('username','ASC')->get();
+
+    	return view($this->views_folder.'.create',[
             'request' => $request,
-            'users' => $users
+            'main_loop' => $main_loop
         ]);	
     }    
 
     public function store(Request $request)
-    {    	
-    	$users = DB::table('users')->get();
-    	  
+    {    	  	  
     	$password = trim( $request->input('password') );
-    	$username = htmlentities (trim($request->input('username')),ENT_QUOTES,"UTF-8");
-        $tipo = htmlentities (trim($request->input('tipo')),ENT_QUOTES,"UTF-8");
-    	  
-    	foreach ($users as $user) {
-    	   if ($user->username == $username) {
-    	       $request->session()->flash('errmess', 'Nombre de usuario en uso, use cualquier otro.');
-    	       return redirect('Usuarios/create');
-    	   }
-    	}	 
-    	 	
+    	$username = $this->sanitizeData($request->input('username'));
+        $type = $this->sanitizeData($request->input('type'));
+
+        if ( $username == 'admin' ) {
+            $request->session()->flash($error_message_name, 'Nombre de usuario no permitido, use cualquier otro.');   
+            return redirect($this->main_route.'/create');
+        }   
+
+        $exists = User::where('username', $username)->exists();
+
+        if ($exists) {
+           $request->session()->flash($error_message_name, 'Nombre de usuario: $username - en uso, use cualquier otro.');
+           return redirect($this->main_route.'/create');
+        }
+
         $validator = Validator::make($request->all(),[
             'username' => 'required|unique:users|max:44',
             'password' => 'required|max:44',
-            'tipo' => 'required|max:44'
+            'type' => 'required|max:44'
         ]);
             
         if ($validator->fails()) {
-	         return redirect('/Usuarios/create')
+	         return redirect($this->main_route.'/create')
 	                     ->withErrors($validator)
 	                     ->withInput();
-	    } else {
-	     		
-	    	if ( $username == 'admin' ) {
-	    		$request->session()->flash('errmess', 'Nombre de usuario no permitido, use cualquier otro.');	
-	    	  	return redirect('Usuarios/create');
-	    	}	     		
+	    } else { 		
         	     	        	
 	        User::create([
 	          'username' => $username,
 	          'password' => bcrypt($password),
-              'tipo' => $tipo
+              'type' => $type
             ]);
 	      
-            $request->session()->flash('sucmess', 'Hecho!!!');	
+            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );	
         	        	
-        	return redirect('Usuarios/create');
+        	return redirect($this->main_route);
         }      
     }
     
-    public function usuedit(Request $request)
+    public function userEdit(Request $request)
     {
-    	$users = DB::table('users')->get();
+        $main_loop = User::orderBy('username','ASC')->get();
 
-    	return view('user.usuedit', [
+    	return view($this->views_folder.'.userEdit', [
             'request' => $request,
-    	    'users' => $users
+            'main_loop' => $main_loop
         ]);  
     }
 
-    public function usudel(Request $request)
+    public function userDeleteViev(Request $request)
     {
-        $users = DB::table('users')->get();
-
-        return view('user.usudel', [
+        $main_loop = User::orderBy('username','ASC')->get();
+        
+        return view($this->views_folder.'.userDeleteViev', [
             'request' => $request,
-            'users' => $users
+            'main_loop' => $main_loop
         ]);
     }
 
-    public function show($id)
-    { }
-
-    public function edit($id)
-    { }
-
-    public function saveup(Request $request)
+    public function userUpdate(Request $request)
     {
-        $uid = htmlentities (trim($request->input('uid')),ENT_QUOTES,"UTF-8");
-        $password = $request->input('password');
+        $uid = $this->sanitizeData($request->input('uid'));
+        $password = trim( $request->input('password') );
 
-        if ( null === $uid ) {
-            return redirect('Ajustes');
-        }  
+        $this->redirectIfIdIsNull($uid, 'Settings');
 
         $validator = Validator::make($request->all(),[
             'uid' => 'required',
@@ -116,43 +105,33 @@ class UsuariosController extends BaseController
         ]);
             
         if ($validator->fails()) {
-             return redirect('/Usuarios/usuedit')
+             return redirect($this->main_route.'/userEdit')
                          ->withErrors($validator)
                          ->withInput();
         } else {
               
-            $User = User::find($uid);
+            $user = User::find($uid);
+            $user->password = bcrypt($password);
+            $user->save();
               
-            $User->password = bcrypt($password);
-              
-            $User->save();
-              
-            $request->session()->flash('sucmess', 'Hecho!!!');
+            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );
                         
-            return redirect('/Usuarios/create');
+            return redirect($this->main_route);
         }  
     }
-     
-    public function update(Request $request,$uid)
-    { }
 
-    public function delete(Request $request)
+    public function userDelete(Request $request)
     {
-        $uid = htmlentities (trim($request->input('uid')),ENT_QUOTES,"UTF-8");
+        $uid = $this->sanitizeData($request->input('uid'));
 
-        if ( null === $uid ) {
-            return redirect('Ajustes');
-        }  
+        $this->redirectIfIdIsNull($uid, 'Settings');
         
-        $User = User::find($uid);
-      
-        $User->delete();
+        $user = User::find($uid);
+        $user->delete();
 
-        $request->session()->flash('sucmess', 'Hecho!!!');
+        $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect('/Usuarios/create');
+        return redirect($this->main_route);
     }
 
-    public function destroy(Request $request,$uid)
-    { }
 }

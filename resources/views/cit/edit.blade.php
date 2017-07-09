@@ -10,7 +10,6 @@
 
  {!! addtexto("Editar Cita") !!}
 
-
 <div class="row">
   <div class="col-sm-12">
 
@@ -21,15 +20,15 @@
 		<input type="hidden" name="idpac" value="{{$idpac}}">
 
 		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Hora:</label> 
-		<input type="time" step="300" class="form-control" name="horacit" value="{{$cita->horacit}}" autofocus required>  </div>
+		<input type="time" step="300" class="form-control" name="hour" value="{{$cita->hour}}" autofocus required>  </div>
 				
 		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Día:</label>		 	
-		<input type="date" class="form-control" name="diacit" value="{{$cita->diacit}}" required>  </div>
+		<input type="date" class="form-control" name="day" value="{{$cita->day}}" required>  </div>
 				
 		<div class="form-group col-sm-9">  <label class="control-label text-left mar10">Notas:</label>
-		<textarea class="form-control" name="notas" rows="3"> {{$cita->notas}} </textarea>  </div>		
+		<textarea class="form-control" name="notes" rows="3"> {{$cita->notes}} </textarea>  </div>		
 				
-		@include('includes.subuto')
+		@include('includes.submit_button')
 	 
 	 </form>
  

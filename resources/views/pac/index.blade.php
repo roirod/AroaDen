@@ -34,7 +34,7 @@
 
 	      			<select name="busen" class="form-control busca_class" required>
 
-	      				<option value="apepac" selected> Apellido/s </option>
+	      				<option value="surname" selected> Apellido/s </option>
 	      				<option value="dni"> DNI </option>
 
 					</select>
@@ -77,7 +77,7 @@
 
 		 	  <table class="table table-hover">
 				
-				@foreach ($pacientes as $paciente)
+				@foreach ($main_loop as $paciente)
 						
 					<tr> 
 						<td class="wid50">
@@ -88,13 +88,13 @@
 
 						<td class="wid290">
 							<a href="{!!url("/Pacientes/$paciente->idpac")!!}" class="pad4" target="_blank">
-								{!!$paciente->apepac!!}, {!!$paciente->nompac!!}
+								{!!$paciente->surname!!}, {!!$paciente->name!!}
 							</a>
 						</td>
 
 						<td class="wid110">{!!$paciente->dni!!}</td>
 						<td class="wid110">{!!$paciente->tel1!!}</td>
-						<td class="wid230">{!!$paciente->pobla!!}</td> 
+						<td class="wid230">{!!$paciente->city!!}</td> 
 						
 					</tr>
 								
@@ -104,7 +104,7 @@
 					<tr> 
 						<div class="textcent">
 							<hr>
-							{!!$pacientes->links()!!}
+							{!!$main_loop->links()!!}
 						</div>
 					</tr> 
 				</table>
@@ -147,7 +147,7 @@
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
 				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-						$('#item_list').hide().html(buscando).fadeIn('slow');
+						$('#item_list').html(buscando);
 
 					    var data = $("form").serialize();
 		     
@@ -182,7 +182,7 @@
 					    		html += '  <div class="box400">';
 					    		html += '    <table class="table table-hover">';
 
-					    		$.each(response.pacientes, function(index, object){
+					    		$.each(response.main_loop, function(index, object){
 						    		html += '  <tr>';
 						    		html += '    <td class="wid50">';
 						    		html += '      <a href="/Pacientes/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
@@ -191,12 +191,12 @@
 						    		html += '    </td>';
 						    		html += '    <td class="wid290">';
 						    		html += '      <a href="/Pacientes/'+object.idpac+'" class="pad4" target="_blank">';
-						    		html += 		  object.apepac + ', ' + object.nompac;
+						    		html += 		  object.surname + ', ' + object.name;
 						    		html += '      </a>';
 						    		html += '    </td>';
 						    		html += '    <td class="wid110">' + object.dni + '</td>';
 	 					    		html += '    <td class="wid110">' + object.tel1 + '</td>';
-						    		html += '    <td class="wid230">' + object.pobla + '</td>';
+						    		html += '    <td class="wid230">' + object.city + '</td>';
 						    		html += '  </tr>';
 					    		});
 

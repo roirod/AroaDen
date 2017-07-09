@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Factutex extends Model
 {
 	protected $table = 'factutex';
-    protected $fillable = ['idpac','factumun','cod','texto'];
+    protected $fillable = ['idpac','invoice_number','code','text'];
     protected $primaryKey = 'idfactex';
 }

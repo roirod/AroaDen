@@ -11,6 +11,6 @@ class Personal extends Model
 	
 	protected $table = 'personal';
 	protected $dates = ['deleted_at'];
-    protected $fillable = ['nom','ape','cargo','dni','tel1','tel2','notas','direc','pobla','fenac'];
+    protected $fillable = ['name','surname','position','dni','tel1','tel2','address','city','birth','notes'];
     protected $primaryKey = 'idper';
 }

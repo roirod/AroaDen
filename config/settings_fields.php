@@ -1,15 +1,16 @@
 <?php
 
 return [
-    "empre_nom",
-    "empre_direc",
-    "empre_pobla",
-    "empre_nif",
-    "empre_tel1",
-    "empre_tel2",
-    "empre_tel3",
-    "empre_notas",
-    "factumun",
-    "factutex",
-    "presutex"    
+    "company_name",
+    "company_address",
+    "company_city",
+    "company_nif",
+    "company_tel1",
+    "company_tel2",
+    "company_tel3",
+    "company_notes",
+    "invoice_number",
+    "invoice_text",
+    "budget_number",
+    "budget_text",    
 ];

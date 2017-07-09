@@ -3,9 +3,8 @@
      <ul class="nav nav-pills bgtra">
          <li><a href="{{url("/Settings")}}">Ajustes</a></li>
          <li><a href="{{url("/Usuarios/create")}}">Ver</a></li>
-         <li><a href="{{url("/Usuarios/usuedit")}}">Editar</a></li>
-         <li><a href="{{url("/Usuarios/usudel")}}">Eliminar</a></li>
-
+         <li><a href="{{url("/Usuarios/userEdit")}}">Editar</a></li>
+         <li><a href="{{url("/Usuarios/userDeleteViev")}}">Eliminar</a></li>
      </ul>
      <hr>
   </div>

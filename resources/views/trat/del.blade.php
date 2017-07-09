@@ -22,20 +22,20 @@
 		   	</p>
 
 		    <p class="pad4">
-		        {{ $tratampa->nomser }}
+		        {{ $tratampa->name }}
 		        <br>
-		        precio: {{ $tratampa->precio }} €.
+		        Precio: {{ $tratampa->price }} €.
 		        <br>
-		        cantidad: {{ $tratampa->canti }}.
+		        Cantidad: {{ $tratampa->units }}.
 		        <br>
-		        total: {{ numformat($tratampa->canti * $tratampa->precio) }} €.      
+		        total: {{ numformat($tratampa->units * $tratampa->price) }} €.      
 		        <br>
-		        Pagado: {{ $tratampa->pagado }} €.
+		        Pagado: {{ $tratampa->paid }} €.
 		        <br>
-		        Fecha: {{ date('d-m-Y', strtotime ($tratampa->fecha) ) }}.        
-		    </p>   
+		        Fecha: {{ date('d-m-Y', strtotime ($tratampa->date) ) }}.        
+		    </p>    
 
-			@include('includes.delbuto')
+			@include('includes.delete_button')
  			
  		</form>
  	</div>

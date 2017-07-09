@@ -5,16 +5,16 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateFichasTable extends Migration
 {
-
     public function up()
     {
         Schema::create('ficha', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->Integer('idpac')->unsigned();
             $table->text('histo')->nullable();
             $table->text('enfer')->nullable();
             $table->text('medic')->nullable();
             $table->text('aler')->nullable();
-            $table->text('notas')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
             $table->primary('idpac');  
 

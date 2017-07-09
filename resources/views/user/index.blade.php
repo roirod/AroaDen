@@ -18,10 +18,10 @@
 	 				<a href="/Usuarios/create" role="button" class="btn btn-sm btn-primary"> <i class="fa fa-plus"></i> Nuevo</a> 
 	 			</div> 
 	 			<div class="btn-group">
-	 				<a href="/Usuarios/usuedit" role="button" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> Editar</a>
+	 				<a href="/Usuarios/userEdit" role="button" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> Editar</a>
 	 			</div>
 	 			<div class="btn-group">
-	 				<a href="/Usuarios/usudel" role="button" class="btn btn-sm btn-danger"> <i class="fa fa-times"></i> Eliminar</a>
+	 				<a href="/Usuarios/userDeleteViev" role="button" class="btn btn-sm btn-danger"> <i class="fa fa-times"></i> Eliminar</a>
 	 			</div>
 
 			</div> 

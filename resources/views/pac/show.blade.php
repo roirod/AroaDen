@@ -28,7 +28,7 @@
 			<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
 			<ul class="dropdown-menu" role="menu"> 
 				<li>
-					@include('includes.delbuto')
+					@include('includes.delete_button')
 				</li>
 			</ul>			
  			
@@ -42,7 +42,7 @@
   	  {!! csrf_field() !!}
 
        <input type="hidden" name="idpac" value="{!!$idpac!!}">
-       <input type="hidden" name="fotoper" value="1">
+       <input type="hidden" name="profile_photo" value="1">
   
   	  <div class="input-group">
   	    <span class="input-group-btn pad4"> 
@@ -66,13 +66,13 @@
     <div class="row fonsi16">
 
 		<div class="col-sm-2 pad4 max150">
-			<img src="{!! $fotoper !!}" class="max150 pad4">
+			<img src="{!! $profile_photo !!}" class="max150 pad4">
 		</div>
 
 		<div class="col-sm-10">
 
 			<div class="col-sm-8 pad4"> 
-			<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$paciente->apepac!!},&nbsp;{!!$paciente->nompac!!} 
+			<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$paciente->surname!!},&nbsp;{!!$paciente->name!!} 
 			</div>
 
 			<div class="col-sm-3 pad4"> 
@@ -80,11 +80,11 @@
 			</div>
 
 			<div class="col-sm-7 pad4"> 
-			<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$paciente->pobla!!}
+			<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$paciente->city!!}
 			 </div> 
 
 			<div class="col-sm-8 pad4">
-			<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$paciente->direc!!} 
+			<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$paciente->address!!} 
 			</div> 
 
 			 <div class="col-sm-4 pad4">
@@ -92,7 +92,7 @@
 			 </div> 
 
 			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$paciente->sexo!!} 
+			<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$paciente->sex!!} 
 			</div> 
 
 			<div class="col-sm-4 pad4">
@@ -108,18 +108,18 @@
 			 </div> 
 
 			 <div class="col-sm-4 pad4"> 
-			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($paciente->fenac) )!!} 
+			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($paciente->birth) )!!} 
 			</div>
 
 			 <div class="col-sm-3 pad4"> 	
-			<i class="fa fa-minus-square"></i> Edad: &nbsp; {!!$Edad!!} años 
+			<i class="fa fa-minus-square"></i> Edad: &nbsp; {!!$edad!!} años 
 			</div>
 
 		</div>
 
 		 <div class="col-sm-12 pad4"> 
 		<i class="fa fa-minus-square"></i> Notas: <br>
-		 <div class="box200"> {!! nl2br(e($paciente->notas)) !!} 
+		 <div class="box200"> {!! nl2br(e($paciente->notes)) !!} 
 		 </div>
 		 </div>
 
@@ -154,8 +154,8 @@
 
     @foreach($citas as $cita)
 		<tr>
- 			<td class="wid95">{!!$cita->horacit!!}</td>
- 			<td class="wid95">{!!date('d-m-Y', strtotime($cita->diacit) )!!}</td>
+ 			<td class="wid95">{!!$cita->hour!!}</td>
+ 			<td class="wid95">{!!date('d-m-Y', strtotime($cita->day) )!!}</td>
  			<td class="wid50">	
 				<a href="{!!url("/Citas/$idpac/$cita->idcit/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
 					<i class="fa fa-edit"></i>
@@ -174,14 +174,14 @@
 						<i class="fa fa-times"></i> <span class="caret"></span>  </button>
 						<ul class="dropdown-menu" role="menu"> 
 							<li>
-								@include('includes.delbuto')
+								@include('includes.delete_button')
 							</li>
 						</ul>			
 			 		</form>
 
 				</div> 
 			</td>
-			<td class="wid290">{!!$cita->notas!!}</td>
+			<td class="wid290">{!!$cita->notes!!}</td>
 		</tr>
     @endforeach
     
@@ -231,12 +231,12 @@
 
     @foreach($tratampacien as $tratam)		
     	<tr>
-    		<td class="wid140">{!!$tratam->nomser!!}</td> 
-			<td class="wid70 textcent">{!!numformat($tratam->precio)!!} €</td>
-			<td class="wid70 textcent">{!!$tratam->canti!!}</td>
-			<td class="wid70 textcent">{!!numformat($tratam->canti * $tratam->precio)!!} €</td>
-			<td class="wid70 textcent">{!!numformat($tratam->pagado)!!} €</td>
-			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->fecha) )!!}</td>
+    		<td class="wid140">{!!$tratam->name!!}</td> 
+			<td class="wid70 textcent">{!!numformat($tratam->price)!!} €</td>
+			<td class="wid70 textcent">{!!$tratam->units!!}</td>
+			<td class="wid70 textcent">{!!numformat($tratam->units * $tratam->price)!!} €</td>
+			<td class="wid70 textcent">{!!numformat($tratam->paid)!!} €</td>
+			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->date) )!!}</td>
 
 			<td class="wid50 textcent">
 				<a href="{!!url("/Trapac/$idpac/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
@@ -257,7 +257,7 @@
 						<i class="fa fa-times"></i> <span class="caret"></span>  </button>
 						<ul class="dropdown-menu" role="menu"> 
 							<li>
-								@include('includes.delbuto')
+								@include('includes.delete_button')
 							</li>
 						</ul>			
 			 			
@@ -308,15 +308,15 @@
 	 	      <table class="table table-bordered">
 	 	     	<tr class="text-info pad10">
 		 	     	 <td class="wid180"> <i class="fa fa-minus"></i> &nbsp; Suma tratamientos:</td>
-		 	     	 <td class="wid95 textder"> {!!numformat($sum->sumtot)!!} €</td>
+		 	     	 <td class="wid95 textder"> {!!numformat($sum->total_sum)!!} €</td>
 	 	     	</tr> 
 	 		    <tr class="text-info pad10">
 	 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; Pagado:</td>
-	 		    	<td class="wid95 textder"> {!!numformat($sum->totpaga)!!} € </td>
+	 		    	<td class="wid95 textder"> {!!numformat($sum->total_paid)!!} € </td>
 	 		    </tr>
 	 		    <tr class="text-danger pad10">
 	 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; Resto:</td>
-	 		    	<td class="wid95 textder"> {!!numformat($sum->resto)!!} € </td>
+	 		    	<td class="wid95 textder"> {!!numformat($sum->rest)!!} € </td>
 	 		    </tr>
 	 		  </table>
 

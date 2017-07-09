@@ -31,24 +31,24 @@
    		<div class="box230">
 	   		<table class="table table-striped">      	  	
 
-		   		@foreach ($servicios as $servicio)
+		   		@foreach ($main_loop as $servicio)
 
 						<tr>
 						 	<form id="nueform">
 
 								<input type="hidden" name="idpac" value="{!!$idpac!!}">
 								<input type="hidden" name="idser" value="{!!$servicio->idser!!}">
-								<input type="hidden" name="precio" value="{!!$servicio->precio!!}">
-								<input type="hidden" name="iva" value="{!!$servicio->iva!!}">
-								<input type="hidden" name="cod" value="{!!$cod!!}">						 	
+								<input type="hidden" name="price" value="{!!$servicio->price!!}">
+								<input type="hidden" name="tax" value="{!!$servicio->tax!!}">
+								<input type="hidden" name="code" value="{!!$code!!}">						 	
 
-								  <td class="wid140">{!!$servicio->nomser!!}</td>
+								  <td class="wid140">{!!$servicio->name!!}</td>
 
-								  <td class="wid95 textcent">{!!$servicio->precio!!} €</td>
+								  <td class="wid95 textcent">{!!$servicio->price!!} €</td>
 
 								  <td class="wid50 textcent">
 								  	 	<div class="form-group">
-								  			<input type="number" min="1" step="1" value="1" class="form-control" name="canti" required>
+								  			<input type="number" min="1" step="1" value="1" class="form-control" name="units" required>
 								  		</div>
 								  </td>
 
@@ -70,9 +70,7 @@
 </div> </div> </div> </div>
 
 
-<?php
-  addtexto("Añadidos");
-?>
+{!! addtexto("Añadidos") !!}
 
 
 <div class="row">

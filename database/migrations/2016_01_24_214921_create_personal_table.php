@@ -5,26 +5,26 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePersonalTable extends Migration
 {
-
     public function up()
     {
         Schema::create('personal', function (Blueprint $table) {
+            $table->engine = 'InnoDB';           
             $table->increments('idper');
-            $table->string('ape', 111);
-            $table->string('nom', 111);
-            $table->string('cargo', 66)->nullable();
-            $table->string('dni', 11);      
-            $table->string('tel1', 11)->nullable();
-            $table->string('tel2', 11)->nullable();    
-            $table->string('direc', 111)->nullable();
-            $table->string('pobla', 111)->nullable();
-            $table->text('notas')->nullable();
-            $table->date('fenac')->nullable();
+            $table->string('surname', 111);
+            $table->string('name', 111);
+            $table->string('position', 66)->nullable();            
+            $table->string('address', 111)->nullable();
+            $table->string('city', 111)->nullable();            
+            $table->string('dni', 18);
+            $table->string('tel1', 18)->nullable();
+            $table->string('tel2', 18)->nullable();
+            $table->date('birth')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->index('ape');
-            $table->index('nom');
-            $table->unique('dni');
+            $table->index('surname');
+            $table->index('name');
+            $table->unique('dni');  
         });
     }
 

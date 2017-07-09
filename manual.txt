@@ -1,0 +1,12 @@
+
+
+php artisan migrate
+
+
+
+php artisan db:seed 
+
+
+php artisan db:seed --class=UsersTableSeeder
+
+php artisan db:seed --class=pacSeeder

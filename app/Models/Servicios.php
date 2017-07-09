@@ -11,6 +11,12 @@ class Servicios extends Model
 
 	protected $table = 'servicios';
 	protected $dates = ['deleted_at'];
-    protected $fillable = ['nomser','precio','iva'];
+    protected $fillable = ['name','price','tax'];
     protected $primaryKey = 'idser';
+
+    public function tratampacien()
+    {
+        return $this->hasMany('App\Models\Tratampacien', 'idser', 'idser');
+    }
+    
 }

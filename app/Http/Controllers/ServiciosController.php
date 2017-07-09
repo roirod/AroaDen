@@ -7,44 +7,74 @@ use App\Models\Servicios;
 
 use Auth;
 use Validator;
+use Lang;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use App\Interfaces\BaseInterface;
 
-class ServiciosController extends BaseController
+class ServiciosController extends BaseController implements BaseInterface
 {
-    private $iva_tipos;
-
+    /**
+     *  construct method
+     */
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware('auth');
 
-        $this->iva_tipos = require(base_path().'/config/iva_tipos.php');
+        $this->tax_types = require(base_path().'/config/tax_types.php');        
+        $this->main_route = 'Servicios';
+        $this->views_folder = 'serv';
+
+        $fields = [
+            'name' => true,
+            'price' => true,
+            'tax' => true,
+            'save' => true,
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
     }
 
+    /**
+     *  get the index page
+     *      
+     *  @return view
+     */
     public function index(Request $request)
     {			
-		$servicios = DB::table('servicios')
-                        ->whereNull('deleted_at')
-                        ->orderBy('nomser', 'ASC')
+		$main_loop = Servicios::whereNull('deleted_at')
+                        ->orderBy('name', 'ASC')
                         ->get();		
 
-        $count = DB::table('servicios')
-                        ->whereNull('deleted_at')
-                        ->count();
+        $count = Servicios::whereNull('deleted_at')->count();
 
-        return view('serv.index', [
-            'servicios' => $servicios,
+        $this->form_fields = [
+            'name' => true,
+            'price' => true,
+            'tax' => true,
+        ];
+
+        $this->view_data = [
+            'main_loop' => $main_loop,
             'request' => $request,
-            'count' => $count
-        ]);          
+            'count' => $count,
+            'form_fields' => $this->form_fields,           
+        ];
+
+        return view($this->views_folder.'.index', $this->view_data);          
     }
 
+    /**
+     *  get query result, using ajax
+     * 
+     *  @param Request $request request object.
+     * 
+     *  @return string JSON
+     */
     public function list(Request $request)
     {   
-        $busca = $request->input('busca');
-        $busca = htmlentities (trim($busca),ENT_QUOTES,"UTF-8");
+        $busca = $this->sanitizeData($request->input('busca'));
 
         $data = $this->consultaItems($busca);
 
@@ -55,211 +85,235 @@ class ServiciosController extends BaseController
         exit();
     }  
 
-    public function create(Request $request)
+    /**
+     *  create an item
+     * 
+     *  @param Request $request request object.
+     * 
+     *  @return view
+     */
+    public function create(Request $request, $id = false)
     {
-        $iva_tipos = $this->iva_tipos;
-   	 
-    	return view('serv.create', [
+        $this->autofocus = 'name';
+
+        $this->view_data = [
             'request' => $request,
-            'ivatp' => $iva_tipos
-        ]);	
+            'tax_types' => $this->tax_types,
+            'main_route' => $this->main_route,
+            'autofocus' => $this->autofocus,
+            'form_fields' => $this->form_fields
+        ];
+
+        return parent::create($request, $id);  
     }
- 
+   
+    /**
+     *  store an item
+     * 
+     *  @param Request $request request object.
+     * 
+     *  @return redirect
+     */
     public function store(Request $request)
     {          
-        $nomser = ucfirst(strtolower( $request->input('nomser') ) );
+        $name = ucfirst(strtolower( $request->input('name') ) );
 
-        $nomser = htmlentities (trim($nomser),ENT_QUOTES,"UTF-8");
-        $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
-        $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");     
+        $name = $this->sanitizeData($name);
+        $price = $this->sanitizeData($request->input('price'));
+        $tax = $this->sanitizeData($request->input('tax'));  
 
-        $servicios = DB::table('servicios')
-                        ->orderBy('nomser','ASC')
-                        ->get();
+        $exists = Servicios::where('name', $name)->exists();
           
-        foreach ($servicios as $servi) {
-           if ($servi->nomser == $nomser) {
-               $request->session()->flash('errmess', "Nombre: $nomser - ya en uso, use cualquier otro.");
-               return redirect('Servicios/create')->withInput();
-           }
-        } 
+        if ($exists) {
+           $request->session()->flash($this->error_message_name, Lang::get('aroaden.name_in_use', ['name' => $name]) );
+           return redirect($this->main_route.'/create')->withInput();
+        }
 
     	$validator = Validator::make($request->all(), [
-            'nomser' => 'required|unique:servicios|max:111',
-            'precio' => 'required',
-            'iva' => ''
+            'name' => 'required|unique:servicios|max:111',
+            'price' => 'required',
+            'tax' => ''
 	    ]);
     	        
         if ($validator->fails()) {
-	        return redirect('Servicios/create')
+	        return redirect($this->main_route.'/create')
 	                     ->withErrors($validator)
 	                     ->withInput();
 	     } else {
 	        	
-		    servicios::create([
-                'nomser' => $nomser,
-		        'precio' => $precio,
-		        'iva' => $iva
+		    Servicios::create([
+                'name' => $name,
+		        'price' => $price,
+		        'tax' => $tax
 		    ]);
 		      
-		    $request->session()->flash('sucmess', 'Hecho!!!');	
+		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
 	        	        	
-	        return redirect('Servicios/create');
+	        return redirect($this->main_route.'/create');
         }     
     }
  
-    public function show($id)
-    { }
-
-    public function edit(Request $request,$idser)
+    /**
+     *  get query result, using an ajax request
+     * 
+     *  @param Request $request request object.
+     *  @param int $idser The ID.
+     * 
+     *  @return json
+     */
+    public function edit(Request $request, $id, $idcit = false)
     {
+        $this->redirectIfIdIsNull($id, $this->main_route);
 
-        if ( null === $idser ) {
-            return redirect('Servicios');
-        }
+        $id = $this->sanitizeData($id);
+        $object = Servicios::find($id);
+        $this->autofocus = 'name';
 
-        $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
-
-        $servicio = servicios::find($idser);
-
-        $iva_tipos = $this->iva_tipos;    
-
-        return view('serv.edit', [
+        $this->view_data = [
             'request' => $request,
-            'servicio' => $servicio,
-            'ivatp' => $iva_tipos,
-            'idser' => $idser
-        ]);
+            'id' => $id,
+            'object' => $object,            
+            'tax_types' => $this->tax_types,
+            'main_route' => $this->main_route,
+            'autofocus' => $this->autofocus,
+            'form_fields' => $this->form_fields
+        ];
+
+        return parent::edit($request, $id);  
     }
 
-    public function update(Request $request,$idser)
+    /**
+     *  get query result, using ajax
+     *  @return json
+     */
+    public function update(Request $request, $idser)
     {
-        if ( null === $idser ) {
-            return redirect('Servicios');
-        }
+        $this->redirectIfIdIsNull($idser, $this->main_route);
 
-        $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
+        $idser = $this->sanitizeData($idser);
 
-        $nomser = ucfirst(strtolower( $request->input('nomser') ) );
+        $name = ucfirst(strtolower( $request->input('name') ) );
 
-        $nomser = htmlentities (trim($nomser),ENT_QUOTES,"UTF-8");
-        $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
-        $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");
+        $name = $this->sanitizeData($name);
+        $price = $this->sanitizeData($request->input('price'));
+        $tax = $this->sanitizeData($request->input('tax'));  
 
-        $servicios = DB::table('servicios')
-                        ->orderBy('nomser','ASC')
-                        ->get();
+        $exists = Servicios::where('idser', '!=', $idser)->exists();
 
-        $servi = servicios::find($idser);
-
-        if ($servi->nomser != $nomser) { 
-            foreach ($servicios as $servi) {
-               if ($servi->nomser == $nomser) {
-                   $request->session()->flash('errmess', "Nombre: $nomser - ya en uso, use cualquier otro.");
-                   return redirect("Servicios/$idser/edit");
-               }
-            }
+        if ($exists) { 
+           $request->session()->flash($this->error_message_name, "Nombre: $name - ya en uso, use cualquier otro.");
+           return redirect("$this->main_route/$idser/edit");
         }
 
         $validator = Validator::make($request->all(), [
-            'nomser' => 'required|max:111',
-            'precio' => 'required',
-            'iva' => 'required'
+            'name' => 'required|max:111',
+            'price' => 'required',
+            'tax' => 'required'
         ]);
             
         if ($validator->fails()) {
-            return redirect("Servicios/$idser/edit")
+            return redirect("$this->main_route/$idser/edit")
                          ->withErrors($validator);
         } else {        
             
-            $servicios = servicios::find($idser);
+            $object = Servicios::find($idser);
                  
-            $servicios->nomser = $nomser;
-            $servicios->precio = $precio;
-            $servicios->iva = $iva;         
+            $object->name = $name;
+            $object->price = $price;
+            $object->tax = $tax;         
             
-            $servicios->save();
+            $object->save();
 
-            $request->session()->flash('sucmess', 'Hecho!!!');
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
-            return redirect('Servicios');
+            return redirect($this->main_route);
         }   
     }
 
-    public function del(Request $request,$idser)
+    /**
+     *  get query result, using ajax
+     *  @return json
+     */
+    public function del(Request $request, $idser)
     {
-        if ( null === $idser ) {
-            return redirect('Servicios');
-        }   
+        $this->redirectIfIdIsNull($idser, $this->main_route);
 
-        $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
+        $idser = $this->sanitizeData($idser);
 
-        $servicio = servicios::find($idser);
+        $object = Servicios::find($idser);
 
-        return view('serv.del', [
+        return view($this->views_folder.'.del', [
             'request' => $request,
-            'servicio' => $servicio,
+            'object' => $object,
             'idser' => $idser
         ]);
     }
  
-    public function destroy(Request $request,$idser)
+     /**
+     *  get query result, using ajax
+     *  @return json
+     */
+    public function destroy(Request $request, $idser)
     {          
-        if ( null === $idser ) {
-            return redirect('Servicios');
-        }   
-        
-        $idser = htmlentities (trim($idser),ENT_QUOTES,"UTF-8");
+        $this->redirectIfIdIsNull($idser, $this->main_route);
+                
+        $idser = $this->sanitizeData($idser);
 
-        servicios::destroy($idser); 
+        Servicios::destroy($idser); 
 
-        $request->session()->flash('sucmess', 'Hecho!!!');
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect('Servicios');
+        return redirect($this->main_route);
     }
 
+    /**
+     *  get query result, using ajax
+     *  @return json
+     */
     public function consultaItems($busca)
     {
-        $count = DB::table('servicios')
-                    ->whereNull('deleted_at')
-                    ->count();
+        $count = Servicios::whereNull('deleted_at')->count();
 
-        if ($count === 0) {
-            $data['servicios'] = false;
+        $data = [];
+
+        if ($count == 0) {
+            $data['main_loop'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay servicios en la base de datos. ';
 
             return $data;
         }
 
-        $servicios = DB::table('servicios')
-                        ->select('idser', 'nomser', 'precio', 'iva')
+        $main_loop = Servicios::select('idser', 'name', 'price', 'tax')
                         ->whereNull('deleted_at')
-                        ->where('nomser','LIKE','%'.$busca.'%')
-                        ->orderBy('nomser','ASC')
+                        ->where('name','LIKE','%'.$busca.'%')
+                        ->orderBy('name','ASC')
                         ->get();
 
-        $count = DB::table('servicios')
-                    ->whereNull('deleted_at')
-                    ->where('nomser','LIKE','%'.$busca.'%')
+        $count = Servicios::whereNull('deleted_at')
+                    ->where('name','LIKE','%'.$busca.'%')
                     ->count();
 
-        return $this->recorrerItems($servicios, $count);
+        return $this->recorrerItems($main_loop, $count);
     }
 
-    public function recorrerItems($servicios, $count)
+    /**
+     *  get query result, using ajax
+     *  @return json
+     */
+    public function recorrerItems($main_loop, $count)
     {
         $data = [];
 
-        if ($count === 0) {
+        if ($count == 0) {
 
-            $data['servicios'] = false;
+            $data['main_loop'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay resultados. ';
 
         } else {
 
-            $data['servicios'] = $servicios;
+            $data['main_loop'] = $main_loop;
             $data['count'] = $count;        
             $data['msg'] = false;
             

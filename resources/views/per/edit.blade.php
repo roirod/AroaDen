@@ -20,19 +20,19 @@
   	  <input type="hidden" name="_method" value="PUT">
 
 		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Apellidos:</label>
-		<input type="text" class="form-control" name="ape" value="{{$personal->ape}}" maxlength="111" autofocus required > 	</div>
+			<input type="text" class="form-control" name="surname" value="{{$personal->surname}}" maxlength="111" autofocus required > 	</div>
 				
 		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Nombre:</label>
-		<input type="text" class="form-control" name="nom" value="{{$personal->nom}}" maxlength="111" required >  </div>
+			<input type="text" class="form-control" name="name" value="{{$personal->name}}" maxlength="111" required >  </div>
 
 		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Cargo:</label>
-		<input type="text" class="form-control" name="cargo" value="{{$personal->cargo}}" maxlength="66" required >  </div>
+			<input type="text" class="form-control" name="position" value="{{$personal->position}}" maxlength="66" required >  </div>
 				
 		<div class="form-group col-sm-3"> <label class="control-label text-left mar10">Poblaci&#xF3;n:</label>
-		  <input type="text" class="form-control" name="pobla" value="{{$personal->pobla}}" maxlength="111" > </div>  
+		  <input type="text" class="form-control" name="city" value="{{$personal->city}}" maxlength="111" > </div>  
 		  
 		<div class="form-group col-sm-3"> <label class="control-label text-left mar10">Direcci&#xF3;n:</label>
-		  <input type="text" class="form-control" name="direc" value="{{$personal->direc}}" maxlength="111" > </div>
+		  <input type="text" class="form-control" name="address" value="{{$personal->address}}" maxlength="111" > </div>
 
 		<div class="form-group col-sm-2"> <label class="control-label text-left mar10">DNI:</label>
 		  <input type="text" class="form-control" name="dni" value="{{$personal->dni}}" maxlength="11" required> </div>
@@ -44,12 +44,12 @@
 		  <input type="text" class="form-control" name="tel2" value="{{$personal->tel2}}" maxlength="11"> </div>
 
 		<div class="form-group col-sm-4"> 	 <label class="control-label text-left mar10">F. nacimiento:</label>		 	
-			<input type="date" name="fenac" value="{{$personal->fenac}}"> </div>
+			<input type="date" name="birth" value="{{$personal->birth}}"> </div>
 
 		<div class="form-group col-sm-11">    <label class="control-label text-left mar10">Notas:</label>
-		    <textarea class="form-control" name="notas" rows="4"> {{ $personal->notas }} </textarea> 		</div>
+		    <textarea class="form-control" name="notes" rows="4"> {{ $personal->notes }} </textarea> 		</div>
 
-@include('includes.subuto')
+		@include('includes.submit_button')
     
 </form> </div> </div>
 

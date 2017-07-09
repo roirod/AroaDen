@@ -10,12 +10,11 @@
 
 {{ addtexto("Añadir Tratamientos") }}
 
-
 <div class="row">
  <div class="col-sm-12 mar10">
 
     <p class="pad4">
-        {{ $servicio->nomser }} | precio: {{ $servicio->precio }} €
+        {{ $servicio->name }} | precio: {{ $servicio->price }} €
     </p>    
 
     <form role="form" id="form" class="form" action="{{url('/Trapac')}}" method="post">
@@ -23,23 +22,23 @@
 
         <input type="hidden" name="idpac" value="{{$idpac}}">
         <input type="hidden" name="idser" value="{{$servicio->idser}}">
-        <input type="hidden" name="precio" value="{{$servicio->precio}}">
-        <input type="hidden" name="iva" value="{{$servicio->iva}}">
+        <input type="hidden" name="price" value="{{$servicio->price}}">
+        <input type="hidden" name="tax" value="{{$servicio->tax}}">
 
          <div class="form-group col-sm-2">
             <label class="control-label text-left mar10">Cantidad:</label>          
-            <input type="number" min="1" value="1" step="1" name="canti" id="uno" onchange="multi(this.value)" class="form-control" autofocus required>
+            <input type="number" min="1" value="1" step="1" name="units" id="uno" onchange="multi(this.value)" class="form-control" autofocus required>
          </div>
         
-        <input type="hidden" value="{{$servicio->precio}}" id="dos">
+        <input type="hidden" value="{{$servicio->price}}" id="dos">
 
          <div class="form-group col-sm-2">
             <label class="control-label text-left mar10">Pagado:</label>            
-            <input type="text" name="pagado" id="Tot" value="{{$servicio->precio}}" pattern="[0-9]{1,10}" class="form-control" required> 
+            <input type="text" name="paid" id="Tot" value="{{$servicio->price}}" pattern="[0-9]{1,10}" class="form-control" required> 
          </div>
    
          <div class="form-group col-sm-3">   <label class="control-label text-left mar10">Fecha:</label>            
-             <input type="date" name="fecha" class="form-control" required> 
+             <input type="date" name="date" class="form-control" required> 
         </div>
         <br>
 
@@ -50,7 +49,7 @@
                  <option value="0" selected> </option>
 
                  @foreach($personal as $person)
-                    <option value="{{$person->idper}}">{{$person->ape}}, {{$person->nom}} - id: {{$person->idper}} - {{$person->cargo}}
+                    <option value="{{$person->idper}}">{{$person->surname}}, {{$person->name}} - id: {{$person->idper}} - {{$person->position}}
                     </option>
                  @endforeach    
            
@@ -63,14 +62,14 @@
                  <option value="0" selected> </option>
 
                  @foreach($personal as $person)
-                    <option value="{{$person->idper}}">{{$person->ape}}, {{$person->nom}} - id: {{$person->idper}} - {{$person->cargo}}
+                    <option value="{{$person->idper}}">{{$person->surname}}, {{$person->name}} - id: {{$person->idper}} - {{$person->position}}
                     </option>
                 @endforeach    
            
            </select>
         </div>
 
-        @include('includes.subuto')
+        @include('includes.submit_button')
 
     </form>
 

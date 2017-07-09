@@ -62,12 +62,12 @@
 
 		 	  <table class="table table-striped table-hover">
 
-				  @foreach ($servicios as $servicio)
+				  @foreach ($main_loop as $servicio)
 
 					 <tr>
-						  <td class="wid290">{{$servicio->nomser}}</td>
-						  <td class="wid110 textcent">{{$servicio->precio}} €</td>
-						  <td class="wid95 textcent">{{$servicio->iva}} %</td>
+						  <td class="wid290">{{$servicio->name}}</td>
+						  <td class="wid110 textcent">{{$servicio->price}} €</td>
+						  <td class="wid95 textcent">{{$servicio->tax}} %</td>
 
 						  <td class="wid50">
 						  	<a class="btn btn-xs btn-success" type="button" href="{{url("Servicios/$servicio->idser/edit")}}">
@@ -86,7 +86,7 @@
 									<i class="fa fa-times"></i> <span class="caret"></span>  </button>
 									<ul class="dropdown-menu" role="menu"> 
 										<li>
-											@include('includes.delbuto')
+											@include('includes.delete_button')
 										</li>
 									</ul>			
 						 		</form>
@@ -134,7 +134,7 @@
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
 				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-						$('#item_list').hide().html(buscando).fadeIn('slow');
+						$('#item_list').html(buscando);
 
 					    var data = $("form").serialize();
 		     
@@ -168,11 +168,11 @@
 					    		html += '  <div class="box400">';
 					    		html += '    <table class="table table-hover">';
 
-					    		$.each(response.servicios, function(index, object){
+					    		$.each(response.main_loop, function(index, object){
 						    		html += '  <tr>';
-						    		html += '    <td class="wid290">' + object.nomser + '</td>';
-						    		html += '    <td class="wid110 textcent">' + object.precio + ' €</td>';
-						    		html += '    <td class="wid95 textcent">' + object.iva + ' %</td>';
+						    		html += '    <td class="wid290">' + object.name + '</td>';
+						    		html += '    <td class="wid110 textcent">' + object.price + ' €</td>';
+						    		html += '    <td class="wid95 textcent">' + object.tax + ' %</td>';
 						    		html += '    <td class="wid50">';
 						    		html += '      <a href="/Servicios/'+object.idser+'/edit" class="btn btn-xs btn-success" role="button">';
 						    		html += '        <i class="fa fa-edit"></i>';

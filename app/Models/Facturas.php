@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Facturas extends Model
 {
 	protected $table = 'facturas';
-    protected $fillable = ['idpac','idser','precio','canti','factumun','cod','iva'];
+    protected $fillable = ['idpac','idser','price','units','invoice_number','code','tax'];
     protected $primaryKey = 'idfac';
 
     public function pacientes()

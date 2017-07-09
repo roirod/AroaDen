@@ -9,10 +9,11 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
+            $table->engine = 'InnoDB';            
             $table->increments('uid');
             $table->string('username',20);
             $table->string('password',60);
-            $table->string('tipo',11);
+            $table->string('type',11);
             $table->rememberToken();
             $table->timestamps();
             $table->unique('username');

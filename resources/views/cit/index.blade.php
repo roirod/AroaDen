@@ -60,7 +60,7 @@
 <div class="row">
   <div class="col-sm-12" id="item_list">
 
-  @if ($count === 0)
+  @if ($count == 0)
 
     <h3> No hay citas para <span class="label label-success fonsi16"> hoy </span> </h3>
 
@@ -86,7 +86,7 @@
 
         <table class="table table-hover">
  
-          @foreach ($citas as $cita)
+          @foreach ($main_loop as $cita)
             <tr>
                 <td class="wid50">
                   <a href="{{url("/Pacientes/$cita->idpac")}}" target="_blank" class="btn btn-default" role="button">
@@ -96,13 +96,13 @@
 
                 <td class="wid290"> 
                   <a href="{{url("/Pacientes/$cita->idpac")}}" class="pad4" target="_blank">
-                      {{$cita->apepac}}, {{$cita->nompac}} 
+                      {{$cita->surname}}, {{$cita->name}} 
                   </a>
                 </td>
 
-                <td class="wid110"> {{ substr( $cita->horacit, 0, -3 ) }} </td>
-                <td class="wid110"> {{date( 'd-m-Y', strtotime($cita->diacit) )}} </td>
-                <td class="wid230"> {{$cita->notas}} </td>
+                <td class="wid110"> {{ substr( $cita->hour, 0, -3 ) }} </td>
+                <td class="wid110"> {{date( 'd-m-Y', strtotime($cita->day) )}} </td>
+                <td class="wid230"> {{$cita->notes}} </td>
             </tr>
           @endforeach
 
@@ -201,11 +201,11 @@
 
               if (response.msg_type) {
 
-                html = '<p> <span class="text-muted">Citas de </span> <span class="label label-success">'+response.citas_de+'</span> </p>';
+                html = '<p> <span class="text-muted">Citas de </span> <span class="label label-success">'+response.appointments_of+'</span> </p>';
 
               } else {
 
-                html = '<p class="text-muted">' + response.citas_de + '</p>';
+                html = '<p class="text-muted">' + response.appointments_of + '</p>';
 
               }
 
@@ -222,7 +222,7 @@
               html += '  <div class="box400">';
               html += '    <table class="table table-hover">';
 
-              $.each(response.citas, function(index, object){
+              $.each(response.main_loop, function(index, object){
                 html += '  <tr>';
                 html += '    <td class="wid50">';
                 html += '      <a href="/Pacientes/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
@@ -231,12 +231,12 @@
                 html += '    </td>';
                 html += '    <td class="wid290">';
                 html += '      <a href="/Pacientes/'+object.idpac+'" class="pad4" target="_blank">';
-                html +=           object.apepac + ', ' + object.nompac;
+                html +=           object.surname + ', ' + object.name;
                 html += '      </a>';
                 html += '    </td>';
-                html += '    <td class="wid110">' + object.horacit.slice(0, -3); + '</td>';
-                html += '    <td class="wid110">' + object.diacit.split("-").reverse().join("-") + '</td>';
-                html += '    <td class="wid230">' + object.notas + '</td>';
+                html += '    <td class="wid110">' + object.hour.slice(0, -3); + '</td>';
+                html += '    <td class="wid110">' + object.day.split("-").reverse().join("-") + '</td>';
+                html += '    <td class="wid230">' + object.notes + '</td>';
                 html += '  </tr>';
               });
 

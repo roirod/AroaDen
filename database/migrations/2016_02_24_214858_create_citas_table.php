@@ -13,13 +13,14 @@ class CreateCitasTable extends Migration
     public function up()
     {
         Schema::create('citas', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('idcit');
             $table->integer('idpac')->unsigned();
-            $table->date('diacit');
-            $table->time('horacit');
-            $table->text('notas')->nullable();
+            $table->date('day');
+            $table->time('hour');
+            $table->text('notes')->nullable();
             $table->timestamps();
-            $table->index(['diacit', 'horacit'], 'horadia');
+            $table->index(['day', 'hour'], 'horadia');
             $table->foreign('idpac')
 				  ->references('idpac')->on('pacientes')
 				  ->onDelete('cascade');
