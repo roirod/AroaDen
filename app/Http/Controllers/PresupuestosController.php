@@ -21,10 +21,7 @@ class PresupuestosController extends BaseController
         $this->middleware('auth');
     }
 
-    public function index()
-    { }
-
-    public function create(Request $request,$idpac)
+    public function create(Request $request, $id = false)
     {     
         if ( null == $idpac ) {
             return redirect('Pacientes');
@@ -135,7 +132,7 @@ class PresupuestosController extends BaseController
         }     
     }
 
-    public function show(Request $request,$idpac)
+    public function show(Request $request, $id)
     {
         if ( null == $idpac ) {
             return redirect('Pacientes');
@@ -291,12 +288,6 @@ class PresupuestosController extends BaseController
         }      
     } 
 
-    public function update(Request $request, $id)
-    { }
-
-    public function edit($id)
-    { }
-
     public function delcod(Request $request)
     {
         $cod = $request->input('cod');
@@ -388,7 +379,4 @@ class PresupuestosController extends BaseController
         return $cadena;
     }
 
-    public function destroy(Request $request,$idpre)
-    {
-    }
 }

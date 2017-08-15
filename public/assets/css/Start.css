@@ -58,14 +58,15 @@ table { table-layout:fixed !important; }
     text-overflow: ellipsis !important;
 }
  
-.fonsi46  {  font-size: 46px;  }
-.fonsi36  {  font-size: 36px;  }
-.fonsi26  {  font-size: 26px;  }
-.fonsi23  {  font-size: 23px;  }
-.fonsi20  {  font-size: 20px;  }
-.fonsi18  {  font-size: 18px;  }
-.fonsi16  {  font-size: 16px;  }
-.fonsi14  {  font-size: 14px;  }
+.fonsi46  {  font-size: 46px !important;  }
+.fonsi36  {  font-size: 36px !important;  }
+.fonsi26  {  font-size: 26px !important;  }
+.fonsi23  {  font-size: 23px !important;  }
+.fonsi20  {  font-size: 20px !important;  }
+.fonsi18  {  font-size: 18px !important;  }
+.fonsi16  {  font-size: 16px !important;  }
+.fonsi15  {  font-size: 15px !important;  }
+.fonsi14  {  font-size: 14px !important;  }
 
 .fontwe4 {  font-weight: 400;  }
 

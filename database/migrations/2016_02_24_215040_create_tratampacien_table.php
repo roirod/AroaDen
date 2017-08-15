@@ -16,12 +16,12 @@ class CreateTratampacienTable extends Migration
             $table->mediumInteger('price')->unsigned();
             $table->tinyInteger('units')->unsigned()->default(1);
             $table->mediumInteger('paid')->unsigned()->default(0);
-            $table->date('date');
+            $table->date('day');
             $table->tinyInteger('tax')->unsigned()->default(0);
             $table->tinyInteger('per1')->unsigned();
             $table->tinyInteger('per2')->unsigned();
             $table->timestamps();
-            $table->index('date');
+            $table->index('day');
             $table->index('per1');
             $table->index('per2');
             $table->foreign('idpac')

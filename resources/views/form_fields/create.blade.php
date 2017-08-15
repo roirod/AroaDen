@@ -1,122 +1,127 @@
-<div class="row">
-	<div class="col-sm-12">
-		<form role="form" id="form" class="form" action="{!! url("/$main_route") !!}" method="post">
-			{!! csrf_field() !!}
+@include('form_fields.create.opendiv')
 
-			<div>
-				@if ($form_fields['surname'])
+	@include('form_fields.create.openform')
 
-					@include('form_fields.create.surname')
+		<div>
+			@if ($form_fields['surname'])
 
-				@endif
+				@include('form_fields.create.surname')
 
-				@if ($form_fields['name'])
+			@endif
 
-					@include('form_fields.create.name')
+			@if ($form_fields['name'])
 
-				@endif
+				@include('form_fields.create.name')
 
-				@if ($form_fields['position'])
+			@endif
 
-					@include('form_fields.create.position')
+			@if ($form_fields['position'])
 
-				@endif
+				@include('form_fields.create.position')
 
-				@if ($form_fields['dni'])
+			@endif
 
-					@include('form_fields.create.dni')
+			@if ($form_fields['dni'])
 
-				@endif
+				@include('form_fields.create.dni')
 
-				@if ($form_fields['tel1'])
+			@endif
 
-					@include('form_fields.create.tel1')
+			@if ($form_fields['tel1'])
 
-				@endif
+				@include('form_fields.create.tel1')
 
-				@if ($form_fields['tel2'])
+			@endif
 
-					@include('form_fields.create.tel2')
+			@if ($form_fields['tel2'])
 
-				@endif
+				@include('form_fields.create.tel2')
 
-				@if ($form_fields['tel3'])
+			@endif
 
-					@include('form_fields.create.tel3')
+			@if ($form_fields['tel3'])
 
-				@endif
+				@include('form_fields.create.tel3')
 
-				@if ($form_fields['sex'])
+			@endif
 
-					@include('form_fields.create.sex')
+			@if ($form_fields['sex'])
 
-				@endif
+				@include('form_fields.create.sex')
 
-				@if ($form_fields['address'])
+			@endif
 
-					@include('form_fields.create.address')
+			@if ($form_fields['address'])
 
-				@endif
+				@include('form_fields.create.address')
 
-				@if ($form_fields['city'])
+			@endif
 
-					@include('form_fields.create.city')
+			@if ($form_fields['city'])
 
-				@endif
+				@include('form_fields.create.city')
 
-				@if ($form_fields['birth'])
+			@endif
 
-					@include('form_fields.create.birth')
+			@if ($form_fields['birth'])
 
-				@endif
+				@include('form_fields.create.birth')
 
-				@if ($form_fields['units'])
+			@endif
 
-					@include('form_fields.create.units')
+			@if ($form_fields['units'])
 
-				@endif
+				@include('form_fields.create.units')
 
-				@if ($form_fields['price'])
+			@endif
 
-					@include('form_fields.create.price')
+			@if ($form_fields['price'])
 
-				@endif
+				@include('form_fields.create.price')
 
-				@if ($form_fields['tax'])
+			@endif
 
-					@include('form_fields.create.tax')
+			@if ($form_fields['paid'])
 
-				@endif 
+				@include('form_fields.create.paid')
 
-				@if ($form_fields['hour'])
+			@endif
 
-					@include('form_fields.create.hour')
+			@if ($form_fields['tax'])
 
-				@endif 
+				@include('form_fields.create.tax')
 
-				@if ($form_fields['day'])
+			@endif 
 
-					@include('form_fields.create.day')
+			@if ($form_fields['hour'])
 
-				@endif 
+				@include('form_fields.create.hour')
 
-				@if ($form_fields['notes'])
+			@endif 
 
-					@include('form_fields.create.notes')
+			@if ($form_fields['day'])
 
-				@endif
-			</div>
+				@include('form_fields.create.day')
 
-			<div class="row">
-			  <div class="col-sm-12">
-				@if ($form_fields['save'])
+			@endif 
 
-					@include('form_fields.save')
+			@if ($form_fields['notes'])
 
-				@endif
-			  </div>
-			</div>
+				@include('form_fields.create.notes')
 
-		</form>
-	</div>
-</div>
+			@endif
+		</div>
+
+		<div class="row">
+		  <div class="col-sm-12">
+			@if ($form_fields['save'])
+
+				@include('form_fields.save')
+
+			@endif
+		  </div>
+		</div>
+
+	@include('form_fields.create.closeform')
+
+@include('form_fields.create.closediv')

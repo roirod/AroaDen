@@ -13,13 +13,13 @@
 	<span class="input-group-btn pad10">  <p> Paciente: </p> </span>
 	<div class="btn-toolbar pad10" role="toolbar">
 	 <div class="btn-group">
-	    <a href="{!!url("/Pacientes/$idpac/edit")!!}" role="button" class="btn btn-sm btn-success">
+	    <a href="{!!url("/$main_route/$id/edit")!!}" role="button" class="btn btn-sm btn-success">
 	       <i class="fa fa-edit"></i> Editar
 	    </a>
 	 </div>	
 	<div class="btn-group">
 
-	 	<form role="form" class="form" id="form" role="form" action="{!!url("/Pacientes/$idpac")!!}" method="POST">	
+	 	<form role="form" class="form" id="form" role="form" action="{!!url("/$main_route/$id")!!}" method="POST">	
 	  		{!! csrf_field() !!}
 
 			<input type="hidden" name="_method" value="DELETE">
@@ -38,10 +38,10 @@
 
 
 <div class="row pad10">
-  <form role="form" action="{!!url('/Pacientes/upload')!!}" method="post" enctype="multipart/form-data">
+  <form role="form" action="{!!url("/$main_route/upload")!!}" method="post" enctype="multipart/form-data">
   	  {!! csrf_field() !!}
 
-       <input type="hidden" name="idpac" value="{!!$idpac!!}">
+       <input type="hidden" name="idpac" value="{!!$id!!}">
        <input type="hidden" name="profile_photo" value="1">
   
   	  <div class="input-group">
@@ -108,7 +108,7 @@
 			 </div> 
 
 			 <div class="col-sm-4 pad4"> 
-			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date ('d-m-Y', strtotime ($paciente->birth) )!!} 
+			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date('d-m-Y', strtotime ($paciente->birth) )!!} 
 			</div>
 
 			 <div class="col-sm-3 pad4"> 	
@@ -133,7 +133,7 @@
    <span class="input-group-btn pad10"> <p> Citas: </p> </span>
    <div class="btn-toolbar pad10" role="toolbar"> 
     <div class="btn-group">
-       <a href="{!!url("/Citas/$idpac/create")!!}" role="button" class="btn btn-sm btn-primary">
+       <a href="{!!url("/Citas/$id/create")!!}" role="button" class="btn btn-sm btn-primary">
           <i class="fa fa-plus"></i> Nueva
        </a>
 </div> </div> </div>  </div> </div>
@@ -154,10 +154,10 @@
 
     @foreach($citas as $cita)
 		<tr>
- 			<td class="wid95">{!!$cita->hour!!}</td>
+ 			<td class="wid95">{!! mb_substr($cita->hour, 0, -3) !!}</td>
  			<td class="wid95">{!!date('d-m-Y', strtotime($cita->day) )!!}</td>
  			<td class="wid50">	
-				<a href="{!!url("/Citas/$idpac/$cita->idcit/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!!url("/Citas/$cita->idcit/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
@@ -168,7 +168,6 @@
 				  		{!! csrf_field() !!}
 
 						<input type="hidden" name="_method" value="DELETE">
-						<input type="hidden" name="idpac" value="{{$idpac}}">
 
 						<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-times"></i> <span class="caret"></span>  </button>
@@ -197,14 +196,9 @@
    <span class="input-group-btn pad10">  <p> Tratramientos: </p> </span>
    	<div class="btn-toolbar pad10" role="toolbar"> 
    	<div class="btn-group">
-	  	<form class="form" id="form" role="form" action="{!!url("/Trapac/crea")!!}" method="POST">
-			{!! csrf_field() !!}
-			<input type="hidden" name="idpac" value="{!!$idpac!!}">
-
-			<button type="submit" class="text-left btn btn-primary btn-sm">Añadir
-				<i class="fa fa-plus"></i> 
-			</button>
-		</form>
+       <a href="{!!url("/Trapac/$id/create")!!}" role="button" class="btn btn-sm btn-primary">
+          <i class="fa fa-plus"></i> Añadir
+       </a>
 </div> </div> </div> 
 *Pe1 y Pe2: personal1 y personal2.
 </div> </div>
@@ -231,15 +225,15 @@
 
     @foreach($tratampacien as $tratam)		
     	<tr>
-    		<td class="wid140">{!!$tratam->name!!}</td> 
+    		<td class="wid140">{!!$tratam->servicios_name!!}</td> 
 			<td class="wid70 textcent">{!!numformat($tratam->price)!!} €</td>
 			<td class="wid70 textcent">{!!$tratam->units!!}</td>
 			<td class="wid70 textcent">{!!numformat($tratam->units * $tratam->price)!!} €</td>
 			<td class="wid70 textcent">{!!numformat($tratam->paid)!!} €</td>
-			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->date) )!!}</td>
+			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->day) )!!}</td>
 
 			<td class="wid50 textcent">
-				<a href="{!!url("/Trapac/$idpac/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!!url("/Trapac/$tratam->idtra/edit")!!}" class="btn btn-xs btn-success" role="button" title="Editar">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
@@ -251,7 +245,6 @@
 				  		{!! csrf_field() !!}
 
 						<input type="hidden" name="_method" value="DELETE">
-						<input type="hidden" name="idpac" value="{{$idpac}}">
 
 						<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-times"></i> <span class="caret"></span>  </button>

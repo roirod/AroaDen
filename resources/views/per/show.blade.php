@@ -13,12 +13,12 @@
 			<span class="input-group-btn pad10">  <p> Personal: </p> </span>
 			<div class="btn-toolbar pad10" role="toolbar"> 
 				<div class="btn-group">
-					<a href="{{url("/Personal/$idper/edit")}}" role="button" class="btn btn-sm btn-success">
+					<a href="{{url("/$main_route/$id/edit")}}" role="button" class="btn btn-sm btn-success">
 						<i class="fa fa-edit"></i> Editar
 					</a>
 				</div>	
 			<div class="btn-group">
-			 	<form role="form" class="form" id="form" role="form" action="{!!url("/Personal/$idper")!!}" method="POST">	
+			 	<form role="form" class="form" id="form" role="form" action="{!!url("/$main_route/$id")!!}" method="POST">	
 			  		{!! csrf_field() !!}
 
 					<input type="hidden" name="_method" value="DELETE">
@@ -100,14 +100,14 @@
 					<tr>
 
 						<td class="wid180">
-							<a href="{{url("/Pacientes/$traba->idpac")}}" class="pad4" target="_blank">
+							<a href="{{url("/$other_route/$traba->idpac")}}" class="pad4" target="_blank">
 								{{$traba->surname}}, {{$traba->name}}
 							</a>
 						</td>
 
 					   	<td class="wid180"> {{$traba->servicio_name}} </td>
 					   	<td class="wid95 textcent"> {{$traba->units}} </td>
-					   	<td class="wid95"> {{date('d-m-Y',strtotime ($traba->date))}} </td>
+					   	<td class="wid95"> {{date('d-m-Y',strtotime ($traba->day))}} </td>
 					   	<td class="wid95"> </td>
 			   		</tr>						
 				@endforeach

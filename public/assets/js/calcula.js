@@ -1,6 +1,9 @@
-function multi() {
-  var uno =	parseInt(document.getElementById("uno").value, 10);
-  var dos =	parseInt(document.getElementById("dos").value, 10);
-  var Total = uno * dos;
-  document.getElementById('Tot').value = Total;
-}
+
+	function multi(units, price) {
+	  var units = parseInt(units, 10);
+	  var price = parseInt(price, 10);
+	  var paid = units * price;
+
+	  $('input[name="paid"]').val(paid);
+	}
+

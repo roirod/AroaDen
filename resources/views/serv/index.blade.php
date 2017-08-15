@@ -140,7 +140,7 @@
 		     
 					    $.ajax({
 					        type : 'POST',
-					        url  : '/Servicios/list',
+					        url  : '/{!! $main_route !!}/{!! $form_route !!}',
 					        dataType: "json",
 					        data : data,     
 					    }).done(function(response) {

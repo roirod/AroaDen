@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Settings;
 use Config;
+use View;
 use Illuminate\Http\Request;
 
-abstract class BaseController extends Controller
+class BaseController extends Controller
 {
     /**
      * @var array $tax_types  file contains that returns an array
@@ -55,11 +56,40 @@ abstract class BaseController extends Controller
     protected $autofocus = 'surname';
 
     /**
+     * @var int $num_paginate  num_paginate
+     */
+    protected $num_paginate = 100;
+
+    /**
+     * @var string $page_title  page_title
+     */
+    protected $page_title = 'AroaDen';
+
+    /**
+     * @var string $error_message_name  error_message_name
+     */
+    protected $profile_photo_name = '.profile_photo.jpg';
+
+    /**
+     * @var string $files_dir  files_dir
+     */
+    protected $files_dir = '';
+
+    /**
+     * @var string $form_route  form_route
+     */
+    protected $form_route = '';
+
+    /**
      *  construct method
      */
     public function __construct()
     {
+        setlocale( LC_ALL, env('APP_LC_ALL') );
+        date_default_timezone_set( env('APP_TIMEZONE') );
+
         $this->checkIfSettingExists();
+        $this->passVarsToViews();
 
         $this->form_fields = [
             'surname' => false,
@@ -75,21 +105,34 @@ abstract class BaseController extends Controller
             'tel3' => false,
             'units' => false,
             'price' => false,
+            'paid' => false,            
             'tax' => false,
             'hour' => false,
             'day' => false,
+            'per' => false,
             'notes' => false,
             'save' => false,
         ];
     }
 
+    public function index(Request $request)
+    {
+        $this->passVarsToViews();
+
+        return view($this->views_folder.'.index', $this->view_data);
+    }
+
     public function create(Request $request, $id = false)
     {
+        $this->passVarsToViews();
+
         return view($this->views_folder.'.create', $this->view_data);   
     }
 
-    public function edit(Request $request, $id, $idcit = false)
+    public function edit(Request $request, $id)
     {
+        $this->passVarsToViews();
+
         return view($this->views_folder.'.edit', $this->view_data);   
     }
 
@@ -148,6 +191,20 @@ abstract class BaseController extends Controller
     {   
         if ( null == $id )
             return redirect($route);
+    }
+
+    protected function passVarsToViews()
+    {   
+        View::share('page_title', $this->page_title);
+        View::share('autofocus', $this->autofocus);
+        View::share('main_route', $this->main_route);        
+    }
+
+    protected function echoJsonOuptut($data)
+    {   
+        header('Content-type: application/json; charset=utf-8');
+        echo json_encode($data);
+        exit();    
     }
 
 }

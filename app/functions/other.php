@@ -4,7 +4,7 @@ function addtexto($texto) {
 	echo ' 
 	<div class="row"> 
 	  <div class="col-sm-12">
-	    <p class="mar10 fonsi16"></i>
+	    <p class="pad4"></i>
 	      '.htmlentities($texto).':
 	    </p>
 	  </div>

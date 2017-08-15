@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Models\Pacientes;
+use App\Models\Personal;
 use App\Models\Servicios;
 use App\Models\Tratampacien;
 
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Lang;
 
 class TratamientosController extends BaseController
 {
@@ -19,107 +21,83 @@ class TratamientosController extends BaseController
 
         $this->middleware('auth');
 
-        $this->main_route = 'Pacientes';
-        $this->other_route = 'Citas';        
+        $this->main_route = 'Trapac';
+        $this->other_route = 'Pacientes';
+        $this->form_route = 'select';              
         $this->views_folder = 'trat';
+
+        $fields = [
+            'units' => true,
+            'paid' => true,
+            'day' => true,
+            'per' => true,
+            'save' => true,
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
     }   
 
-    public function index()
-    { }
+    public function create(Request $request, $id = false)
+    {  
+        $this->redirectIfIdIsNull($id, $this->other_route);
 
-    public function create(Request $request)
-    { }
+        $servicios = Servicios::AllOrderByName();
+        $personal = Personal::AllOrderBySurnameNoPagination();
+        $object = Pacientes::FirstById($id);
 
-    public function crea(Request $request)
-    {     
-        $idpac = $request->input('idpac');
+        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
 
-        $this->redirectIfIdIsNull($idpac, $this->main_route);
+        $this->passVarsToViews();     
 
-        $servicios = DB::table('servicios')
-                    ->whereNull('deleted_at')
-                    ->orderBy('nomser', 'ASC')
-                    ->get();
+        $this->view_data['request'] = $request;
+        $this->view_data['id'] = $id;
+        $this->view_data['idpac'] = $object->idpac;
+        $this->view_data['servicios'] = $servicios;
+        $this->view_data['personal'] = $personal;        
+        $this->view_data['name'] = $object->name;
+        $this->view_data['surname'] = $object->surname;
+        $this->view_data['form_route'] = $this->form_route;
+        $this->view_data['form_fields'] = $this->form_fields;
 
-        $pacientes = DB::table('pacientes')
-                    ->where('idpac', $idpac)
-                    ->whereNull('deleted_at')
-                    ->first();
-
-        $surname = $pacientes->surname;
-        $name = $pacientes->name;
-
-        return view($this->views_folder.'.crea', [
-            'request' => $request,
-            'servicios' => $servicios,
-            'idpac' => $idpac,
-            'surname' => $surname,
-            'name' => $name
-        ]);
+        return parent::create($request, $id);
     }
 
-    public function selcrea(Request $request)
-    {     
-        $idser = $request->input('idser');
-        $idpac = $request->input('idpac');
-        $surname = $request->input('surname');
-        $name = $request->input('name');     
+    public function select(Request $request)
+    {
+        $id = $request->input('idser_select');
 
-        $this->redirectIfIdIsNull($idpac, $this->main_route);
+        $servicio = Servicios::FirstById($id);
 
-        $servicio = DB::table('servicios')
-                    ->where('idser', $idser)
-                    ->whereNull('deleted_at')
-                    ->first();
+        $data = [];
+        $data['idser'] = $servicio->idser;
+        $data['name'] = $servicio->name;        
+        $data['price'] = $servicio->price;
+        $data['tax'] = $servicio->tax;   
         
-        $personal = DB::table('personal')
-                    ->whereNull('deleted_at')
-                    ->orderBy('ape', 'ASC')
-                    ->get();
-        
-        return view($this->views_folder.'.selcrea', [
-            'request' => $request,
-            'servicio' => $servicio,
-            'personal' => $personal,
-            'idpac' => $idpac,
-            'surname' => $surname,
-            'name' => $name
-        ]);
+        $this->echoJsonOuptut($data);
     }
 
     public function store(Request $request)
     {
-        $idpac = $request->input('idpac');
+        $idpac = $this->sanitizeData( $request->input('idpac') );
+        $idser = $this->sanitizeData( $request->input('idser') );
 
-        $this->redirectIfIdIsNull($idpac, $this->main_route);   
-                  
-        $validator = Validator::make($request->all(), [
-            'idpac' => 'required',
-            'idser' => 'required',
-            'price' => 'required',
-            'units' => 'required',
-            'paid' => 'required',
-            'date' => 'required|date',
-            'tax' => 'max:12',
-            'per1' => '',
-            'per2' => ''
-        ]);
-            
-        if ($validator->fails()) {
-            return redirect("/$this->main_route/$idpac")
-                         ->withErrors($validator)
-                         ->withInput();
-        } else {
+        $this->redirectIfIdIsNull($idpac, $this->other_route);
+        $this->redirectIfIdIsNull($idser, $this->other_route);
 
-            $idpac = $this->sanitizeData( $request->input('idpac') );
-            $idser = $this->sanitizeData( $request->input('idser') );
-            $price = $this->sanitizeData( $request->input('price') );
-            $units = $this->sanitizeData( $request->input('units') );
-            $paid = $this->sanitizeData( $request->input('paid') );
-            $date = $this->sanitizeData( $request->input('date') );
-            $tax = $this->sanitizeData( $request->input('tax') );
-            $per1 = $this->sanitizeData( $request->input('per1') );
-            $per2 = $this->sanitizeData( $request->input('per2') );      
+        $servicio = Servicios::FirstById($idser);     
+
+        $price = $servicio->price;
+        $units = $this->sanitizeData( $request->input('units') );
+        $paid = $this->sanitizeData( $request->input('paid') );
+        $day = $this->sanitizeData( $request->input('day') );
+        $tax = $servicio->tax;
+        $per1 = $this->sanitizeData( $request->input('per1') );
+        $per2 = $this->sanitizeData( $request->input('per2') );
+
+        $data = [];
+
+        try {
 
             Tratampacien::create([
                 'idpac' => $idpac,
@@ -127,123 +105,111 @@ class TratamientosController extends BaseController
                 'price' => $price,
                 'units' => $units,
                 'paid' => $paid,
-                'date' => $date,
+                'day' => $day,
                 'tax' => $tax,
                 'per1' => $per1,
                 'per2' => $per2
-            ]);
-              
-            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );  
-                            
-            return redirect("/$this->main_route/$idpac");
-        }     
+            ]);           
+
+        } catch(Exception $e) {
+
+            $data['msg'] = $e->getMessage();
+
+            $this->echoJsonOuptut($data);
+
+        }
+
+        $data['msg'] = Lang::get('aroaden.success_message');
+       
+        $this->echoJsonOuptut($data);                      
     }
 
-    public function show($id)
-    { }
-
-    public function edit(Request $request, $idpac, $idtra)
+    public function edit(Request $request, $id)
     {
-        $this->redirectIfIdIsNull($idpac, $this->main_route);
-        $this->redirectIfIdIsNull($idtra, $this->main_route);
+        $this->redirectIfIdIsNull($id, $this->other_route);
 
-        $idpac = $this->sanitizeData($idpac);
-        $idtra = $this->sanitizeData($idtra);
+        $id = $this->sanitizeData($id);
     
-        $tratampa = DB::table('tratampacien')
-            ->join('servicios','tratampacien.idser','=','servicios.idser')
-            ->select('tratampacien.*','servicios.nomser')
-            ->where('idtra', $idtra)
-            ->first();
+        $object = Tratampacien::FirstById($id); 
+        $personal = Personal::AllOrderBySurnameNoPagination();
+        $paciente = Pacientes::FirstById($object->idpac);
 
-        $personal = DB::table('personal')->whereNull('deleted_at')->get();
+        $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
 
-        return view($this->views_folder.'.edit', [
-            'request' => $request,
-            'tratampa' => $tratampa,
-            'personal' => $personal,
-            'idtra' => $idtra,
-            'idpac' => $idpac
-        ]);
+        $this->passVarsToViews();
+
+        $this->view_data['request'] = $request;
+        $this->view_data['id'] = $id;
+        $this->view_data['idpac'] = $object->idpac;        
+        $this->view_data['object'] = $object;
+        $this->view_data['personal'] = $personal;        
+        $this->view_data['name'] = $paciente->name;
+        $this->view_data['surname'] = $paciente->surname;
+        $this->view_data['form_fields'] = $this->form_fields;        
+        $this->view_data['autofocus'] = 'units';
+        
+        return parent::edit($request, $id);
     }
 
-    public function update(Request $request, $idtra)
+    public function update(Request $request, $id)
     {
-        $this->redirectIfIdIsNull($request->input('idpac'), $this->main_route);
-        $this->redirectIfIdIsNull($idtra, $this->main_route);
+        $this->redirectIfIdIsNull($id, $this->other_route);
 
-        $idpac = $this->sanitizeData($request->input('idpac'));
-        $idtra = $this->sanitizeData($idtra);  
+        $id = $this->sanitizeData($id);  
                   
         $validator = Validator::make($request->all(), [
+            'units' => 'required',            
             'paid' => 'required',
-            'date' => 'required|date',
+            'day' => 'required|date',
             'per1' => '',
             'per2' => ''
         ]);
             
         if ($validator->fails()) {
-            return redirect("/$this->other_route/$idpac/$idtra/edit")
+            return redirect("/$this->main_route/$id/edit")
                          ->withErrors($validator)
                          ->withInput();
         } else {
 
-            $paid = htmlentities (trim($request->input('paid')),ENT_QUOTES,"UTF-8");
-            $date = htmlentities (trim($request->input('date')),ENT_QUOTES,"UTF-8");
-            $per1 = htmlentities (trim($request->input('per1')),ENT_QUOTES,"UTF-8");
-            $per2 = htmlentities (trim($request->input('per2')),ENT_QUOTES,"UTF-8");            
-    
-            $tratampacien = Tratampacien::find($idtra);
-            
-            $tratampacien->paid = htmlentities (trim($paid),ENT_QUOTES,"UTF-8");
-            $tratampacien->date = htmlentities (trim($date),ENT_QUOTES,"UTF-8");            
-            $tratampacien->per1 = htmlentities (trim($per1),ENT_QUOTES,"UTF-8");
-            $tratampacien->per2 = htmlentities (trim($per2),ENT_QUOTES,"UTF-8");
-                                                
-            $tratampacien->save();
+            try{
+
+                $tratampacien = Tratampacien::find($id);
+
+                $tratampacien->units = $this->sanitizeData($request->input('units'));
+                $tratampacien->paid = $this->sanitizeData($request->input('paid'));
+                $tratampacien->day = $this->sanitizeData($request->input('day'));
+                $tratampacien->per1 = $this->sanitizeData($request->input('per1'));
+                $tratampacien->per2 = $this->sanitizeData($request->input('per2'));
+                $tratampacien->updated_at = date('Y-m-d H:i:s');
+
+                $tratampacien->save();
+
+            } catch(Exception $e) {
+
+                $request->session()->flash($this->error_message_name, $e->getMessage());  
+                                
+                return redirect("/$this->other_route/$tratampacien->idpac");
+
+            }
               
-            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );  
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
                             
-            return redirect("/$this->main_route/$idpac");
+            return redirect("/$this->other_route/$tratampacien->idpac");
         }     
     }
 
-    public function del(Request $request, $idpac, $idtra)
-    {         
-        $idpac = $this->sanitizeData($idpac); 
-        $idtra = $this->sanitizeData($idtra);  
-
-        $this->redirectIfIdIsNull($idtra, $this->main_route);
-        $this->redirectIfIdIsNull($idpac, $this->main_route);
-
-        $tratampa = DB::table('tratampacien')
-            ->join('servicios','tratampacien.idser','=','servicios.idser')
-            ->select('tratampacien.*','servicios.nomser')
-            ->where('idtra', $idtra)
-            ->first(); 
-
-        return view($this->views_folder.'.del', [
-            'request' => $request,
-            'tratampa' => $tratampa,
-            'idtra' => $idtra,
-            'idpac' => $idpac
-        ]);
-    }
-
-    public function destroy(Request $request, $idtra)
+    public function destroy(Request $request, $id)
     {               
-        $idpac = $this->sanitizeData($request->input('idpac'));
-        $idtra = $this->sanitizeData($idtra);  
+        $id = $this->sanitizeData($id);  
 
-        $this->redirectIfIdIsNull($idtra, $this->main_route);
-        $this->redirectIfIdIsNull($idpac, $this->main_route);
+        $this->redirectIfIdIsNull($id, $this->main_route);
                 
-        $tratampacien = Tratampacien::find($idtra);
+        $tratampacien = Tratampacien::find($id);
       
         $tratampacien->delete();
 
-        $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect("$this->main_route/$idpac");
+        return redirect("$this->main_route/$tratampacien->idpac");
     }
 }

@@ -3,7 +3,7 @@
 <head>
   @section('head')
     <meta charset="UTF-8"/>
-    <title>AroaDen</title>
+    <title> {{ $page_title }} </title>
     <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css" >
     <link href="{!! asset('assets/css/Start.css') !!}" rel="stylesheet" type="text/css" >
     <link href="{!! asset('assets/font-awe/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css" >
@@ -32,7 +32,7 @@
           <i class="fa fa-child"></i> Aroa<small>Den</small>
         </h3>
         <nav class="navbar navbar-default" role="navigation">   
-          <ul class="nav nav-pills nav-stacked bgtra fonsi16"> 
+          <ul class="nav nav-pills nav-stacked bgtra"> 
             <li><a href="{!!url("/Empresa")!!}"><i class="fa fa-home"></i> Empresa</a></li>  
             <li><a href="{!!url("/Citas")!!}"><i class="fa fa-calendar"></i> Citas</a></li> 
             <li><a href="{!!url("/Pacientes")!!}"><i class="fa fa-users"></i> Pacientes </a></li>
@@ -52,13 +52,11 @@
           <div class="col-sm-10 fonsi16 pad4">
 
               <?php
-              setlocale(LC_ALL,'es_ES.UTF-8');
-
-              $Carbon = new Carbon\Carbon;
-              $diactu = $Carbon::now()->formatLocalized('%A');
+                $Carbon = new Carbon\Carbon;
+                $date = $Carbon::now()->formatLocalized('%A');
               ?>
 
-              {!! ucfirst ($diactu) !!},&nbsp;
+              {!! ucfirst ($date) !!},&nbsp;
               {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;|&nbsp;
 
               Usuario:  <span class="label label-primary fonsi16"> {!! Auth::user()->username !!} </span>
@@ -67,7 +65,7 @@
    	
           <div class="col-sm-2 text-right">	
 
-            <a class="btn btn-default btn-sm" role="button" href="{!!url("/Settings")!!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
+            <a class="btn btn-default btn-sm" role="button" href="{!! url('/Settings') !!}" title="Ajustes"> <i class="fa fa-cogs"></i> </a>
         
             <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="Manuales">
               <i class="fa fa-question" aria-hidden="true"></i>

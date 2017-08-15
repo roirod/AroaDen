@@ -14,6 +14,11 @@ use App\Interfaces\BaseInterface;
 
 class PersonalController extends BaseController implements BaseInterface
 {
+    /**
+     * @var string $odogram  odogram
+     */
+    private $own_dir = 'perdir';
+
     public function __construct()
     {
         parent::__construct();
@@ -21,7 +26,10 @@ class PersonalController extends BaseController implements BaseInterface
         $this->middleware('auth');
 
         $this->main_route = 'Personal';
+        $this->other_route = 'Pacientes';        
         $this->views_folder = 'per';
+        $this->form_route = 'list';
+        $this->files_dir = "app/".$this->own_dir;
 
         $fields = [
             'surname' => true,
@@ -42,23 +50,19 @@ class PersonalController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {   
-        $numpag = 30;
+        $main_loop = Personal::AllOrderBySurname($this->num_paginate);
+        $count = Personal::CountAll();
 
-        $main_loop = DB::table('personal')
-                    ->whereNull('deleted_at')
-                    ->orderBy('surname', 'ASC')
-                    ->orderBy('name', 'ASC')
-                    ->paginate($numpag);
+        $this->page_title = Lang::get('aroaden.personal').' - '.$this->page_title;
 
-        $count = DB::table('personal')
-                    ->whereNull('deleted_at')
-                    ->count();
+        $this->passVarsToViews();
 
-        return view($this->views_folder.'.index', [
-          'personal' => $main_loop,
-          'request' => $request,
-          'count' => $count          
-        ]);   
+        $this->view_data['request'] = $request;
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['count'] = $count;
+        $this->view_data['form_route'] = $this->form_route;
+
+        return parent::index($request);
     }
   
     public function list(Request $request)
@@ -68,54 +72,39 @@ class PersonalController extends BaseController implements BaseInterface
 
         $data = $this->getResults($busen, $busca);
 
-        header('Content-type: application/json; charset=utf-8');
-
-        echo json_encode($data);
-
-        exit();
+        $this->echoJsonOuptut($data);
     } 
 
     public function show(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);
           
         $this->createDir($id);
 
-        $personal = Personal::where('idper', $id)
-                    ->whereNull('deleted_at')
-                    ->first();
+        $personal = Personal::FirstById($id);
 
         if (is_null($personal)) {
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
             return redirect($this->main_route);
         }
-                       
-        $trabajos = DB::table('tratampacien')
-                ->join('pacientes', 'tratampacien.idpac','=','pacientes.idpac')
-                ->join('servicios', 'tratampacien.idser','=','servicios.idser')
-                ->select('tratampacien.*','pacientes.surname','pacientes.name','servicios.name as servicio_name')
-                ->whereNull('pacientes.deleted_at')
-                ->where('per1', $id)
-                ->orWhere('per2', $id)
-                ->orderBy('date' , 'DESC')
-                ->get();    
+
+        $trabajos = Personal::ServicesById($id);
             
-        return view($this->views_folder.'.show', [
-            'request' => $request,
-            'personal' => $personal,
-            'trabajos' => $trabajos,
-            'idper' => $id
-        ]);       
+        $this->view_data['request'] = $request;
+        $this->view_data['personal'] = $personal;
+        $this->view_data['trabajos'] = $trabajos;
+        $this->view_data['id'] = $id;
+        $this->view_data['idper'] = $personal->idper;        
+        $this->view_data['other_route'] = $this->other_route;
+
+        return view($this->views_folder.'.show', $this->view_data);       
     }
 
     public function create(Request $request, $id = false)
     {     
-        $this->view_data = [
-            'request' => $request,
-            'form_fields' => $this->form_fields
-        ];
+        $this->view_data['request'] = $request;
+        $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::create($request, $id);  
     }
@@ -124,10 +113,8 @@ class PersonalController extends BaseController implements BaseInterface
     {
         $dni = $this->sanitizeData($request->input('dni'));
 
-        $person = DB::table('personal')
-                        ->where('dni', $dni)
-                        ->first();
-
+        $person = Personal::FirstByDniDeleted($dni);
+   
         if ($person != null) {
             $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->surname.', '.$person->name;
             $request->session()->flash($this->error_message_name, $messa);
@@ -189,7 +176,7 @@ class PersonalController extends BaseController implements BaseInterface
         }      
     }
   
-    public function edit(Request $request, $id, $idcit = false)
+    public function edit(Request $request, $id, $id2 = false)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
 
@@ -197,11 +184,11 @@ class PersonalController extends BaseController implements BaseInterface
          
         $personal = Personal::find($id); 
 
-        return view($this->views_folder.'.edit', [
-          'request' => $request,
-          'personal' => $personal,
-          'idper' => $id
-        ]);
+        $this->view_data['request'] = $request;
+        $this->view_data['personal'] = $personal;
+        $this->view_data['id'] = $id;
+
+        return parent::edit($request);
     }
 
     public function update(Request $request, $id)
@@ -427,7 +414,7 @@ class PersonalController extends BaseController implements BaseInterface
                     ->whereNull('deleted_at')
                     ->count();
 
-        if ($count === 0) {
+        if ($count == 0) {
             $data['main_loop'] = false;
             $data['count'] = false;       
             $data['msg'] = ' No hay personal en la base de datos. ';

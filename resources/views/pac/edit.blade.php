@@ -2,70 +2,14 @@
 
 @section('content')
 
-@include('includes.pacnav')
+	@include('includes.pacnav')
 
-@include('includes.messages')
-@include('includes.errors')
+	@include('includes.messages')
+	@include('includes.errors')
 
+	{!! addtexto("Editar Paciente") !!}
 
-{!! addtexto("Editar Paciente") !!}
-
-
-<div class="row">
- <div class="col-sm-12">
-  	<form class="form" id="form" role="form" action="{!!url("/Pacientes/$idpac")!!}" method="POST">
-		{!! csrf_field() !!}
-		<input type="hidden" name="_method" value="PUT">
-
-		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Apellidos:</label>
-		<input type="text" class="form-control" name="surname" value="{!!$pacientes->surname!!}" maxlength="111" autofocus required>  </div>
-				
-		<div class="form-group col-sm-3">  <label class="control-label text-left mar10">Nombre:</label>
-		<input type="text" class="form-control" name="name" value="{!!$pacientes->name!!}" maxlength="111" required >  </div>
-				
-		<div class="form-group col-sm-5">  <label class="control-label text-left mar10">Poblaci&#xF3;n:</label>
-		<input type="text" class="form-control" name="city" value="{!!$pacientes->city!!}" maxlength="111">  </div>  
-				  
-		<div class="form-group col-sm-5">  <label class="control-label text-left mar10">Direcci&#xF3;n:</label>
-		<input type="text" class="form-control" name="address" value="{!!$pacientes->address!!}" maxlength="111">  	</div>
-				
-		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">DNI:</label>
-		<input type="text" class="form-control" name="dni" value="{!!$pacientes->dni!!}" pattern="[A-Z0-9]{9}" maxlength="9" required>  </div>
-			
-		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">Sexo:</label>
-		 <select name="sex" class="form-control" required>    
-			@if( $pacientes->sex == 'hombre' )
-				<option value="hombre" selected> hombre </option>
-				<option value="mujer"> mujer </option> 
-			@else
-				<option value="hombre"> hombre </option>
-				<option value="mujer" selected> mujer </option> 
-			@endif	        
-		</select> </div>
-				
-		<div class="form-group col-sm-2">    <label class="control-label text-left mar10">Tel&#xE9;fono1:</label>
-		<input type="text" class="form-control" name="tel1" value="{!!$pacientes->tel1!!}" maxlength="11"> 	</div>
-				
-		<div class="form-group col-sm-2">     <label class="control-label text-left mar10">Tel&#xE9;fono2:</label>
-		<input type="text" class="form-control" name="tel2" value="{!!$pacientes->tel2!!}" maxlength="11"> 	</div>
-				
-		<div class="form-group col-sm-2">    <label class="control-label text-left mar10">Tel&#xE9;fono3:</label>
-		<input type="text" class="form-control" name="tel3" value="{!!$pacientes->tel3!!}" maxlength="11"> 	</div>
-				
-		<div class="form-group col-sm-4">      <label class="control-label text-left mar10">F. nacimiento:</label>
-			@if( isset($pacientes->birth) ) 
-				<input type="date" name="birth" value="{!!$pacientes->birth!!}">
-			@else
-				<input type="date" name="birth">
-			@endif
-		</div>
-				
-		<div class="form-group col-sm-11">      <label class="control-label text-left mar10">Notas:</label>
-		<textarea class="form-control" name="notes" rows="4"> {!!$pacientes->notes!!} </textarea> 	</div> 
-
-		@include('includes.submit_button')
-
- </form>  </div> </div>
+	@include('form_fields.edit')
 
 @endsection
 	 

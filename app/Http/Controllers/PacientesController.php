@@ -5,17 +5,42 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Pacientes;
 use App\Models\Ficha;
+use App\Models\Presup;
+use App\Models\Tratampacien;
+
 use Carbon\Carbon;
 use Storage;
 use Html;
 use Image;
 use Validator;
 use Lang;
+use Exception;
+
 use Illuminate\Http\Request;
 use App\Interfaces\BaseInterface;
 
 class PacientesController extends BaseController implements BaseInterface
 {
+    /**
+     * @var string $img_folder  img_folder
+     */
+    private $img_folder = '/public/assets/img';
+
+    /**
+     * @var string $odog_dir  odog_dir
+     */
+    private $odog_dir = '.odogdir';
+
+    /**
+     * @var string $odogram  odogram
+     */
+    private $odogram = 'odogram.jpg';
+
+    /**
+     * @var string $odogram  odogram
+     */
+    private $own_dir = 'pacdir';
+
     /**
      * 
      */
@@ -26,7 +51,9 @@ class PacientesController extends BaseController implements BaseInterface
         $this->middleware('auth');
 
         $this->main_route = 'Pacientes';
+        $this->form_route = 'list';        
         $this->views_folder = 'pac';
+        $this->files_dir = "app/".$this->own_dir;      
 
         $fields = [
             'surname' => true,
@@ -48,34 +75,33 @@ class PacientesController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {  	
-    	$numpag = 100;
+        $main_loop = Pacientes::AllOrderBySurname($this->num_paginate);
+        $count = Pacientes::CountAll();
 
-    	$main_loop = DB::table('pacientes')
-                        ->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
-                        ->whereNull('deleted_at')
-                        ->orderBy('surname', 'ASC')
-                        ->orderBy('name', 'ASC')
-                        ->paginate($numpag);
+        $this->page_title = Lang::get('aroaden.patients').' - '.$this->page_title;
 
-        $count = $this->getPatientsCount();
+        $this->passVarsToViews();
 
-    	return view($this->views_folder.'.index', [
-    		'main_loop' => $main_loop,
-         	'request' => $request,
-            'count' => $count
-        ]);   
+        $this->view_data['request'] = $request;
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['count'] = $count;
+        $this->view_data['form_route'] = $this->form_route;
+
+        return parent::index($request);    
     }
   
     public function list(Request $request)
     {   
         $data = [];
 
-        $count = $this->getPatientsCount();
+        $count = Pacientes::CountAll();
+
+        $data['main_loop'] = false;
+        $data['count'] = false;    
+        $data['msg'] = false; 
 
         if ($count == 0) {
-
-            $data['main_loop'] = false;
-            $data['count'] = false;       
+   
             $data['msg'] = Lang::get('aroaden.no_patients_on_db');
 
         } else {
@@ -83,15 +109,18 @@ class PacientesController extends BaseController implements BaseInterface
             $busca = $this->sanitizeData($request->input('busca'));
             $busen = $this->sanitizeData($request->input('busen'));
 
-            $data = $this->getItems($busen, $busca);
+            try {
 
+                $data = $this->getItems($busen, $busca);
+
+            } catch (Exception $e) {
+    
+                $data['msg'] = $e->getMessage();
+
+            }
         }
 
-        header('Content-type: application/json; charset=utf-8');
-
-        echo json_encode($data);
-
-        exit();
+        $this->echoJsonOuptut($data);
     } 
 
     public function show(Request $request, $id)
@@ -102,60 +131,44 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->createDir($id);
 
-        $profile_photo = url("/app/pacdir/$id/.profile_photo.jpg");
+        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
 
-	    $paciente = DB::table('pacientes')
-                        ->where('idpac', $id)
-                        ->whereNull('deleted_at')
-                        ->first();
+        $paciente = Pacientes::FirstById($id);
 
-        if (is_null($paciente)) {
-            $request->session()->flash($this->error_message_name, 'Has borrado a este paciente.');    
+        if ( !isset($paciente->idpac) ) {
+            $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_patient_or_deleted'));    
             return redirect($this->main_route);
         }
 
-        $citas = Pacientes::find($id)
-                    ->citas()
-                    ->orderBy('day', 'DESC')
-                    ->orderBy('hour', 'DESC')
-                    ->get();
-
-		$tratampacien = DB::table('tratampacien')
-		            ->join('servicios','tratampacien.idser','=','servicios.idser')
-		            ->select('tratampacien.*','servicios.name as servicios_name')
-		            ->where('idpac', $id)
-		            ->orderBy('date','DESC')
-		            ->get(); 
-	    
-	    $suma = DB::table('tratampacien')
-				    ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
-				    ->where('idpac', $id)
-				    ->get();
+        $citas = Pacientes::AllCitasById($id);
+        $tratampacien = Tratampacien::ServicesById($id);
+        $suma = Pacientes::ServicesSumById($id);
 
 	  	$birth = trim($paciente->birth);
 
 	  	if (isset($birth)) {
-            $date = explode("-",$birth,3);
-
-            $date0 = $date[0];
-            $date1 = $date[1];
-            $date2 = $date[2];
-		  	  
-            $edad = Carbon::createFromDate($date0,$date1,$date2)->age;
+            $date = explode("-", $birth, 3);	  	  
+            $edad = Carbon::createFromDate($date[0], $date[1], $date[2])->age;
 	  	} else {
             $edad = 0;
 	  	}
 
-        return response()->view($this->views_folder.'.show',[
-            'request' => $request,
-            'paciente' => $paciente,
-            'citas' => $citas,
-            'tratampacien' => $tratampacien,
-            'suma' => $suma,
-            'idpac' => $id,
-            'profile_photo' => $profile_photo,
-            'edad' => $edad
-        ])
+        $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
+
+        $this->passVarsToViews();
+
+        $this->view_data['request'] = $request;
+        $this->view_data['paciente'] = $paciente;
+        $this->view_data['citas'] = $citas;
+        $this->view_data['tratampacien'] = $tratampacien;
+        $this->view_data['suma'] = $suma;
+        $this->view_data['id'] = $id;
+        $this->view_data['idpac'] = $id;        
+        $this->view_data['edad'] = $edad;
+        $this->view_data['profile_photo'] = $profile_photo;
+        $this->view_data['profile_photo_name'] = $this->profile_photo_name;
+
+        return response()->view($this->views_folder.'.show', $this->view_data)
            ->header('Expires', 'Sun, 01 Jan 1966 00:00:00 GMT')
            ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
            ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
@@ -164,14 +177,10 @@ class PacientesController extends BaseController implements BaseInterface
 
     public function create(Request $request, $id = false)
     {
-        $this->autofocus = 'surname';
+        $this->page_title = Lang::get('aroaden.create_patient').' - '.$this->page_title;
 
-        $this->view_data = [
-            'request' => $request,
-            'main_route' => $this->main_route,
-            'autofocus' => $this->autofocus,
-            'form_fields' => $this->form_fields
-        ];
+        $this->view_data['request'] = $request;
+        $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::create($request, $id);  
     }
@@ -180,13 +189,11 @@ class PacientesController extends BaseController implements BaseInterface
     {        
         $dni = $this->sanitizeData($request->input('dni'));
     
-        $patient = DB::table('pacientes')
-                        ->where('dni', $dni)
-                        ->first();
+        $exists = Pacientes::FirstByDniDeleted($dni);
 
-        if ($patient != null) {
-            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$patient->surname.', '.$patient->name.'.';
-            $request->session()->flash($this->error_message_name, $messa);
+        if ( isset($exists->dni) ) {
+            $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+            $request->session()->flash($this->error_message_name, $msg);
             return redirect($this->main_route.'/create')->withInput();
         }
 
@@ -254,7 +261,7 @@ class PacientesController extends BaseController implements BaseInterface
         }      
     }
 
-    public function edit(Request $request, $id, $idcit = false)
+    public function edit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
 
@@ -262,14 +269,13 @@ class PacientesController extends BaseController implements BaseInterface
 
         $object = Pacientes::find($id);
 
-        $this->view_data = [
-            'request' => $request,
-            'id' => $id,
-            'object' => $object,
-            'main_route' => $this->main_route,
-            'autofocus' => $this->autofocus,
-            'form_fields' => $this->form_fields
-        ];
+        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
+
+        $this->view_data['request'] = $request;
+        $this->view_data['id'] = $id;
+        $this->view_data['idpac'] = $id;        
+        $this->view_data['object'] = $object;
+        $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::edit($request, $id);
     }
@@ -282,15 +288,12 @@ class PacientesController extends BaseController implements BaseInterface
         $dni = $this->sanitizeData($dni);   
 
         $patient = Pacientes::find($id);
+    
+        $exists = Pacientes::CheckIfExistsOnUpdate($id, $patient->dni);
 
-        $patient_exits = DB::table('pacientes')
-                        ->where('dni', $patient->dni)
-                        ->where('idpac', '!=', $id)
-                        ->first();
-        
-        if ($dni != null) {
-            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$patient_exits->surname.', '.$patient_exits->name;
-            $request->session()->flash($this->error_message_name, $messa);
+        if ( isset($exists->dni) ) {
+            $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+            $request->session()->flash($this->error_message_name, $msg);
             return redirect("$this->main_route/$id/edit")->withInput();
         }
 
@@ -356,11 +359,11 @@ class PacientesController extends BaseController implements BaseInterface
             return redirect("$this->main_route/$id/ficha");
         }
 
-        return view($this->views_folder.'.ficha', [
-            'request' => $request,
-            'idpac' => $id,
-            'ficha' => $ficha
-        ]);
+        $this->view_data['request'] = $request;
+        $this->view_data['idpac'] = $id;
+        $this->view_data['ficha'] = $ficha;
+
+        return view($this->views_folder.'.ficha', $this->view_data);
     } 
 
     public function fiedit(Request $request, $id)
@@ -371,11 +374,11 @@ class PacientesController extends BaseController implements BaseInterface
 
         $ficha = ficha::find($id);
 
-        return view($this->views_folder.'.fiedit', [
-            'request' => $request,
-            'idpac' => $id,
-            'ficha' => $ficha
-        ]);
+        $this->view_data['request'] = $request;
+        $this->view_data['idpac'] = $id;
+        $this->view_data['ficha'] = $ficha;
+
+        return view($this->views_folder.'.fiedit', $this->view_data);
     }
 
     public function fisave(Request $request, $id)
@@ -413,18 +416,18 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->createDir($id);
 
-        $pacdir = "/pacdir/$id";
+        $pacdir = "/$this->own_dir/$id";
 
         $files = Storage::files($pacdir);
 
         $url = url("$this->main_route/$id");
 
-		return view($this->views_folder.'.file', [
-            'request' => $request,
-    	  	'idpac' => $id,
-    	  	'files' => $files,
-            'url' => $url
-        ]);
+        $this->view_data['request'] = $request;
+        $this->view_data['idpac'] = $id;
+        $this->view_data['files'] = $files;
+        $this->view_data['url'] = $url;
+
+        return view($this->views_folder.'.file', $this->view_data);
     }
 
     public function upload(Request $request)
@@ -436,7 +439,7 @@ class PacientesController extends BaseController implements BaseInterface
 
     	$id = $this->sanitizeData($id);
 
-        $pacdir = storage_path("app/pacdir/$id");
+        $pacdir = storage_path("$this->files_dir/$id");
 
 		$files = $request->file('files');
 
@@ -444,16 +447,16 @@ class PacientesController extends BaseController implements BaseInterface
             $extension = $files->getClientOriginalExtension();
 
             if ($extension == 'jpg' || $extension == 'png') {
-
                 Image::make($files)->encode('jpg', 60)
                     ->resize(150, null, function ($constraint) {
                         $constraint->aspectRatio();
                     })
-                    ->save("$pacdir/.profile_photo.jpg");
+                    ->save("$pacdir/$this->profile_photo_name");
 
                 return redirect("$this->main_route/$id");
 
-            } else { 
+            } else {
+
                 $request->session()->flash($this->error_message_name, 'Formato no soportado, suba una imagen jpg o png.');
                 return redirect("$this->main_route/$id/file");
             }
@@ -470,7 +473,7 @@ class PacientesController extends BaseController implements BaseInterface
                 $max_size = 2;
                 $max = 1024 * 1024 * $max_size;
  
-                $filedisk = storage_path("app/pacdir/$id/$filename");
+                $filedisk = storage_path("$this->files_dir/$id/$filename");
 
                 if ( $size > $max ) {
                     $mess = "El archivo: - $filename - es superior a $max_size MB";
@@ -491,7 +494,9 @@ class PacientesController extends BaseController implements BaseInterface
     	     
     	    if($upcount == $ficount){
     	      return redirect("$this->main_route/$id/file");
+
     	    } else {
+
     	      $request->session()->flash($this->error_message_name, 'error!!!');
     	      return redirect("$this->main_route/$id/file");
     	    }
@@ -505,7 +510,7 @@ class PacientesController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $this->redirectIfIdIsNull($file, $this->main_route);
         
-        $pacdir = storage_path("app/pacdir/$id");
+        $pacdir = storage_path("$this->files_dir/$id");
 
         $filedown = $pacdir.'/'.$file;
 
@@ -522,7 +527,7 @@ class PacientesController extends BaseController implements BaseInterface
 
     	$id = $this->sanitizeData($id);
 
-        $pacdir = storage_path("app/pacdir/$id");
+        $pacdir = storage_path("$this->files_dir/$id");
 
         $file = $request->input('filerem');
 
@@ -539,15 +544,14 @@ class PacientesController extends BaseController implements BaseInterface
 
     	$id = $this->sanitizeData($id);
 
-        $pacdir = "/app/pacdir/$id";
+        $pacdir = "/$this->files_dir/$id";
+        $odogram = "$pacdir/$this->odog_dir/$this->odogram";
 
-        $odogram = $pacdir."/.odogdir/odogram.jpg";
+        $this->view_data['request'] = $request;
+        $this->view_data['idpac'] = $id;
+        $this->view_data['odogram'] = $odogram;
 
-        return response()->view($this->views_folder.'.odogram',[
-            'request' => $request,
-            'idpac' => $id,
-            'odogram' => $odogram
-        ])
+        return response()->view($this->views_folder.'.odogram', $this->view_data)
            ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
            ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
            ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
@@ -557,7 +561,6 @@ class PacientesController extends BaseController implements BaseInterface
     public function upodog(Request $request)
     {   
         if ($request->file('upodog')->isValid()) {
-
             $id = $request->input('idpac');
 
             $upodog = $request->file('upodog');
@@ -573,15 +576,17 @@ class PacientesController extends BaseController implements BaseInterface
 
             $id = $this->sanitizeData($id);
 
-            $pacdir = storage_path("app/pacdir/$id");
+            $pacdir = storage_path("$this->files_dir/$id");
 
-            $odogram = $pacdir."/.odogdir/";
+            $odogram = "$pacdir/$this->odog_dir/";
 
-            $upodog->move($odogram,'odogram.jpg');
+            $upodog->move($odogram, $this->odogram);
 
             return redirect("$this->main_route/$id/odogram");
 
         } else {
+
+            $request->session()->flash($this->error_message_name, 'Error');
             return redirect("$this->main_route/$id/odogram");
         }    
     }   
@@ -592,9 +597,9 @@ class PacientesController extends BaseController implements BaseInterface
 
         $id = $this->sanitizeData($id);
 
-        $pacdir = storage_path("app/pacdir/$id");
+        $pacdir = storage_path("$this->files_dir/$id");
 
-        $odogram = $pacdir."/.odogdir/odogram.jpg";
+        $odogram = "$pacdir/$this->odog_dir/$this->odogram";
 
         return response()->download($odogram);
     }    
@@ -610,10 +615,10 @@ class PacientesController extends BaseController implements BaseInterface
 		$resodog = $request->input('resodog');
 		 
 		if ( $resodog == 1 ) {
-            $pacdir = "/pacdir/$id";
+            $pacdir = "/$this->own_dir/$id";
 
-            $odogram = "/$pacdir/.odogdir/odogram.jpg";
-            $img = '/img/odogram.jpg'; 
+            $odogram = "/$pacdir/$this->odog_dir/$this->odogram";
+            $img = "/img/$this->odogram"; 
 
             Storage::delete($odogram);           
 
@@ -622,6 +627,7 @@ class PacientesController extends BaseController implements BaseInterface
 	    	return redirect("/Pacientes/$id/odogram");
 
 		} else {
+
 		 	$request->session()->flash($this->error_message_name, 'Error');
 		 	return redirect("/Pacientes/$id/odogram");
 		}	
@@ -633,18 +639,13 @@ class PacientesController extends BaseController implements BaseInterface
 
         $id = $this->sanitizeData($id);
 
-        $presup = DB::table('presup')
-                    ->join('servicios','presup.idser','=','servicios.idser')
-                    ->select('presup.*','servicios.name')
-                    ->where('idpac', $id)
-                    ->orderBy('cod','ASC')
-                    ->get(); 
-          
-        return view($this->views_folder.'.presup', [
-            'request' => $request,
-            'idpac' => $id,
-            'presup' => $presup
-        ]);
+        $presup = Presup::AllById($query, $id);
+
+        $this->view_data['request'] = $request;
+        $this->view_data['idpac'] = $id;
+        $this->view_data['presup'] = $presup;
+
+        return view($this->views_folder.'.presup', $this->view_data);
     }    
 
     public function del(Request $request, $id)
@@ -655,11 +656,11 @@ class PacientesController extends BaseController implements BaseInterface
 
         $paciente = Pacientes::find($id);
 
-    	return view($this->views_folder.'.del', [
-            'request' => $request,
-            'paciente' => $paciente,
-    		'idpac' => $id
-        ]);
+        $this->view_data['request'] = $request;
+        $this->view_data['idpac'] = $id;
+        $this->view_data['paciente'] = $paciente;
+
+        return view($this->views_folder.'.del', $this->view_data);
     }
  
     public function destroy(Request $request, $id)
@@ -677,27 +678,27 @@ class PacientesController extends BaseController implements BaseInterface
 
     public function createDir($id)
     {               
-        $pacdir = "/pacdir/$id";
+        $pacdir = "/$this->own_dir/$id";
 
         if ( ! Storage::exists($pacdir) ) { 
             Storage::makeDirectory($pacdir,0770,true);
         }
 
-        $odogdir = $pacdir.'/.odogdir';
+        $odogdir = "$pacdir/$this->odog_dir";
 
         if ( ! Storage::exists($odogdir) ) { 
             Storage::makeDirectory($odogdir,0770,true);
         }
 
-        $odogram = "/$pacdir/.odogdir/odogram.jpg";
-        $img = '/public/assets/img/odogram.jpg';
+        $odogram = "/$pacdir/$this->odog_dir/$this->odogram";
+        $img = "$this->img_folder/$this->odogram";
           
         if ( ! Storage::exists($odogram) ) { 
             Storage::copy($img,$odogram);
         }
 
-        $profile_photo = "/$pacdir/.profile_photo.jpg";
-        $foto = '/public/assets/img/profile_photo.jpg';
+        $profile_photo = "/$pacdir/$this->profile_photo_name";
+        $foto = "$this->img_folder/profile_photo.jpg";
           
         if ( ! Storage::exists($profile_photo) ) { 
             Storage::copy($foto,$profile_photo);
@@ -714,43 +715,22 @@ class PacientesController extends BaseController implements BaseInterface
     {
         $data = [];
 
-        $main_loop = DB::table('pacientes')
-                        ->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
-                        ->whereNull('deleted_at')
-                        ->where($busen,'LIKE','%'.$busca.'%')
-                        ->orderBy('surname','ASC')
-                        ->orderBy('name','ASC')
-                        ->get();
-
-        $count = DB::table('pacientes')
-                    ->whereNull('deleted_at')
-                    ->where($busen,'LIKE','%'.$busca.'%')
-                    ->count();
+        $main_loop = Pacientes::FindStringOnField($busen, $busca);
+        $count = Pacientes::CountFindStringOnField($busen, $busca);
 
         if ($count == 0) {
 
-            $data['main_loop'] = false;
-            $data['count'] = false;       
-            $data['msg'] = ' No hay resultados para la búsqueda. ';
+            throw new Exception( Lang::get('aroaden.no_query_results') );
 
         } else {
 
             $data['main_loop'] = $main_loop;
             $data['count'] = $count;        
             $data['msg'] = false;
-
+            return $data;
         }
 
-        return $data;
-    }
-
-    public function getPatientsCount()
-    {
-        $patients_count = DB::table('pacientes')
-                            ->whereNull('deleted_at')
-                            ->count();
-
-        return $patients_count;
+        throw new Exception( Lang::get('aroaden.db_query_error') );
     }
 
 }

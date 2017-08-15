@@ -18,5 +18,20 @@ class Servicios extends Model
     {
         return $this->hasMany('App\Models\Tratampacien', 'idser', 'idser');
     }
-    
+
+    public function scopeAllOrderByName($query)
+    {
+        return $query->whereNull('deleted_at')
+                        ->orderBy('name', 'ASC')
+                        ->get();
+
+    }
+
+    public function scopeFirstById($query, $id)
+    {
+        return $query->where('idser', $id)
+                        ->whereNull('deleted_at')
+                        ->first();
+    }
+
 }

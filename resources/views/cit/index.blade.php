@@ -9,9 +9,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-  	<form role="form" class="form" action="{{ url('/Citas/list') }}" method="post">
-  		{!! csrf_field() !!}
-
+    <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
   		<div class="input-group">
   		 	<span class="input-group-btn pad4"> <p> &nbsp;<i class="fa fa-clock-o"></i> Citas: </p> </span>
   		  <div class="col-sm-2"> 
@@ -35,9 +33,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form role="form" class="form" action="{{ url('/Citas/list') }}" method="post">
-      {!! csrf_field() !!}
-
+    <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
       <input type="hidden" name="selec" value="rango">
 
       <div class="input-group pad10"> 
@@ -186,8 +182,9 @@
           $('#item_list').html(message);
 
           $.ajax({
+
               type : 'POST',
-              url  : '/Citas/list',
+              url  : '/{!! $main_route !!}/{!! $form_route !!}',
               dataType: "json",
               data : data,
 

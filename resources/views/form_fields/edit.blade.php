@@ -1,113 +1,127 @@
-<div >
-	@if ($form_fields['surname'])
+@include('form_fields.edit.opendiv')
 
-		@include('form_fields.edit.surname')
+	@include('form_fields.edit.openform')
 
-	@endif
+		<div>
+			@if ($form_fields['surname'])
 
-	@if ($form_fields['name'])
+				@include('form_fields.edit.surname')
 
-		@include('form_fields.edit.name')
+			@endif
 
-	@endif
+			@if ($form_fields['name'])
 
-	@if ($form_fields['position'])
+				@include('form_fields.edit.name')
 
-		@include('form_fields.edit.position')
+			@endif
 
-	@endif
+			@if ($form_fields['position'])
 
-	@if ($form_fields['dni'])
+				@include('form_fields.edit.position')
 
-		@include('form_fields.edit.dni')
+			@endif
 
-	@endif
+			@if ($form_fields['dni'])
 
-	@if ($form_fields['tel1'])
+				@include('form_fields.edit.dni')
 
-		@include('form_fields.edit.tel1')
+			@endif
 
-	@endif
+			@if ($form_fields['tel1'])
 
-	@if ($form_fields['tel2'])
+				@include('form_fields.edit.tel1')
 
-		@include('form_fields.edit.tel2')
+			@endif
 
-	@endif
+			@if ($form_fields['tel2'])
 
-	@if ($form_fields['tel3'])
+				@include('form_fields.edit.tel2')
 
-		@include('form_fields.edit.tel3')
+			@endif
 
-	@endif
+			@if ($form_fields['tel3'])
 
-	@if ($form_fields['sex'])
+				@include('form_fields.edit.tel3')
 
-		@include('form_fields.edit.sex')
+			@endif
 
-	@endif
+			@if ($form_fields['sex'])
 
-	@if ($form_fields['address'])
+				@include('form_fields.edit.sex')
 
-		@include('form_fields.edit.address')
+			@endif
 
-	@endif
+			@if ($form_fields['address'])
 
-	@if ($form_fields['city'])
+				@include('form_fields.edit.address')
 
-		@include('form_fields.edit.city')
+			@endif
 
-	@endif
+			@if ($form_fields['city'])
 
-	@if ($form_fields['birth'])
+				@include('form_fields.edit.city')
 
-		@include('form_fields.edit.birth')
+			@endif
 
-	@endif
+			@if ($form_fields['birth'])
 
-	@if ($form_fields['units'])
+				@include('form_fields.edit.birth')
 
-		@include('form_fields.edit.units')
+			@endif
 
-	@endif
+			@if ($form_fields['units'])
 
-	@if ($form_fields['price'])
+				@include('form_fields.edit.units')
 
-		@include('form_fields.edit.price')
+			@endif
 
-	@endif
+			@if ($form_fields['price'])
 
-	@if ($form_fields['tax'])
+				@include('form_fields.edit.price')
 
-		@include('form_fields.edit.tax')
+			@endif
 
-	@endif 
+			@if ($form_fields['paid'])
 
-	@if ($form_fields['hour'])
+				@include('form_fields.edit.paid')
 
-		@include('form_fields.edit.hour')
+			@endif
 
-	@endif 
+			@if ($form_fields['tax'])
 
-	@if ($form_fields['day'])
+				@include('form_fields.edit.tax')
 
-		@include('form_fields.edit.day')
+			@endif 
 
-	@endif 
+			@if ($form_fields['hour'])
 
-	@if ($form_fields['notes'])
+				@include('form_fields.edit.hour')
 
-		@include('form_fields.edit.notes')
+			@endif 
 
-	@endif
-</div>
+			@if ($form_fields['day'])
 
-<div class="row">
-  <div class="col-sm-12">
-	@if ($form_fields['save'])
+				@include('form_fields.edit.day')
 
-		@include('form_fields.save')
+			@endif 
 
-	@endif
-  </div>
-</div>
+			@if ($form_fields['notes'])
+
+				@include('form_fields.edit.notes')
+
+			@endif
+		</div>
+
+		<div class="row">
+		  <div class="col-sm-12">
+			@if ($form_fields['save'])
+
+				@include('form_fields.save')
+
+			@endif
+		  </div>
+		</div>
+
+	@include('form_fields.edit.closeform')
+
+@include('form_fields.edit.closediv')

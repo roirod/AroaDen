@@ -13,7 +13,7 @@
 			<span class="input-group-btn pad4"> <p> Paciente:</p> </span>
 			<div class="col-sm-3">
 				<span class="input-group-btn">
-					<a href="/Pacientes/create" role="button" class="btn btn-sm btn-primary">
+					<a href="/{!! $main_route !!}/create" role="button" class="btn btn-sm btn-primary">
 						<i class="fa fa-plus"></i> Nuevo
 					</a> 
 				</span>
@@ -81,13 +81,13 @@
 						
 					<tr> 
 						<td class="wid50">
-							<a href="{!!url("/Pacientes/$paciente->idpac")!!}" target="_blank" class="btn btn-default" role="button">
+							<a href="{!! url("/$main_route/$paciente->idpac")!!}" target="_blank" class="btn btn-default" role="button">
 								<i class="fa fa-hand-pointer-o"></i>
 							</a> 
 						</td>
 
 						<td class="wid290">
-							<a href="{!!url("/Pacientes/$paciente->idpac")!!}" class="pad4" target="_blank">
+							<a href="{!! url("/$main_route/$paciente->idpac")!!}" class="pad4" target="_blank">
 								{!!$paciente->surname!!}, {!!$paciente->name!!}
 							</a>
 						</td>
@@ -114,7 +114,6 @@
 		</div> </div>
 
 	@endif
-
 
  </div> </div>
 
@@ -154,7 +153,7 @@
 					    $.ajax({
 
 					        type : 'POST',
-					        url  : '/Pacientes/list',
+					        url  : '/{!! $main_route !!}/{!! $form_route !!}',
 					        dataType: "json",
 					        data : data,
 

@@ -31,13 +31,8 @@ class EmpresaController extends BaseController
      *  @return view       
      */
     public function index(Request $request)
-    { 
-        $obj = $this->getObject();
-
-		return view($this->views_folder.'.index', [
-		   'request' => $request,
-		   'empre' => $obj
-		]);
+    {
+        return $this->commonProcess($request, 'index');
     }
 
     /**
@@ -47,12 +42,27 @@ class EmpresaController extends BaseController
      */
     public function editData(Request $request)
     {
+        return $this->commonProcess($request, 'edit');
+    }
+
+
+    /**
+     *  create object from key value pair array in this format $obj->obj_key
+     * 
+     *  @return object $obj get object          
+     */
+    private function commonProcess($request, $view_name)
+    {
         $obj = $this->getObject();
 
-        return view($this->views_folder.'.edit', [
-            'request' => $request,
-            'empre' => $obj
-        ]);
+        $this->page_title = Lang::get('aroaden.company').' - '.$this->page_title;
+
+        $this->passVarsToViews();
+
+        $this->view_data['request'] = $request;
+        $this->view_data['empre'] = $obj;
+
+        return view($this->views_folder.".$view_name", $this->view_data);
     }
 
     /**

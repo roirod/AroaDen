@@ -15,10 +15,8 @@ Route::group(['middleware' => 'web'], function () {
 	 	Route::get('Empresa/editData', 'EmpresaController@editData');
 	 	Route::post('Empresa/saveData', 'EmpresaController@saveData');
 
-	 	Route::get('Pacientes/{id}/del', 'PacientesController@del');
 	 	Route::delete('Pacientes/{id}', 'PacientesController@destroy');
 
-	 	Route::get('Personal/{id}/del', 'PersonalController@del');
 	 	Route::delete('Personal/{id}', 'PersonalController@destroy');
 
 	 	Route::get('Servicios/{id}/del', 'ServiciosController@del');
@@ -33,7 +31,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	 Route::group(['middleware' => 'medio'], function () {
 
-	 	Route::get('Pacientes/{id}/{idcit?}/edit', 'PacientesController@edit');
+	 	Route::get('Pacientes/{id}/edit', 'PacientesController@edit');
 	 	Route::put('Pacientes/{id}', 'PacientesController@update');
 	 	Route::get('Pacientes/{id}/fiedit', 'PacientesController@fiedit');
 	 	Route::put('Pacientes/{id}/fisave', 'PacientesController@fisave');
@@ -41,19 +39,17 @@ Route::group(['middleware' => 'web'], function () {
 		Route::post('Pacientes/upodog', 'PacientesController@upodog');
 		Route::post('Pacientes/resodog', 'PacientesController@resodog');
 
-	 	Route::get('Personal/{id}/{idcit?}/edit', 'PersonalController@edit');
+	 	Route::get('Personal/{id}/edit', 'PersonalController@edit');
 		Route::put('Personal/{id}', 'PersonalController@update');
 	 	Route::post('Personal/filerem', 'PersonalController@filerem');
 
-	 	Route::get('Servicios/{id}/{idcit?}/edit', 'ServiciosController@edit');
+	 	Route::get('Servicios/{id}/edit', 'ServiciosController@edit');
 	 	Route::put('Servicios/{id}', 'ServiciosController@update');
 
-		Route::get('Citas/{id}/{idcit}/edit', 'CitasController@edit');
-		Route::get('Citas/{id}/{idcit}/del', 'CitasController@del');
-		Route::delete('Citas/{idcit}', 'CitasController@destroy');	
+		Route::get('Citas/{id}/edit', 'CitasController@edit');
+		Route::delete('Citas/{id}', 'CitasController@destroy');	
 
-		Route::get('Trapac/{id}/{idtra}/edit', 'TratamientosController@edit');
-		Route::get('Trapac/{id}/{idtra}/del', 'TratamientosController@del');
+		Route::get('Trapac/{id}/edit', 'TratamientosController@edit');
 		Route::delete('Trapac/{id}', 'TratamientosController@destroy');	
 
 		Route::post('Presup/delcod', 'PresupuestosController@delcod');
@@ -65,6 +61,7 @@ Route::group(['middleware' => 'web'], function () {
 	 
 	 Route::post('Citas/list', 'CitasController@list');
 	 Route::get('Citas/{id}/create', 'CitasController@create');
+	 Route::get('Citas/{id}/edit', 'CitasController@edit');
 	 Route::resource('Citas', 'CitasController', ['except' => ['show']]);
 	  	  
 	 Route::post('Pacientes/list', 'PacientesController@list');
@@ -86,9 +83,9 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::post('Servicios/list', 'ServiciosController@list');
 	 Route::resource('Servicios', 'ServiciosController', ['except' => ['show']]);
 
-	 Route::resource('Contable', 'ContableController');
+	 Route::get('Contable', 'ContableController@index');
 
-	 Route::resource('Pagos', 'PagosController@index');
+	 Route::get('Pagos', 'PagosController@index');
 
 	 Route::get('Settings', 'SettingsController@index');
 	 
@@ -97,8 +94,9 @@ Route::group(['middleware' => 'web'], function () {
 	 Route::post('Presup/presmod', 'PresupuestosController@presmod');
 	 Route::resource('Presup', 'PresupuestosController', ['except' => ['index', 'update', 'edit', 'destroy']]);
 
-	 Route::post('Trapac/crea','TratamientosController@crea');
-	 Route::post('Trapac/selcrea', 'TratamientosController@selcrea'); 
+	 Route::get('Trapac/{id}/create','TratamientosController@create');
+	 Route::post('Trapac/select', 'TratamientosController@select');  
+	 Route::get('Trapac/{id}/edit', 'TratamientosController@edit');
 	 Route::resource('Trapac', 'TratamientosController', ['except' => ['index', 'create', 'show']]);
 
 });

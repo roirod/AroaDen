@@ -2,37 +2,35 @@
 
 @section('content')
 
-@include('includes.pacnav')
+	@include('includes.pacnav')
 
-@include('includes.messages')
-@include('includes.errors')
+	@include('includes.messages')
+	@include('includes.errors')
 
+	{!! addtexto("Añadir Cita") !!}
 
-{{ addtexto("Añadir Cita") }}
+	@include('form_fields.create.opendiv')
 
+		<p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
 
-<div class="row">
-  <div class="col-sm-12">
+		@include('form_fields.create.openform')
 
-	<p class="lead"> {{ $surname }}, {{ $name }} | id: {{ $idpac }}</p>
+			<input type="hidden" name="idpac" value="{{$id}}">
 
-	<form role="form" id="form" class="form" action="{{ url('/Citas') }}" method="post">
-		{!! csrf_field() !!}
+			@include('form_fields.create_alternative')
 
-		<input type="hidden" name="idpac" value="{{$idpac}}">
-
-		@include('form_fields.create') 
-
-	</form> 
-</div>  </div>
+		@include('form_fields.create.closeform')
+	@include('form_fields.create.closediv')
 
 @endsection
 
 @section('js')
-    @parent   
-	  <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
+    @parent
+
+	<script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/minified/shims/i18n/formcfg-es.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
 @endsection

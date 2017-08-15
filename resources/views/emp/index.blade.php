@@ -17,7 +17,7 @@
       </span>
       <div class="col-sm-3">
         <span>
-        	<a href="{{url("/Empresa/editData")}}" role="button" class="btn btn-sm btn-success"><i class="fa fa-edit"> </i> Editar</a>
+        	<a href="{{url("/$main_route/editData")}}" role="button" class="btn btn-sm btn-success"><i class="fa fa-edit"> </i> Editar</a>
         </span>
 	  </div>
 	</div>

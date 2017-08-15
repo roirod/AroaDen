@@ -24,6 +24,7 @@ class ServiciosController extends BaseController implements BaseInterface
 
         $this->tax_types = require(base_path().'/config/tax_types.php');        
         $this->main_route = 'Servicios';
+        $this->form_route = 'list';
         $this->views_folder = 'serv';
 
         $fields = [
@@ -48,21 +49,14 @@ class ServiciosController extends BaseController implements BaseInterface
                         ->get();		
 
         $count = Servicios::whereNull('deleted_at')->count();
+        
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['request'] = $request;
+        $this->view_data['count'] = $count;
+        $this->view_data['form_fields'] = $this->form_fields;
+        $this->view_data['form_route'] = $this->form_route;
 
-        $this->form_fields = [
-            'name' => true,
-            'price' => true,
-            'tax' => true,
-        ];
-
-        $this->view_data = [
-            'main_loop' => $main_loop,
-            'request' => $request,
-            'count' => $count,
-            'form_fields' => $this->form_fields,           
-        ];
-
-        return view($this->views_folder.'.index', $this->view_data);          
+        return parent::index($request);        
     }
 
     /**
@@ -78,11 +72,7 @@ class ServiciosController extends BaseController implements BaseInterface
 
         $data = $this->consultaItems($busca);
 
-        header('Content-type: application/json; charset=utf-8');
-
-        echo json_encode($data);
-
-        exit();
+        $this->echoJsonOuptut($data);
     }  
 
     /**
@@ -95,14 +85,11 @@ class ServiciosController extends BaseController implements BaseInterface
     public function create(Request $request, $id = false)
     {
         $this->autofocus = 'name';
+        $this->passVarsToViews();
 
-        $this->view_data = [
-            'request' => $request,
-            'tax_types' => $this->tax_types,
-            'main_route' => $this->main_route,
-            'autofocus' => $this->autofocus,
-            'form_fields' => $this->form_fields
-        ];
+        $this->view_data['request'] = $request;
+        $this->view_data['tax_types'] = $this->tax_types;
+        $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::create($request, $id);  
     }
@@ -161,23 +148,20 @@ class ServiciosController extends BaseController implements BaseInterface
      * 
      *  @return json
      */
-    public function edit(Request $request, $id, $idcit = false)
+    public function edit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);
+
         $object = Servicios::find($id);
         $this->autofocus = 'name';
+        $this->passVarsToViews();
 
-        $this->view_data = [
-            'request' => $request,
-            'id' => $id,
-            'object' => $object,            
-            'tax_types' => $this->tax_types,
-            'main_route' => $this->main_route,
-            'autofocus' => $this->autofocus,
-            'form_fields' => $this->form_fields
-        ];
+        $this->view_data['request'] = $request;
+        $this->view_data['id'] = $id;
+        $this->view_data['object'] = $object;
+        $this->view_data['tax_types'] = $this->tax_types;
+        $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::edit($request, $id);  
     }

@@ -10,11 +10,10 @@ class MedioMiddleware
 {
     public function handle($request, Closure $next)
     {         
-        $tipo = Auth::user()->tipo;
+        $type = Auth::user()->type;
           
-        if ($tipo != 'medio') {
-            return redirect('/Ajustes');
-        }             
+        if ($type != 'medio')
+            return redirect('/Settings');       
         
         return $next($request);
     }

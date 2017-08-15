@@ -13,7 +13,7 @@
 <div class="row">
  <div class="col-sm-12">
   
-  	<form class="form" id="form" role="form" action="{!!url("/Empresa/saveData")!!}" method="post">
+  	<form class="form" id="form" role="form" action="{!!url("/$main_route/saveData")!!}" method="post">
 		{!! csrf_field() !!}
 		
 		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Nombre:</label>

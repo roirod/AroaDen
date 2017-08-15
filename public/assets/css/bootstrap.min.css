@@ -1365,7 +1365,7 @@ button,input,select,textarea{
 }
 
 a{
-	color: #FFF;
+	color: #E0E0E0;
 	text-decoration:none
 }
 
@@ -5274,7 +5274,7 @@ a.badge:focus,a.badge:hover{
 
 .jumbotron p{
 	margin-bottom:15px;
-	font-size:17px;
+	font-size:16px;
 	font-weight:200
 }
 
