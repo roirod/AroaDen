@@ -16,14 +16,34 @@ class Presup extends Model
         return $this->belongsTo('App\Models\Pacientes');
     }
 
-    public function scopeAllById($query, $id)
+    public static function scopeAllById($id)
     {
         return DB::table('presup')
                     ->join('servicios','presup.idser','=','servicios.idser')
                     ->select('presup.*','servicios.name')
                     ->where('presup.idpac', $id)
-                    ->orderBy('cod','ASC')
+                    ->orderBy('code','ASC')
                     ->get(); 
+    }
+
+    public static function AllByIdOrderByName($id, $code)
+    {
+        return DB::table('presup')
+                    ->join('servicios', 'presup.idser','=','servicios.idser')
+                    ->select('presup.*','servicios.name')
+                    ->where('idpac', $id)
+                    ->where('code', $code)
+                    ->orderBy('servicios.name' , 'ASC')
+                    ->get();  
+    }
+
+    public static function AllGroupByCode($id)
+    {
+        return DB::table('presup')
+                ->groupBy('code')
+                ->having('idpac', $id)
+                ->orderBy('code' , 'DESC')
+                ->get(); 
     }
 
 }

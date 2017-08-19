@@ -82,11 +82,18 @@ class Personal extends Model
                     ->get();
     }
 
-    public function scopeCheckIfExistsOnUpdate($query, $id, $dni)
+    public static function CheckIfExistsOnUpdate($id, $dni)
     {
-        return $query->where('dni', $dni)
+        $exists = DB::table('personal')
                         ->where('idper', '!=', $id)
+                        ->where('dni', $dni)
                         ->first();
+
+        if ( is_null($exists) ) {
+            return true;
+        }
+
+        return $exists;
     }
 
     public function scopeFindStringOnField($query, $busen, $busca)
@@ -94,14 +101,14 @@ class Personal extends Model
         return $query->select('idper', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
                         ->where($busen, 'LIKE', '%'.$busca.'%')
-                        ->orderBy('surname','ASC')
-                        ->orderBy('name','ASC')
+                        ->orderBy('surname', 'ASC')
+                        ->orderBy('name', 'ASC')
                         ->get();
     }
 
     public static function CountFindStringOnField($busen, $busca)
     {
-        $result = DB::table('pacientes')
+        $result = DB::table('personal')
                     ->where($busen, 'LIKE', '%'.$busca.'%')
                     ->get();
 

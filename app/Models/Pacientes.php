@@ -87,11 +87,18 @@ class Pacientes extends Model
                     ->get();
     }
 
-    public function scopeCheckIfExistsOnUpdate($query, $id, $dni)
+    public static function CheckIfExistsOnUpdate($id, $dni)
     {
-        return $query->where('dni', $dni)
+        $exists = DB::table('pacientes')
                         ->where('idpac', '!=', $id)
+                        ->where('dni', $dni)
                         ->first();
+
+        if ( is_null($exists) ) {
+            return true;
+        }
+
+        return $exists;
     }
 
     public function scopeFindStringOnField($query, $busen, $busca)

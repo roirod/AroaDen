@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Auth;
+use Lang;
 
 class AdminMiddleware
 {
@@ -11,9 +12,11 @@ class AdminMiddleware
     {    	  
     	$username = Auth::user()->username;
     	  
-    	if ( $username != 'admin' )
-	    	return redirect('/Settings');	  
-    	
+    	if ( $username != 'admin' ) {
+    		$request->session()->flash('error_message', Lang::get('aroaden.deny_access') );  
+	    	return redirect()->back(); 
+    	}
+
         return $next($request);       
     }
 }

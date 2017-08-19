@@ -34,6 +34,7 @@ return [
 
     'company' => 'Empresa',
 
+    'deny_access' => 'No tienes permisos para hacer esto.',
 
 
     'save'   => 'Guardar',

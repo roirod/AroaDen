@@ -81,6 +81,21 @@ class BaseController extends Controller
     protected $form_route = '';
 
     /**
+     * @var int $file_max_size  file_max_size in MB
+     */
+    protected $file_max_size = 1024 * 1024 * 3;
+
+    /**
+     * @var string $img_folder  img_folder
+     */
+    protected $img_folder = '/public/assets/img';
+
+    /**
+     * @var string $own_dir  own_dir
+     */
+    protected $own_dir = '';    
+
+    /**
      *  construct method
      */
     public function __construct()
@@ -182,7 +197,7 @@ class BaseController extends Controller
 
     protected function sanitizeData($data)
     {   
-        $data = htmlentities(trim($data),ENT_QUOTES,"UTF-8");
+        $data = htmlentities(trim($data), ENT_QUOTES, "UTF-8");
 
         return $data;
     }

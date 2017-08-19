@@ -41,7 +41,7 @@
   <form role="form" action="{!!url("/$main_route/upload")!!}" method="post" enctype="multipart/form-data">
   	  {!! csrf_field() !!}
 
-       <input type="hidden" name="idpac" value="{!!$id!!}">
+       <input type="hidden" name="id" value="{!!$id!!}">
        <input type="hidden" name="profile_photo" value="1">
   
   	  <div class="input-group">

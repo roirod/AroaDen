@@ -14,7 +14,7 @@
 		<span class="input-group-btn pad4">  <p> Ficha: </p> </span>
 		<div class="btn-toolbar" role="toolbar">
 		 <div class="btn-group">
-		    <a href="{!!url("/Pacientes/$idpac/fiedit")!!}" role="button" class="btn btn-sm btn-success">
+		    <a href="{!!url("/$main_route/$id/fiedit")!!}" role="button" class="btn btn-sm btn-success">
 		       <i class="fa fa-edit"></i> Editar
 		    </a>
 		 </div>	

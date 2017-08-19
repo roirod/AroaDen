@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+use Illuminate\Http\Request;
+use App\Interfaces\BaseInterface;
 use App\Models\Personal;
-
 use Carbon\Carbon;
+use DB;
 use Storage;
 use Validator;
-use Illuminate\Http\Request;
 use Lang;
-use App\Interfaces\BaseInterface;
 
 class PersonalController extends BaseController implements BaseInterface
 {
-    /**
-     * @var string $odogram  odogram
-     */
-    private $own_dir = 'perdir';
+    use DirFilesTrait;
 
     public function __construct()
     {
@@ -29,6 +25,7 @@ class PersonalController extends BaseController implements BaseInterface
         $this->other_route = 'Pacientes';        
         $this->views_folder = 'per';
         $this->form_route = 'list';
+        $this->own_dir = 'perdir';
         $this->files_dir = "app/".$this->own_dir;
 
         $fields = [
@@ -55,8 +52,6 @@ class PersonalController extends BaseController implements BaseInterface
 
         $this->page_title = Lang::get('aroaden.personal').' - '.$this->page_title;
 
-        $this->passVarsToViews();
-
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
         $this->view_data['count'] = $count;
@@ -67,10 +62,33 @@ class PersonalController extends BaseController implements BaseInterface
   
     public function list(Request $request)
     {                                    
-        $busca = $this->sanitizeData($request->input('busca'));
-        $busen = $this->sanitizeData($request->input('busen'));
+        $data = [];
 
-        $data = $this->getResults($busen, $busca);
+        $count = Personal::CountAll();
+
+        $data['main_loop'] = false;
+        $data['count'] = false;    
+        $data['msg'] = false; 
+
+        if ($count == 0) {
+   
+            $data['msg'] = Lang::get('aroaden.no_patients_on_db');
+
+        } else {
+
+            try {
+
+                $busca = $this->sanitizeData($request->input('busca'));
+                $busen = $this->sanitizeData($request->input('busen'));                
+
+                $data = $this->getItems($busen, $busca);
+
+            } catch (Exception $e) {
+    
+                $data['msg'] = $e->getMessage();
+
+            }
+        }
 
         $this->echoJsonOuptut($data);
     } 
@@ -80,7 +98,7 @@ class PersonalController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
           
-        $this->createDir($id);
+        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
 
         $personal = Personal::FirstById($id);
 
@@ -88,6 +106,11 @@ class PersonalController extends BaseController implements BaseInterface
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
             return redirect($this->main_route);
         }
+
+        $this->createDir($id);
+
+        $this->page_title = $personal->surname.', '.$personal->name.' - '.$this->page_title;
+        $this->passVarsToViews();
 
         $trabajos = Personal::ServicesById($id);
             
@@ -97,6 +120,8 @@ class PersonalController extends BaseController implements BaseInterface
         $this->view_data['id'] = $id;
         $this->view_data['idper'] = $personal->idper;        
         $this->view_data['other_route'] = $this->other_route;
+        $this->view_data['profile_photo'] = $profile_photo;
+        $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
         return view($this->views_folder.'.show', $this->view_data);       
     }
@@ -113,10 +138,10 @@ class PersonalController extends BaseController implements BaseInterface
     {
         $dni = $this->sanitizeData($request->input('dni'));
 
-        $person = Personal::FirstByDniDeleted($dni);
+        $exists = Personal::FirstByDniDeleted($dni);
    
-        if ($person != null) {
-            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->surname.', '.$person->name;
+        if ( isset($exists->dni) ) {
+            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$exists->surname.', '.$exists->name;
             $request->session()->flash($this->error_message_name, $messa);
             return redirect("/$this->main_route/create")->withInput();
         }
@@ -176,16 +201,16 @@ class PersonalController extends BaseController implements BaseInterface
         }      
     }
   
-    public function edit(Request $request, $id, $id2 = false)
+    public function edit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);
          
-        $personal = Personal::find($id); 
+        $object = Personal::find($id); 
+        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
 
         $this->view_data['request'] = $request;
-        $this->view_data['personal'] = $personal;
+        $this->view_data['object'] = $object;
         $this->view_data['id'] = $id;
 
         return parent::edit($request);
@@ -194,22 +219,19 @@ class PersonalController extends BaseController implements BaseInterface
     public function update(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);
-        $dni = $this->sanitizeData($request->input('dni'));
 
-        $person = Personal::find($id); 
-       
-        $exists = Personal::where('idper', '!=', $id)
-                        ->where('dni', $person->dni)
-                        ->first();
-              
-        if ($exists == null) {
-            $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$person->surname.', '.$person->name;
-            $request->session()->flash($this->error_message_name, $messa);
-            return redirect("/$this->main_route/$id/edit")->withInput();
+        $input_dni = $this->sanitizeData($request->input('dni'));
+
+        $person = Personal::FirstById($id);
+        $exists = Personal::CheckIfExistsOnUpdate($id, $input_dni);
+
+        if ( isset($exists->dni) ) {
+            $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+            $request->session()->flash($this->error_message_name, $msg);
+            return redirect("$this->main_route/$id/edit")->withInput();
         }
-
+              
         $validator = Validator::make($request->all(),[
             'name' => 'required|max:111',
             'surname' => 'required|max:111',
@@ -268,118 +290,28 @@ class PersonalController extends BaseController implements BaseInterface
     public function file(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);
 
         $this->createDir($id);
 
-        $files = Storage::files("/perdir/$id/");
-
+        $dir = "/$this->own_dir/$id";
+        $files = Storage::files($dir);
         $url = url("$this->main_route/$id");
-        
-        return view($this->views_folder.'.file', [
-          'request' => $request,
-          'idper' => $id,
-          'files' => $files,
-          'url' => $url
-        ]);
+
+        $object = Personal::find($id); 
+        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
+        $this->passVarsToViews();        
+
+        $this->view_data['request'] = $request;
+        $this->view_data['id'] = $id;
+        $this->view_data['idper'] = $id;
+        $this->view_data['files'] = $files;
+        $this->view_data['url'] = $url;
+        $this->view_data['profile_photo_name'] = $this->profile_photo_name;
+
+        return view($this->views_folder.'.file', $this->view_data);
     }
-
-    public function upload(Request $request)
-    {
-        $id = $request->input('idper');
-
-        $this->redirectIfIdIsNull($id, $this->main_route);
-
-        $id = $this->sanitizeData($id);
-
-        $perdir = storage_path("app/perdir/$id");
-         
-        $files = $request->file('files');
-          
-        $ficount = count($files);
-        $upcount = 0;
-
-        foreach ($files as $file) {                       
-            $filename = $file->getClientOriginalName();
-            $size = $file->getClientSize();
-
-            $max = 1024 * 1024 * 22;
-
-            $filedisk = storage_path("app/perdir/$id/$filename");
-
-            if ( $size > $max ) {
-                $mess = "El archivo: - $filename - es superior a 22 MB";
-                $request->session()->flash($this->error_message_name, $mess);
-                return redirect("/$this->main_route/$id/file");
-            }                
-
-            if ( file_exists($filedisk) ) {
-                $mess = "El archivo: $filename -- existe ya en su carpeta";
-                $request->session()->flash($this->error_message_name, $mess);
-                return redirect("/$this->main_route/$id/file");
-
-            } else {
-                $file->move($perdir, $filename);
-                $upcount ++;
-            }
-        }  
-        
-        if($upcount == $ficount){
-            return redirect("/$this->main_route/$id/file");
-        } else {
-            $request->session()->flash($this->error_message_name, 'error!!!');
-            return redirect("/$this->main_route/$id/file");
-        }
-    }
-    
-    public function download(Request $request, $id, $file)
-    {   
-        $this->redirectIfIdIsNull($id, $this->main_route);
-
-        $id = $this->sanitizeData($id);
-
-        $perdir = storage_path("app/perdir/$id");
-
-        $filedown = $perdir.'/'.$file;
-
-        return response()->download($filedown);
-    } 
-
-    public function filerem(Request $request)
-    {
-        $id = $request->input('idper');
-
-        $this->redirectIfIdIsNull($id, $this->main_route);
-
-        $id = $this->sanitizeData($id);     
-
-        $perdir = storage_path("app/perdir/$id");
-
-        $file = $request->input('filerem');
-
-        $filerem = $perdir.'/'.$file;
-          
-        unlink($filerem);   
-          
-        return redirect("/$this->main_route/$id/file");
-    }  
-   
-    public function del(Request $request, $id)
-    {
-        $this->redirectIfIdIsNull($idser, $this->main_route);
-
-        $id = $this->sanitizeData($id);
-
-        $personal = Personal::find($id);
-         
-        return view($this->views_folder.'.del', [
-          'request' => $request,
-          'personal' => $personal,
-          'idper' => $id
-        ]);
-    }
- 
+     
     public function destroy(Request $request, $id)
     {      
         $this->redirectIfIdIsNull($id, $this->main_route);
@@ -393,66 +325,27 @@ class PersonalController extends BaseController implements BaseInterface
         return redirect($this->main_route);
     }
 
-    public function createDir($id)
-    {               
-        $perdir = "/perdir/$id/";
 
-        if ( ! Storage::exists($perdir) ) { 
-            Storage::makeDirectory($perdir, 0770, true);
-        }
-
-        $thumbdir = $perdir.'/.thumbdir';
-
-        if ( ! Storage::exists($thumbdir) ) { 
-            Storage::makeDirectory($thumbdir, 0770, true);
-        }
-    }
-
-    private function getResults($busen, $busca)
-    {
-        $count = DB::table('personal')
-                    ->whereNull('deleted_at')
-                    ->count();
-
-        if ($count == 0) {
-            $data['main_loop'] = false;
-            $data['count'] = false;       
-            $data['msg'] = ' No hay personal en la base de datos. ';
-
-            return $data;
-        }
-
-        $main_loop = DB::table('personal')
-                    ->select('idper', 'surname', 'name', 'dni', 'tel1', 'position')
-                    ->whereNull('deleted_at')
-                    ->where($busen,'LIKE','%'.$busca.'%')
-                    ->orderBy('surname','ASC')
-                    ->orderBy('name','ASC')
-                    ->get();
-
-        $count = DB::table('personal')
-                    ->select('idper', 'surname', 'name', 'dni', 'tel1', 'position')
-                    ->whereNull('deleted_at')
-                    ->where($busen,'LIKE','%'.$busca.'%')
-                    ->count();      
-                    
-        return $this->getOutputData($main_loop, $count);
-    }
-
-    private function getOutputData($main_loop, $count)
+    public function getItems($busen, $busca)
     {
         $data = [];
 
+        $main_loop = Personal::FindStringOnField($busen, $busca);
+        $count = Personal::CountFindStringOnField($busen, $busca);
+
         if ($count == 0) {
-            $data['main_loop'] = false;
-            $data['count'] = false;       
-            $data['msg'] = ' No hay resultados. ';
+
+            throw new Exception( Lang::get('aroaden.no_query_results') );
+
         } else {
+
             $data['main_loop'] = $main_loop;
             $data['count'] = $count;        
             $data['msg'] = false;
+            return $data;
         }
 
-        return $data;
+        throw new Exception( Lang::get('aroaden.db_query_error') );
     }
+
 }

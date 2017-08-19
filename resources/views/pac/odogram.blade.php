@@ -13,15 +13,15 @@
   	 	<span class="input-group-btn pad4"> Odontograma: &nbsp; </span>
   		<div class="btn-toolbar pad4" role="toolbar">
   			<div class="btn-group">
-  				<a href="{!! url("/Pacientes/$idpac/downodog") !!}" class="btn btn-sm btn-primary" role="button"> 
+  				<a href="{!! url("/$main_route/$id/downodog") !!}" class="btn btn-sm btn-primary" role="button"> 
          		<i class="fa fa-download" aria-hidden="true"></i> Descargar
             </a>
          </div>
          <div class="btn-group">
-         	<form role="form" class="form" action="{!!url("/Pacientes/resodog")!!}" method="post">
+         	<form role="form" class="form" action="{!!url("/$main_route/resodog")!!}" method="post">
               {!! csrf_field() !!}
 
-           		<input type="hidden" name="idpac" value="{!!$idpac!!}">
+           		<input type="hidden" name="id" value="{!!$id!!}">
            		<input type="hidden" name="resodog" value="1">
 
            		<button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -36,10 +36,10 @@
   </div> </div> </div> </div>
 
 <div class="row pad10">
-  <form role="form" action="{!!url('/Pacientes/upodog')!!}" method="post" enctype="multipart/form-data">
+  <form role="form" action="{!!url("/$main_route/upodog")!!}" method="post" enctype="multipart/form-data">
   	  {!! csrf_field() !!}
 
-       <input type="hidden" name="idpac" value="{!!$idpac!!}">
+      <input type="hidden" name="id" value="{!!$id!!}">
   
   	  <div class="input-group">
   	    <span class="input-group-btn pad4"> 

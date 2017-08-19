@@ -19,187 +19,132 @@ class PresupuestosController extends BaseController
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Presup';
+        $this->other_route = 'Pacientes';
+        $this->views_folder = 'presup';
     }
 
     public function create(Request $request, $id = false)
     {     
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($id, $this->other_route);
+        $id = $this->sanitizeData($id);
         
-        $pacientes = pacientes::find($idpac);
+        $paciente = Pacientes::FirstById($id);
+        $servicios = Servicios::AllOrderByName();        
 
-        $servicios = servicios::all();        
+        $code = date('Y-m-d H:i:s');
 
-        $cod = date('Y-m-d H:i:s');
+        $nueurl = url("/$this->main_route");
+        $delurl = url("/$this->main_route/delid");
 
-        $nueurl = url('/Presup');
-        $delurl = url('/Presup/delid');
+        $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
 
-        $apepac = $pacientes->apepac;
-        $nompac = $pacientes->nompac;
+        $this->view_data['request'] = $request;
+        $this->view_data['code'] = $code;
+        $this->view_data['nueurl'] = $nueurl;
+        $this->view_data['delurl'] = $delurl;
+        $this->view_data['servicios'] = $servicios;
+        $this->view_data['id'] = $id;
+        $this->view_data['idpac'] = $id;        
+        $this->view_data['name'] = $paciente->name;
+        $this->view_data['surname'] = $paciente->surname;
 
-        return view('presup.create', [
-            'request' => $request,
-            'cod' => $cod,
-            'nueurl' => $nueurl,
-            'delurl' => $delurl,
-            'servicios' => $servicios,
-            'idpac' => $idpac,
-            'apepac' => $apepac,
-            'nompac' => $nompac
-        ]);
+        return parent::create($request, $id);
     }
 
     public function store(Request $request)
     {
-        $idpac = htmlentities (trim( $request->input('idpac')),ENT_QUOTES,"UTF-8");
-        $idser = htmlentities (trim( $request->input('idser')),ENT_QUOTES,"UTF-8");
-        $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
-        $canti = htmlentities (trim( $request->input('canti')),ENT_QUOTES,"UTF-8");
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");
-        $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");            
-
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }         
-          
-        $validator = Validator::make($request->all(), [
-            'idpac' => 'required',
-            'idser' => 'required',
-            'precio' => 'required',
-            'canti' => 'required',
-            'cod' => 'required',
-            'iva' => 'required',            
+        $idpac = $this->sanitizeData($request->input('idpac'));
+        $idser = $this->sanitizeData($request->input('idser'));
+        $price = $this->sanitizeData($request->input('price'));
+        $units = $this->sanitizeData($request->input('units'));
+        $code = $this->sanitizeData($request->input('code'));
+        $tax = $this->sanitizeData($request->input('tax'));
+                     
+        Presup::create([
+            'idpac' => $idpac,
+            'idser' => $idser,
+            'price' => $price,
+            'units' => $units,
+            'code' => $code,
+            'tax' => $tax,
+            'created_at' => date('Y-m-d H:i:s')                
         ]);
-            
-        if ($validator->fails()) {
-            return redirect("/Presup/$idpac/create")
-                         ->withErrors($validator)
-                         ->withInput();
-        } else {
-                
-            presup::create([
+
+        $prestex = Prestex::FirstById($id, $code);
+
+        if (is_null($prestex)) {                 
+            Prestex::create([
                 'idpac' => $idpac,
-                'idser' => $idser,
-                'precio' => $precio,
-                'canti' => $canti,
-                'cod' => $cod,
-                'iva' => $iva,
+                'code' => $code
             ]);
+        }
 
-            $presup = DB::table('presup')
-                    ->join('servicios', 'presup.idser','=','servicios.idser')
-                    ->select('presup.*','servicios.nomser')
-                    ->where('idpac', $idpac)
-                    ->where('cod', $cod)
-                    ->orderBy('nomser' , 'ASC')
-                    ->get();  
+        $presup = Presup::AllByIdOrderByName($idpac, $code);
 
-            $cadena = '';
+        $cadena = '';
 
-            foreach ($presup as $presu) {
+        foreach ($presup as $presu) {
 
-                $cadena .= '<tr>
-                                <td class="wid140">'.$presu->nomser.'</td>
-                                <td class="wid95 textcent">'.$presu->canti.'</td>
-                                <td class="wid95 textcent">'.$presu->precio.' €</td>
+            $cadena .= '
+                <tr>
+                    <td class="wid140">'.$presu->nomser.'</td>
+                    <td class="wid95 textcent">'.$presu->canti.'</td>
+                    <td class="wid95 textcent">'.$presu->precio.' €</td>
 
-                                <td class="wid50">
+                    <td class="wid50">
 
-                                  <form id="delform">
-                                  
-                                    <input type="hidden" name="idpre" value="'.$presu->idpre.'">
-                                    <input type="hidden" name="cod" value="'.$cod.'">
+                      <form id="delform">
+                      
+                        <input type="hidden" name="idpre" value="'.$presu->idpre.'">
+                        <input type="hidden" name="code" value="'.$code.'">
 
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-times"></i>  <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                          <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
-                                        </ul> 
-                                    </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-times"></i>  <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
+                            </ul> 
+                        </div>
 
-                                  </form>   
-                                </td>
+                      </form>   
+                    </td>
 
-                                <td class="wid230"> </td>                            
-                            </tr> ';
-            }
-                             
-            return $cadena;
-        }     
+                    <td class="wid230"> </td>                            
+                </tr> 
+            ';
+        }
+                         
+        return $cadena;     
     }
 
     public function show(Request $request, $id)
     {
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }
+        $this->redirectIfIdIsNull($id, $this->other_route);
+        $id = $this->sanitizeData($id);
 
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
-                               
-        $presup = DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('idpac', $idpac)
-                ->orderBy('cod' , 'DESC')
-                ->get();  
+        $presup = Presup::AllById($id, $code);
+        $presgroup = Presup::AllGroupByCode($id);
 
-        $presgroup = DB::table('presup')
-                ->groupBy('cod')
-                ->having('idpac','=',$idpac)
-                ->orderBy('cod' , 'DESC')
-                ->get(); 
+        $this->view_data['request'] = $request;
+        $this->view_data['presup'] = $presup;
+        $this->view_data['presgroup'] = $presgroup;
+        $this->view_data['id'] = $id;
+        $this->view_data['idpac'] = $id;        
 
-        return view('presup.show', [
-            'request' => $request,
-            'presup' => $presup,
-            'presgroup' => $presgroup,
-            'idpac' => $idpac
-        ]);       
+        return view($this->views_folder.'.show', $this->view_data);   
     }
 
     public function presuedit(Request $request)
     {
-        $idpac = htmlentities (trim( $request->input('idpac')),ENT_QUOTES,"UTF-8");
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");          
+        $idpac = $this->sanitizeData($request->input('idpac'));
+        $code = $this->sanitizeData($request->input('code'));     
 
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }   
+        $prestex = Prestex::FirstById($id, $code);
 
-        if ( null == $cod ) {
-            return redirect('Pacientes');
-        }
-
-        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->first();
-
-        if (is_null($prestex)) {
-
-            $validator = Validator::make($request->all(),[
-                'idpac' => 'required',
-                'cod' => 'required',
-                'texto' => ''
-            ]);
-                    
-            if ($validator->fails()) {
-                return redirect('Servicios/create')
-                             ->withErrors($validator)
-                             ->withInput();
-             } else {
-                    
-                prestex::create([
-                    'idpac' => $idpac,
-                    'cod' => $cod
-                ]);
-            }   
-        }
-
-        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->first();
-
-        $delurl = url('/Presup/delid');
+        $delurl = url("/$this->main_route/delid");
 
         $presup = DB::table('presup')
                 ->join('servicios', 'presup.idser','=','servicios.idser')

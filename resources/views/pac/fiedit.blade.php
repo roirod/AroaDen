@@ -12,7 +12,7 @@
 
 <div class="row">
  <div class="col-sm-12">
-  	<form class="form" id="form" role="form" action="{!!url("/Pacientes/$idpac/fisave")!!}" method="POST">
+  	<form class="form" id="form" role="form" action="{!!url("/$main_route/$id/fisave")!!}" method="POST">
 		{!! csrf_field() !!}
 		<input type="hidden" name="_method" value="PUT">
 
