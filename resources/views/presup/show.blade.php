@@ -11,9 +11,9 @@
   <div class="col-sm-12"> 
  	 <div class="input-group">
    	<span class="input-group-btn pad10"> <p> Presupuesto: </p> </span>
-  		<div class="btn-toolbar pad10" role="toolbar"> 
+  		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
-	      		<a href="{!!url("/Presup/$idpac/create")!!}" role="button" class="btn btn-sm btn-primary">
+	      		<a href="{!!url("/$main_route/$idpac/create")!!}" role="button" class="btn btn-sm btn-primary">
 	          		<i class="fa fa-plus"></i> Nuevo
 	       		</a>
        		</div>
@@ -86,7 +86,7 @@
 
 <div class="row">
   	<div class="col-sm-12"> 
-		<form role="form" id="form" class="form" action="{!!url('/Presup/presuedit')!!}" method="post">
+		<form role="form" id="form" class="form" action="{!!url("/$main_route/presuedit")!!}" method="post">
 			{!! csrf_field() !!}
 
 			<input type="hidden" name="idpac" value="{!!$idpac!!}">	

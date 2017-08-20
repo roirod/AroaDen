@@ -11,7 +11,7 @@
  <div class="col-sm-12"> 
 	<div class="input-group"> 
 	<span class="input-group-btn pad10">  <p> Paciente: </p> </span>
-	<div class="btn-toolbar pad10" role="toolbar">
+	<div class="btn-toolbar pad4" role="toolbar">
 	 <div class="btn-group">
 	    <a href="{!!url("/$main_route/$id/edit")!!}" role="button" class="btn btn-sm btn-success">
 	       <i class="fa fa-edit"></i> Editar

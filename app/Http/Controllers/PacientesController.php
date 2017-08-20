@@ -36,7 +36,7 @@ class PacientesController extends BaseController implements BaseInterface
     /**
      * 
      */
-    public function __construct()
+    public function __construct(Pacientes $pacientes)
     {
         parent::__construct();
 
@@ -46,7 +46,8 @@ class PacientesController extends BaseController implements BaseInterface
         $this->form_route = 'list';        
         $this->views_folder = 'pac';
         $this->own_dir = 'pacdir';
-        $this->files_dir = "app/".$this->own_dir;      
+        $this->files_dir = "app/".$this->own_dir;
+        $this->model = $pacientes;
 
         $fields = [
             'surname' => true,
@@ -68,8 +69,8 @@ class PacientesController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {  	
-        $main_loop = Pacientes::AllOrderBySurname($this->num_paginate);
-        $count = Pacientes::CountAll();
+        $main_loop = $this->model::AllOrderBySurname($this->num_paginate);
+        $count = $this->model::CountAll();
 
         $this->page_title = Lang::get('aroaden.patients').' - '.$this->page_title;
 
@@ -85,7 +86,7 @@ class PacientesController extends BaseController implements BaseInterface
     {   
         $data = [];
 
-        $count = Pacientes::CountAll();
+        $count = $this->model::CountAll();
 
         $data['main_loop'] = false;
         $data['count'] = false;    
@@ -123,16 +124,16 @@ class PacientesController extends BaseController implements BaseInterface
 
         $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
 
-        $paciente = Pacientes::FirstById($id);
+        $paciente = $this->model::FirstById($id);
 
         if ( !isset($paciente->idpac) ) {
             $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_patient_or_deleted'));    
             return redirect($this->main_route);
         }
 
-        $citas = Pacientes::AllCitasById($id);
+        $citas = $this->model::AllCitasById($id);
         $tratampacien = Tratampacien::ServicesById($id);
-        $suma = Pacientes::ServicesSumById($id);
+        $suma = $this->model::ServicesSumById($id);
 
 	  	$birth = trim($paciente->birth);
 
@@ -178,7 +179,7 @@ class PacientesController extends BaseController implements BaseInterface
     {        
         $dni = $this->sanitizeData($request->input('dni'));
     
-        $exists = Pacientes::FirstByDniDeleted($dni);
+        $exists = $this->model::FirstByDniDeleted($dni);
 
         if ( isset($exists->dni) ) {
             $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
@@ -212,7 +213,7 @@ class PacientesController extends BaseController implements BaseInterface
         	$city = ucfirst(strtolower( $request->input('city') ) );
             $notes = ucfirst(strtolower( $request->input('notes') ) );
               
-            $insertGetId = Pacientes::insertGetId([
+            $insertGetId = $this->model::insertGetId([
 	          'name' => $this->sanitizeData($name),
 	          'surname' => $this->sanitizeData($surname),
 	          'dni' => $this->sanitizeData($request->input('dni')),
@@ -242,7 +243,7 @@ class PacientesController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $object = Pacientes::find($id);
+        $object = $this->model::FirstById($id);
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
 
         $this->view_data['request'] = $request;
@@ -261,8 +262,8 @@ class PacientesController extends BaseController implements BaseInterface
 
         $input_dni = $this->sanitizeData($request->input('dni'));
 
-        $patient = Pacientes::find($id);
-        $exists = Pacientes::CheckIfExistsOnUpdate($id, $input_dni);
+        $patient = $this->model::FirstById($id);
+        $exists = $this->model::CheckIfExistsOnUpdate($id, $input_dni);
 
         if ( isset($exists->dni) ) {
             $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
@@ -332,7 +333,7 @@ class PacientesController extends BaseController implements BaseInterface
             return redirect("$this->main_route/$id/ficha");
         }
 
-        $object = Pacientes::FirstById($id);
+        $object = $this->model::FirstById($id);
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->passVarsToViews(); 
 
@@ -350,7 +351,7 @@ class PacientesController extends BaseController implements BaseInterface
         $id = $this->sanitizeData($id);
         $ficha = ficha::find($id);
 
-        $object = Pacientes::FirstById($id);
+        $object = $this->model::FirstById($id);
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->passVarsToViews(); 
 
@@ -365,7 +366,6 @@ class PacientesController extends BaseController implements BaseInterface
     public function fisave(Request $request, $id)
     {   
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);     
        
         $ficha = ficha::find($id);
@@ -392,7 +392,6 @@ class PacientesController extends BaseController implements BaseInterface
     public function file(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
     	$id = $this->sanitizeData($id);
         $this->createDir($id, true);
 
@@ -400,7 +399,7 @@ class PacientesController extends BaseController implements BaseInterface
         $files = Storage::files($dir);
         $url = url("$this->main_route/$id");
 
-        $object = Pacientes::FirstById($id);
+        $object = $this->model::FirstById($id);
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->passVarsToViews();      
 
@@ -421,7 +420,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $odogram = "/$this->files_dir/$id/$this->odog_dir/$this->odogram";
 
-        $object = Pacientes::FirstById($id);
+        $object = $this->model::FirstById($id);
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->passVarsToViews();  
 
@@ -444,6 +443,7 @@ class PacientesController extends BaseController implements BaseInterface
             $upodog = $request->file('upodog');
 
             $this->redirectIfIdIsNull($id, $this->main_route);
+            $id = $this->sanitizeData($id);
 
             $extension = $request->file('upodog')->getClientOriginalExtension();
 
@@ -451,8 +451,6 @@ class PacientesController extends BaseController implements BaseInterface
                 $request->session()->flash($this->error_message_name, 'No es una imagen jpg');
                 return redirect("$this->main_route/$id/odogram");
             } 
-
-            $id = $this->sanitizeData($id);
 
             $odogram = storage_path("$this->files_dir/$id")."/$this->odog_dir/";
 
@@ -506,12 +504,11 @@ class PacientesController extends BaseController implements BaseInterface
     public function presup(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);
 
         $presup = Presup::AllById($query, $id);
 
-        $object = Pacientes::FirstById($id);
+        $object = $this->model::FirstById($id);
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->passVarsToViews(); 
 
@@ -525,11 +522,10 @@ class PacientesController extends BaseController implements BaseInterface
 
     public function destroy(Request $request, $id)
     {             	
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        
+        $this->redirectIfIdIsNull($id, $this->main_route); 
         $id = $this->sanitizeData($id);
         
-        Pacientes::destroy($id);
+        $this->model::destroy($id);
       
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
@@ -540,8 +536,8 @@ class PacientesController extends BaseController implements BaseInterface
     {
         $data = [];
 
-        $main_loop = Pacientes::FindStringOnField($busen, $busca);
-        $count = Pacientes::CountFindStringOnField($busen, $busca);
+        $main_loop = $this->model::FindStringOnField($busen, $busca);
+        $count = $this->model::CountFindStringOnField($busen, $busca);
 
         if ($count == 0) {
 

@@ -10,12 +10,13 @@ use DB;
 use Storage;
 use Validator;
 use Lang;
+use Exception;
 
 class PersonalController extends BaseController implements BaseInterface
 {
     use DirFilesTrait;
 
-    public function __construct()
+    public function __construct(Personal $personal)
     {
         parent::__construct();
 
@@ -27,6 +28,7 @@ class PersonalController extends BaseController implements BaseInterface
         $this->form_route = 'list';
         $this->own_dir = 'perdir';
         $this->files_dir = "app/".$this->own_dir;
+        $this->model = $personal;
 
         $fields = [
             'surname' => true,
@@ -47,10 +49,10 @@ class PersonalController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {   
-        $main_loop = Personal::AllOrderBySurname($this->num_paginate);
-        $count = Personal::CountAll();
+        $main_loop = $this->model::AllOrderBySurname($this->num_paginate);
+        $count = $this->model::CountAll();
 
-        $this->page_title = Lang::get('aroaden.personal').' - '.$this->page_title;
+        $this->page_title = Lang::get('aroaden.staff').' - '.$this->page_title;
 
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
@@ -64,7 +66,7 @@ class PersonalController extends BaseController implements BaseInterface
     {                                    
         $data = [];
 
-        $count = Personal::CountAll();
+        $count = $this->model::CountAll();
 
         $data['main_loop'] = false;
         $data['count'] = false;    
@@ -72,7 +74,7 @@ class PersonalController extends BaseController implements BaseInterface
 
         if ($count == 0) {
    
-            $data['msg'] = Lang::get('aroaden.no_patients_on_db');
+            $data['msg'] = Lang::get('aroaden.no_staff_on_db');
 
         } else {
 
@@ -100,7 +102,7 @@ class PersonalController extends BaseController implements BaseInterface
           
         $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
 
-        $personal = Personal::FirstById($id);
+        $personal = $this->model::FirstById($id);
 
         if (is_null($personal)) {
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
@@ -112,7 +114,7 @@ class PersonalController extends BaseController implements BaseInterface
         $this->page_title = $personal->surname.', '.$personal->name.' - '.$this->page_title;
         $this->passVarsToViews();
 
-        $trabajos = Personal::ServicesById($id);
+        $trabajos = $this->model::ServicesById($id);
             
         $this->view_data['request'] = $request;
         $this->view_data['personal'] = $personal;
@@ -138,7 +140,7 @@ class PersonalController extends BaseController implements BaseInterface
     {
         $dni = $this->sanitizeData($request->input('dni'));
 
-        $exists = Personal::FirstByDniDeleted($dni);
+        $exists = $this->model::FirstByDniDeleted($dni);
    
         if ( isset($exists->dni) ) {
             $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$exists->surname.', '.$exists->name;
@@ -182,7 +184,7 @@ class PersonalController extends BaseController implements BaseInterface
             $birth = $this->sanitizeData($request->input('birth'));
             $notes = $this->sanitizeData($notes);
                         
-            Personal::create([
+            $this->model::create([
               'name' => $name,
               'surname' => $surname,
               'dni' => $dni,
@@ -206,7 +208,7 @@ class PersonalController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
          
-        $object = Personal::find($id); 
+        $object = $this->model::FirstById($id); 
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
 
         $this->view_data['request'] = $request;
@@ -223,8 +225,8 @@ class PersonalController extends BaseController implements BaseInterface
 
         $input_dni = $this->sanitizeData($request->input('dni'));
 
-        $person = Personal::FirstById($id);
-        $exists = Personal::CheckIfExistsOnUpdate($id, $input_dni);
+        $person = $this->model::FirstById($id);
+        $exists = $this->model::CheckIfExistsOnUpdate($id, $input_dni);
 
         if ( isset($exists->dni) ) {
             $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
@@ -260,7 +262,7 @@ class PersonalController extends BaseController implements BaseInterface
           
             $id = $this->sanitizeData($id);
             
-            $personal = Personal::find($id);
+            $personal = $this->model::FirstById($id);
                     
             $name = ucfirst(strtolower( $request->input('name') ) );
             $surname = ucwords(strtolower( $request->input('surname') ) );
@@ -298,7 +300,7 @@ class PersonalController extends BaseController implements BaseInterface
         $files = Storage::files($dir);
         $url = url("$this->main_route/$id");
 
-        $object = Personal::find($id); 
+        $object = $this->model::FirstById($id); 
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->passVarsToViews();        
 
@@ -315,10 +317,9 @@ class PersonalController extends BaseController implements BaseInterface
     public function destroy(Request $request, $id)
     {      
         $this->redirectIfIdIsNull($id, $this->main_route);
-
         $id = $this->sanitizeData($id);    
         
-        Personal::destroy($id);     
+        $this->model::destroy($id);     
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
@@ -330,8 +331,8 @@ class PersonalController extends BaseController implements BaseInterface
     {
         $data = [];
 
-        $main_loop = Personal::FindStringOnField($busen, $busca);
-        $count = Personal::CountFindStringOnField($busen, $busca);
+        $main_loop = $this->model::FindStringOnField($busen, $busca);
+        $count = $this->model::CountFindStringOnField($busen, $busca);
 
         if ($count == 0) {
 

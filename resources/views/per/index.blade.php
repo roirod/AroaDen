@@ -137,16 +137,18 @@
 				function runApp(event) {
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-						$('#item_list').html(buscando);
+				    	var wait = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
+						$('#item_list').html(wait);
 
 					    var data = $("form").serialize();
 		     
 					    $.ajax({
+
 					        type : 'POST',
 					        url  : '/{!! $main_route !!}/{!! $form_route !!}',
 					        dataType: "json",
 					        data : data,     
+
 					    }).done(function(response) {
 					    	var html = '';
 
@@ -171,7 +173,7 @@
 					    		html += '  <div class="box400">';
 					    		html += '    <table class="table table-hover">';
 
-	   							$.each(response.personal, function(index, object){			
+	   							$.each(response.main_loop, function(index, object){			
 						    		html += '  <tr>';
 						    		html += '    <td class="wid50">';
 						    		html += '      <a href="/{!! $main_route !!}/'+object.idper+'" target="_blank" class="btn btn-default" role="button">';
@@ -180,7 +182,7 @@
 						    		html += '    </td>';
 						    		html += '    <td class="wid290">';
 						    		html += '      <a href="/{!! $main_route !!}/'+object.idper+'" class="pad4" target="_blank">';
-						    		html += 		  object.surname + ' ' + object.name;
+						    		html += 		  object.surname + ', ' + object.name;
 						    		html += '      </a>';
 						    		html += '    </td>';
 						    		html += '    <td class="wid110">' + object.dni + '</td>';

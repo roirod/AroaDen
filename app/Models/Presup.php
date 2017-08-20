@@ -16,7 +16,7 @@ class Presup extends Model
         return $this->belongsTo('App\Models\Pacientes');
     }
 
-    public static function scopeAllById($id)
+    public static function AllById($id)
     {
         return DB::table('presup')
                     ->join('servicios','presup.idser','=','servicios.idser')
@@ -41,7 +41,7 @@ class Presup extends Model
     {
         return DB::table('presup')
                 ->groupBy('code')
-                ->having('idpac', $id)
+                ->having('idpac','=', $id)
                 ->orderBy('code' , 'DESC')
                 ->get(); 
     }

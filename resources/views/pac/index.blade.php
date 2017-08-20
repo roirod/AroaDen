@@ -145,8 +145,8 @@
 				function runApp(event) {
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-						$('#item_list').html(buscando);
+				    	var wait = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
+						$('#item_list').html(wait);
 
 					    var data = $("form").serialize();
 		     

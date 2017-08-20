@@ -12,7 +12,7 @@
 		<div class="input-group pad4"> <span class="input-group-btn pad4"> <p> Servicio:</p> </span>
 			<div class="col-sm-3">
 				<span class="input-group-btn">
-					<a href="/Servicios/create" role="button" class="btn btn-sm btn-primary">
+					<a href="/{!! $main_route !!}/create" role="button" class="btn btn-sm btn-primary">
 						<i class="fa fa-plus"></i> Nuevo
 					</a> 
 				</span>
@@ -70,14 +70,14 @@
 						  <td class="wid95 textcent">{{$servicio->tax}} %</td>
 
 						  <td class="wid50">
-						  	<a class="btn btn-xs btn-success" type="button" href="{{url("Servicios/$servicio->idser/edit")}}">
+						  	<a class="btn btn-xs btn-success" type="button" href="{{url("/$main_route/$servicio->idser/edit")}}">
 						  		<i class="fa fa-edit"></i>
 						  	</a>
 						  </td>
 						  
 						  <td class="wid50"> 
 						    <div class="btn-group"> 
-						    	<form role="form" class="form" id="form" role="form" action="{!!url("/Servicios/$servicio->idser")!!}" method="POST">		
+						    	<form role="form" class="form" id="form" role="form" action="{!!url("/$main_route/$servicio->idser")!!}" method="POST">		
 							  		{!! csrf_field() !!}
 
 									<input type="hidden" name="_method" value="DELETE">
@@ -107,6 +107,7 @@
 
 @endsection
 
+
 @section('footer_script')
 
 	<script>
@@ -133,8 +134,8 @@
 				function runApp(event) {
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-				    	var buscando = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
-						$('#item_list').html(buscando);
+				    	var wait = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
+						$('#item_list').html(wait);
 
 					    var data = $("form").serialize();
 		     
@@ -187,7 +188,8 @@
 						    		html += '            <i class="fa fa-times"></i> <span class="caret"></span>  </button>';
 						    		html += '             <ul class="dropdown-menu" role="menu">';
 						    		html += '               <li>';
-						    		html += '                  <button onclick="showAlert(); return false;" class="btn btn-sm btn-danger"> <i class="fa fa-times"></i> Eliminar </button>';
+						    		html += '					<button type="submit" class="btn btn-sm btn-danger del_btn">';
+						    		html += '						<i class="fa fa-times"></i> Eliminar </button>';
 						    		html += '               </li>';
 						    		html += '             </ul>';
 						    		html += '         </form>';

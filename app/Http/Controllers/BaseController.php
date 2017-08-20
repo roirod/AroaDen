@@ -96,6 +96,11 @@ class BaseController extends Controller
     protected $own_dir = '';    
 
     /**
+     * @var object $model  model
+     */
+    protected $model;    
+
+    /**
      *  construct method
      */
     public function __construct()

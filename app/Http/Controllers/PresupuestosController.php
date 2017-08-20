@@ -14,37 +14,37 @@ use App\Http\Requests;
 
 class PresupuestosController extends BaseController
 {
-    public function __construct()
+    public function __construct(Presup $presup)
     {
-        parent::__construct();
-
         $this->middleware('auth');
 
         $this->main_route = 'Presup';
         $this->other_route = 'Pacientes';
         $this->views_folder = 'presup';
+        $this->model = $presup;
+
+        parent::__construct();
     }
 
     public function create(Request $request, $id = false)
     {     
         $this->redirectIfIdIsNull($id, $this->other_route);
         $id = $this->sanitizeData($id);
-        
-        $paciente = Pacientes::FirstById($id);
-        $servicios = Servicios::AllOrderByName();        
+
+        $main_loop = Servicios::AllOrderByName();        
 
         $code = date('Y-m-d H:i:s');
-
         $nueurl = url("/$this->main_route");
         $delurl = url("/$this->main_route/delid");
 
+        $paciente = Pacientes::FirstById($id);
         $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
 
         $this->view_data['request'] = $request;
         $this->view_data['code'] = $code;
         $this->view_data['nueurl'] = $nueurl;
         $this->view_data['delurl'] = $delurl;
-        $this->view_data['servicios'] = $servicios;
+        $this->view_data['main_loop'] = $main_loop;
         $this->view_data['id'] = $id;
         $this->view_data['idpac'] = $id;        
         $this->view_data['name'] = $paciente->name;
@@ -62,7 +62,7 @@ class PresupuestosController extends BaseController
         $code = $this->sanitizeData($request->input('code'));
         $tax = $this->sanitizeData($request->input('tax'));
                      
-        Presup::create([
+        $this->model::create([
             'idpac' => $idpac,
             'idser' => $idser,
             'price' => $price,
@@ -72,7 +72,7 @@ class PresupuestosController extends BaseController
             'created_at' => date('Y-m-d H:i:s')                
         ]);
 
-        $prestex = Prestex::FirstById($id, $code);
+        $prestex = Prestex::FirstById($idpac, $code);
 
         if (is_null($prestex)) {                 
             Prestex::create([
@@ -81,7 +81,7 @@ class PresupuestosController extends BaseController
             ]);
         }
 
-        $presup = Presup::AllByIdOrderByName($idpac, $code);
+        $presup = $this->model::AllByIdOrderByName($idpac, $code);
 
         $cadena = '';
 
@@ -89,9 +89,9 @@ class PresupuestosController extends BaseController
 
             $cadena .= '
                 <tr>
-                    <td class="wid140">'.$presu->nomser.'</td>
-                    <td class="wid95 textcent">'.$presu->canti.'</td>
-                    <td class="wid95 textcent">'.$presu->precio.' €</td>
+                    <td class="wid140">'.$presu->name.'</td>
+                    <td class="wid95 textcent">'.$presu->units.'</td>
+                    <td class="wid95 textcent">'.$presu->price.' €</td>
 
                     <td class="wid50">
 
@@ -125,8 +125,8 @@ class PresupuestosController extends BaseController
         $this->redirectIfIdIsNull($id, $this->other_route);
         $id = $this->sanitizeData($id);
 
-        $presup = Presup::AllById($id, $code);
-        $presgroup = Presup::AllGroupByCode($id);
+        $presup = $this->model::AllById($id);
+        $presgroup = $this->model::AllGroupByCode($id);
 
         $this->view_data['request'] = $request;
         $this->view_data['presup'] = $presup;
@@ -139,7 +139,7 @@ class PresupuestosController extends BaseController
 
     public function presuedit(Request $request)
     {
-        $idpac = $this->sanitizeData($request->input('idpac'));
+        $id = $this->sanitizeData($request->input('idpac'));
         $code = $this->sanitizeData($request->input('code'));     
 
         $prestex = Prestex::FirstById($id, $code);
@@ -148,16 +148,16 @@ class PresupuestosController extends BaseController
 
         $presup = DB::table('presup')
                 ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('cod', $cod)
-                ->orderBy('servicios.nomser' , 'ASC')
+                ->select('presup.*','servicios.name')
+                ->where('code', $code)
+                ->orderBy('servicios.name' , 'ASC')
                 ->get();
 
         return view('presup.edit', [
             'request' => $request,
             'presup' => $presup,
             'delurl' => $delurl,
-            'cod' => $cod,
+            'code' => $code,
             'idpac' => $idpac,
             'prestex' => $prestex
         ]);        
@@ -165,41 +165,41 @@ class PresupuestosController extends BaseController
 
     public function presmod(Request $request)
     {
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8"); 
+        $code = htmlentities (trim( $request->input('code')),ENT_QUOTES,"UTF-8"); 
 
         $presmod = $request->input('presmod');
 
         $texto = htmlentities (trim( $request->input('texto')),ENT_QUOTES,"UTF-8");
 
-        if ( null == $cod ) {
+        if ( null == $code ) {
             return redirect('Pacientes');
         }
 
-        $prestex = prestex::where('cod', $cod)->first();
+        $prestex = prestex::where('code', $code)->first();
 
         $prestex->texto = $texto;            
         $prestex->save();
 
         $presup = DB::table('presup')
                 ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('cod', $cod)
-                ->orderBy('servicios.nomser' , 'ASC')
+                ->select('presup.*','servicios.name')
+                ->where('code', $code)
+                ->orderBy('servicios.name' , 'ASC')
                 ->get();
 
         $totiva = DB::table('presup')
-                ->selectRaw('SUM((canti*precio*iva)/100) AS tot')
-                ->where('cod', $cod)
+                ->selectRaw('SUM((units*price*iva)/100) AS tot')
+                ->where('code', $code)
                 ->get();
 
         $siniva = DB::table('presup')
-                ->selectRaw('SUM(canti*precio)-SUM((canti*precio*iva)/100) AS tot')
-                ->where('cod', $cod)
+                ->selectRaw('SUM(units*price)-SUM((units*price*iva)/100) AS tot')
+                ->where('code', $code)
                 ->get();                
 
         $sumtot = DB::table('presup')
-                ->selectRaw('SUM(canti*precio) AS tot')
-                ->where('cod', $cod)
+                ->selectRaw('SUM(units*price) AS tot')
+                ->where('code', $code)
                 ->get();                
 
         $empre = DB::table('empre')->where('id','1')->first();
@@ -208,7 +208,7 @@ class PresupuestosController extends BaseController
 
             return view('presup.imp', [
                 'request' => $request,
-                'cod' => $cod,
+                'code' => $code,
                 'texto' => $texto,
                 'presup' => $presup,
                 'presmod' => $presmod,
@@ -222,7 +222,7 @@ class PresupuestosController extends BaseController
   
             return view('presup.mod', [
                 'request' => $request,
-                'cod' => $cod,
+                'code' => $code,
                 'texto' => $texto,
                 'presup' => $presup,
                 'totiva' => $totiva,
@@ -235,10 +235,10 @@ class PresupuestosController extends BaseController
 
     public function delcod(Request $request)
     {
-        $cod = $request->input('cod');
+        $code = $request->input('code');
         $idpac = $request->input('idpac');
 
-        if ( null == $cod ) {
+        if ( null == $code ) {
             return redirect('Pacientes');
         }
         
@@ -247,11 +247,11 @@ class PresupuestosController extends BaseController
         }
 
         $presup = DB::table('presup')
-                ->where('cod', $cod)
+                ->where('code', $code)
                 ->where('idpac', $idpac)
                 ->delete();
 
-        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->delete();
+        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('code', $code)->delete();
         
         return redirect("/Presup/$idpac");
     }
@@ -264,18 +264,18 @@ class PresupuestosController extends BaseController
             return redirect('Pacientes');
         }   
 
-        $cod = $request->input('cod');            
+        $code = $request->input('code');            
 
-        if ( null == $cod ) {
+        if ( null == $code ) {
             return redirect('Pacientes');
         }       
 
         $presup = DB::table('presup')
-                ->where('cod', $cod)
+                ->where('code', $code)
                 ->first();
 
         if (is_null($presup)) {
-            $prestex = DB::table('prestex')->where('cod', $cod)->first();
+            $prestex = DB::table('prestex')->where('code', $code)->first();
             $prestex->delete();
         }
          
@@ -285,25 +285,25 @@ class PresupuestosController extends BaseController
         
         $presup = DB::table('presup')
                 ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('cod', $cod)
-                ->orderBy('servicios.nomser' , 'ASC')
+                ->select('presup.*','servicios.name')
+                ->where('code', $code)
+                ->orderBy('servicios.name' , 'ASC')
                 ->get();  
 
         $cadena = '';
 
         foreach ($presup as $presu) {
             $cadena .= '<tr>
-                            <td class="wid140">'.$presu->nomser.'</td>
-                            <td class="wid95 textcent">'.$presu->canti.'</td>
-                            <td class="wid95 textcent">'.$presu->precio.' €</td>
+                            <td class="wid140">'.$presu->name.'</td>
+                            <td class="wid95 textcent">'.$presu->units.'</td>
+                            <td class="wid95 textcent">'.$presu->price.' €</td>
 
                             <td class="wid50">
 
                               <form id="delform">
                               
                                 <input type="hidden" name="idpre" value="'.$presu->idpre.'">
-                                <input type="hidden" name="cod" value="'.$cod.'">
+                                <input type="hidden" name="code" value="'.$code.'">
 
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">

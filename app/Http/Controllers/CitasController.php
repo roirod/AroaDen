@@ -12,7 +12,7 @@ use App\Interfaces\BaseInterface;
 
 class CitasController extends BaseController implements BaseInterface
 {
-    public function __construct()
+    public function __construct(Citas $citas)
     {
         parent::__construct();
 
@@ -22,7 +22,8 @@ class CitasController extends BaseController implements BaseInterface
         $this->views_folder = 'cit';
         $this->other_route = 'Pacientes';
         $this->form_route = 'list';
-
+        $this->model = $citas;
+        
         $fields = [
             'hour' => true,
             'day' => true,
@@ -35,8 +36,10 @@ class CitasController extends BaseController implements BaseInterface
     
     public function index(Request $request)
     {	
-        $main_loop = Citas::AllTodayOrderByDay();
-        $count = Citas::CountAllToday();
+        $main_loop = $this->model::AllTodayOrderByDay();
+        $count = $this->model::CountAllToday();
+
+        $this->page_title = Lang::get('aroaden.appointments').' - '.$this->page_title;
 
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
@@ -55,7 +58,7 @@ class CitasController extends BaseController implements BaseInterface
         $data['appointments_of'] = false;   
         $data['msg'] = false; 
 
-        $count = Citas::CountAll();
+        $count = $this->model::CountAll();
 
         if ($count == 0) {
     
@@ -139,7 +142,7 @@ class CitasController extends BaseController implements BaseInterface
 	                     ->withInput();
 	    } else {
 	        	
-		    Citas::create([
+		    $this->model::create([
 		        'idpac' => $id,
 		        'hour' => $hour,
 		        'day' => $day,
@@ -158,7 +161,7 @@ class CitasController extends BaseController implements BaseInterface
 
         $id = $this->sanitizeData($id);
 
-        $object = Citas::FirstById($id);
+        $object = $this->model::FirstById($id);
 
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
         $this->autofocus = 'hour';
@@ -181,7 +184,7 @@ class CitasController extends BaseController implements BaseInterface
     {
         $id = $this->sanitizeData($id);
 
-        $exists = Citas::CheckIfIdExists($id);
+        $exists = $this->model::CheckIfIdExists($id);
 
         if (!$exists) {
             $request->session()->flash($this->error_message_name, 'Error');  
@@ -210,7 +213,7 @@ class CitasController extends BaseController implements BaseInterface
                 return redirect("/$this->main_route/$id/$idcit/edit");
             }
 				
-			$object = Citas::find($id);
+			$object = $this->model::find($id);
 
 	    	$notes = ucfirst(strtolower($request->input('notes')));
 
@@ -232,7 +235,7 @@ class CitasController extends BaseController implements BaseInterface
 
         $this->redirectIfIdIsNull($id, $this->other_route);
        
-        $object = Citas::find($id);
+        $object = $this->model::find($id);
         $object->delete();
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
@@ -247,75 +250,75 @@ class CitasController extends BaseController implements BaseInterface
         if ( $selec == 'todas' ) {
 
             $appointments_of = 'todas';
-            $main_loop = Citas::AllOrderByDay();
+            $main_loop = $this->model::AllOrderByDay();
 
         } elseif ( $selec == 'hoy' ) {
 
             $appointments_of = 'hoy';
-            $main_loop = Citas::AllTodayOrderByDay();
+            $main_loop = $this->model::AllTodayOrderByDay();
 
         } elseif ($selec == '1semana' ) {
 
             $selfe1 = date('Y-m-d');
             $selfe2 = date('Y-m-d', strtotime('+1 Week'));
             $appointments_of = '+1 semana';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
                         
         } elseif ($selec == '1mes' ) {
 
             $selfe1 = date('Y-m-d');
             $selfe2 = date('Y-m-d', strtotime('+1 Month'));
             $appointments_of = '+1 mes';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == '3mes' ) {
 
             $selfe1 = date('Y-m-d');
             $selfe2 = date('Y-m-d', strtotime('+3 Month'));
             $appointments_of = '+3 meses';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == '1ano' ) {
 
             $selfe1 = date('Y-m-d');
             $selfe2 = date('Y-m-d', strtotime('+1 Year'));
             $appointments_of = '+1 año';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == 'menos1mes' ) {
 
             $selfe2 = date('Y-m-d');
             $selfe1 = date('Y-m-d', strtotime('-1 Month'));
             $appointments_of = '-1 mes';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == 'menos3mes' ) {
 
             $selfe2 = date('Y-m-d');
             $selfe1 = date('Y-m-d', strtotime('-3 Month'));
             $appointments_of = '-3 meses';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == 'menos1ano' ) {
 
             $selfe2 = date('Y-m-d');
             $selfe1 = date('Y-m-d', strtotime('-1 Year'));
             $appointments_of = '-1 año';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == 'menos5ano' ) {
 
             $selfe2 = date('Y-m-d');
             $selfe1 = date('Y-m-d', strtotime('-5 Year'));
             $appointments_of = '-5 años';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == 'menos20ano' ) {
 
             $selfe2 = date('Y-m-d');
             $selfe1 = date('Y-m-d', strtotime('-20 Year'));
             $appointments_of = '-20 años';
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
 
         } elseif ($selec == 'rango' ) {
 
@@ -323,7 +326,7 @@ class CitasController extends BaseController implements BaseInterface
             $selfe1 = $fechde;
             $appointments_of = "Citas entre ".$this->convertYmdToDmY($fechde)." y ".$this->convertYmdToDmY($fechha);
             $msg_type = false;
-            $main_loop = Citas::AllBetweenRangeOrderByDay($selfe1, $selfe2);                                                                      
+            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);                                                                      
         }
 
         $data = [];

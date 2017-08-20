@@ -8,6 +8,7 @@ use App\Models\Servicios;
 use Auth;
 use Validator;
 use Lang;
+use Exception;
 use Illuminate\Http\Request;
 use App\Interfaces\BaseInterface;
 
@@ -16,7 +17,7 @@ class ServiciosController extends BaseController implements BaseInterface
     /**
      *  construct method
      */
-    public function __construct()
+    public function __construct(Servicios $servicios)
     {
         parent::__construct();
 
@@ -26,6 +27,7 @@ class ServiciosController extends BaseController implements BaseInterface
         $this->main_route = 'Servicios';
         $this->form_route = 'list';
         $this->views_folder = 'serv';
+        $this->model = $servicios;
 
         $fields = [
             'name' => true,
@@ -43,13 +45,12 @@ class ServiciosController extends BaseController implements BaseInterface
      *  @return view
      */
     public function index(Request $request)
-    {			
-		$main_loop = Servicios::whereNull('deleted_at')
-                        ->orderBy('name', 'ASC')
-                        ->get();		
+    {
+        $main_loop = $this->model::AllOrderByName($this->num_paginate);
+        $count = $this->model::CountAll();       
 
-        $count = Servicios::whereNull('deleted_at')->count();
-        
+        $this->page_title = Lang::get('aroaden.sevices').' - '.$this->page_title;
+
         $this->view_data['main_loop'] = $main_loop;
         $this->view_data['request'] = $request;
         $this->view_data['count'] = $count;
@@ -68,9 +69,32 @@ class ServiciosController extends BaseController implements BaseInterface
      */
     public function list(Request $request)
     {   
-        $busca = $this->sanitizeData($request->input('busca'));
+        $data = [];
 
-        $data = $this->consultaItems($busca);
+        $count = $this->model::CountAll();
+
+        $data['main_loop'] = false;
+        $data['count'] = false;    
+        $data['msg'] = false; 
+
+        if ($count == 0) {
+   
+            $data['msg'] = Lang::get('aroaden.no_services_on_db');
+
+        } else {
+
+            try {
+
+                $busca = $this->sanitizeData($request->input('busca'));          
+
+                $data = $this->getItems($busca);
+
+            } catch (Exception $e) {
+    
+                $data['msg'] = $e->getMessage();
+
+            }
+        }
 
         $this->echoJsonOuptut($data);
     }  
@@ -85,7 +109,6 @@ class ServiciosController extends BaseController implements BaseInterface
     public function create(Request $request, $id = false)
     {
         $this->autofocus = 'name';
-        $this->passVarsToViews();
 
         $this->view_data['request'] = $request;
         $this->view_data['tax_types'] = $this->tax_types;
@@ -109,9 +132,9 @@ class ServiciosController extends BaseController implements BaseInterface
         $price = $this->sanitizeData($request->input('price'));
         $tax = $this->sanitizeData($request->input('tax'));  
 
-        $exists = Servicios::where('name', $name)->exists();
-          
-        if ($exists) {
+        $exists = $this->model::FirstByNameDeleted($name);
+
+        if ( isset($exists->name) ) {
            $request->session()->flash($this->error_message_name, Lang::get('aroaden.name_in_use', ['name' => $name]) );
            return redirect($this->main_route.'/create')->withInput();
         }
@@ -128,7 +151,7 @@ class ServiciosController extends BaseController implements BaseInterface
 	                     ->withInput();
 	     } else {
 	        	
-		    Servicios::create([
+		    $this->model::create([
                 'name' => $name,
 		        'price' => $price,
 		        'tax' => $tax
@@ -153,9 +176,8 @@ class ServiciosController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $object = Servicios::find($id);
+        $object = $this->model::find($id);
         $this->autofocus = 'name';
-        $this->passVarsToViews();
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
@@ -170,23 +192,21 @@ class ServiciosController extends BaseController implements BaseInterface
      *  get query result, using ajax
      *  @return json
      */
-    public function update(Request $request, $idser)
+    public function update(Request $request, $id)
     {
-        $this->redirectIfIdIsNull($idser, $this->main_route);
-
-        $idser = $this->sanitizeData($idser);
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
 
         $name = ucfirst(strtolower( $request->input('name') ) );
-
         $name = $this->sanitizeData($name);
         $price = $this->sanitizeData($request->input('price'));
         $tax = $this->sanitizeData($request->input('tax'));  
 
-        $exists = Servicios::where('idser', '!=', $idser)->exists();
+        $exists = $this->model::CheckIfExistsOnUpdate($id, $name);
 
-        if ($exists) { 
-           $request->session()->flash($this->error_message_name, "Nombre: $name - ya en uso, use cualquier otro.");
-           return redirect("$this->main_route/$idser/edit");
+        if ( isset($exists->name) ) {
+            $request->session()->flash($this->error_message_name, "Nombre: $name - ya en uso, use cualquier otro.");
+            return redirect("$this->main_route/$id/edit")->withInput();
         }
 
         $validator = Validator::make($request->all(), [
@@ -196,11 +216,11 @@ class ServiciosController extends BaseController implements BaseInterface
         ]);
             
         if ($validator->fails()) {
-            return redirect("$this->main_route/$idser/edit")
+            return redirect("$this->main_route/$id/edit")
                          ->withErrors($validator);
         } else {        
             
-            $object = Servicios::find($idser);
+            $object = $this->model::find($id);
                  
             $object->name = $name;
             $object->price = $price;
@@ -214,36 +234,16 @@ class ServiciosController extends BaseController implements BaseInterface
         }   
     }
 
-    /**
-     *  get query result, using ajax
-     *  @return json
-     */
-    public function del(Request $request, $idser)
-    {
-        $this->redirectIfIdIsNull($idser, $this->main_route);
-
-        $idser = $this->sanitizeData($idser);
-
-        $object = Servicios::find($idser);
-
-        return view($this->views_folder.'.del', [
-            'request' => $request,
-            'object' => $object,
-            'idser' => $idser
-        ]);
-    }
- 
      /**
      *  get query result, using ajax
      *  @return json
      */
-    public function destroy(Request $request, $idser)
+    public function destroy(Request $request, $id)
     {          
-        $this->redirectIfIdIsNull($idser, $this->main_route);
-                
-        $idser = $this->sanitizeData($idser);
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
 
-        Servicios::destroy($idser); 
+        $this->model::destroy($id); 
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
@@ -254,55 +254,25 @@ class ServiciosController extends BaseController implements BaseInterface
      *  get query result, using ajax
      *  @return json
      */
-    public function consultaItems($busca)
-    {
-        $count = Servicios::whereNull('deleted_at')->count();
-
-        $data = [];
-
-        if ($count == 0) {
-            $data['main_loop'] = false;
-            $data['count'] = false;       
-            $data['msg'] = ' No hay servicios en la base de datos. ';
-
-            return $data;
-        }
-
-        $main_loop = Servicios::select('idser', 'name', 'price', 'tax')
-                        ->whereNull('deleted_at')
-                        ->where('name','LIKE','%'.$busca.'%')
-                        ->orderBy('name','ASC')
-                        ->get();
-
-        $count = Servicios::whereNull('deleted_at')
-                    ->where('name','LIKE','%'.$busca.'%')
-                    ->count();
-
-        return $this->recorrerItems($main_loop, $count);
-    }
-
-    /**
-     *  get query result, using ajax
-     *  @return json
-     */
-    public function recorrerItems($main_loop, $count)
+    public function getItems($busca)
     {
         $data = [];
 
+        $main_loop = $this->model::FindStringOnField($busca);
+        $count = $this->model::CountFindStringOnField($busca);
+
         if ($count == 0) {
 
-            $data['main_loop'] = false;
-            $data['count'] = false;       
-            $data['msg'] = ' No hay resultados. ';
+            throw new Exception( Lang::get('aroaden.no_query_results') );
 
         } else {
 
             $data['main_loop'] = $main_loop;
             $data['count'] = $count;        
             $data['msg'] = false;
-            
+            return $data;
         }
 
-        return $data;
+        throw new Exception( Lang::get('aroaden.db_query_error') );
     }
 }
