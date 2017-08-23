@@ -11,7 +11,7 @@ class pacSeeder extends Seeder
     {
     	$faker = Faker::create('es_ES');
 
-    	foreach (range(1,500) as $index) {
+    	foreach (range(1, 200) as $index) {
 	        DB::table('pacientes')->insert([
 	            'surname' => htmlentities ($faker->lastName, ENT_QUOTES, "UTF-8").' '.htmlentities ($faker->lastName, ENT_QUOTES, "UTF-8"),
 	            'name' => htmlentities ($faker->firstName, ENT_QUOTES, "UTF-8"),

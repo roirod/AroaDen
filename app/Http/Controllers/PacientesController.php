@@ -153,7 +153,7 @@ class PacientesController extends BaseController implements BaseInterface
         $this->view_data['tratampacien'] = $tratampacien;
         $this->view_data['suma'] = $suma;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;        
+        $this->view_data['idnav'] = $id;        
         $this->view_data['edad'] = $edad;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
@@ -248,7 +248,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;        
+        $this->view_data['idnav'] = $id;        
         $this->view_data['object'] = $object;
         $this->view_data['form_fields'] = $this->form_fields;
 
@@ -339,7 +339,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;
+        $this->view_data['idnav'] = $id;
         $this->view_data['ficha'] = $ficha;
 
         return view($this->views_folder.'.ficha', $this->view_data);
@@ -357,7 +357,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;
+        $this->view_data['idnav'] = $id;
         $this->view_data['ficha'] = $ficha;
 
         return view($this->views_folder.'.fiedit', $this->view_data);
@@ -405,7 +405,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;
+        $this->view_data['idnav'] = $id;
         $this->view_data['files'] = $files;
         $this->view_data['url'] = $url;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
@@ -426,7 +426,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;
+        $this->view_data['idnav'] = $id;
         $this->view_data['odogram'] = $odogram;
 
         return response()->view($this->views_folder.'.odogram', $this->view_data)
@@ -514,7 +514,7 @@ class PacientesController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $id;
+        $this->view_data['idnav'] = $id;
         $this->view_data['presup'] = $presup;
 
         return view($this->views_folder.'.presup', $this->view_data);

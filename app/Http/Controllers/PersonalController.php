@@ -120,7 +120,7 @@ class PersonalController extends BaseController implements BaseInterface
         $this->view_data['personal'] = $personal;
         $this->view_data['trabajos'] = $trabajos;
         $this->view_data['id'] = $id;
-        $this->view_data['idper'] = $personal->idper;        
+        $this->view_data['idnav'] = $personal->idper;        
         $this->view_data['other_route'] = $this->other_route;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
@@ -306,7 +306,7 @@ class PersonalController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idper'] = $id;
+        $this->view_data['idnav'] = $id;
         $this->view_data['files'] = $files;
         $this->view_data['url'] = $url;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;

@@ -15,7 +15,7 @@ class EmpresaController extends BaseController
     /**
      *  __construct method          
      */
-    public function __construct()
+    public function __construct(Settings $settings)
     {
         parent::__construct();
 
@@ -23,6 +23,7 @@ class EmpresaController extends BaseController
 
         $this->main_route = 'Empresa';
         $this->views_folder = 'emp';
+        $this->model = $settings;        
     }
 
     /**
@@ -53,37 +54,15 @@ class EmpresaController extends BaseController
      */
     private function commonProcess($request, $view_name)
     {
-        $obj = $this->getObject();
+        $obj = $this->model::getObject();
 
         $this->page_title = Lang::get('aroaden.company').' - '.$this->page_title;
-
         $this->passVarsToViews();
 
         $this->view_data['request'] = $request;
         $this->view_data['empre'] = $obj;
 
         return view($this->views_folder.".$view_name", $this->view_data);
-    }
-
-    /**
-     *  create object from key value pair array in this format $obj->obj_key
-     * 
-     *  @return object $obj get object          
-     */
-    private function getObject()
-    {
-        $empre = Settings::select('key', 'value')->get()->toArray();
-
-        $obj = new class {};
-
-        foreach ($empre as $arr => $value) {
-            $obj_key = $value["key"];
-            $obj_val = $value["value"];
-
-            $obj->$obj_key = $obj_val;
-        }
-
-        return $obj;
     }
 
     /**
@@ -112,7 +91,7 @@ class EmpresaController extends BaseController
                      ->withInput();
         } else {        
 
-            $empre = Settings::select('key', 'value')->get()->toArray();
+            $empre = $this->model::select('key', 'value')->get()->toArray();
 
             foreach ($empre as $arr => $value) {
                 foreach ($request->input() as $request_key => $request_value) {
@@ -120,7 +99,7 @@ class EmpresaController extends BaseController
                     $request_value = $this->sanitizeData($request_value);
 
                     if ($value["key"] == $request_key) {
-                        Settings::where('key', $request_key)->update(['value' => $request_value]);
+                        $this->model::where('key', $request_key)->update(['value' => $request_value]);
                     }
                 }
             }

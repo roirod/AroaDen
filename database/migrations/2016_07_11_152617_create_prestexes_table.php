@@ -11,17 +11,13 @@ class CreatePrestexesTable extends Migration
             $table->engine = 'InnoDB';            
             $table->increments('idprestex');
             $table->Integer('idpac')->unsigned();
-            $table->dateTime('code');
+            $table->string('uniqid', 16);
             $table->text('text')->nullable();
             $table->timestamps();
-            $table->unique('code');  
-
+            $table->unique('uniqid');
             $table->foreign('idpac')
                   ->references('idpac')->on('pacientes')
-                  ->onDelete('cascade');
-            $table->foreign('code')
-                  ->references('code')->on('presup')
-                  ->onDelete('cascade');                  
+                  ->onDelete('cascade');         
         });
     }
 

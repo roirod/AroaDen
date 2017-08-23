@@ -7,9 +7,6 @@
 @include('includes.messages')
 @include('includes.errors')
 
-
-
-
 @endsection
 
 

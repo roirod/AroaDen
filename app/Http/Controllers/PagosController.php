@@ -21,17 +21,17 @@ class PagosController extends BaseController
         $num_mostrado = 5000;
 
         $pagos = DB::select("
-            SELECT pac.apepac, pac.nompac, pac.idpac, 
-            SUM(tra.canti*tra.precio) as total, 
-            SUM(tra.pagado) as pagado, 
-            SUM(tra.canti*tra.precio)-SUM(tra.pagado) as resto 
+            SELECT pac.surname, pac.name, pac.idpac, 
+            SUM(tra.units*tra.price) as total, 
+            SUM(tra.paid) as paid, 
+            SUM(tra.units*tra.price)-SUM(tra.paid) as rest 
             FROM tratampacien tra
             INNER JOIN pacientes pac
             ON tra.idpac=pac.idpac 
             WHERE pac.deleted_at IS NULL 
             GROUP BY tra.idpac 
             HAVING tra.idpac=tra.idpac  
-            ORDER BY resto DESC
+            ORDER BY rest DESC
             LIMIT $num_mostrado
         ");
 

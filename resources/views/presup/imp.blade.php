@@ -21,7 +21,7 @@
   			{!! $empre->company_city !!}
   			<br><br>
 
-			Presupuesto: {!! DatTime($code) !!}
+			Presupuesto: {!! DatTime($created_at) !!}
   		</p>
   		<br>
   	</div>
@@ -57,29 +57,29 @@
 					<td class="wid70">&nbsp;</td>
 				</tr>
 				
-				@foreach ($tottax as $totiv)
+				@foreach ($taxtotal as $totiv)
 
 					<tr>
 						<td class="wid230"></td>
 						<td class="wid70">&nbsp;</td>
-						<td class="wid70 textder">Total tax:</td>
+						<td class="wid70 textder">Total IVA:</td>
 						<td class="wid70 textcent"> {!! numformat($totiv->tot) !!} € </td> 
 					</tr>
 
 				@endforeach				
 
-				@foreach ($sintax as $sini)
+				@foreach ($notaxtotal as $sini)
 
 					<tr>
 						<td class="wid230"></td>
 						<td class="wid70">&nbsp;</td>
-						<td class="wid70 textder">Total sin tax:</td>
+						<td class="wid70 textder">Total sin IVA:</td>
 						<td class="wid70 textcent"> {!! numformat($sini->tot) !!} € </td> 
 					</tr>
 
 				@endforeach
 
-				@foreach ($sumtot as $sum)
+				@foreach ($total as $sum)
 
 					<tr>
 						<td class="wid230"></td>
@@ -97,7 +97,7 @@
    <br><br>
 
    <p class="fonsi18">
-   	{!! nl2br(e($texto)) !!}
+   	{!! nl2br(e($text)) !!}
    </p>
 
    <p class="lead">

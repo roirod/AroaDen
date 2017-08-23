@@ -13,7 +13,7 @@
    	<span class="input-group-btn pad10"> <p> Presupuesto: </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
-	      		<a href="{!!url("/$main_route/$idpac/create")!!}" role="button" class="btn btn-sm btn-primary">
+	      		<a href="{!! url("/$main_route/$idpac/create") !!}" role="button" class="btn btn-sm btn-primary">
 	          		<i class="fa fa-plus"></i> Nuevo
 	       		</a>
        		</div>
@@ -39,9 +39,9 @@
 
 		    @foreach($presup as $presu)
 
-		    	<?php $code = $presu->code; ?>
+		    	<?php $created_at = $presu->created_at; ?>
 
-		    	@if( isset($code2) && $code != $code2 )
+		    	@if( isset($created_at2) && $created_at != $created_at2 )
 		    		<tr class="danger">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
@@ -58,13 +58,13 @@
 	   				</tr>
 	   			@endif
 
-				<?php $code2 = $presu->code; ?>
+				<?php $created_at2 = $presu->created_at; ?>
 
 				<tr>
-		 			<td class="wid110"> {!!DatTime($presu->code)!!} </td>
-		 			<td class="wid180">{!!$presu->name!!}</td>
-		 			<td class="wid95 textcent">{!!$presu->units!!}</td>
-		 			<td class="wid95 textcent">{!!$presu->price!!} €</td>
+		 			<td class="wid110"> {!! DatTime($presu->created_at) !!} </td>
+		 			<td class="wid180">{!! $presu->name !!}</td>
+		 			<td class="wid95 textcent">{!! $presu->units !!}</td>
+		 			<td class="wid95 textcent">{!! $presu->price !!} €</td>
 		 			<td class="wid180"></td>
 				</tr>
 				
@@ -86,7 +86,7 @@
 
 <div class="row">
   	<div class="col-sm-12"> 
-		<form role="form" id="form" class="form" action="{!!url("/$main_route/presuedit")!!}" method="post">
+		<form role="form" id="form" class="form" action="{!! url("/$main_route/presuedit") !!}" method="post">
 			{!! csrf_field() !!}
 
 			<input type="hidden" name="idpac" value="{!!$idpac!!}">	
@@ -94,11 +94,11 @@
 			<div class="input-group">
 
 				<div class="col-sm-9">
-					<select name="code" class="form-control">
+					<select name="uniqid" class="form-control">
 
 						@foreach ($presgroup as $presgro)
 
-							<option value="{!!$presgro->code!!}">{!!DatTime($presgro->code)!!}</option>
+							<option value="{!!$presgro->uniqid!!}">{!! DatTime($presgro->created_at) !!}</option>
 									
 						@endforeach
 

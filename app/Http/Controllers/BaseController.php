@@ -162,7 +162,7 @@ class BaseController extends Controller
 
         foreach ($settings_fields as $field) {
 
-            $exits = Settings::where('key', $field)->first();
+            $exits = Settings::getValueByKey($field);
 
             if ($exits == null) {
 

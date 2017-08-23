@@ -17,12 +17,11 @@ class CreateFactutexesTable extends Migration
             $table->timestamps();
             $table->unique('code');  
             $table->unique('invoice_number');
-
             $table->foreign('idpac')
                   ->references('idpac')->on('pacientes')
                   ->onDelete('cascade');
             $table->foreign('code')
-                  ->references('code')->on('presup')
+                  ->references('code')->on('facturas')
                   ->onDelete('cascade');                  
         });
     }

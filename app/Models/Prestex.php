@@ -8,15 +8,22 @@ use Illuminate\Support\Facades\DB;
 class Prestex extends Model
 {
 	protected $table = 'prestex';
-    protected $fillable = ['idpac','code','text'];
+    protected $fillable = ['idpac','uniqid','created_at','text'];
     protected $primaryKey = 'idprestex';
 
-    public static function FirstById($id, $code)
+    public static function FirstById($id, $uniqid)
     {
         return DB::table('prestex')
 				->where('idpac', $id)
-				->where('code', $code)
+				->where('uniqid', $uniqid)
 				->first();
+    }
+
+    public static function FirstByUniqid($uniqid)
+    {
+        return DB::table('prestex')
+                ->where('uniqid', $uniqid)
+                ->first();
     }
 
 }

@@ -16,10 +16,10 @@ class CreatePresupTable extends Migration
             $table->smallInteger('price')->unsigned();
             $table->tinyInteger('tax')->unsigned()->default(0);
             $table->tinyInteger('units')->unsigned()->default(1);   
-            $table->dateTime('code');
+            $table->string('uniqid', 22);
             $table->boolean('applied')->default(0);
             $table->timestamps();
-            $table->index('code');
+            $table->index('uniqid');
             $table->foreign('idpac')
 				      ->references('idpac')->on('pacientes')
 				      ->onDelete('cascade');

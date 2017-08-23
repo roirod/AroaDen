@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class Presup extends Model
 {
 	protected $table = 'presup';
-    protected $fillable = ['idpac','idser','price','units','code','tax'];
+    protected $fillable = ['idpac','idser','price','units','uniqid','created_at','tax'];
     protected $primaryKey = 'idpre';
 
     public function pacientes()
@@ -22,17 +22,27 @@ class Presup extends Model
                     ->join('servicios','presup.idser','=','servicios.idser')
                     ->select('presup.*','servicios.name')
                     ->where('presup.idpac', $id)
-                    ->orderBy('code','ASC')
+                    ->orderBy('created_at','DESC')
                     ->get(); 
     }
 
-    public static function AllByIdOrderByName($id, $code)
+    public static function AllByCode($uniqid)
+    {
+        return DB::table('presup')
+                ->join('servicios', 'presup.idser','=','servicios.idser')
+                ->select('presup.*','servicios.name')
+                ->where('uniqid', $uniqid)
+                ->orderBy('servicios.name' , 'ASC')
+                ->get();
+    }
+
+    public static function AllByIdOrderByName($id, $uniqid)
     {
         return DB::table('presup')
                     ->join('servicios', 'presup.idser','=','servicios.idser')
                     ->select('presup.*','servicios.name')
                     ->where('idpac', $id)
-                    ->where('code', $code)
+                    ->where('uniqid', $uniqid)
                     ->orderBy('servicios.name' , 'ASC')
                     ->get();  
     }
@@ -40,10 +50,35 @@ class Presup extends Model
     public static function AllGroupByCode($id)
     {
         return DB::table('presup')
-                ->groupBy('code')
+                ->groupBy('uniqid')
                 ->having('idpac','=', $id)
-                ->orderBy('code' , 'DESC')
+                ->orderBy('created_at' , 'DESC')
                 ->get(); 
+    }
+
+
+    public static function GetTaxTotal($uniqid)
+    {
+        return DB::table('presup')
+                ->selectRaw('SUM((units*price*tax)/100) AS tot')
+                ->where('uniqid', $uniqid)
+                ->get();
+    }
+
+    public static function GetNoTaxTotal($uniqid)
+    {
+        return DB::table('presup')
+                ->selectRaw('SUM(units*price)-SUM((units*price*tax)/100) AS tot')
+                ->where('uniqid', $uniqid)
+                ->get();   
+    }
+
+    public static function GetTotal($uniqid)
+    {
+        return DB::table('presup')
+                ->selectRaw('SUM(units*price) AS tot')
+                ->where('uniqid', $uniqid)
+                ->get();   
     }
 
 }
