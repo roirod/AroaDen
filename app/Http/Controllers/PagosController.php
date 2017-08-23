@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-
+use App\Models\Pacientes;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
@@ -14,31 +13,21 @@ class PagosController extends BaseController
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Pagos';
+        $this->form_route = 'list';        
+        $this->views_folder = 'pago';        
     }
 
     public function index(Request $request)
     {
-        $num_mostrado = 5000;
+        $num_mostrado = 200;
+        $main_loop = Pacientes::GetTotalPayments($num_mostrado);
 
-        $pagos = DB::select("
-            SELECT pac.surname, pac.name, pac.idpac, 
-            SUM(tra.units*tra.price) as total, 
-            SUM(tra.paid) as paid, 
-            SUM(tra.units*tra.price)-SUM(tra.paid) as rest 
-            FROM tratampacien tra
-            INNER JOIN pacientes pac
-            ON tra.idpac=pac.idpac 
-            WHERE pac.deleted_at IS NULL 
-            GROUP BY tra.idpac 
-            HAVING tra.idpac=tra.idpac  
-            ORDER BY rest DESC
-            LIMIT $num_mostrado
-        ");
+        $this->view_data['request'] = $request;
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['num_mostrado'] = $num_mostrado;
 
-        return view('pago.index', [
-            'request' => $request,
-       		'pagos' => $pagos,
-            'num_mostrado' => $num_mostrado
-        ]);   
+        return parent::index($request);
     }
 }

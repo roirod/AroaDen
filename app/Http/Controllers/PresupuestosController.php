@@ -164,7 +164,7 @@ class PresupuestosController extends BaseController
         $this->view_data['presup'] = $presup;
         $this->view_data['delurl'] = $delurl;
         $this->view_data['prestex'] = $prestex;
-        $this->view_data['uniqid'] = $uniqid;        
+        $this->view_data['uniqid'] = $uniqid;
         $this->view_data['idpac'] = $idpac;
         $this->view_data['idnav'] = $idpac;     
 
@@ -173,7 +173,7 @@ class PresupuestosController extends BaseController
 
     public function presmod(Request $request)
     {
-        $uniqid = $this->sanitizeData($request->input('uniqid'));     
+        $uniqid = $this->sanitizeData($request->input('uniqid')); 
         $presmod = $this->sanitizeData($request->input('presmod'));     
         $text = $this->sanitizeData($request->input('text'));   
         $idpac = $this->sanitizeData($request->input('idpac'));   
@@ -188,6 +188,8 @@ class PresupuestosController extends BaseController
         }
 
         $presup = $this->model::AllByCode($uniqid);
+        $created_at = $presup[0]->created_at;
+
         $taxtotal = $this->model::GetTaxTotal($uniqid);
         $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
         $total = $this->model::GetTotal($uniqid);
@@ -197,6 +199,7 @@ class PresupuestosController extends BaseController
         $this->view_data['text'] = $text;
         $this->view_data['presup'] = $presup;
         $this->view_data['uniqid'] = $uniqid;
+        $this->view_data['created_at'] = $created_at;
         $this->view_data['presmod'] = $presmod;
         $this->view_data['idpac'] = $idpac;
         $this->view_data['idnav'] = $idpac;  

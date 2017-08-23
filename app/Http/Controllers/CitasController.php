@@ -107,7 +107,7 @@ class CitasController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $object->idpac;
+        $this->view_data['idnav'] = $object->idpac;
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;
@@ -171,7 +171,7 @@ class CitasController extends BaseController implements BaseInterface
         $this->view_data['request'] = $request;
         $this->view_data['object'] = $object;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $object->idpac;
+        $this->view_data['idnav'] = $object->idpac;
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;

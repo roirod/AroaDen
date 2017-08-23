@@ -51,7 +51,7 @@ class TratamientosController extends BaseController
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $object->idpac;
+        $this->view_data['idnav'] = $object->idpac;
         $this->view_data['servicios'] = $servicios;
         $this->view_data['personal'] = $personal;        
         $this->view_data['name'] = $object->name;
@@ -140,7 +140,7 @@ class TratamientosController extends BaseController
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idpac'] = $object->idpac;        
+        $this->view_data['idnav'] = $object->idpac;        
         $this->view_data['object'] = $object;
         $this->view_data['personal'] = $personal;        
         $this->view_data['name'] = $paciente->name;

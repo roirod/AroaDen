@@ -29,7 +29,7 @@
    <div class="box400">
    	  <table class="table table-striped">
 
-	   	  	@foreach($pagos as $pago)
+	   	  	@foreach($main_loop as $pago)
 		   	  	<tr>
 		   	  	  	<td class="wid50">
 						         <a href="{!!url("/Pacientes/$pago->idpac")!!}" target="_blank" class="btn btn-default" role="button">

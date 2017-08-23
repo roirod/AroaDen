@@ -136,7 +136,7 @@
 		<input type="hidden" name="idpac" value="{!! $idpac !!}">
 
 		<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
-		<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Crear</button>
+		<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Ver</button>
 		<button type="submit" name="presmod" value="save_text" class="btn btn-success btn-md save_text">Guardar texto</button>
 	</form>
 	
