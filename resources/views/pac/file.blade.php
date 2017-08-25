@@ -7,6 +7,6 @@
   @include('includes.messages')
   @include('includes.errors')
 
-  @include('form_fields.file')
+  @include('form_fields.show.file')
 	 
 @endsection

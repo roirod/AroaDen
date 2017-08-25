@@ -11,9 +11,8 @@
   <div class="col-sm-12">
     <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
   		<div class="input-group">
-  		 	<span class="input-group-btn pad4"> <p> &nbsp;<i class="fa fa-clock-o"></i> Citas: </p> </span>
+  		 	<div class="input-group-btn pad10"> <p> &nbsp;<i class="fa fa-clock-o"></i> Citas:</p> </div>
   		  <div class="col-sm-2"> 
-  		    <span class="input-group-btn"> 
   		      <select name="selec" class="form-control busca_class">
   		        <option value="hoy" selected>hoy</option> 
   		        <option value="1semana">+1 semana</option>
@@ -27,7 +26,6 @@
   		        <option value="menos20ano">-20 años</option>
   		        <option value="todas">todas</option>
   		      </select> 
-  		    </span>
   		  </div>
 </div>  </form>  </div>  </div>
 
@@ -36,13 +34,13 @@
     <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
       <input type="hidden" name="selec" value="rango">
 
-      <div class="input-group pad10"> 
-        <span class="input-group-btn pad4">  <p> Fecha de: </p> </span>
+      <div class="input-group pad4"> 
+        <span class="input-group-btn pad10"> <p> Fecha de: </p> </span>
         <div class="col-sm-4"> 
           <input name="fechde" type="date" class="busca_class" autofocus required>
         </div>
         <div class="col-sm-1">
-          <span class="input-group-btn pad4">  <p> hasta: </p> </span> 
+          <span class="input-group-btn pad10">  <p> hasta: </p> </span> 
         </div>
         <div class="col-sm-4 input-group">
           <input name="fechha" type="date" class="busca_class" required>

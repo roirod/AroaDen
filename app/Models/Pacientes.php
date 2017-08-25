@@ -120,9 +120,9 @@ class Pacientes extends Model
         return count($result);
     }
 
-    public static function GetTotalPayments($num_mostrado)
+    public static function GetTotalPayments($num_mostrado, $todos = false)
     {
-        return DB::select("
+        $query = "
             SELECT pac.surname, pac.name, pac.idpac, 
             SUM(tra.units*tra.price) as total, 
             SUM(tra.paid) as paid, 
@@ -134,8 +134,13 @@ class Pacientes extends Model
             GROUP BY tra.idpac 
             HAVING tra.idpac=tra.idpac  
             ORDER BY rest DESC
-            LIMIT $num_mostrado
-        ");
+        ";
+
+        if (!$todos) {
+            $query .= " LIMIT $num_mostrado";
+        }
+
+        return DB::select($query);
     }
 
 }

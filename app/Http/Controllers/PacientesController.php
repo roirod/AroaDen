@@ -139,22 +139,22 @@ class PacientesController extends BaseController implements BaseInterface
 
 	  	if (isset($birth)) {
             $date = explode("-", $birth, 3);	  	  
-            $edad = Carbon::createFromDate($date[0], $date[1], $date[2])->age;
+            $age = Carbon::createFromDate($date[0], $date[1], $date[2])->age;
 	  	} else {
-            $edad = 0;
+            $age = 0;
 	  	}
 
         $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
         $this->passVarsToViews();
 
         $this->view_data['request'] = $request;
-        $this->view_data['paciente'] = $paciente;
+        $this->view_data['object'] = $paciente;
         $this->view_data['citas'] = $citas;
         $this->view_data['tratampacien'] = $tratampacien;
         $this->view_data['suma'] = $suma;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;        
-        $this->view_data['edad'] = $edad;
+        $this->view_data['age'] = $age;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 

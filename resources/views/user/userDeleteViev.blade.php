@@ -14,7 +14,7 @@
    		Eliminar Usuario:
    	</p>
 
-	 	<form role="form" class="form" id="form" role="form" action="{!!url('/Usuarios/userDelete')!!}" method="POST">	
+	 	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$form_route") !!}" method="POST">
 	  		{!! csrf_field() !!}
 
 			<div class="input-group"> 
@@ -22,7 +22,7 @@
 	 			<div class="col-sm-3">
 	 				<select name="uid" class="form-control">
  
-						@foreach($users as $user)
+						@foreach($main_loop as $user)
 
 							@continue($user->username == 'admin')
 			   

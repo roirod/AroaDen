@@ -8,18 +8,19 @@
 @include('includes.errors')
 
 <br> 
-    
+
 <div class="row"> 
- <div class="col-sm-12"> 
-  <div class="input-group pad4"> 
-    <span class="input-group-btn pad4">  <p> Datos empresa: </p> </span>
-    <div class="btn-toolbar" role="toolbar">
-     <div class="btn-group">
-        <a href="{!!url("/$main_route/editData")!!}" role="button" class="btn btn-sm btn-success">
-           <i class="fa fa-edit"></i> Editar
-        </a>
-     </div>
-</div> </div> </div> </div> 
+  <div class="col-sm-12"> 
+    <div class="input-group"> 
+      <span class="input-group-btn pad10">  <p> Datos empresa: </p> </span>
+      <div class="btn-toolbar pad4" role="toolbar"> 
+        <div class="btn-group">
+          <a href="{{url("/$main_route/editData")}}" role="button" class="btn btn-sm btn-success">
+            <i class="fa fa-edit"></i> Editar
+          </a>
+        </div>  
+</div> </div> </div> </div>
+
 
 <div class="row">
   <div class="col-sm-12 fonsi16">

@@ -12,15 +12,15 @@
 
    		<p class="pad10"> {!!Lang::get('aroaden.change_pass')!!}: </p>
 	 	
-	 	<form role="form" class="form" id="form" role="form" action="{!!url("/Usuarios/userUpdate")!!}" method="POST">	
+	 	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$form_route") !!}" method="POST">	
 	  		{!! csrf_field() !!}
 
 			<div class="input-group"> 
-				<span class="input-group-btn pad4"> <p> &nbsp; {!!Lang::get('aroaden.user')!!}:</p> </span>
+				<span class="input-group-btn pad4"> <p> &nbsp; {!! Lang::get('aroaden.user') !!}:</p> </span>
 	 			<div class="col-sm-3">
 	 				<select name="uid" class="form-control">
  
-						@foreach ($users as $user)
+						@foreach ($main_loop as $user)
 			   
 			  				<option value="{!!$user->uid!!}">{!!$user->username!!}</option> 
 			

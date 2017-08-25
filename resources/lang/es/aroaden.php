@@ -3,6 +3,7 @@
 return [
 
     'user'   => 'Usuario',
+    'users'   => 'Usuarios',
     'new_pass'   => 'Contraseña nueva',
     'change_pass'   => 'Cambiar contraseña',
 
@@ -47,7 +48,7 @@ return [
 
     'no_staff_on_db'   => 'No hay personal en la base de datos.',
 
-
+    'payments' => 'Pagos',
 
 
     'save'   => 'Guardar',

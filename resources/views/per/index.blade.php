@@ -8,42 +8,19 @@
 <meta name="_token" content="{!!csrf_token()!!}"/>
 
 <div class="row"> 
-	<div class="col-sm-12"> 
-		<div class="input-group pad4"> <span class="input-group-btn pad4"> <p> Personal:</p> </span>
-			<div class="col-sm-3">
-				<span class="input-group-btn">
-					<a href="/{!! $main_route !!}/create" role="button" class="btn btn-sm btn-primary">
-						<i class="fa fa-plus"></i> Nuevo
-					</a> 
-				</span>
-			</div>
-		</div> 
-	</div>
-</div>
+  <div class="col-sm-12"> 
+    <div class="input-group"> 
+      <span class="input-group-btn pad10">  <p> Personal: </p> </span>
+      <div class="btn-toolbar pad4" role="toolbar"> 
+        <div class="btn-group">
+          <a href="{{url("/$main_route/create")}}" role="button" class="btn btn-sm btn-primary">
+            <i class="fa fa-plus"></i> Nuevo
+          </a>
+        </div>  
+</div> </div> </div> </div>
+
 	
-<div class="row">
-	 <form role="form" class="form">
-		 <div class="input-group">
-
-			  <span class="input-group-btn pad4"> <p> &nbsp; Buscar en:</p> </span>
-
-			  <div class="col-sm-2">
-
-      			<select name="busen" class="form-control" required>
-
-      				<option value="surname" selected> Apellido/s </option>
-      				<option value="dni"> DNI </option>
-
-				</select>
-
-			  </div>
-
-			  <div class="col-sm-4">
-			   		<input type="search" name="busca" id="busca" class="form-control" placeholder="buscar..." autofocus required>
-			  </div>				  
-		 </div>
-	 </form>
-</div>
+@include('form_fields.show.search_in')
 
 	
 <div class="row">
@@ -123,7 +100,7 @@
 			   	}
 			}); 
 
-			$("#busca").on('keyup change', function(evt) {
+			$(".busca_class").on('keyup change', function(evt) {
 				var event = evt;
 
 		        Module.run(event);

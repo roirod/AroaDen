@@ -49,7 +49,7 @@
 
       <div class="row">
 
-          <div class="col-sm-10 fonsi16 pad4">
+          <div class="col-sm-10 fonsi15 pad4">
 
               <?php
                 $Carbon = new Carbon\Carbon;
@@ -57,9 +57,9 @@
               ?>
 
               {!! ucfirst ($date) !!},&nbsp;
-              {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;|&nbsp;
+              {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;| &nbsp;
 
-              Usuario:  <span class="label label-primary fonsi16"> {!! Auth::user()->username !!} </span>
+              Usuario:  <span class="label label-primary fonsi15"> {!! Auth::user()->username !!} </span>
 
           </div>
    	

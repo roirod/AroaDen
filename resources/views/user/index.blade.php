@@ -2,40 +2,61 @@
 
 @section('content')
 
+@include('includes.usernav')
+
 @include('includes.messages')
 @include('includes.errors')
 
 
-@if( $username === 'admin' )
+<div class="row">
 
-	<div class="row">
-	  <div class="col-sm-12 mar10">
-		 <div class="input-group">
-		 	<span class="input-group-btn pad4"> <p> Usuario:</p> </span>	
-	 		<div class="btn-toolbar pad4" role="toolbar">
-	 			
-	 			<div class="btn-group"> 
-	 				<a href="/Usuarios/create" role="button" class="btn btn-sm btn-primary"> <i class="fa fa-plus"></i> Nuevo</a> 
-	 			</div> 
-	 			<div class="btn-group">
-	 				<a href="/Usuarios/userEdit" role="button" class="btn btn-sm btn-success"> <i class="fa fa-edit"></i> Editar</a>
-	 			</div>
-	 			<div class="btn-group">
-	 				<a href="/Usuarios/userDeleteViev" role="button" class="btn btn-sm btn-danger"> <i class="fa fa-times"></i> Eliminar</a>
-	 			</div>
+	<div class="col-sm-4 mar10">
+	  <p class="pad10"> Usuarios creados: </p>
 
-			</div> 
-		</div>
-	  </div>
+	  <div class="panel panel-default">
+			<table class="table">
+			  	 <tr class="fonsi16">
+					<td class="wid110">Usuario</td>
+					<td class="wid110">Permisos</td>			
+				 </tr>
+			</table>
+	 	<div class="box300">
+
+		 	 <table class="table table-striped table-bordered table-hover">
+				
+				@foreach ($main_loop as $user)
+
+					@continue($user->username == 'admin')
+						
+					<tr> 
+						<td class="wid110">{!! $user->username !!}</td>
+						<td class="wid110">{!! $user->type !!}</td>				
+					</tr>
+								
+				@endforeach
+						
+			</table>
+
+</div> </div> </div>
+
+
+	<div class="col-sm-6 mar10"> 
+	  	<p class="pad10"> Crear Usuario: </p>
+	  	
+	  	<form role="form" class="form" id="form" action="/{!! $main_route !!}" method="POST">
+			{!! csrf_field() !!}
+			 
+			@include('form_fields.create.user')
+
+			@include('form_fields.create.password')
+
+			@include('form_fields.create.scopes')
+
+			@include('includes.submit_button')
+
+		</form>
 	</div>
-
-@else
-
-	<h2 class="col-sm-12 mar30 text-danger">
-		<br>
-		<i class="fa fa-warning"></i> No tienes permisos para acceder a esta área.
-	</h2>
-   
-@endif
-
+ 
+</div>
+ 
 @endsection

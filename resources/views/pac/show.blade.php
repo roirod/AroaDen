@@ -18,10 +18,8 @@
 	    </a>
 	 </div>	
 	<div class="btn-group">
-
 	 	<form role="form" class="form" id="form" role="form" action="{!!url("/$main_route/$id")!!}" method="POST">	
 	  		{!! csrf_field() !!}
-
 			<input type="hidden" name="_method" value="DELETE">
 
 			<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -37,27 +35,8 @@
 </div> </div> </div> </div> </div>
 
 
-<div class="row pad10">
-  <form role="form" action="{!!url("/$main_route/upload")!!}" method="post" enctype="multipart/form-data">
-  	  {!! csrf_field() !!}
+@include('form_fields.show.upload_photo')
 
-       <input type="hidden" name="id" value="{!!$id!!}">
-       <input type="hidden" name="profile_photo" value="1">
-  
-  	  <div class="input-group">
-  	    <span class="input-group-btn pad4"> 
-  	      <p>&nbsp;&nbsp; Subir foto perfil: &nbsp;&nbsp;</p> 
-  	    </span> 
-  	    <span class="input-group-btn"> 
-  	      <input type="file" class="btn btn-default" name="files" />
-  	    </span> 
-  	    &nbsp;&nbsp;&nbsp;
-  	    <span class="pad10"> 
-  	      <button type="submit" class="btn btn-info">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
-  	    </span>
-  	  </div>
-  </form>
-</div>
 
 <hr>
 
@@ -65,63 +44,35 @@
   <div class="col-sm-12"> 
     <div class="row fonsi16">
 
-		<div class="col-sm-2 pad4 max150">
-			<img src="{!! $profile_photo !!}" class="max150 pad4">
-		</div>
+		@include('form_fields.show.profile_photo')
 
 		<div class="col-sm-10">
 
-			<div class="col-sm-8 pad4"> 
-			<i class="fa fa-minus-square"></i> Paciente: &nbsp; {!!$paciente->surname!!},&nbsp;{!!$paciente->name!!} 
-			</div>
+			@include('form_fields.show.name')
 
-			<div class="col-sm-3 pad4"> 
-			<i class="fa fa-minus-square"></i> id: &nbsp; {!!$paciente->idpac!!} 
-			</div>
+			@include('form_fields.show.idpac')
 
-			<div class="col-sm-7 pad4"> 
-			<i class="fa fa-minus-square"></i> Poblaci&#xF3;n: &nbsp; {!!$paciente->city!!}
-			 </div> 
+			@include('form_fields.show.city')
 
-			<div class="col-sm-8 pad4">
-			<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; {!!$paciente->address!!} 
-			</div> 
+			@include('form_fields.show.address')
 
-			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> DNI: &nbsp; {!! $paciente->dni!!}
-			 </div> 
+			@include('form_fields.show.dni')
 
-			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Sexo: &nbsp; {!!$paciente->sex!!} 
-			</div> 
+			@include('form_fields.show.sex')
 
-			<div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Tel&#xE9;fono1: &nbsp;{!!$paciente->tel1!!}
-			 </div>
+			@include('form_fields.show.tel1')
 
-			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Tel&#xE9;fono2: &nbsp; {!! $paciente->tel2!!} 
-			</div>
+			@include('form_fields.show.tel2')
 
-			 <div class="col-sm-4 pad4">
-			<i class="fa fa-minus-square"></i> Tel&#xE9;fono3: &nbsp; {!!$paciente->tel3!!}
-			 </div> 
+			@include('form_fields.show.tel3')
 
-			 <div class="col-sm-4 pad4"> 
-			<i class="fa fa-minus-square"></i> F. nacimiento: &nbsp; {!!date('d-m-Y', strtotime ($paciente->birth) )!!} 
-			</div>
+			@include('form_fields.show.birth')
 
-			 <div class="col-sm-3 pad4"> 	
-			<i class="fa fa-minus-square"></i> Edad: &nbsp; {!!$edad!!} años 
-			</div>
-
+			@include('form_fields.show.age')
+			
 		</div>
 
-		 <div class="col-sm-12 pad4"> 
-		<i class="fa fa-minus-square"></i> Notas: <br>
-		 <div class="box200"> {!! nl2br(e($paciente->notes)) !!} 
-		 </div>
-		 </div>
+		@include('form_fields.show.notes')
 
  </div> </div> </div>
 
@@ -131,7 +82,7 @@
   <div class="col-sm-12"> 
   <div class="input-group">
    <span class="input-group-btn pad10"> <p> Citas: </p> </span>
-   <div class="btn-toolbar pad10" role="toolbar"> 
+   <div class="btn-toolbar pad4" role="toolbar"> 
     <div class="btn-group">
        <a href="{!!url("/Citas/$id/create")!!}" role="button" class="btn btn-sm btn-primary">
           <i class="fa fa-plus"></i> Nueva
@@ -194,7 +145,7 @@
   <div class="col-sm-12"> 
   <div class="input-group">
    <span class="input-group-btn pad10">  <p> Tratramientos: </p> </span>
-   	<div class="btn-toolbar pad10" role="toolbar"> 
+   	<div class="btn-toolbar pad4" role="toolbar"> 
    	<div class="btn-group">
        <a href="{!!url("/Trapac/$id/create")!!}" role="button" class="btn btn-sm btn-primary">
           <i class="fa fa-plus"></i> Añadir

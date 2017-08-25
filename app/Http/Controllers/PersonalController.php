@@ -117,7 +117,7 @@ class PersonalController extends BaseController implements BaseInterface
         $trabajos = $this->model::ServicesById($id);
             
         $this->view_data['request'] = $request;
-        $this->view_data['personal'] = $personal;
+        $this->view_data['object'] = $personal;
         $this->view_data['trabajos'] = $trabajos;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $personal->idper;        

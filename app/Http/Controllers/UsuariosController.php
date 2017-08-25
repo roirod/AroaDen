@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use DB;
 use Validator;
-
+use Lang;
 use Illuminate\Http\Request;
 
 class UsuariosController extends BaseController
 {
-    public function __construct()
+    public function __construct(User $user)
     {
         parent::__construct();
 
@@ -18,16 +18,19 @@ class UsuariosController extends BaseController
 
         $this->main_route = 'Usuarios';
         $this->views_folder = 'user';
+        $this->model = $user;
     }
       
-    public function create(Request $request, $id = false)
+    public function index(Request $request)
     {
-        $main_loop = User::orderBy('username','ASC')->get();
+        $main_loop = $this->model::AllOrderByUsername();
 
-    	return view($this->views_folder.'.create',[
-            'request' => $request,
-            'main_loop' => $main_loop
-        ]);	
+        $this->page_title = Lang::get('aroaden.users').' - '.$this->page_title;
+
+        $this->view_data['request'] = $request;
+        $this->view_data['main_loop'] = $main_loop;
+
+        return parent::index($request);
     }    
 
     public function store(Request $request)
@@ -37,15 +40,15 @@ class UsuariosController extends BaseController
         $type = $this->sanitizeData($request->input('type'));
 
         if ( $username == 'admin' ) {
-            $request->session()->flash($error_message_name, 'Nombre de usuario no permitido, use cualquier otro.');   
-            return redirect($this->main_route.'/create');
+            $request->session()->flash($this->error_message_name, 'Nombre de usuario no permitido, use cualquier otro.');   
+            return redirect($this->main_route);
         }   
 
-        $exists = User::where('username', $username)->exists();
+        $exists = $this->model::CheckIfExists($username);
 
         if ($exists) {
-           $request->session()->flash($error_message_name, 'Nombre de usuario: $username - en uso, use cualquier otro.');
-           return redirect($this->main_route.'/create');
+           $request->session()->flash($this->error_message_name, "Nombre de usuario: $username - en uso, use cualquier otro.");
+           return redirect($this->main_route);
         }
 
         $validator = Validator::make($request->all(),[
@@ -55,18 +58,18 @@ class UsuariosController extends BaseController
         ]);
             
         if ($validator->fails()) {
-	         return redirect($this->main_route.'/create')
+	         return redirect($this->main_route)
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else { 		
         	     	        	
-	        User::create([
+	        $this->model::create([
 	          'username' => $username,
 	          'password' => bcrypt($password),
               'type' => $type
             ]);
 	      
-            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );	
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
         	        	
         	return redirect($this->main_route);
         }      
@@ -74,22 +77,31 @@ class UsuariosController extends BaseController
     
     public function userEdit(Request $request)
     {
-        $main_loop = User::orderBy('username','ASC')->get();
+        $main_loop = $this->model::AllOrderByUsername();
 
-    	return view($this->views_folder.'.userEdit', [
-            'request' => $request,
-            'main_loop' => $main_loop
-        ]);  
+        $this->form_route = 'userUpdate';
+        $this->page_title = Lang::get('aroaden.users').' - '.$this->page_title;
+        $this->passVarsToViews();  
+
+        $this->view_data['request'] = $request;
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['form_route'] = $this->form_route;
+
+        return view($this->views_folder.'.userEdit', $this->view_data);
     }
 
     public function userDeleteViev(Request $request)
     {
-        $main_loop = User::orderBy('username','ASC')->get();
+        $main_loop = $this->model::AllOrderByUsername();
         
-        return view($this->views_folder.'.userDeleteViev', [
-            'request' => $request,
-            'main_loop' => $main_loop
-        ]);
+        $this->form_route = 'userDelete';
+        $this->passVarsToViews();  
+
+        $this->view_data['request'] = $request;
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['form_route'] = $this->form_route;
+
+        return view($this->views_folder.'.userDeleteViev', $this->view_data);
     }
 
     public function userUpdate(Request $request)
@@ -97,7 +109,7 @@ class UsuariosController extends BaseController
         $uid = $this->sanitizeData($request->input('uid'));
         $password = trim( $request->input('password') );
 
-        $this->redirectIfIdIsNull($uid, 'Settings');
+        $this->redirectIfIdIsNull($uid, $this->main_route);
 
         $validator = Validator::make($request->all(),[
             'uid' => 'required',
@@ -110,11 +122,11 @@ class UsuariosController extends BaseController
                          ->withInput();
         } else {
               
-            $user = User::find($uid);
+            $user = $this->model::find($uid);
             $user->password = bcrypt($password);
             $user->save();
               
-            $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
                         
             return redirect($this->main_route);
         }  
@@ -123,13 +135,12 @@ class UsuariosController extends BaseController
     public function userDelete(Request $request)
     {
         $uid = $this->sanitizeData($request->input('uid'));
-
-        $this->redirectIfIdIsNull($uid, 'Settings');
+        $this->redirectIfIdIsNull($uid, $this->main_route);
         
-        $user = User::find($uid);
+        $user = $this->model::find($uid);
         $user->delete();
 
-        $request->session()->flash($success_message_name, Lang::get('aroaden.success_message') );
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
         return redirect($this->main_route);
     }

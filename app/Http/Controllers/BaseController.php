@@ -227,4 +227,9 @@ class BaseController extends Controller
         exit();    
     }
 
+    protected function formatNumber($num)
+    {   
+        return number_format($num, 0, '', '.');
+    }
+
 }
