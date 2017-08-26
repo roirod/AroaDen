@@ -42,20 +42,27 @@
 		    	<?php $created_at = $presu->created_at; ?>
 
 		    	@if( isset($created_at2) && $created_at != $created_at2 )
-		    		<tr class="danger">
-			     	  <td class="wid110"></td>
-					  <td class="wid180"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid180 textcent"></td>
-		    		</tr> 
 		    		<tr class="info">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
 					  <td class="wid95 textcent"></td>
 					  <td class="wid95 textcent"></td>
 					  <td class="wid180 textcent"></td>
+		    		</tr> 
+		    		<tr class="danger">
+			     	  <td class="wid110"></td>
+					  <td class="wid180"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid180 textcent"></td>
 	   				</tr>
+		    		<tr class="info">
+			     	  <td class="wid110"></td>
+					  <td class="wid180"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid180 textcent"></td>
+		    		</tr>
 	   			@endif
 
 				<?php $created_at2 = $presu->created_at; ?>
