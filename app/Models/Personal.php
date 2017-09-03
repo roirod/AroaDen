@@ -109,8 +109,9 @@ class Personal extends Model
     public static function CountFindStringOnField($busen, $busca)
     {
         $result = DB::table('personal')
-                    ->where($busen, 'LIKE', '%'.$busca.'%')
-                    ->get();
+                        ->whereNull('deleted_at')
+                        ->where($busen, 'LIKE', '%'.$busca.'%')
+                        ->get();
 
         return count($result);
     }

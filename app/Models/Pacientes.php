@@ -114,6 +114,7 @@ class Pacientes extends Model
     public static function CountFindStringOnField($busen, $busca)
     {
         $result = DB::table('pacientes')
+                    ->whereNull('deleted_at')
                     ->where($busen, 'LIKE', '%'.$busca.'%')
                     ->get();
 
