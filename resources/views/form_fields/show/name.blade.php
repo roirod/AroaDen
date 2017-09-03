@@ -1,3 +1,3 @@
-<div class="col-sm-6 pad4"> 
-	<i class="fa fa-minus-square"></i> Nombre: &nbsp; {{ $object->surname }}, &nbsp; {{ $object->name }} 
+<div class="col-sm-8 pad4"> 
+	<i class="fa fa-minus-square"></i> Nombre: {{ $object->surname }}, {{ $object->name }} 
 </div>

@@ -72,6 +72,7 @@ class Servicios extends Model
     public static function CountFindStringOnField($busca)
     {
         $result = DB::table('servicios')
+                    ->whereNull('deleted_at')
                     ->where('name', 'LIKE', '%'.$busca.'%')
                     ->get();
 

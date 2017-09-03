@@ -51,8 +51,6 @@
 
 			@include('form_fields.show.name')
 
-			@include('form_fields.show.idper')
-
 			@include('form_fields.show.position')
 
 			@include('form_fields.show.city')
