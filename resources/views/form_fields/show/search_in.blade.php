@@ -17,8 +17,15 @@
 			  </div>
 
 			  <div class="col-sm-4">
-			   		<input type="search" name="busca" id="busca" class="form-control busca_class" placeholder="Buscar..." autofocus required>
-			  </div>				  
+			   		<input type="search" name="busca" id="busca" class="form-control busca_class" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
+			  </div>
+
+			  <div class="col-sm-3">
+		          <a href="{{url("/$main_route")}}" role="button" class="btn btn-md btn-danger">
+		            <i class="fa fa-trash"></i> Borrar texto
+		          </a>
+			  </div>
+
 		 </div>
 	 </form>
 </div>

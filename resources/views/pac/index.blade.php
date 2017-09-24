@@ -33,7 +33,7 @@
 	@else
 
 		<p>
-		  <span class="label label-success"> {!! $count !!} Pacientes </span>
+			<span class="label label-success"> {!! $count !!} Pacientes </span>
 		</p>
 
 		  <div class="panel panel-default">
@@ -106,9 +106,14 @@
 			}); 
 
 			$(".busca_class").on('keyup change', function(evt) {
-				var event = evt;
+				var busca_val = $('#busca').val();
+				var busca_val_length = busca_val.length;
 
-		        Module.run(event);
+				if (busca_val != '' && busca_val_length >= 2) {
+					var event = evt;
+
+			        Module.run(event);
+				}
 
 		        evt.preventDefault();
 		        evt.stopPropagation();
@@ -123,6 +128,8 @@
 						$('#item_list').html(wait);
 
 					    var data = $("form").serialize();
+
+					    $('#busca').prop('disabled', true);
 		     
 					    $.ajax({
 
@@ -140,7 +147,7 @@
 
 					    	} else {
 
-					    		html = '<p> <span class="label label-success">' + response.count + ' Pacientes</span></p>';
+					    		html = '<p id="buscado"> <span class="label label-success">' + response.count + ' Pacientes</span></p>';
 
 					    		html += '<div class="panel panel-default">';
 					    		html += '   <table class="table">';
@@ -178,9 +185,12 @@
 					    		html += ' </div> </div>';				    		
 					    	}
 
-					        $('#item_list').hide().html(html).fadeIn('slow');	          
-					    }).fail(function() {
+					        $('#item_list').hide().html(html).fadeIn('slow');
+					        $('#buscado').prepend(' <span class="label label-primary"> Texto buscado: ' + $('#busca').val() + '</span>');
+					        $('#busca').prop('disabled', false);      
 
+					    }).fail(function() {
+					    	$('#busca').prop('disabled', false);  
 					    	$('#item_list').hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
 					    });
 				    }

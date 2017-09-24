@@ -10,15 +10,14 @@
 
 <div class="row"> 
  <div class="col-sm-12"> 
-	<div class="input-group pad4"> 
-		<span class="input-group-btn pad4">  <p> Ficha: </p> </span>
-		<div class="btn-toolbar" role="toolbar">
-		 <div class="btn-group">
-		    <a href="{!!url("/$main_route/$id/fiedit")!!}" role="button" class="btn btn-sm btn-success">
-		       <i class="fa fa-edit"></i> Editar
-		    </a>
-		 </div>	
-
+	<div class="input-group"> 
+	<span class="input-group-btn pad10">  <p> Ficha: </p> </span>
+	<div class="btn-toolbar pad4" role="toolbar">
+	 <div class="btn-group">
+	    <a href="{!!url("/$main_route/$id/fiedit")!!}" role="button" class="btn btn-sm btn-success">
+	       <i class="fa fa-edit"></i> Editar
+	    </a>
+	 </div>	
 </div> </div> </div> </div>
 
 <div class="row">

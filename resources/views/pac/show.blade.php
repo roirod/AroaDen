@@ -50,8 +50,6 @@
 
 			@include('form_fields.show.name')
 
-			@include('form_fields.show.idpac')
-
 			@include('form_fields.show.city')
 
 			@include('form_fields.show.address')
