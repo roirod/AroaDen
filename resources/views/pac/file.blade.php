@@ -8,7 +8,7 @@
 
 @section('js')
     @parent
-    
+
 	<script type="text/javascript" src="{!! asset('assets/js/colorbox/jquery.colorbox-min.js') !!}"></script>
 	<script type="text/javascript" src="{!! asset('assets/js/colorbox/jquery.colorbox-es.js') !!}"></script>	
 @endsection
@@ -23,4 +23,3 @@
   @include('form_fields.show.file')
 	 
 @endsection
-

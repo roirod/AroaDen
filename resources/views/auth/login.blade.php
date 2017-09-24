@@ -11,21 +11,28 @@
 
     <br>
 
-    <div class="col-xs-9">  
-      <h1 class="pad10 mar10 textshadow textcent"><i class="fa fa-child"></i> Aroa<small>Den</small></h1> </div>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-6">  
+        <h1 class="mar10 fonsi36 textshadow textcent">
+          <i class="fa fa-child"></i> Aroa<small>Den</small>
+        </h1>
+      </div>
+    </div>
 
      <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
         {!! csrf_field() !!}
 
       <div class="form-group">
-       <label class="control-label col-xs-4 fonbla text-left mar10 pad10 col-xs-offset-1"> Usuario:</label>
-            <div class="col-xs-offset-1 col-xs-10 text-left mar10">  <div class="input-group margin-bottom-sm">
-        <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-        <input type="text" class="form-control" name="username" value="{{ old('username') }}" required >  </div> 
+       <label class="control-label col-xs-4 fonbla text-left mar10 col-xs-offset-1"> Usuario</label>
+            <div class="col-xs-offset-1 col-xs-10 text-left mar10">
+              <div class="input-group margin-bottom-sm">
+                <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                <input type="text" class="form-control" name="username" value="{{ old('username') }}" required >  
+              </div> 
         </div> </div>
        
       <div class="form-group">
-        <label class="control-label col-xs-4 fonbla text-left mar10 pad10 col-xs-offset-1">Contrase&ntilde;a:</label>
+        <label class="control-label col-xs-4 fonbla text-left mar10 col-xs-offset-1">Contrase&ntilde;a</label>
         <div class="col-xs-offset-1 col-xs-10 text-left mar10">  <div class="input-group"> 
         <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
         <input type="password" class="form-control" name="password" required > </div>
@@ -49,7 +56,7 @@
           <input type="checkbox" name="remember"> Recordarme </label>
        </div> </div>
 
-         <div class="col-xs-5 pull-right mar10">
+         <div class="col-xs-5 pull-right mar10 pad4">
           <button type="submit" class="btn btn-info">Acceder <i class="fa fa-chevron-circle-right"></i> </button> 
          </div>
       </div>

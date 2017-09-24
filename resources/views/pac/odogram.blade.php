@@ -7,11 +7,14 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<div class="row mar10">
+<div class="row">
   <div class="col-sm-12">
-  	 <div class="input-group"> 
-  	 	<span class="input-group-btn pad4"> Odontograma: &nbsp; </span>
+  	 <div class="input-group pad4"> 
+  	 	
   		<div class="btn-toolbar pad4" role="toolbar">
+        <div class="btn-group">
+          <p class="pad4"> Odontograma: &nbsp; </p>
+        </div>
   			<div class="btn-group">
   				<a href="{!! url("/$main_route/$id/downodog") !!}" class="btn btn-sm btn-primary" role="button"> 
          		<i class="fa fa-download" aria-hidden="true"></i> Descargar
@@ -34,28 +37,37 @@
        	</div>
   
   </div> </div> </div> </div>
-
-<div class="row pad10">
-  <form role="form" action="{!!url("/$main_route/upodog")!!}" method="post" enctype="multipart/form-data">
-  	  {!! csrf_field() !!}
-
-      <input type="hidden" name="id" value="{!!$id!!}">
   
-  	  <div class="input-group">
-  	    <span class="input-group-btn pad4"> 
-  	      <p>&nbsp;&nbsp;&nbsp; Subir: &nbsp;&nbsp;&nbsp;</p> 
-  	    </span> 
-  	    <span class="input-group-btn"> 
-  	      <input type="file" class="btn btn-default" name="upodog"/>
-  	    </span> 
-  	    &nbsp;&nbsp;&nbsp;
-  	    <span class="pad10"> 
-  	      <button type="submit" class="btn btn-info">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
-  	    </span>
-  	  </div>
-  </form>
-</div>
-  
+<div class="row"> 
+ <div class="col-sm-12"> 
+  <div class="input-group">
+
+    <form role="form" action="{!!url("/$main_route/upodog")!!}" method="post" enctype="multipart/form-data">
+        {!! csrf_field() !!}
+
+         <input type="hidden" name="id" value="{!!$id!!}">
+
+          <div class="btn-toolbar pad4" role="toolbar">
+             <div class="btn-group">
+                <span class="input-group-btn pad10">  <p> Subir: </p> </span>
+             </div>
+             <div class="btn-group">
+                <input type="file" class="btn btn-default btn-sm" name="upodog"/>
+             </div>
+            <div class="btn-group pad4"> 
+              <button type="submit" class="btn btn-info btn-sm">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
+            </div>
+        </div>
+      
+    </form>
+
+    </div>
+ </div> 
+</div> 
+
+
+
+
   <div class="col-sm-12 pad10">
     {!! Html::image($odogram,'a pic', array('class' => 'wPa')) !!}
   </div> 

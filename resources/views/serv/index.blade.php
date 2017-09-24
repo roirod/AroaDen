@@ -26,7 +26,7 @@
 		<div class="input-group">
 			<span class="input-group-btn pad10"> <p> &nbsp; Buscar Servicio:</p> </span>
 			<div class="col-sm-4">
-				<input type="search" name="busca" id="busca" class="form-control" placeholder="buscar..." autofocus required>
+				<input type="search" name="busca" id="busca" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
 			</div>
 			<div class="col-sm-3">
 			  <a href="{{url("/$main_route")}}" role="button" class="btn btn-md btn-danger">

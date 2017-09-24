@@ -33,7 +33,32 @@ html,body { height:100%; padding:0; margin:0; }
 }
 
 .wrap {
-    word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 110px !important;
+  width: 110px !important;
+}
+
+.img_container {
+  max-width: 36px !important;
+  min-width: 36px !important;  
+  width: 36px !important;
+  max-height: 36px !important;
+  min-height: 36px !important;  
+  height: 36px !important;
+  margin: auto;
+  width: 50%;
+}
+
+.pad_top_bot { 
+  padding-top: 10px !important;
+  padding-bottom: 23px !important;
+}
+
+img .img_file_view {
+  max-width: 36px !important; 
+  max-height: 36px !important;  
 }
 
 table { table-layout:fixed !important; }
@@ -67,6 +92,10 @@ table { table-layout:fixed !important; }
 .fonsi16  {  font-size: 16px !important;  }
 .fonsi15  {  font-size: 15px !important;  }
 .fonsi14  {  font-size: 14px !important;  }
+.fonsi13  {  font-size: 13px !important;  }
+.fonsi12  {  font-size: 12px !important;  }
+.fonsi11  {  font-size: 11px !important;  }
+.fonsi10  {  font-size: 10px !important;  }
 
 .fontwe4 {  font-weight: 400;  }
 
