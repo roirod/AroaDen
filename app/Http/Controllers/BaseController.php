@@ -91,6 +91,11 @@ class BaseController extends Controller
     protected $img_folder = '/public/assets/img';
 
     /**
+     * @var string $img_folder  img_folder
+     */
+    protected $thumb_dir = '.thumbdir';
+
+    /**
      * @var string $own_dir  own_dir
      */
     protected $own_dir = '';    

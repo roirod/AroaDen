@@ -299,6 +299,8 @@ class PersonalController extends BaseController implements BaseInterface
         $dir = "/$this->own_dir/$id";
         $files = Storage::files($dir);
         $url = url("$this->main_route/$id");
+        $user_dir = "/$this->files_dir/$id";
+        $thumb_dir = "/$this->files_dir/$id/$this->thumb_dir";
 
         $object = $this->model::FirstById($id); 
         $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
@@ -309,6 +311,8 @@ class PersonalController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['files'] = $files;
         $this->view_data['url'] = $url;
+        $this->view_data['user_dir'] = $user_dir;        
+        $this->view_data['thumb_dir'] = $thumb_dir;     
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
         return view($this->views_folder.'.file', $this->view_data);

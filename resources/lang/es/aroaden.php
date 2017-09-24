@@ -53,4 +53,7 @@ return [
 
     'save'   => 'Guardar',
 
+
+    'write_2_or_more'   => 'Escribe 2 caracteres o más',
+
 ];

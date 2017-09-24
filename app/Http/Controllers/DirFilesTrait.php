@@ -35,7 +35,7 @@ trait DirFilesTrait {
         if ( ! Storage::exists($profile_photo) )
             Storage::copy($foto,$profile_photo);   
 
-        $thumbdir = $dir.'/.thumbdir';
+        $thumbdir = "$dir/$this->thumb_dir";
 
         if ( ! Storage::exists($thumbdir) )
             Storage::makeDirectory($thumbdir,0770,true);
@@ -51,6 +51,7 @@ trait DirFilesTrait {
         $id = $this->sanitizeData($id);
 
         $dir = storage_path("$this->files_dir/$id");
+        $thumbdir = "$dir/$this->thumb_dir";
 
         if ($profile_photo == 1) {
             $extension = $files->getClientOriginalExtension();
@@ -78,11 +79,12 @@ trait DirFilesTrait {
             foreach ($files as $file) {                       
                 $filename = $file->getClientOriginalName();
                 $size = $file->getClientSize();
+                $extension = $file->getClientOriginalExtension();
 
                 $filedisk = storage_path("$this->files_dir/$id/$filename");
 
                 if ( $size > $this->file_max_size ) {
-                    $mess = "El archivo: - $filename - es superior a $this->file_max_size MB";
+                    $mess = "El archivo: $filename - es superior a $this->file_max_size MB";
                     $request->session()->flash($this->error_message_name, $mess);
                     return redirect("$this->main_route/$id/file");
                 }                
@@ -93,6 +95,17 @@ trait DirFilesTrait {
                     return redirect("$this->main_route/$id/file");
 
                 } else {
+
+                    if ($extension == 'jpg' || $extension == 'png' || $extension == 'jpeg' || $extension == 'gif') {
+                        $file_name = pathinfo($filename, PATHINFO_FILENAME);
+                        
+                        Image::make($file)->encode('jpg', 50)
+                            ->resize(34, null, function ($constraint) {
+                                $constraint->aspectRatio();
+                            })
+                            ->save("$thumbdir/$file_name.jpg");
+                    }
+
                     $file->move($dir, $filename);
                     $upcount ++;
                 }
@@ -130,8 +143,14 @@ trait DirFilesTrait {
         $this->redirectIfIdIsNull($file, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $filerem = storage_path("$this->files_dir/$id").'/'.$file;
-        unlink($filerem);    
+        $dir = storage_path("$this->files_dir/$id");
+        $filedisk = "$dir/$this->thumb_dir/$file";         
+
+        if ( file_exists($filedisk) ) {
+            unlink($filedisk);
+        }
+
+        unlink("$dir/$file");    
           
         return redirect("$this->main_route/$id/file");
     }  
