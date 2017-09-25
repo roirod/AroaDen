@@ -42,7 +42,7 @@
 
 	@if ($count == 0)
 
-		<h3> No hay servicios. </h3>
+		<p> No hay servicios. </p>
 
 	@else
 
@@ -52,7 +52,7 @@
 
 	  	<div class="panel panel-default">
 		  	<table class="table">
-			  	 <tr class="fonsi16 success">
+			  	 <tr class="fonsi15 success">
 					<td class="wid290">Servicio</td>
 					<td class="wid110 textcent">Precio</td>
 					<td class="wid95 textcent">IVA</td>
@@ -161,7 +161,7 @@
 
 					    	if (response.msg !== false) {
 
-					    		html = '<h3>' + response.msg + '</h3>';
+					    		html = '<p>' + response.msg + '</p>';
 
 					    	} else {
 
@@ -169,7 +169,7 @@
 
 					    		html += '<div class="panel panel-default">';
 					    		html += '   <table class="table">';
-					    		html += '     <tr class="fonsi16 success">';
+					    		html += '     <tr class="fonsi15 success">';
 					    		html += '       <td class="wid290">Servicio</td>';
 					    		html += '       <td class="wid110 textcent">Precio</td>';
 					    		html += '       <td class="wid95 textcent">IVA</td>';

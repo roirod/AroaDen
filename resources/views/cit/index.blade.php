@@ -56,7 +56,7 @@
 
   @if ($count == 0)
 
-    <h3> No hay citas para <span class="label label-success fonsi16"> hoy </span> </h3>
+    <p> No hay citas para <span class="label label-success fonsi15"> hoy </span> </p>
 
   @else
 
@@ -67,7 +67,7 @@
 
     <div class="panel panel-default"> 
       <table class="table">
-         <tr class="fonsi16 success">
+         <tr class="fonsi15 success">
              <td class="wid50"></td>
              <td class="wid290">Paciente</td>
              <td class="wid110">Hora</td>
@@ -157,7 +157,7 @@
 
               if (fechde == '' || fechha == '' || typeof fechde == 'undefined' || typeof fechha == 'undefined') {
 
-                var message = '<h3 class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </h3>';
+                var message = '<p class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </p>';
                 $('#item_list').hide().html(message).fadeIn('slow');
                 return;
 
@@ -190,7 +190,7 @@
             var html = '';
 
             if (response.msg !== false) {
-              html = '<h3 class="text-danger">' + response.msg + '</h3>';
+              html = '<p class="text-danger">' + response.msg + '</p>';
 
             } else {
 
@@ -206,7 +206,7 @@
 
               html += '<div class="panel panel-default">';
               html += '   <table class="table">';
-              html += '     <tr class="fonsi16 success">';
+              html += '     <tr class="fonsi15 success">';
               html += '       <td class="wid50"> &nbsp; </td>';
               html += '       <td class="wid290"> Paciente </td>';
               html += '       <td class="wid110"> Hora </td>';

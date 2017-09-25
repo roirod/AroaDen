@@ -23,7 +23,7 @@
 
 
 <div class="row">
-  <div class="col-sm-12 fonsi16">
+  <div class="col-sm-12 fonsi15">
 
   	 <div class="col-sm-5 pad10">
   		<i class="fa fa-minus-square"></i> Nombre: &nbsp; <span class="text-muted"> {{$empre->company_name}} </span>  

@@ -40,7 +40,7 @@
   <div class="col-sm-12">
    <div class="panel panel-default">
     <table class="table">
-      <tr class="fonsi16 success">
+      <tr class="fonsi15 success">
         <td class="wid50"></td>
         <td class="wid290">Paciente</td>
         <td class="wid110 textcent">Total</td>
