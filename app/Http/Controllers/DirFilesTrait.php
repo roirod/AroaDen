@@ -9,35 +9,64 @@ use Exception;
 
 trait DirFilesTrait {
 
+    public function loadFileView($request, $id)
+    {   
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
+
+        $this->createDir($id, $this->has_odogram);
+
+        $dir = "/$this->own_dir/$id";
+        $files = Storage::files($dir);
+        $url = url("$this->main_route/$id");
+        $user_dir = "/$this->files_dir/$id";
+        $thumb_dir = "/$this->files_dir/$id/$this->thumb_dir";
+
+        $object = $this->model::FirstById($id);
+        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
+        $this->passVarsToViews();      
+
+        $this->view_data['request'] = $request;
+        $this->view_data['id'] = $id;
+        $this->view_data['idnav'] = $id;
+        $this->view_data['files'] = $files;
+        $this->view_data['url'] = $url;
+        $this->view_data['user_dir'] = $user_dir;        
+        $this->view_data['thumb_dir'] = $thumb_dir;        
+        $this->view_data['profile_photo_name'] = $this->profile_photo_name;
+
+        return view($this->views_folder.'.file', $this->view_data);
+    }
+
     public function createDir($id, $odogram = false)
     {               
         $dir = "/$this->own_dir/$id";
 
-        if ( ! Storage::exists($dir) )
+        if ( !Storage::exists($dir) )
             Storage::makeDirectory($dir,0770,true);
 
         if ($odogram) {
 	        $odogdir = "$dir/$this->odog_dir";
 
-	        if ( ! Storage::exists($odogdir) )
+	        if ( !Storage::exists($odogdir) )
 	            Storage::makeDirectory($odogdir,0770,true);
 
 	        $odogram = "/$dir/$this->odog_dir/$this->odogram";
 	        $img = "$this->img_folder/$this->odogram";
 	          
-	        if ( ! Storage::exists($odogram) )
+	        if ( !Storage::exists($odogram) )
 	            Storage::copy($img,$odogram);
         }
 
         $profile_photo = "/$dir/$this->profile_photo_name";
         $foto = "$this->img_folder/profile_photo.jpg";
           
-        if ( ! Storage::exists($profile_photo) )
+        if ( !Storage::exists($profile_photo) )
             Storage::copy($foto,$profile_photo);   
 
         $thumbdir = "$dir/$this->thumb_dir";
 
-        if ( ! Storage::exists($thumbdir) )
+        if ( !Storage::exists($thumbdir) )
             Storage::makeDirectory($thumbdir,0770,true);
     }
 
@@ -144,13 +173,30 @@ trait DirFilesTrait {
         $id = $this->sanitizeData($id);
 
         $dir = storage_path("$this->files_dir/$id");
-        $filedisk = "$dir/$this->thumb_dir/$file";         
 
-        if ( file_exists($filedisk) ) {
-            unlink($filedisk);
+        $partes_ruta = pathinfo($file);
+
+        if ( isset($partes_ruta['extension']) ) {
+
+            $extension = $partes_ruta['extension'];
+            $thumb_filename = $partes_ruta['filename'];
+            $thumb = "$dir/$this->thumb_dir/$thumb_filename.jpg";
+
+        } else {
+
+            $extension = '';
+
         }
 
-        unlink("$dir/$file");    
+        if ($extension == 'jpg' || $extension == 'png' || $extension == 'jpeg' || $extension == 'gif') {
+            if ( file_exists($thumb) )
+                unlink($thumb);
+        }
+
+        $file_path = "$dir/$file";
+
+        if ( file_exists($file_path) )
+            unlink($file_path); 
           
         return redirect("$this->main_route/$id/file");
     }  
