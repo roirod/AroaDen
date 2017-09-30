@@ -5,7 +5,7 @@
   			{!! $empre->company_name !!}
   		</div> 
 
-  		<p class="fonsi16">
+  		<p class="fonsi15">
   			NIF: {!! $empre->company_nif !!}
   			<br> 
   			Telf.: {!! $empre->company_tel1 !!}
@@ -23,7 +23,7 @@
 
 
 <div class="row">
-	<div class="col-sm-12 fonsi16">
+	<div class="col-sm-12 fonsi15">
 	  <div class="panel panel-default">
 	  		<table class="table table-striped">
 			  	 <tr>

@@ -14,7 +14,9 @@
     <div class="row">
       <div class="col-xs-offset-2 col-xs-6">  
         <h1 class="mar10 fonsi36 textshadow textcent">
-          <i class="fa fa-child"></i> Aroa<small>Den</small>
+          <i class="fa fa-child"></i>
+          <br>
+          Aroa<small>Den</small>
         </h1>
       </div>
     </div>

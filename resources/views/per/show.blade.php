@@ -43,7 +43,7 @@
 
 <div class="row mar10"> 
   <div class="col-sm-12"> 
-    <div class="row fonsi16">
+    <div class="row fonsi15">
 
 		@include('form_fields.show.profile_photo')
 
@@ -83,7 +83,7 @@
  <div class="col-sm-12">
   <div class="panel panel-default">
    <table class="table">
-   	 <tr class="fonsi16 success">
+   	 <tr class="fonsi15 success">
 	   	 	<td class="wid180">Paciente</td>
 	   	 	<td class="wid180">Tratamiento</td>
 	   	 	<td class="wid95 textcent">Cantidad</td>

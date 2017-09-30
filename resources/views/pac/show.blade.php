@@ -42,7 +42,7 @@
 
 <div class="row mar10"> 
   <div class="col-sm-12"> 
-    <div class="row fonsi16">
+    <div class="row fonsi15">
 
 		@include('form_fields.show.profile_photo')
 
@@ -90,7 +90,7 @@
   <div class="row"> <div class="col-sm-12">
    <div class="panel panel-default">
     <table class="table">
-     <tr class="fonsi16 success">
+     <tr class="fonsi15 success">
 		  <td class="wid95">Hora</td>
 		  <td class="wid95">Día</td>
 		  <td class="wid50"></td>
@@ -156,7 +156,7 @@
  <div class="col-sm-12">
  <div class="panel panel-default">
   <table class="table"> 
-	  <tr class="fonsi16 success">
+	  <tr class="fonsi15 success">
 		  <td class="wid140">Servicio</td>
 		  <td class="wid70 textcent">Precio</td>
 		  <td class="wid70 textcent">Cantidad</td>
@@ -245,7 +245,7 @@
  
 	@foreach( $suma as $sum )
 
-	 	<div class="row mar10 fonsi16">
+	 	<div class="row mar10 fonsi15">
 	 	    <div class="col-sm-5">
 	 	      <table class="table table-bordered">
 	 	     	<tr class="text-info pad10">

@@ -28,7 +28,7 @@
 
 	@if ($count == 0)
 
-		<h3> No hay pacientes. </h3>
+		<p> No hay pacientes. </p>
 
 	@else
 
@@ -38,7 +38,7 @@
 
 		  <div class="panel panel-default">
 			 <table class="table">
-			  	 <tr class="fonsi16 success">
+			  	 <tr class="fonsi15 success">
 					<td class="wid50">&nbsp;</td>
 					<td class="wid290">Nombre</td>
 					<td class="wid110">DNI</td>
@@ -143,7 +143,7 @@
 
 					    	if (response.msg !== false) {
 
-					    		html = '<h3>' + response.msg + '</h3>';
+					    		html = '<p>' + response.msg + '</p>';
 
 					    	} else {
 
@@ -151,7 +151,7 @@
 
 					    		html += '<div class="panel panel-default">';
 					    		html += '   <table class="table">';
-					    		html += '     <tr class="fonsi16 success">';
+					    		html += '     <tr class="fonsi15 success">';
 					    		html += '       <td class="wid50">&nbsp;</td>';
 					    		html += '       <td class="wid290">Nombre</td>';
 					    		html += '       <td class="wid110">DNI</td>';

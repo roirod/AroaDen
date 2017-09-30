@@ -25,11 +25,13 @@
 <div class="jumbotron container bgwi pad20">
   <div class="row">  
 
-    <div class="col-sm-1 wid180">
+    <div class="col-sm-1 wid180 fonsi14">
       <div class="affix">
 
-        <h3 class="pad10">
-          <i class="fa fa-child"></i> Aroa<small>Den</small>
+        <h3 class="pad10 textcent">
+          <i class="fa fa-child"></i>
+          <br>
+          Aroa<small>Den</small>
         </h3>
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 

@@ -1352,7 +1352,7 @@ html{
 
 body{
 	font-family:Ubuntu;
-	font-size:14px;
+	font-size:13px;
 	line-height:1.42857143;
 	color:#333;
 	background-color:#fff
@@ -5274,7 +5274,7 @@ a.badge:focus,a.badge:hover{
 
 .jumbotron p{
 	margin-bottom:15px;
-	font-size:16px;
+	font-size:15px;
 	font-weight:200
 }
 
