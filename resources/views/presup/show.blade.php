@@ -26,7 +26,7 @@
  <div class="col-sm-12">
    <div class="panel panel-default">
     <table class="table">
-     <tr class="fonsi16 success">
+     <tr class="fonsi15 success">
      	  <td class="wid110">Fecha</td>
 		  <td class="wid180">Tratamiento</td>
 		  <td class="wid95 textcent">Cantidad</td>
@@ -92,34 +92,44 @@
 
 
 <div class="row">
-  	<div class="col-sm-12"> 
-		<form role="form" id="form" class="form" action="{!! url("/$main_route/presuedit") !!}" method="post">
-			{!! csrf_field() !!}
+  	<div class="col-sm-12">
 
-			<input type="hidden" name="idpac" value="{!!$idpac!!}">	
+  		@if (count($presgroup) == 0)
 
-			<div class="input-group">
+  			<p class="pad10"> No hay presupuestos a editar </p>
 
-				<div class="col-sm-9">
-					<select name="uniqid" class="form-control">
+  		@else
 
-						@foreach ($presgroup as $presgro)
+			<form role="form" id="form" class="form" action="{!! url("/$main_route/presuedit") !!}" method="post">
+				{!! csrf_field() !!}
 
-							<option value="{!!$presgro->uniqid!!}">{!! DatTime($presgro->created_at) !!}</option>
-									
-						@endforeach
+				<input type="hidden" name="idpac" value="{!!$idpac!!}">	
 
-					</select>
-				</div>	
+				<div class="input-group">
 
-				<div class="col-sm-2">
-					<button class="btn btn-default" type="submit">
-						&nbsp; <i class="fa fa-arrow-circle-right"></i> &nbsp; 
-					</button>
-				</div>	
+					<div class="col-sm-9">
+						<select name="uniqid" class="form-control">
 
-			</div>
-		</form>
+							@foreach ($presgroup as $presgro)
+
+								<option value="{!!$presgro->uniqid!!}">{!! DatTime($presgro->created_at) !!}</option>
+										
+							@endforeach
+
+						</select>
+					</div>	
+
+					<div class="col-sm-2">
+						<button class="btn btn-default" type="submit">
+							&nbsp; <i class="fa fa-arrow-circle-right"></i> &nbsp; 
+						</button>
+					</div>	
+
+				</div>
+			</form>
+
+  		@endif
+
 </div> </div>
  
 @endsection

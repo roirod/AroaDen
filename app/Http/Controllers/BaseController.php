@@ -106,6 +106,11 @@ class BaseController extends Controller
     protected $model;    
 
     /**
+     * @var bool $has_odogram  si tiene odontograma o no
+     */
+    protected $has_odogram = false;   
+
+    /**
      *  construct method
      */
     public function __construct()

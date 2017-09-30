@@ -15,7 +15,7 @@
 
 	  <div class="panel panel-default">
 			<table class="table">
-			  	 <tr class="fonsi16">
+			  	 <tr class="fonsi15">
 					<td class="wid110">Usuario</td>
 					<td class="wid110">Permisos</td>			
 				 </tr>
