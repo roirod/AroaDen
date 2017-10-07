@@ -35,7 +35,7 @@
  	 	<i class="fa fa-minus-square"></i> Direcci&#xF3;n: &nbsp; <span class="text-muted"> {{$empre->company_address}} </span>
  	 </div>
  	 <div class="col-sm-3 pad10">
- 	 	<i class="fa fa-minus-square"></i> NIF: &nbsp; <span class="text-muted"> {{$empre->company_nif}} </span>
+ 	 	<i class="fa fa-minus-square"></i> NIF/CIF: &nbsp; <span class="text-muted"> {{$empre->company_nif}} </span>
  	 </div>
  	 <div class="col-sm-3 pad10">
  	 	<i class="fa fa-minus-square"></i> Tel&#xE9;fono: &nbsp; <span class="text-muted"> {{$empre->company_tel1}} </span>
