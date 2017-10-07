@@ -128,8 +128,6 @@
 						$('#item_list').html(wait);
 
 					    var data = $("form").serialize();
-
-					    $('#busca').prop('disabled', true);
 		     
 					    $.ajax({
 
@@ -187,11 +185,11 @@
 
 					        $('#item_list').hide().html(html).fadeIn('slow');
 					        $('#buscado').prepend(' <span class="label label-primary"> Texto buscado: ' + $('#busca').val() + '</span>');
-					        $('#busca').prop('disabled', false);      
 
 					    }).fail(function() {
-					    	$('#busca').prop('disabled', false);  
+
 					    	$('#item_list').hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
+					    	
 					    });
 				    }
 				}
