@@ -25,7 +25,7 @@
 		<div class="form-group col-sm-4">  <label class="control-label text-left mar10">Direcci&#xF3;n:</label>
 		<input type="text" class="form-control" name="company_address" value="{!!$empre->company_address!!}" maxlength="111" >  	</div>
 				
-		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">NIF:</label>
+		<div class="form-group col-sm-2">  <label class="control-label text-left mar10">NIF/CIF:</label>
 		<input type="text" class="form-control" name="company_nif" value="{!!$empre->company_nif!!}" maxlength="22">  </div>
 					
 		<div class="form-group col-sm-2">    <label class="control-label text-left mar10">Tel&#xE9;fono:</label>
