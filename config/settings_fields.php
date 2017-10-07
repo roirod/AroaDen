@@ -9,8 +9,6 @@ return [
     "company_tel2",
     "company_tel3",
     "company_notes",
-    "invoice_number",
     "invoice_text",
-    "budget_number",
     "budget_text",    
 ];
