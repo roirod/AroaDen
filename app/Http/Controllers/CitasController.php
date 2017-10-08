@@ -6,8 +6,9 @@ use DB;
 use App\Models\Citas;
 use App\Models\Pacientes;
 use Validator;
-use Illuminate\Http\Request;
 use Lang;
+use Exception;
+use Illuminate\Http\Request;
 use App\Interfaces\BaseInterface;
 
 class CitasController extends BaseController implements BaseInterface
@@ -69,27 +70,35 @@ class CitasController extends BaseController implements BaseInterface
             $fechde = $this->sanitizeData($request->input('fechde'));
             $fechha = $this->sanitizeData($request->input('fechha'));
 
-        	if ( $selec == 'rango' ) {
+            try {
 
-		        if ( $this->validateDate($fechde) == false || $this->validateDate($fechha) == false ) {
-   
-		            $data['msg'] = ' Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14/04/2017. ';
+                if ( $selec == 'rango' ) {
 
-			 	} elseif ( $fechde > $fechha ) {
-   
-		            $data['msg'] = "La fecha ".$this->convertYmdToDmY($fechha)." es anterior a ".$this->convertYmdToDmY($fechde) .".";
+                    if ( $this->validateDate($fechde) == false || $this->validateDate($fechha) == false ) {
+       
+                        $data['msg'] = ' Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14/04/2017. ';
 
-		        } else {
+                    } elseif ( $fechde > $fechha ) {
+       
+                        $data['msg'] = "La fecha ".$this->convertYmdToDmY($fechha)." es anterior a ".$this->convertYmdToDmY($fechde) .".";
 
-		       		$data = $this->getItemsByDate('rango', $fechde, $fechha);
+                    } else {
 
-		       	}
+                        $data = $this->getItemsByDate('rango', $fechde, $fechha);
 
-		    } else {
+                    }
 
-	        	$data = $this->getItemsByDate($selec, $fechde, $fechha);
-	        	   	
-			}     
+                } else {
+
+                    $data = $this->getItemsByDate($selec, $fechde, $fechha);
+                        
+                }
+
+            } catch (Exception $e) {
+    
+                $data['msg'] = $e->getMessage();
+
+            }  
 	    }
 
         $this->echoJsonOuptut($data);
@@ -328,6 +337,11 @@ class CitasController extends BaseController implements BaseInterface
             $msg_type = false;
             $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);                                                                      
         }
+
+        $count = count($main_loop);
+
+        if ($count == 0)
+            throw new Exception( Lang::get('aroaden.no_query_results') );
 
         $data = [];
         $data['main_loop'] = $main_loop;
