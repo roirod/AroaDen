@@ -158,6 +158,7 @@
               if (fechde == '' || fechha == '' || typeof fechde == 'undefined' || typeof fechha == 'undefined') {
 
                 var message = '<p class="text-danger"> Introduzca dos fechas válidas en  Fecha de: y hasta: </p>';
+                $('#item_list').empty();
                 $('#item_list').hide().html(message).fadeIn('slow');
                 return;
 
@@ -177,6 +178,7 @@
         function sendAjaxRequest(data) {
        
           var message = '<img src="/assets/img/loading.gif" /> &nbsp; &nbsp; <span class="text-muted"> Cargando... </span>';
+          $('#item_list').empty();
           $('#item_list').html(message);
 
           $.ajax({
@@ -190,7 +192,7 @@
             var html = '';
 
             if (response.msg !== false) {
-              html = '<p class="text-danger">' + response.msg + '</p>';
+              html = '<p>' + response.msg + '</p>';
 
             } else {
 
@@ -240,9 +242,14 @@
               html += ' </div> </div>';               
             }
 
-            $('#item_list').hide().html(html).fadeIn('slow');         
+            $('#item_list').empty();
+            $('#item_list').hide().html(html).fadeIn('slow');
+
           }).fail(function() {
+
+            $('#item_list').empty();
             $("#item_list").hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
+            
           });
 
         }
