@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Interfaces\BaseInterface;
+use App\Http\Controllers\Interfaces\BaseInterface;
+use App\Http\Controllers\Traits\DirFilesTrait;
 use App\Models\Personal;
 use Carbon\Carbon;
 use DB;

@@ -17,7 +17,8 @@ use Lang;
 use Exception;
 
 use Illuminate\Http\Request;
-use App\Interfaces\BaseInterface;
+use App\Http\Controllers\Interfaces\BaseInterface;
+use App\Http\Controllers\Traits\DirFilesTrait;
 
 class PacientesController extends BaseController implements BaseInterface
 {
