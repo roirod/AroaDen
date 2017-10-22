@@ -90,6 +90,11 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('Presup/presmod', 'PresupuestosController@presmod');
 	Route::resource('Presup', 'PresupuestosController', ['except' => ['index', 'update', 'edit', 'destroy']]);
 
+	Route::get('Factu/{id}/create', 'FacturasController@create');
+	Route::post('Factu/presuedit', 'FacturasController@presuedit');
+	Route::post('Factu/presmod', 'FacturasController@presmod');
+	Route::resource('Factu', 'FacturasController', ['except' => ['index', 'update', 'edit', 'destroy']]);
+
 	Route::get('Trapac/{id}/create','TratamientosController@create');
 	Route::post('Trapac/select', 'TratamientosController@select');  
 	Route::get('Trapac/{id}/edit', 'TratamientosController@edit');

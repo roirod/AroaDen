@@ -3,66 +3,81 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Validator;
+use Lang;
 use App\Models\Factutex;
 use App\Models\Facturas;
-use App\Models\Empre;
-
-use Validator;
-
+use App\Models\Pacientes;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-
+use App\Http\Controllers\Facturas\Complete;
+use App\Http\Controllers\Facturas\Rectification;
 
 class FacturasController extends BaseController
 {
-    public function __construct()
+    /**
+     * @var array $invoice_types  invoice types
+     */
+    private $invoice_types = [];
+
+    public function __construct(Facturas $factu)
     {
         parent::__construct();
 
         $this->middleware('auth');
+
+        $this->main_route = 'Factu';
+        $this->other_route = 'Pacientes';
+        $this->views_folder = 'factu';
+        $this->model = $factu;
+
+        $complete = '"'.Lang::get('aroaden.complete').'"';
+        $rectification = '"'.Lang::get('aroaden.rectification').'"';
+
+        $this->invoice_types = [
+            'Complete' => $complete,
+            'Rectification' => $rectification,
+        ];
     }
 
-    public function index()
-    { }
+    public static function chose($type)
+    {
+        if ( !array_key_exists($type, $this->invoice_types) )
+            throw new Exception('Fail');
 
-    public function create(Request $request,$idpac)
-    {     
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
+        switch ($type) {
+            case 'Complete':
+                return new Complete();
+            break;
+            case 'Rectification':
+                return new Rectification();
+            break;
+            default:
+                throw new Exception('Fail');
+            break;
         }
-        
-        $pacientes = pacientes::find($idpac);
+    }
 
-        $tratampac = DB::table('tratampacien')
-                    ->join('servicios','tratampacien.idser','=','servicios.idser')
-                    ->select('tratampacien.*','servicios.nomser')
-                    ->where('idpac', $idpac)
-                    ->orderBy('fecha','DESC')
-                    ->get();
-  
+    public function show(Request $request, $id)
+    {     
+        $this->redirectIfIdIsNull($id, $this->other_route);
+        $idpac = $this->sanitizeData($id);
 
-        $empre = empre::find('1');
-                
-        $factumun = $empre->factumun + 1;
+        $paciente = Pacientes::FirstById($idpac);
+        $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
+        $this->passVarsToViews();
 
-        $empre->factumun = $factumun;
+        $this->form_route = 'select';
 
-        $empre->save();
+        //$presup = $this->model::AllById($idpac);
 
-        $empre = empre::find('1');
+        $this->view_data['request'] = $request;
+        //$this->view_data['presup'] = $presup;
+        $this->view_data['form_route'] = $this->form_route;
+        $this->view_data['invoice_types'] = $this->invoice_types;
+        $this->view_data['idpac'] = $idpac;
+        $this->view_data['idnav'] = $idpac;        
 
-        $cod = date('Y-m-d H:i:s');
-
-        $nueurl = url('/Facturas');
-
-        return view('presup.create', [
-            'request' => $request,
-            'cod' => $cod,
-            'nueurl' => $nueurl,
-            'tratampac' => $tratampac,
-            'empre' => $empre,
-            'idpac' => $idpac
-        ]);
+        return view($this->views_folder.'.show', $this->view_data);
     }
 
     public function store(Request $request)
@@ -148,168 +163,6 @@ class FacturasController extends BaseController
             return $cadena;
         }     
     }
-
-    public function show(Request $request,$idpac)
-    {
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }
-
-        $idpac = htmlentities (trim($idpac),ENT_QUOTES,"UTF-8");
-                               
-        $presup = DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('idpac', $idpac)
-                ->orderBy('cod' , 'DESC')
-                ->get();  
-
-        $presgroup = DB::table('presup')
-                ->groupBy('cod')
-                ->having('idpac','=',$idpac)
-                ->orderBy('cod' , 'DESC')
-                ->get(); 
-
-        return view('presup.show', [
-            'request' => $request,
-            'presup' => $presup,
-            'presgroup' => $presgroup,
-            'idpac' => $idpac
-        ]);       
-    }
-
-    public function presuedit(Request $request)
-    {
-        $idpac = htmlentities (trim( $request->input('idpac')),ENT_QUOTES,"UTF-8");
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");          
-
-        if ( null == $idpac ) {
-            return redirect('Pacientes');
-        }   
-
-        if ( null == $cod ) {
-            return redirect('Pacientes');
-        }
-
-        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->first();
-
-        if (is_null($prestex)) {
-
-            $validator = Validator::make($request->all(),[
-                'idpac' => 'required',
-                'cod' => 'required',
-                'texto' => ''
-            ]);
-                    
-            if ($validator->fails()) {
-                return redirect('Servicios/create')
-                             ->withErrors($validator)
-                             ->withInput();
-             } else {
-                    
-                prestex::create([
-                    'idpac' => $idpac,
-                    'cod' => $cod
-                ]);
-            }   
-        }
-
-        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->first();
-
-        $delurl = url('/Presup/delid');
-
-        $presup = DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('cod', $cod)
-                ->orderBy('servicios.nomser' , 'ASC')
-                ->get();
-
-        return view('presup.edit', [
-            'request' => $request,
-            'presup' => $presup,
-            'delurl' => $delurl,
-            'cod' => $cod,
-            'idpac' => $idpac,
-            'prestex' => $prestex
-        ]);        
-    }
-
-    public function presmod(Request $request)
-    {
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8"); 
-
-        $presmod = $request->input('presmod');
-
-        $texto = htmlentities (trim( $request->input('texto')),ENT_QUOTES,"UTF-8");
-
-        if ( null == $cod ) {
-            return redirect('Pacientes');
-        }
-
-        $prestex = prestex::where('cod', $cod)->first();
-
-        $prestex->texto = $texto;            
-        $prestex->save();
-
-        $presup = DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('cod', $cod)
-                ->orderBy('servicios.nomser' , 'ASC')
-                ->get();
-
-        $totiva = DB::table('presup')
-                ->selectRaw('SUM((canti*precio*iva)/100) AS tot')
-                ->where('cod', $cod)
-                ->get();
-
-        $siniva = DB::table('presup')
-                ->selectRaw('SUM(canti*precio)-SUM((canti*precio*iva)/100) AS tot')
-                ->where('cod', $cod)
-                ->get();                
-
-        $sumtot = DB::table('presup')
-                ->selectRaw('SUM(canti*precio) AS tot')
-                ->where('cod', $cod)
-                ->get();                
-
-        $empre = DB::table('empre')->where('id','1')->first();
-
-        if ($presmod == 'imp') {
-
-            return view('presup.imp', [
-                'request' => $request,
-                'cod' => $cod,
-                'texto' => $texto,
-                'presup' => $presup,
-                'presmod' => $presmod,
-                'totiva' => $totiva,
-                'siniva' => $siniva,
-                'sumtot' => $sumtot,
-                'empre' => $empre
-            ]);  
-
-        } else {
-  
-            return view('presup.mod', [
-                'request' => $request,
-                'cod' => $cod,
-                'texto' => $texto,
-                'presup' => $presup,
-                'totiva' => $totiva,
-                'siniva' => $siniva,
-                'sumtot' => $sumtot,
-                'empre' => $empre
-            ]);  
-        }      
-    } 
-
-    public function update(Request $request, $id)
-    { }
-
-    public function edit($id)
-    { }
 
     public function delcod(Request $request)
     {
@@ -402,9 +255,7 @@ class FacturasController extends BaseController
         return $cadena;
     }
 
-    public function destroy(Request $request,$idpre)
-    {
-    }
+
 }
 
 
