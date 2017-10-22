@@ -50,10 +50,21 @@ return [
 
     'payments' => 'Pagos',
 
-
     'save'   => 'Guardar',
-
+    'create'   => 'Crear',
 
     'write_2_or_more'   => 'Escribe 2 caracteres o más',
+
+    'profile' => 'Perfil',
+    'record' => 'Ficha',
+    'files' => 'Archivos',
+    'odontogram' => 'Odontograma',
+    'budgets' => 'Presupuestos',
+    'invoices' => 'Facturas',
+
+    'complete' => 'Completa',
+    'rectification' => 'Rectificativa',
+
+    'select_invoice_type' => 'Selecciona el tipo de factura',
 
 ];

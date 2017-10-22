@@ -9,7 +9,7 @@ use Validator;
 use Lang;
 use Exception;
 use Illuminate\Http\Request;
-use App\Interfaces\BaseInterface;
+use App\Http\Controllers\Interfaces\BaseInterface;
 
 class CitasController extends BaseController implements BaseInterface
 {
