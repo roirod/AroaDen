@@ -31,13 +31,34 @@ html,body { height:100%; padding:0; margin:0; }
 .fontwe4 {  font-weight: 400;  }
 
 .btnbig { 
-font-size: 20px;
-line-height: 1.1;
-border-radius: 6px !important;
-padding: 10px 14px; 
+	font-size: 20px;
+	line-height: 1.1;
+	border-radius: 6px !important;
+	padding: 10px 14px; 
 }
 
-.border2px { border: 2px solid #0cedde; }
+.input_login_form { 
+  background-color: #111 !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  border: 1px solid #efefef !important;
+  border-radius: 4px !important;
+  color: #efefef !important;  
+}
+
+.login_text { 
+  color: #efefef !important;
+}
+
+.login_button { 
+  color: #efefef !important;
+  border: 1px solid #efefef !important;
+  border-radius: 4px !important;
+  background-color: #00B1CC !important;
+}
+
+.border2px { border: 2px solid #06F; }
 
 .boxsha {
 -webkit-box-shadow: 0px 0px 19px -1px rgba(255,255,255,1);
