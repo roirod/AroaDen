@@ -92,7 +92,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::get('Factu/{id}/create', 'FacturasController@create');
 	Route::post('Factu/presuedit', 'FacturasController@presuedit');
-	Route::post('Factu/presmod', 'FacturasController@presmod');
+	Route::post('Factu/select', 'FacturasController@select');
 	Route::resource('Factu', 'FacturasController', ['except' => ['index', 'update', 'edit', 'destroy']]);
 
 	Route::get('Trapac/{id}/create','TratamientosController@create');

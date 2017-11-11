@@ -14,6 +14,9 @@ use App\Http\Controllers\Facturas\Rectification;
 
 class FacturasController extends BaseController
 {
+    const COMPLETE = 'Complete';
+    const RECTIFICATION = 'Rectification';
+
     /**
      * @var array $invoice_types  invoice types
      */
@@ -30,31 +33,20 @@ class FacturasController extends BaseController
         $this->views_folder = 'factu';
         $this->model = $factu;
 
+        $fields = [      
+            'issue_date' => true,
+            'no_tax_msg' => true,
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
+
         $complete = '"'.Lang::get('aroaden.complete').'"';
         $rectification = '"'.Lang::get('aroaden.rectification').'"';
 
         $this->invoice_types = [
-            'Complete' => $complete,
-            'Rectification' => $rectification,
+            self::COMPLETE => $complete,
+            self::RECTIFICATION => $rectification,
         ];
-    }
-
-    public static function chose($type)
-    {
-        if ( !array_key_exists($type, $this->invoice_types) )
-            throw new Exception('Fail');
-
-        switch ($type) {
-            case 'Complete':
-                return new Complete();
-            break;
-            case 'Rectification':
-                return new Rectification();
-            break;
-            default:
-                throw new Exception('Fail');
-            break;
-        }
     }
 
     public function show(Request $request, $id)
@@ -68,17 +60,54 @@ class FacturasController extends BaseController
 
         $this->form_route = 'select';
 
-        //$presup = $this->model::AllById($idpac);
-
         $this->view_data['request'] = $request;
-        //$this->view_data['presup'] = $presup;
         $this->view_data['form_route'] = $this->form_route;
         $this->view_data['invoice_types'] = $this->invoice_types;
+        $this->view_data['default_type'] = self::COMPLETE;
         $this->view_data['idpac'] = $idpac;
         $this->view_data['idnav'] = $idpac;        
 
         return view($this->views_folder.'.show', $this->view_data);
     }
+
+    public function select(Request $request)
+    {
+        $type = $request->type;
+        $id = $request->id;
+
+        $this->redirectIfIdIsNull($id, $this->other_route);
+        $id = $this->sanitizeData($id);
+        $type = $this->sanitizeData($type);
+
+        switch ($type) {
+            case self::COMPLETE:
+                $object = new Complete($this->model);
+                return $object->createInvoice($request, $id);
+            break;
+
+            case self::RECTIFICATION:
+                $object = new Rectification($this->model);
+                return $object->createInvoice($request, $id);
+            break;
+
+            default:
+                $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));    
+                return redirect("$this->main_route/$id");
+            break;
+        }
+    }
+
+    public function create(Request $request, $id = false)
+    {    
+
+        $this->view_data['request'] = $request;
+        $this->view_data['form_fields'] = $this->form_fields;        
+        $this->view_data['idpac'] = $id;
+        $this->view_data['idnav'] = $id;
+
+        return parent::create($request, $id);
+    }
+
 
     public function store(Request $request)
     {

@@ -23,7 +23,7 @@
             <br>
             Cantidad: {{ $object->units }}.
             <br>
-            IVA: {{ $object->tax }}.
+            IVA: {{ $object->tax }} %.
             <br>
             Total: {{ numformat($object->units * $object->price) }} €.      
             <br>

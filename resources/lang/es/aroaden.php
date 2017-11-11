@@ -67,4 +67,10 @@ return [
 
     'select_invoice_type' => 'Selecciona el tipo de factura',
 
+    'issue_date' => 'Fecha de emisión',
+    'no_tax_msg' => 'Mensaje de factura exenta de IVA',
+    'no_tax_msg_text' => ' "Factura exenta de I.V.A. (artículo 20. Uno. 5º- Ley 37/1992)"',
+
+
+
 ];

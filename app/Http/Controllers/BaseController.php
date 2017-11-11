@@ -139,7 +139,9 @@ class BaseController extends Controller
             'tax' => false,
             'hour' => false,
             'day' => false,
-            'per' => false,
+            'issue_date' => false,
+            'no_tax_msg' => false,
+            'per' => false,            
             'notes' => false,
             'save' => false,
         ];
