@@ -69,7 +69,6 @@ html,body { height:100%; padding:0; margin:0; }
 .btn_login:hover {
   color: #06F !important;
   background-color: #efefef !important;
-  border-color: #06F;
 }
 
 
