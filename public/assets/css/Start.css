@@ -26,7 +26,6 @@ html,body { height:100%; padding:0; margin:0; }
 .wid70 { width: 70px !important; }
 .wid50 { width: 50px !important; }
 
-
 .max150 { 
   max-width: 150px !important;
   max-height: 150px !important;
@@ -49,6 +48,10 @@ html,body { height:100%; padding:0; margin:0; }
   height: 36px !important;
   margin: auto;
   width: 50%;
+}
+
+.login_text { 
+  color: #efefef !important;
 }
 
 .pad_top_bot { 
@@ -124,6 +127,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 }
 
 .bgtra  { background-color: rgba(0, 0, 0, 0.66); }
+
+.logo  {
+ background-color: rgba(0, 0, 0, 0.66); 
+}
 
 .mar4 { margin: 4px; }
 .mar10 { margin: 10px; }

@@ -28,7 +28,7 @@
     <div class="col-sm-1 wid180 fonsi14">
       <div class="affix">
 
-        <h3 class="pad10 textcent">
+        <h3 class="pad10 login_text textcent bgtra textshadow">
           <i class="fa fa-child"></i>
           <br>
           Aroa<small>Den</small>

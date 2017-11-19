@@ -32,8 +32,8 @@ html,body { height:100%; padding:0; margin:0; }
 
 
 .col_centered{
-    float: none;
-    margin: 0 auto;
+  float: none;
+  margin: 0 auto;
 }
 
 
@@ -93,14 +93,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .bgtra  { background-color: rgba(0, 0, 0, 0.66); }
 
 .boradius { 
--webkit-border-radius: 11px;
--moz-border-radius: 11px;
-border-radius: 11px;
-}
-
-.padlefrig { 
-padding-left: 47px;
-padding-right: 5px;
+  -webkit-border-radius: 11px;
+  -moz-border-radius: 11px;
+  border-radius: 11px;
 }
 
 .mar4 { margin: 4px; }
