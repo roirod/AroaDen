@@ -21,7 +21,7 @@ class Tratampacien extends Model
         return $this->belongsTo('App\Models\Servicios', 'idser', 'idser');
     }
 
-    public function scopeFirstById($query, $id)
+    public static function FirstById($id)
     {
         return DB::table('tratampacien')
             ->join('servicios','tratampacien.idser','=','servicios.idser')
@@ -30,7 +30,7 @@ class Tratampacien extends Model
             ->first();
     }
 
-    public function scopeServicesById($query, $id)
+    public static function ServicesById($id)
     {
         return DB::table('tratampacien')
                     ->join('servicios','tratampacien.idser','=','servicios.idser')
@@ -39,5 +39,23 @@ class Tratampacien extends Model
                     ->orderBy('day','DESC')
                     ->get();
     }
+
+    public static function PaidServicesById($id)
+    {
+        return DB::table('tratampacien')
+                    ->join('servicios','tratampacien.idser','=','servicios.idser')
+                    ->select('tratampacien.*','servicios.name as servicios_name', DB::raw('tratampacien.units*tratampacien.price AS total'))
+                    ->where('idpac', $id)
+                    ->where('tratampacien.paid', 'total')
+
+
+
+
+                                
+                    ->orderBy('day','DESC')
+                    ->get();
+    }
+
+
 
 }

@@ -9,9 +9,10 @@ use App\Models\Servicios;
 use App\Models\Tratampacien;
 
 use Validator;
+use Lang;
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use Lang;
 
 class TratamientosController extends BaseController
 {
@@ -160,6 +161,7 @@ class TratamientosController extends BaseController
         $validator = Validator::make($request->all(), [
             'units' => 'required',            
             'paid' => 'required',
+            'price' => 'required',
             'day' => 'required|date',
             'per1' => '',
             'per2' => ''
@@ -171,12 +173,19 @@ class TratamientosController extends BaseController
                          ->withInput();
         } else {
 
-            try{
+            $units = $this->sanitizeData($request->input('units'));
+            $price = $this->sanitizeData($request->input('price'));
+            $paid = $this->sanitizeData($request->input('paid'));
+
+            try {
 
                 $tratampacien = Tratampacien::find($id);
 
-                $tratampacien->units = $this->sanitizeData($request->input('units'));
-                $tratampacien->paid = $this->sanitizeData($request->input('paid'));
+                if ($this->checkIfPaidIsHigher($units, $price, $paid))
+                    throw new Exception(Lang::get('aroaden.paid_is_higher'));
+
+                $tratampacien->units = $units;
+                $tratampacien->paid = $paid;
                 $tratampacien->day = $this->sanitizeData($request->input('day'));
                 $tratampacien->per1 = $this->sanitizeData($request->input('per1'));
                 $tratampacien->per2 = $this->sanitizeData($request->input('per2'));

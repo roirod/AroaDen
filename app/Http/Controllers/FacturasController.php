@@ -8,6 +8,7 @@ use Lang;
 use App\Models\Factutex;
 use App\Models\Facturas;
 use App\Models\Pacientes;
+use App\Models\Tratampacien;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Facturas\Complete;
 use App\Http\Controllers\Facturas\Rectification;
@@ -99,6 +100,23 @@ class FacturasController extends BaseController
 
     public function create(Request $request, $id = false)
     {    
+
+        $tratampacien = Tratampacien::PaidServicesById($id);
+
+
+
+echo "<pre>";
+echo "<br>";
+echo "------------ tratampacien ------------------";
+echo "<br>";
+var_dump($tratampacien);
+echo "<br>";
+echo "</pre>";
+
+exit();
+
+
+
 
         $this->view_data['request'] = $request;
         $this->view_data['form_fields'] = $this->form_fields;        

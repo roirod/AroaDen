@@ -7,9 +7,12 @@ use App\Models\Settings;
 use Config;
 use View;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Traits\BaseTrait;
 
 class BaseController extends Controller
 {
+    use BaseTrait;
+
     /**
      * @var array $tax_types  file contains that returns an array
      */

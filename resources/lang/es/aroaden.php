@@ -6,6 +6,8 @@ return [
     'users'   => 'Usuarios',
     'new_pass'   => 'Contraseña nueva',
     'change_pass'   => 'Cambiar contraseña',
+    'password'   => 'Contraseña',
+
 
     'name'   => 'Nombre',
     'surname'   => 'Apellidos',
@@ -70,6 +72,8 @@ return [
     'issue_date' => 'Fecha de emisión',
     'no_tax_msg' => 'Mensaje de factura exenta de IVA',
     'no_tax_msg_text' => ' "Factura exenta de I.V.A. (artículo 20. Uno. 5º- Ley 37/1992)"',
+    'paid_is_higher' => 'La cantidad introducida en pagado es superior al total.',
+
 
 
 

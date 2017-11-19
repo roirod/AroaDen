@@ -36,6 +36,8 @@
 
         @include('form_fields.edit.openform')
 
+            <input type="hidden" name="price" value="{{ $object->price }}">
+
             @include('form_fields.edit_alternative')
 
         @include('form_fields.edit.closeform')
