@@ -42,8 +42,8 @@ html,body { height:100%; padding:0; margin:0; }
   max-width: 100% !important;
   min-width: 100% !important;
   width: 100% !important;
-  border: 1px solid #efefef !important;
-  border-radius: 4px !important;
+  outline: 0 none !important;
+  border-bottom: 1px solid #efefef !important;
   color: #efefef !important;  
 }
 
@@ -54,9 +54,24 @@ html,body { height:100%; padding:0; margin:0; }
 .login_button { 
   color: #efefef !important;
   border: 1px solid #efefef !important;
-  border-radius: 4px !important;
   background-color: #00B1CC !important;
 }
+
+.btn_login {
+  color: #efefef !important;
+  background-color: #06F !important;
+  display: block !important;
+  width: 100% !important;
+  height: 40px !important;  
+  border-radius: 4px !important;
+}
+
+.btn_login:hover {
+  color: #06F !important;
+  background-color: #efefef !important;
+  border-color: #06F;
+}
+
 
 .border2px { border: 2px solid #06F; }
 
