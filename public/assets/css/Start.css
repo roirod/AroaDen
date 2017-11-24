@@ -156,7 +156,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .bgblack { background-color: black; }
 .bgwi { background-color: white; }
 
-.textshadow { text-shadow:5px 5px 5px #000000; }
+.textshadow { 
+  text-shadow:  2px 2px 0px #000;
+}
 
 .filena { padding: 1px; margin: 7px; }
 .visfile { border: 1px yellow solid; min-height: 600px; }
