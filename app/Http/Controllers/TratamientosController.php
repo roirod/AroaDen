@@ -154,8 +154,6 @@ class TratamientosController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->redirectIfIdIsNull($id, $this->other_route);
-
         $id = $this->sanitizeData($id);  
                   
         $validator = Validator::make($request->all(), [
@@ -197,13 +195,13 @@ class TratamientosController extends BaseController
 
                 $request->session()->flash($this->error_message_name, $e->getMessage());  
                                 
-                return redirect("/$this->other_route/$tratampacien->idpac");
+                return redirect("/$this->main_route/$id/edit");
 
             }
               
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
                             
-            return redirect("/$this->other_route/$tratampacien->idpac");
+            return redirect("/$this->main_route/$id/edit");
         }     
     }
 
