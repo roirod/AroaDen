@@ -4181,13 +4181,13 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .nav>li>a{
 	position:relative;
 	display:block;
-	padding:10px 15px
+	padding:10px 15px;
+  	border-bottom: 2px solid white !important;
 }
 
 .nav>li>a:focus,.nav>li>a:hover{
 	text-decoration: none;
-	color: rgb(65, 65, 65);
-	background-color: rgb(206, 206, 206);
+  	border-bottom: 2px solid red !important;
 }
 
 .nav>li.disabled>a{

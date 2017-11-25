@@ -1,6 +1,10 @@
 <?php
 
-Route::group(['middleware' => 'web'], function () {
+use Illuminate\Support\Facades\Config;
+
+$route = Config::get('aroaden.routes');
+
+Route::group(['middleware' => 'web'], function () use ($route) {
 	
 	Route::get('/', 'Auth\AuthController@getLogin');
 	Route::get('/login', 'Auth\AuthController@getLogin');
@@ -9,9 +13,9 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::get('/home', 'CitasController@index');
 
-	Route::group(['middleware' => ['admin']], function () {
-		Route::get('Empresa/editData', 'EmpresaController@editData');
-		Route::post('Empresa/saveData', 'EmpresaController@saveData');
+	Route::group(['middleware' => ['admin']], function () use ($route) {
+		Route::get($route["company"].'/editData', 'CompanyController@editData');
+		Route::post($route["company"].'/saveData', 'CompanyController@saveData');
 
 		Route::delete('Pacientes/{id}', 'PacientesController@destroy');
 
@@ -25,10 +29,10 @@ Route::group(['middleware' => 'web'], function () {
 		Route::post('Usuarios/userDelete', 'UsuariosController@userDelete');
 		Route::resource('Usuarios', 'UsuariosController', ['except' => ['create', 'update', 'edit', 'destroy']]);
 
-	 	Route::get('Settings', 'SettingsController@index');
+	 	Route::get($route["settings"], 'SettingsController@index');
 	});
 
-	Route::group(['middleware' => ['medio']], function () {
+	Route::group(['middleware' => ['medio']], function () use ($route) {
 		Route::get('Pacientes/{id}/edit', 'PacientesController@edit');
 		Route::put('Pacientes/{id}', 'PacientesController@update');
 		Route::get('Pacientes/{id}/fiedit', 'PacientesController@fiedit');
@@ -47,14 +51,14 @@ Route::group(['middleware' => 'web'], function () {
 		Route::get('Citas/{id}/edit', 'CitasController@edit');
 		Route::delete('Citas/{id}', 'CitasController@destroy');	
 
-		Route::get('Trapac/{id}/edit', 'TratamientosController@edit');
-		Route::delete('Trapac/{id}', 'TratamientosController@destroy');
+		Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
+		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		
-		Route::post('Presup/delcod', 'PresupuestosController@delcod');
-		Route::post('Presup/delid', 'PresupuestosController@delid');
+		Route::post($route["budgets"].'/delcod', 'PresupuestosController@delcod');
+		Route::post($route["budgets"].'/delid', 'PresupuestosController@delid');
 	});
 
-	Route::get('Empresa', 'EmpresaController@index');
+	Route::get(Config::get('aroaden.routes.company'), 'CompanyController@index');
 
 	Route::post('Citas/list', 'CitasController@list');
 	Route::get('Citas/{id}/create', 'CitasController@create');
@@ -85,15 +89,21 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('Pagos/list', 'PagosController@list');
 	Route::get('Pagos', 'PagosController@index');
 
-	Route::get('Presup/{id}/create', 'PresupuestosController@create');
-	Route::post('Presup/presuedit', 'PresupuestosController@presuedit');
-	Route::post('Presup/presmod', 'PresupuestosController@presmod');
-	Route::resource('Presup', 'PresupuestosController', ['except' => ['index', 'update', 'edit', 'destroy']]);
+	Route::get($route["budgets"].'/{id}/create', 'PresupuestosController@create');
+	Route::post($route["budgets"].'/presuedit', 'PresupuestosController@presuedit');
+	Route::post($route["budgets"].'/presmod', 'PresupuestosController@presmod');
+	Route::resource($route["budgets"], 'PresupuestosController', ['except' => 
+		['index', 'update', 'edit', 'destroy']]);
 
-	Route::get('Trapac/{id}/create','TratamientosController@create');
-	Route::post('Trapac/select', 'TratamientosController@select');  
-	Route::get('Trapac/{id}/edit', 'TratamientosController@edit');
-	Route::resource('Trapac', 'TratamientosController', ['except' => ['index', 'create', 'show']]);
+	Route::get($route["invoices"].'/{id}/create', 'InvoicesController@create');
+	Route::post($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');
+	Route::resource($route["invoices"], 'InvoicesController', ['except' => 
+		['index', 'update', 'edit', 'destroy']]);
+
+	Route::get($route["treatments"].'/{id}/create','TreatmentsController@create');
+	Route::post($route["treatments"].'/select', 'TreatmentsController@select');  
+	Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
+	Route::resource($route["treatments"], 'TreatmentsController', ['except' => ['index', 'create', 'show']]);
 
 });
 

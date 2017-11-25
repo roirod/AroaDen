@@ -107,6 +107,18 @@
 
 			@endif
 
+			@if ($form_fields['issue_date'])
+
+				@include('form_fields.create.issue_date')
+
+			@endif
+
+			@if ($form_fields['no_tax_msg'])
+
+				@include('form_fields.create.no_tax_msg')
+
+			@endif
+
 			@if ($form_fields['notes'])
 
 				@include('form_fields.create.notes')

@@ -6,14 +6,15 @@ use DB;
 use App\Models\Pacientes;
 use App\Models\Personal;
 use App\Models\Servicios;
-use App\Models\Tratampacien;
+use App\Models\Treatments;
 
 use Validator;
+use Lang;
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use Lang;
 
-class TratamientosController extends BaseController
+class TreatmentsController extends BaseController
 {
     public function __construct()
     {
@@ -99,7 +100,7 @@ class TratamientosController extends BaseController
 
         try {
 
-            Tratampacien::create([
+            Treatments::create([
                 'idpac' => $idpac,
                 'idser' => $idser,
                 'price' => $price,
@@ -130,7 +131,7 @@ class TratamientosController extends BaseController
 
         $id = $this->sanitizeData($id);
     
-        $object = Tratampacien::FirstById($id); 
+        $object = Treatments::FirstById($id); 
         $personal = Personal::AllOrderBySurnameNoPagination();
         $paciente = Pacientes::FirstById($object->idpac);
 
@@ -153,13 +154,12 @@ class TratamientosController extends BaseController
 
     public function update(Request $request, $id)
     {
-        $this->redirectIfIdIsNull($id, $this->other_route);
-
         $id = $this->sanitizeData($id);  
                   
         $validator = Validator::make($request->all(), [
             'units' => 'required',            
             'paid' => 'required',
+            'price' => 'required',
             'day' => 'required|date',
             'per1' => '',
             'per2' => ''
@@ -171,12 +171,19 @@ class TratamientosController extends BaseController
                          ->withInput();
         } else {
 
-            try{
+            $units = $this->sanitizeData($request->input('units'));
+            $price = $this->sanitizeData($request->input('price'));
+            $paid = $this->sanitizeData($request->input('paid'));
 
-                $tratampacien = Tratampacien::find($id);
+            try {
 
-                $tratampacien->units = $this->sanitizeData($request->input('units'));
-                $tratampacien->paid = $this->sanitizeData($request->input('paid'));
+                $tratampacien = Treatments::find($id);
+
+                if ($this->checkIfPaidIsHigher($units, $price, $paid))
+                    throw new Exception(Lang::get('aroaden.paid_is_higher'));
+
+                $tratampacien->units = $units;
+                $tratampacien->paid = $paid;
                 $tratampacien->day = $this->sanitizeData($request->input('day'));
                 $tratampacien->per1 = $this->sanitizeData($request->input('per1'));
                 $tratampacien->per2 = $this->sanitizeData($request->input('per2'));
@@ -188,13 +195,13 @@ class TratamientosController extends BaseController
 
                 $request->session()->flash($this->error_message_name, $e->getMessage());  
                                 
-                return redirect("/$this->other_route/$tratampacien->idpac");
+                return redirect("/$this->main_route/$id/edit");
 
             }
               
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
                             
-            return redirect("/$this->other_route/$tratampacien->idpac");
+            return redirect("/$this->main_route/$id/edit");
         }     
     }
 
@@ -204,7 +211,7 @@ class TratamientosController extends BaseController
 
         $this->redirectIfIdIsNull($id, $this->main_route);
                 
-        $tratampacien = Tratampacien::find($id);
+        $tratampacien = Treatments::find($id);
       
         $tratampacien->delete();
 

@@ -6,7 +6,7 @@ use DB;
 use App\Models\Pacientes;
 use App\Models\Ficha;
 use App\Models\Presup;
-use App\Models\Tratampacien;
+use App\Models\Treatments;
 
 use Carbon\Carbon;
 use Storage;
@@ -134,7 +134,7 @@ class PacientesController extends BaseController implements BaseInterface
         }
 
         $citas = $this->model::AllCitasById($id);
-        $tratampacien = Tratampacien::ServicesById($id);
+        $tratampacien = Treatments::ServicesById($id);
         $suma = $this->model::ServicesSumById($id);
 
 	  	$birth = trim($paciente->birth);

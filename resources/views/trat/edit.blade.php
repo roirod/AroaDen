@@ -23,7 +23,7 @@
             <br>
             Cantidad: {{ $object->units }}.
             <br>
-            IVA: {{ $object->tax }}.
+            IVA: {{ $object->tax }} %.
             <br>
             Total: {{ numformat($object->units * $object->price) }} €.      
             <br>
@@ -35,6 +35,8 @@
         <hr>
 
         @include('form_fields.edit.openform')
+
+            <input type="hidden" name="price" value="{{ $object->price }}">
 
             @include('form_fields.edit_alternative')
 

@@ -26,7 +26,6 @@ html,body { height:100%; padding:0; margin:0; }
 .wid70 { width: 70px !important; }
 .wid50 { width: 50px !important; }
 
-
 .max150 { 
   max-width: 150px !important;
   max-height: 150px !important;
@@ -49,6 +48,10 @@ html,body { height:100%; padding:0; margin:0; }
   height: 36px !important;
   margin: auto;
   width: 50%;
+}
+
+.login_text { 
+  color: #efefef !important;
 }
 
 .pad_top_bot { 
@@ -125,6 +128,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 
 .bgtra  { background-color: rgba(0, 0, 0, 0.66); }
 
+.logo  {
+ background-color: rgba(0, 0, 0, 0.66); 
+}
+
 .mar4 { margin: 4px; }
 .mar10 { margin: 10px; }
 .mar20 { margin: 20px; }
@@ -149,7 +156,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .bgblack { background-color: black; }
 .bgwi { background-color: white; }
 
-.textshadow { text-shadow:5px 5px 5px #000000; }
+.textshadow { 
+  text-shadow:  2px 2px 0px #000;
+}
 
 .filena { padding: 1px; margin: 7px; }
 .visfile { border: 1px yellow solid; min-height: 600px; }

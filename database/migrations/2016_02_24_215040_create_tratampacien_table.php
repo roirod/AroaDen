@@ -13,8 +13,8 @@ class CreateTratampacienTable extends Migration
             $table->bigIncrements('idtra');
             $table->Integer('idpac')->unsigned();
             $table->Integer('idser')->unsigned();
+            $table->tinyInteger('units')->unsigned()->default(1);            
             $table->mediumInteger('price')->unsigned();
-            $table->tinyInteger('units')->unsigned()->default(1);
             $table->mediumInteger('paid')->unsigned()->default(0);
             $table->date('day');
             $table->tinyInteger('tax')->unsigned()->default(0);

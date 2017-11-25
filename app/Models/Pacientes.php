@@ -20,9 +20,9 @@ class Pacientes extends Model
         return $this->hasOne('App\Models\Ficha', 'idpac', 'idpac');
     }
 
-    public function tratampacien()
+    public function treatments()
     {
-        return $this->hasMany('App\Models\Tratampacien', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Treatments', 'idpac', 'idpac');
     }
 
     public function citas()
@@ -81,7 +81,7 @@ class Pacientes extends Model
 
     public function scopeServicesSumById($query, $id)
     {
-        return DB::table('tratampacien')
+        return DB::table('treatments')
                     ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
                     ->where('idpac', $id)
                     ->get();
@@ -128,7 +128,7 @@ class Pacientes extends Model
             SUM(tra.units*tra.price) as total, 
             SUM(tra.paid) as paid, 
             SUM(tra.units*tra.price)-SUM(tra.paid) as rest 
-            FROM tratampacien tra
+            FROM treatments tra
             INNER JOIN pacientes pac
             ON tra.idpac=pac.idpac 
             WHERE pac.deleted_at IS NULL 

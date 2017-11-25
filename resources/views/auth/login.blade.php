@@ -3,70 +3,70 @@
 @section('content')
 
 
-<div class="col-xs-8 col-xs-offset-4">
+<div class="col-xs-12">
 	<div class="row">
 
-    <div class="center-block">
-    <div class="col-xs-6 bgtra boradius border2px boxsha padlefrig">
+    <div class="col-xs-3 bgtra boradius border2px boxsha col_centered">
 
-    <br>
+      <div class="row">
+        <div class="col-xs-12 pad10">
 
-    <div class="row">
-      <div class="col-xs-offset-2 col-xs-6">  
-        <h1 class="mar10 fonsi36 textshadow textcent">
-          <i class="fa fa-child"></i>
-          <br>
-          Aroa<small>Den</small>
-        </h1>
+          <div class="col-md-12 textcent">
+            <h1 class="fonsi36 login_text textshadow textcent">
+              <i class="fa fa-child"></i>
+              <br>
+              Aroa<small>Den</small>
+            </h1>
+            <br>
+          </div> 
+
+       <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+          {!! csrf_field() !!}
+
+          <div class="col-md-12">
+            <input type="text" class="form-control input_login_form" name="username" value="{{ old('username') }}" placeholder="{{ trans('aroaden.user') }}" autofocus required>
+
+           <br>
+          </div>
+
+
+         
+          <div class="col-md-12">
+            <input type="password" class="form-control input_login_form" name="password" placeholder="{{ trans('aroaden.password') }}" required >
+          </div> 
+
+        	  @if ($errors->has('username'))
+        	      <span class="help-block">
+        	          <strong>{{ $errors->first('username') }}</strong>
+        	      </span>
+        	  @endif  
+         
+             @if ($errors->has('password'))
+                 <span class="help-block">
+                     <strong>{{ $errors->first('password') }}</strong>
+                 </span>
+             @endif 
+
+
+         <div class="col-md-12">
+          <div class="checkbox login_text"> <label>
+            <input type="checkbox" name="remember"> Recordarme </label>
+         </div> </div>
+   
+         <div class="col-md-12">
+          <br> 
+            <button type="submit" class="btn btn_login">
+              Acceder <i class="fa fa-chevron-circle-right"></i> 
+            </button> 
+           </div>
+
+      </form> 
+
+        </div>
       </div>
-    </div>
 
-     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-        {!! csrf_field() !!}
+    <br> 
 
-      <div class="form-group">
-       <label class="control-label col-xs-4 fonbla text-left mar10 col-xs-offset-1"> Usuario</label>
-            <div class="col-xs-offset-1 col-xs-10 text-left mar10">
-              <div class="input-group margin-bottom-sm">
-                <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-                <input type="text" class="form-control" name="username" value="{{ old('username') }}" required >  
-              </div> 
-        </div> </div>
-       
-      <div class="form-group">
-        <label class="control-label col-xs-4 fonbla text-left mar10 col-xs-offset-1">Contrase&ntilde;a</label>
-        <div class="col-xs-offset-1 col-xs-10 text-left mar10">  <div class="input-group"> 
-        <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-        <input type="password" class="form-control" name="password" required > </div>
-       </div> </div>
-
-      	  @if ($errors->has('username'))
-      	      <span class="help-block">
-      	          <strong>{{ $errors->first('username') }}</strong>
-      	      </span>
-      	  @endif  
-       
-           @if ($errors->has('password'))
-               <span class="help-block">
-                   <strong>{{ $errors->first('password') }}</strong>
-               </span>
-           @endif 
-
-      <div class="form-group"> 
-       <div class="col-xs-offset-1 col-xs-5">
-        <div class="checkbox fonbla"> <label>
-          <input type="checkbox" name="remember"> Recordarme </label>
-       </div> </div>
-
-         <div class="col-xs-5 pull-right mar10 pad4">
-          <button type="submit" class="btn btn-info">Acceder <i class="fa fa-chevron-circle-right"></i> </button> 
-         </div>
-      </div>
-
- </form> 
-
-    <br>
-
-</div> </div> </div> </div>
+</div> </div> </div>
  
 @endsection
