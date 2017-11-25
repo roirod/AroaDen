@@ -26,7 +26,7 @@ class Settings extends Model
 
         $obj = new class {};
 
-        foreach ($empre as $arr => $value) {
+        foreach ($empre as $value) {
             $obj_key = $value->key;
             $obj_val = $value->value;
 

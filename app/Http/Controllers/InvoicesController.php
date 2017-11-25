@@ -6,14 +6,14 @@ use DB;
 use Validator;
 use Lang;
 use App\Models\Factutex;
-use App\Models\Facturas;
+use App\Models\Invoices;
 use App\Models\Pacientes;
-use App\Models\Tratampacien;
+use App\Models\Treatments;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Facturas\Complete;
-use App\Http\Controllers\Facturas\Rectification;
+use App\Http\Controllers\Invoices\Complete;
+use App\Http\Controllers\Invoices\Rectification;
 
-class FacturasController extends BaseController
+class InvoicesController extends BaseController
 {
     const COMPLETE = 'Complete';
     const RECTIFICATION = 'Rectification';
@@ -23,16 +23,16 @@ class FacturasController extends BaseController
      */
     private $invoice_types = [];
 
-    public function __construct(Facturas $factu)
+    public function __construct(Invoices $invoices)
     {
         parent::__construct();
 
         $this->middleware('auth');
 
-        $this->main_route = 'Factu';
+        $this->main_route = 'invoices';
         $this->other_route = 'Pacientes';
-        $this->views_folder = 'factu';
-        $this->model = $factu;
+        $this->views_folder = 'invoices';
+        $this->model = $invoices;
 
         $fields = [      
             'issue_date' => true,
@@ -59,7 +59,7 @@ class FacturasController extends BaseController
         $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
         $this->passVarsToViews();
 
-        $this->form_route = 'select';
+        $this->form_route = 'invoicesFactory';
 
         $this->view_data['request'] = $request;
         $this->view_data['form_route'] = $this->form_route;
@@ -71,7 +71,7 @@ class FacturasController extends BaseController
         return view($this->views_folder.'.show', $this->view_data);
     }
 
-    public function select(Request $request)
+    public function invoicesFactory(Request $request)
     {
         $type = $request->type;
         $id = $request->id;
@@ -101,7 +101,7 @@ class FacturasController extends BaseController
     public function create(Request $request, $id = false)
     {    
 
-        $tratampacien = Tratampacien::PaidServicesById($id);
+        $tratampacien = Treatments::PaidServicesById($id);
 
 
 

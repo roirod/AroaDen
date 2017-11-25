@@ -31,16 +31,16 @@
         <h3 class="pad10 login_text textcent bgtra textshadow">
           <i class="fa fa-child"></i>
           <br>
-          Aroa<small>Den</small>
+          {!! $app_name !!}
         </h3>
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 
-            <li><a href="{!!url("/Empresa")!!}"><i class="fa fa-home"></i> Empresa</a></li>  
-            <li><a href="{!!url("/Citas")!!}"><i class="fa fa-calendar"></i> Citas</a></li> 
-            <li><a href="{!!url("/Pacientes")!!}"><i class="fa fa-users"></i> Pacientes </a></li>
-            <li><a href="{!!url("/Personal")!!}"><i class="fa fa-user-md"></i> Personal</a></li> 
-            <li><a href="{!!url("/Servicios")!!}"><i class="fa fa-tasks"> </i> Servicios</a></li> 
-            <li><a href="{!!url("/Contable")!!}"><i class="fa fa-pie-chart"></i> Contable</a></li> 
+            <li><a href="{!! url("/$company_route")!!}"><i class="fa fa-home"></i> {!! @trans("aroaden.company") !!}</a></li>  
+            <li><a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar"> </i> {!! @trans("aroaden.appointments") !!}</a></li> 
+            <li><a href="{!! url("/$patients_route")!!}"><i class="fa fa-users"></i> {!! @trans("aroaden.patients") !!}</a></li>
+            <li><a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md"></i> {!! @trans("aroaden.staff") !!}</a></li> 
+            <li><a href="{!! url("/$sevices_route")!!}"><i class="fa fa-tasks"> </i> {!! @trans("aroaden.sevices") !!}</a></li> 
+            <li><a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart"></i> {!! @trans("aroaden.accounting") !!}</a></li> 
           </ul>
         </nav>
 
@@ -59,24 +59,24 @@
               {!! ucfirst ($date) !!},&nbsp;
               {!! $Carbon::now()->format('d-m-Y') !!}  &nbsp;| &nbsp;
 
-              Usuario:  <span class="label label-primary fonsi15"> {!! Auth::user()->username !!} </span>
+              {!! @trans("aroaden.user") !!}  <span class="label label-primary fonsi15"> {!! Auth::user()->username !!} </span>
 
           </div>
    	
           <div class="col-sm-2 text-right">
-            <a class="btn btn-default btn-sm" role="button" href="{!! url('/Settings') !!}" title="Ajustes">
+            <a class="btn btn-default btn-sm" role="button" href="{!! url("/$settings_route") !!}" title="Ajustes">
               <i class="fa fa-cogs"></i>
             </a>
         
-            <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="Manuales">
-              <i class="fa fa-question" aria-hidden="true"></i>
+            <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="{!! @trans("aroaden.manuals") !!}">
+              <i class="fa fa-question"></i>
             </a>
 
             <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
               <span class="caret"></span> &nbsp; <i class="fa fa-close"></i>
             </button> 
             <ul class="dropdown-menu" role="menu">
-    		      <li><a href="{!!url("/logout")!!}" class="btn btn-default btn-md" role="button"> Cerrar </a></li>
+    		      <li><a href="{!! url("/logout") !!}" class="btn btn-default btn-md" role="button"> {!! @trans("aroaden.logout") !!} </a></li>
             </ul>
           </div>
 

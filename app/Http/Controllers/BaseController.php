@@ -13,6 +13,8 @@ class BaseController extends Controller
 {
     use BaseTrait;
 
+    const APP_NAME = 'Aroa<small>Den</small>';
+
     /**
      * @var array $tax_types  file contains that returns an array
      */
@@ -173,16 +175,16 @@ class BaseController extends Controller
 
     private function checkIfSettingExists()
     {
-        $settings_fields = Config::get('settings_fields');
+        $settings_fields = Config::get('aroaden.settings_fields');
 
         foreach ($settings_fields as $field) {
 
-            $exits = Settings::getValueByKey($field);
+            $exits = Settings::getValueByKey($field['name']);
 
             if ($exits == null) {
 
                 DB::table('settings')->insert([
-                    'key' => $field,
+                    'key' => $field['name'],
                     'value' => 'none'
                 ]);                
                 
@@ -229,10 +231,27 @@ class BaseController extends Controller
     }
 
     protected function passVarsToViews()
-    {   
+    {
+        View::share('app_name', self::APP_NAME);
         View::share('page_title', $this->page_title);
         View::share('autofocus', $this->autofocus);
-        View::share('main_route', $this->main_route);        
+        View::share('main_route', $this->main_route);
+
+        View::share('patients_route', Config::get('aroaden.routes.patients'));
+        View::share('invoices_route', Config::get('aroaden.routes.invoices'));
+        View::share('budgets_route', Config::get('aroaden.routes.budgets')); 
+        View::share('company_route', Config::get('aroaden.routes.company'));
+        View::share('appointments_route', Config::get('aroaden.routes.appointments'));
+        View::share('staff_route', Config::get('aroaden.routes.staff')); 
+        View::share('sevices_route', Config::get('aroaden.routes.sevices'));
+        View::share('accounting_route', Config::get('aroaden.routes.accounting'));
+        View::share('settings_route', Config::get('aroaden.routes.settings')); 
+    }
+
+    protected function setPageTitle($data)
+    {   
+        $this->page_title = $data.' - '.$this->page_title;
+        View::share('page_title', $this->page_title);
     }
 
     protected function echoJsonOuptut($data)

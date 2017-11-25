@@ -6,7 +6,7 @@ use DB;
 use App\Models\Pacientes;
 use App\Models\Personal;
 use App\Models\Servicios;
-use App\Models\Tratampacien;
+use App\Models\Treatments;
 
 use Validator;
 use Lang;
@@ -14,7 +14,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
-class TratamientosController extends BaseController
+class TreatmentsController extends BaseController
 {
     public function __construct()
     {
@@ -100,7 +100,7 @@ class TratamientosController extends BaseController
 
         try {
 
-            Tratampacien::create([
+            Treatments::create([
                 'idpac' => $idpac,
                 'idser' => $idser,
                 'price' => $price,
@@ -131,7 +131,7 @@ class TratamientosController extends BaseController
 
         $id = $this->sanitizeData($id);
     
-        $object = Tratampacien::FirstById($id); 
+        $object = Treatments::FirstById($id); 
         $personal = Personal::AllOrderBySurnameNoPagination();
         $paciente = Pacientes::FirstById($object->idpac);
 
@@ -177,7 +177,7 @@ class TratamientosController extends BaseController
 
             try {
 
-                $tratampacien = Tratampacien::find($id);
+                $tratampacien = Treatments::find($id);
 
                 if ($this->checkIfPaidIsHigher($units, $price, $paid))
                     throw new Exception(Lang::get('aroaden.paid_is_higher'));
@@ -211,7 +211,7 @@ class TratamientosController extends BaseController
 
         $this->redirectIfIdIsNull($id, $this->main_route);
                 
-        $tratampacien = Tratampacien::find($id);
+        $tratampacien = Treatments::find($id);
       
         $tratampacien->delete();
 

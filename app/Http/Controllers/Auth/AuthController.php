@@ -30,7 +30,7 @@ class AuthController extends Controller
     private function checkIfUserExists()
     {
         if ( env('CREATE_DEFAULT_USERS') ) {
-            $default_users = Config::get('default_users');
+            $default_users = Config::get('aroaden.default_users');
 
             foreach ($default_users as $user) {
 
