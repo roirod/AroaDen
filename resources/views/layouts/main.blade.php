@@ -39,7 +39,7 @@
             <li><a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar"> </i> {!! @trans("aroaden.appointments") !!}</a></li> 
             <li><a href="{!! url("/$patients_route")!!}"><i class="fa fa-users"></i> {!! @trans("aroaden.patients") !!}</a></li>
             <li><a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md"></i> {!! @trans("aroaden.staff") !!}</a></li> 
-            <li><a href="{!! url("/$sevices_route")!!}"><i class="fa fa-tasks"> </i> {!! @trans("aroaden.sevices") !!}</a></li> 
+            <li><a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks"> </i> {!! @trans("aroaden.services") !!}</a></li>
             <li><a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart"></i> {!! @trans("aroaden.accounting") !!}</a></li> 
           </ul>
         </nav>

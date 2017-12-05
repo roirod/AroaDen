@@ -11,14 +11,14 @@ class Treatments extends Model
     protected $fillable = ['idpac','idser','price','units','paid','day','tax','per1','per2'];
     protected $primaryKey = 'idtra';
 
-    public function pacientes()
+    public function patients()
     {
-        return $this->belongsTo('App\Models\Pacientes', 'idpac', 'idpac');
+        return $this->belongsTo('App\Models\Patients', 'idpac', 'idpac');
     }
 
-    public function servicios()
+    public function services()
     {
-        return $this->belongsTo('App\Models\Servicios', 'idser', 'idser');
+        return $this->belongsTo('App\Models\Services', 'idser', 'idser');
     }
 
     public static function FirstById($id)
@@ -58,7 +58,5 @@ class Treatments extends Model
 
         return $array_data;
     }
-
-
 
 }

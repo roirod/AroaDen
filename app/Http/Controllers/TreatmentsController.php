@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use App\Models\Pacientes;
-use App\Models\Personal;
-use App\Models\Servicios;
-use App\Models\Treatments;
-
-use Validator;
-use Lang;
-use Exception;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use App\Models\Treatments;
+use App\Models\Patients;
+use App\Models\Services;
+use App\Models\Staff;
+use Validator;
+use Exception;
+use Lang;
+use DB;
 
 class TreatmentsController extends BaseController
 {
@@ -22,10 +20,10 @@ class TreatmentsController extends BaseController
 
         $this->middleware('auth');
 
-        $this->main_route = 'Trapac';
-        $this->other_route = 'Pacientes';
-        $this->form_route = 'select';              
-        $this->views_folder = 'trat';
+        $this->main_route = $this->config['routes']['treatments'];
+        $this->other_route = $this->config['routes']['patients'];             
+        $this->views_folder = $this->config['routes']['treatments'];        
+        $this->form_route = 'select';   
 
         $fields = [
             'units' => true,
@@ -42,13 +40,9 @@ class TreatmentsController extends BaseController
     {  
         $this->redirectIfIdIsNull($id, $this->other_route);
 
-        $servicios = Servicios::AllOrderByName();
-        $personal = Personal::AllOrderBySurnameNoPagination();
-        $object = Pacientes::FirstById($id);
-
-        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
-
-        $this->passVarsToViews();     
+        $servicios = Services::AllOrderByName();
+        $personal = Staff::AllOrderBySurnameNoPagination();
+        $object = Patients::FirstById($id);
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
@@ -60,14 +54,16 @@ class TreatmentsController extends BaseController
         $this->view_data['form_route'] = $this->form_route;
         $this->view_data['form_fields'] = $this->form_fields;
 
+        $this->setPageTitle($object->surname.', '.$object->name);
+
         return parent::create($request, $id);
     }
 
     public function select(Request $request)
     {
-        $id = $request->input('idser_select');
+        $id = $this->sanitizeData( $request->input('idser_select') );
 
-        $servicio = Servicios::FirstById($id);
+        $servicio = Services::FirstById($id);
 
         $data = [];
         $data['idser'] = $servicio->idser;
@@ -86,7 +82,7 @@ class TreatmentsController extends BaseController
         $this->redirectIfIdIsNull($idpac, $this->other_route);
         $this->redirectIfIdIsNull($idser, $this->other_route);
 
-        $servicio = Servicios::FirstById($idser);     
+        $servicio = Services::FirstById($idser);     
 
         $price = $servicio->price;
         $units = $this->sanitizeData( $request->input('units') );
@@ -128,16 +124,11 @@ class TreatmentsController extends BaseController
     public function edit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->other_route);
-
         $id = $this->sanitizeData($id);
     
         $object = Treatments::FirstById($id); 
-        $personal = Personal::AllOrderBySurnameNoPagination();
-        $paciente = Pacientes::FirstById($object->idpac);
-
-        $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
-
-        $this->passVarsToViews();
+        $personal = Staff::AllOrderBySurnameNoPagination();
+        $paciente = Patients::FirstById($object->idpac);
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
@@ -149,6 +140,8 @@ class TreatmentsController extends BaseController
         $this->view_data['form_fields'] = $this->form_fields;        
         $this->view_data['autofocus'] = 'units';
         
+        $this->setPageTitle($paciente->surname.', '.$paciente->name);
+
         return parent::edit($request, $id);
     }
 

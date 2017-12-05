@@ -2,19 +2,23 @@
 
 return [
 
+    'files' => [
+        'file_max_size' => 3,
+    ],
+
     'routes' => [
         'company' => 'company',
-        'appointments' => 'Citas',
-        'patients' => 'Pacientes',
-        'staff' => 'Personal',
-        'sevices' => 'Servicios',
-        'accounting' => 'Contable',
+        'appointments' => 'appointments',
+        'patients' => 'patients',
+        'staff' => 'staff',
+        'services' => 'services',
+        'accounting' => 'accounting',
+        'users' => 'users',
         'invoices' => 'invoices',
-        'budgets' => 'Presup',
+        'budgets' => 'budgets',
         'settings' => 'settings',
         'pays' => 'pays',
-        'treatments' => 'Trapac',
-
+        'treatments' => 'treatments',
     ],
 
     'tax_types' => [

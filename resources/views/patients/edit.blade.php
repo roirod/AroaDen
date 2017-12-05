@@ -7,24 +7,19 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Crear factura") !!}
+	{!! addtexto("Editar Paciente") !!}
 
-	@include('form_fields.create.opendiv')
+	@include('form_fields.edit')
 
-		<form role="form" id="form" class="form">
-
-			@include('form_fields.create_alternative')
-
-		@include('form_fields.create.closeform')
-	@include('form_fields.create.closediv')
-    
 @endsection
-
+	 
 @section('js')
-    @parent   
+    @parent
+    
 	  <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/minified/polyfiller.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/main.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/guarda.js') !!}"></script>
+	 	  
 @endsection

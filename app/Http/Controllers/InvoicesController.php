@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+use App\Http\Controllers\Invoices\Rectification;
+use App\Http\Controllers\Invoices\Complete;
+use Illuminate\Http\Request;
+use App\Models\Treatments;
+use App\Models\Patients;
+use App\Models\Services;
+use App\Models\Invoices;
+use App\Models\Staff;
 use Validator;
 use Lang;
-use App\Models\Factutex;
-use App\Models\Invoices;
-use App\Models\Pacientes;
-use App\Models\Treatments;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Invoices\Complete;
-use App\Http\Controllers\Invoices\Rectification;
+use DB;
 
 class InvoicesController extends BaseController
 {
@@ -29,9 +30,9 @@ class InvoicesController extends BaseController
 
         $this->middleware('auth');
 
-        $this->main_route = 'invoices';
-        $this->other_route = 'Pacientes';
-        $this->views_folder = 'invoices';
+        $this->main_route = $this->config['routes']['invoices'];
+        $this->other_route = $this->config['routes']['patients'];             
+        $this->views_folder = $this->config['routes']['invoices'];        
         $this->model = $invoices;
 
         $fields = [      
@@ -55,9 +56,9 @@ class InvoicesController extends BaseController
         $this->redirectIfIdIsNull($id, $this->other_route);
         $idpac = $this->sanitizeData($id);
 
-        $paciente = Pacientes::FirstById($idpac);
-        $this->page_title = $paciente->surname.', '.$paciente->name.' - '.$this->page_title;
-        $this->passVarsToViews();
+        $object = Patients::FirstById($idpac);
+
+        $this->setPageTitle($object->surname.', '.$object->name);
 
         $this->form_route = 'invoicesFactory';
 

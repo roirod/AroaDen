@@ -46,13 +46,7 @@
                      <strong>{{ $errors->first('password') }}</strong>
                  </span>
              @endif 
-
-
-         <div class="col-md-12">
-          <div class="checkbox login_text"> <label>
-            <input type="checkbox" name="remember"> Recordarme </label>
-         </div> </div>
-   
+  
          <div class="col-md-12">
           <br> 
             <button type="submit" class="btn btn_login">
