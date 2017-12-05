@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use App\Models\Settings;
 use Illuminate\Http\Request;
-use Lang;
+use App\Models\Settings;
 use Validator;
-use Config;
+use Redis;
+use Lang;
+use DB;
 
 class CompanyController extends BaseController
 {
@@ -20,8 +20,8 @@ class CompanyController extends BaseController
 
         $this->middleware('auth');
 
-        $this->main_route = Config::get('aroaden.routes.company');
-        $this->views_folder = Config::get('aroaden.routes.company');
+        $this->main_route = $this->config['routes']['company'];
+        $this->views_folder = $this->config['routes']['company'];
         $this->model = $settings;        
     }
 
@@ -45,7 +45,6 @@ class CompanyController extends BaseController
         return $this->commonProcess($request, 'edit');
     }
 
-
     /**
      *  create object from key value pair array in this format $obj->obj_key
      * 
@@ -53,21 +52,23 @@ class CompanyController extends BaseController
      */
     private function commonProcess($request, $view_name)
     {
-        $obj = $this->model::getObject();
-
-        $this->setPageTitle(Lang::get('aroaden.company'));
+        $obj = $this->getSettings();
 
         $this->view_data['request'] = $request;
         $this->view_data['obj'] = $obj;
-        $this->view_data['main_loop'] = Config::get('aroaden.settings_fields');
+        $this->view_data['main_loop'] = $this->config['settings_fields'];
 
-        if ($view_name == 'edit') {
-            $this->view_data['form_route'] = 'saveData';
-        } else {
+        if ($view_name == 'index') {
+
             $this->view_data['form_route'] = 'editData';
-        }
+            $this->setPageTitle(Lang::get('aroaden.company_data'));
 
-        $this->passVarsToViews();
+        } elseif ($view_name == 'edit') {
+
+            $this->view_data['form_route'] = 'saveData';
+            $this->setPageTitle(Lang::get('aroaden.company_edit_data'));
+
+        }
 
         return view($this->views_folder.".$view_name", $this->view_data);
     }
@@ -91,6 +92,10 @@ class CompanyController extends BaseController
                 }
             }
         }
+
+        $settings = Settings::getArray();
+
+        Redis::set('settings', json_encode($settings));       
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 

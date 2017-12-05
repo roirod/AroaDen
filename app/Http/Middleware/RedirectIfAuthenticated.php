@@ -12,12 +12,9 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {   	
 	        	
-	        if (property_exists($this, 'redirectTo')) {
-	            return redirect("$this->redirectTo");
-	        }     	
+	        if (property_exists($this, 'redirectTo'))
+	            return redirect("$this->redirectTo");  	
         	    	
-	       // return redirect('/Clientes');
-
         }
 
         return $next($request);

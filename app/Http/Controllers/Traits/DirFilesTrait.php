@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Traits;
 use Illuminate\Http\Request;
 use Storage;
 use Image;
-use Exception;
 
 trait DirFilesTrait {
 
@@ -23,8 +22,7 @@ trait DirFilesTrait {
         $thumb_dir = "/$this->files_dir/$id/$this->thumb_dir";
 
         $object = $this->model::FirstById($id);
-        $this->page_title = $object->surname.', '.$object->name.' - '.$this->page_title;
-        $this->passVarsToViews();      
+        $this->setPageTitle($object->surname.', '.$object->name); 
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
@@ -154,7 +152,6 @@ trait DirFilesTrait {
     public function download(Request $request, $id, $file)
     {   
         $id = $this->sanitizeData($id);
-
         $this->redirectIfIdIsNull($id, $this->main_route);
         $this->redirectIfIdIsNull($file, $this->main_route);
         

@@ -10,8 +10,8 @@ class Invoices extends Model
     protected $fillable = ['idpac','idser','price','units','invoice_number','code','tax'];
     protected $primaryKey = 'idfac';
 
-    public function pacientes()
+    public function patients()
     {
-        return $this->belongsTo('App\Models\Pacientes');
+        return $this->belongsTo('App\Models\Patients');
     }
 }

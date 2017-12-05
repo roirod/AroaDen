@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\Request;
+use Config;
+use Auth;
+use Lang;
 
 class SettingsController extends BaseController
 {
@@ -13,16 +15,19 @@ class SettingsController extends BaseController
 
         $this->middleware('auth');
 
-        $this->views_folder = Config::get('aroaden.routes.settings');
+        $this->main_route = $this->config['routes']['users'];
+        $this->views_folder = $this->config['routes']['settings'];
     }	
 
     public function index(Request $request)
     {  	 	  
         $username = Auth::user()->username;
 
-        return view("$this->views_folder.index", [
-            'request' => $request,
-        	'username' => $username
-        ]);
+        $this->view_data['request'] = $request;
+        $this->view_data['username'] = $username;
+
+        $this->setPageTitle(Lang::get('aroaden.settings'));
+
+        return parent::index($request);
     }
 }

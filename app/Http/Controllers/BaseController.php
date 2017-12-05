@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+use App\Http\Controllers\Traits\BaseTrait;
+use Illuminate\Http\Request;
 use App\Models\Settings;
 use Config;
+use Redis;
 use View;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Traits\BaseTrait;
+use DB;
 
 class BaseController extends Controller
 {
     use BaseTrait;
 
     const APP_NAME = 'Aroa<small>Den</small>';
+
+    /**
+     * @var array $config  config
+     */
+    protected $config;
 
     /**
      * @var array $tax_types  file contains that returns an array
@@ -88,7 +94,7 @@ class BaseController extends Controller
     /**
      * @var int $file_max_size  file_max_size in MB
      */
-    protected $file_max_size = 1024 * 1024 * 3;
+    protected $file_max_size;
 
     /**
      * @var string $img_folder  img_folder
@@ -111,6 +117,16 @@ class BaseController extends Controller
     protected $model;    
 
     /**
+     * @var object $model2  model
+     */
+    protected $model2;    
+
+    /**
+     * @var object $model3  model
+     */
+    protected $model3;    
+
+    /**
      * @var bool $has_odogram  si tiene odontograma o no
      */
     protected $has_odogram = false;   
@@ -122,6 +138,11 @@ class BaseController extends Controller
     {
         setlocale( LC_ALL, env('APP_LC_ALL') );
         date_default_timezone_set( env('APP_TIMEZONE') );
+
+        $this->config = Config::get('aroaden');
+
+        $file_max_size = (int)$this->config['files']['file_max_size'];
+        $this->file_max_size = 1024 * 1024 * $file_max_size;
 
         $this->checkIfSettingExists();
         $this->passVarsToViews();
@@ -152,6 +173,12 @@ class BaseController extends Controller
         ];
     }
 
+    /**
+     *  get index view
+     * 
+     *  @param object $request     
+     *  @return string       
+     */
     public function index(Request $request)
     {
         $this->passVarsToViews();
@@ -159,6 +186,13 @@ class BaseController extends Controller
         return view($this->views_folder.'.index', $this->view_data);
     }
 
+    /**
+     *  get create view
+     * 
+     *  @param object $request     
+     *  @param int $id
+     *  @return string       
+     */
     public function create(Request $request, $id = false)
     {
         $this->passVarsToViews();
@@ -166,6 +200,13 @@ class BaseController extends Controller
         return view($this->views_folder.'.create', $this->view_data);   
     }
 
+    /**
+     *  get edit view
+     * 
+     *  @param object $request     
+     *  @param int $id
+     *  @return string       
+     */
     public function edit(Request $request, $id)
     {
         $this->passVarsToViews();
@@ -173,97 +214,69 @@ class BaseController extends Controller
         return view($this->views_folder.'.edit', $this->view_data);   
     }
 
+    /**
+     *  check If Setting Exists 
+     */
     private function checkIfSettingExists()
     {
-        $settings_fields = Config::get('aroaden.settings_fields');
+        $settings_fields = $this->config['settings_fields'];
 
         foreach ($settings_fields as $field) {
-
             $exits = Settings::getValueByKey($field['name']);
 
             if ($exits == null) {
-
                 DB::table('settings')->insert([
                     'key' => $field['name'],
-                    'value' => 'none'
+                    'value' => ''
                 ]);                
-                
             }
+        }
 
+        $exists = Redis::exists('settings');
+
+        if (!$exists) {
+            $settings = Settings::getArray();
+
+            Redis::set('settings', json_encode($settings));
         }
 
         return redirect()->back(); 
     }
 
-    protected function convertYmdToDmY($date)
-    {   
-        $date = date('d-m-Y', strtotime($date));
-
-        return $date;
-    }
-
-    protected function validateDate($date)
-    {   
-        list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
-
-        return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
-    }
-
-    protected function validateTime($time)
-    {   
-        if ( preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time) )
-            return true;
-
-        return false;
-    }
-
-    protected function sanitizeData($data)
-    {   
-        $data = htmlentities(trim($data), ENT_QUOTES, "UTF-8");
-
-        return $data;
-    }
-
-    protected function redirectIfIdIsNull($id, $route)
-    {   
-        if ( null == $id )
-            return redirect($route);
-    }
-
+    /**
+     *  pass Vars To Views
+     */
     protected function passVarsToViews()
     {
         View::share('app_name', self::APP_NAME);
         View::share('page_title', $this->page_title);
         View::share('autofocus', $this->autofocus);
         View::share('main_route', $this->main_route);
+        View::share('other_route', $this->other_route);
+        View::share('form_route', $this->form_route);
 
-        View::share('patients_route', Config::get('aroaden.routes.patients'));
-        View::share('invoices_route', Config::get('aroaden.routes.invoices'));
-        View::share('budgets_route', Config::get('aroaden.routes.budgets')); 
-        View::share('company_route', Config::get('aroaden.routes.company'));
-        View::share('appointments_route', Config::get('aroaden.routes.appointments'));
-        View::share('staff_route', Config::get('aroaden.routes.staff')); 
-        View::share('sevices_route', Config::get('aroaden.routes.sevices'));
-        View::share('accounting_route', Config::get('aroaden.routes.accounting'));
-        View::share('settings_route', Config::get('aroaden.routes.settings')); 
+        View::share('patients_route', $this->config['routes']['patients']);
+        View::share('invoices_route', $this->config['routes']['invoices']);
+        View::share('budgets_route', $this->config['routes']['budgets']);
+        View::share('company_route', $this->config['routes']['company']);
+        View::share('appointments_route', $this->config['routes']['appointments']);
+        View::share('staff_route', $this->config['routes']['staff']);
+        View::share('services_route', $this->config['routes']['services']);
+        View::share('accounting_route', $this->config['routes']['accounting']);
+        View::share('treatments_route', $this->config['routes']['treatments']);        
+        View::share('settings_route', $this->config['routes']['settings']);
     }
 
+    /**
+     *  set Page Title
+     * 
+     *  @param string $data
+     */
     protected function setPageTitle($data)
     {   
         $this->page_title = $data.' - '.$this->page_title;
-        View::share('page_title', $this->page_title);
-    }
-
-    protected function echoJsonOuptut($data)
-    {   
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($data);
-        exit();    
-    }
-
-    protected function formatNumber($num)
-    {   
-        return number_format($num, 0, '', '.');
+        
+        $this->passVarsToViews();
     }
 
 }

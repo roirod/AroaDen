@@ -2,7 +2,7 @@
 
 @section('content')
 
-@include('includes.pacnav')
+@include('includes.patients_nav')
 
 @include('includes.messages')
 @include('includes.errors')
