@@ -7,7 +7,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Añadir Cita") !!}
+	{!! addText("Añadir Cita") !!}
 
 	@include('form_fields.create.opendiv')
 

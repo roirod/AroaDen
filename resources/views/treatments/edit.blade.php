@@ -7,7 +7,7 @@
     @include('includes.messages')
     @include('includes.errors')
 
-    {{ addtexto("Editar Tratamiento") }}
+    {{ addText("Editar Tratamiento") }}
 
     <div class="row">
      <div class="col-sm-12 mar10">

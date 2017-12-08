@@ -7,7 +7,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Editar Paciente") !!}
+	{!! addText("Editar Paciente") !!}
 
 	@include('form_fields.edit')
 

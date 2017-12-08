@@ -35,8 +35,8 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::group(['middleware' => ['medio']], function () use ($route) {
 		Route::get($route["patients"].'/{id}/edit', 'PatientsController@edit');
 		Route::put($route["patients"].'/{id}', 'PatientsController@update');
-		Route::get($route["patients"].'/{id}/fiedit', 'PatientsController@fiedit');
-		Route::put($route["patients"].'/{id}/fisave', 'PatientsController@fisave');
+		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');
+		Route::put($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
 		Route::post($route["patients"].'/filerem', 'PatientsController@filerem');
 		Route::post($route["patients"].'/upodog', 'PatientsController@upodog');
 		Route::post($route["patients"].'/resodog', 'PatientsController@resodog');
@@ -66,13 +66,13 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::resource($route["appointments"], 'AppointmentsController', ['except' => ['show']]);
 	  	  
 	Route::post($route["patients"].'/list', 'PatientsController@list');
-	Route::get($route["patients"].'/{id}/ficha', 'PatientsController@ficha');
+	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
 	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
 	Route::post($route["patients"].'/upload', 'PatientsController@upload');
 	Route::get($route["patients"].'/{id}/{file}/down', 'PatientsController@download');
 	Route::get($route["patients"].'/{id}/odogram', 'PatientsController@odogram');	 
 	Route::get($route["patients"].'/{id}/downodog', 'PatientsController@downodog');
-	Route::get($route["patients"].'/{id}/presup', 'PatientsController@presup');
+	Route::get($route["patients"].'/{id}/budgets', 'PatientsController@budgets');
 	Route::resource($route["patients"], 'PatientsController');
 
 	Route::post($route["staff"].'/list', 'StaffController@list');
@@ -86,7 +86,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 
 	Route::get($route["accounting"], 'AccountingController@index');
 
-	Route::post($route["pays"].'/list', 'PaysController@list');
+	Route::post($route["pays"].'/index', 'PaysController@index');
 	Route::get($route["pays"], 'PaysController@index');
 
 	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');

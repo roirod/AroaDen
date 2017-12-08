@@ -69,7 +69,7 @@ class InvoicesController extends BaseController
         $this->view_data['idpac'] = $idpac;
         $this->view_data['idnav'] = $idpac;        
 
-        return view($this->views_folder.'.show', $this->view_data);
+        return parent::show($request, $id);
     }
 
     public function invoicesFactory(Request $request)

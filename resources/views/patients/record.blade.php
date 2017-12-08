@@ -14,7 +14,7 @@
 	<span class="input-group-btn pad10">  <p> Ficha: </p> </span>
 	<div class="btn-toolbar pad4" role="toolbar">
 	 <div class="btn-group">
-	    <a href="{!!url("/$main_route/$id/fiedit")!!}" role="button" class="btn btn-sm btn-success">
+	    <a href="{!! url("/$main_route/$id/$form_route") !!}" role="button" class="btn btn-sm btn-success">
 	       <i class="fa fa-edit"></i> Editar
 	    </a>
 	 </div>	
@@ -26,7 +26,7 @@
   	 <div class="col-sm-12">
 		<i class="fa fa-minus-square"></i> Historial Médico:
 		<br>
-	 	<div class="box200"> {!! nl2br(e($ficha->histo)) !!} </div>
+	 	<div class="box200"> {!! nl2br(e($record->histo)) !!} </div>
    	 </div>
 
    	
@@ -35,7 +35,7 @@
 		<br> <br>
 		<i class="fa fa-minus-square"></i> Enfermedades:
 		<br> 
-		<div class="box200"> {!! nl2br(e($ficha->enfer)) !!} </div>
+		<div class="box200"> {!! nl2br(e($record->enfer)) !!} </div>
    	</div>
 
 
@@ -44,7 +44,7 @@
 
 		<i class="fa fa-minus-square"></i> Medicamentos:
 		<br> 
-		<div class="box200"> {!! nl2br(e($ficha->medic)) !!} </div>
+		<div class="box200"> {!! nl2br(e($record->medic)) !!} </div>
 	</div>
 
 
@@ -53,7 +53,7 @@
 		<br> <br>
 		<i class="fa fa-minus-square"></i> Alergias:
 		<br> 
-		<div class="box200"> {!! nl2br(e($ficha->aler)) !!} </div>
+		<div class="box200"> {!! nl2br(e($record->aler)) !!} </div>
     </div>
   	
 
@@ -62,7 +62,7 @@
     	<br> <br>
 		<i class="fa fa-minus-square"></i> Notas:
 		<br> 
-		<div class="box200"> {!! nl2br(e($ficha->notes)) !!} </div>
+		<div class="box200"> {!! nl2br(e($record->notes)) !!} </div>
     </div> 	 
 
  </div>

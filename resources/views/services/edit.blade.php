@@ -5,7 +5,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Editar servicio") !!}
+	{!! addText("Editar servicio") !!}
 
 	@include('form_fields.edit')
 

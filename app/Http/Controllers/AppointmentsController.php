@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\NoAppointmentsFoundException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use Illuminate\Http\Request;
 use App\Models\Appointments;
 use App\Models\Patients;
 use Validator;
 use Exception;
+use DateTime;
 use Lang;
 use DB;
 
@@ -53,56 +55,74 @@ class AppointmentsController extends BaseController implements BaseInterface
     
     public function list(Request $request)
     {
-        $selec = $this->sanitizeData($request->input('selec'));
+        $select = $this->sanitizeData($request->input('select'));
+        $date_from = $this->sanitizeData($request->input('date_from'));
+        $date_to = $this->sanitizeData($request->input('date_to'));
 
         $data = [];
         $data['main_loop'] = false;
-        $data['appointments_of'] = false;   
-        $data['msg'] = false; 
+        $data['msg'] = false;
+        $data['error'] = false;
 
         $count = $this->model::CountAll();
 
-        if ($count == 0) {
-    
-            $data['msg'] = ' No hay citas en la base de datos. ';
+        if ((int)$count === 0) {
 
-        } else {
+            $data['error'] = true;    
+            $data['msg'] = Lang::get('aroaden.no_appointments_on_db');
+            $this->echoJsonOuptut($data);
 
-            $fechde = $this->sanitizeData($request->input('fechde'));
-            $fechha = $this->sanitizeData($request->input('fechha'));
+        }
 
-            try {
+        try {
 
-                if ( $selec == 'rango' ) {
+            if ($select == 'date_range') {
 
-                    if ( !$this->validateDate($fechde) || !$this->validateDate($fechha) ) {
-       
-                        $data['msg'] = ' Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14/04/2017. ';
+                if (!$this->validateDate($date_from) || !$this->validateDate($date_to)) {
 
-                    } elseif ( $fechde > $fechha ) {
-       
-                        $data['msg'] = "La fecha ".$this->convertYmdToDmY($fechha)." es anterior a ".$this->convertYmdToDmY($fechde) .".";
+                    $data['error'] = true; 
+                    $data['msg'] = Lang::get('aroaden.date_format_fail');
+                    $this->echoJsonOuptut($data);
 
-                    } else {
+                } 
 
-                        $data = $this->getItemsByDate('rango', $fechde, $fechha);
+                if ($date_from > $date_to) {
 
-                    }
+                    $date_from = $this->convertYmdToDmY($date_from);
+                    $date_to = $this->convertYmdToDmY($date_to);
+                    $data['error'] = true;
+                    $data['msg'] = Lang::get('aroaden.date_from_is_older', ['date_to' => $date_to, 'date_from' => $date_from]);
+                    $this->echoJsonOuptut($data);
 
-                } else {
+                } 
 
-                    $data = $this->getItemsByDate($selec, $fechde, $fechha);
-                        
+                $date_f = new DateTime($date_from);
+                $date_t = new DateTime($date_to);
+                $diff = $date_f->diff($date_t);
+
+                if ((int)$diff->days > (int)$this->date_max_days) {
+
+                    $data['error'] = true;    
+                    $data['msg'] = Lang::get('aroaden.date_out_range', ['date_max_days' => $this->date_max_days]);
+                    $this->echoJsonOuptut($data);
+
                 }
 
-            } catch (Exception $e) {
-    
-                $data['msg'] = $e->getMessage();
+                $data = $this->getItemsByDate($select, $date_from, $date_to);
+                $this->echoJsonOuptut($data);
 
-            }  
-	    }
+            }
 
-        $this->echoJsonOuptut($data);
+            $data = $this->getItemsByDate($select, $date_from, $date_to);
+            $this->echoJsonOuptut($data);
+
+        } catch (NoAppointmentsFoundException $e) {
+
+            $data['error'] = true;    
+            $data['msg'] = $e->getMessage();
+            $this->echoJsonOuptut($data);
+
+        }
     }
 
     public function create(Request $request, $id = false)
@@ -126,7 +146,6 @@ class AppointmentsController extends BaseController implements BaseInterface
     public function store(Request $request)
     {
     	$id = $request->input('idpac');
-
         $this->redirectIfIdIsNull($id, $this->other_route);  	
     	
     	$hour = trim ( $request->input('hour') );
@@ -134,7 +153,7 @@ class AppointmentsController extends BaseController implements BaseInterface
         $notes = $this->sanitizeData($request->input('notes'));
 
         if ( !$this->validateDate($day) || !$this->validateTime($hour) ) {
-		  	$request->session()->flash($this->error_message_name, 'Fecha o hora incorrecta.');	
+		  	$request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail'));	
 			return redirect("/$this->main_route/$id/create");
 		}
 	    	  
@@ -166,7 +185,6 @@ class AppointmentsController extends BaseController implements BaseInterface
     public function edit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->other_route);
-
         $id = $this->sanitizeData($id);
         $object = $this->model::FirstById($id);
 
@@ -214,7 +232,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 	    	$day = trim($request->input('day'));
 
             if ( !$this->validateTime($hour) || !$this->validateDate($day) ) {
-                $request->session()->flash($this->error_message_name, 'Fecha o hora incorrecta');  
+                $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail'));  
                 return redirect("/$this->main_route/$id/$idcit/edit");
             }
 				
@@ -237,7 +255,6 @@ class AppointmentsController extends BaseController implements BaseInterface
     public function destroy(Request $request, $id)
     {       
         $id = $this->sanitizeData($id);
-
         $this->redirectIfIdIsNull($id, $this->other_route);
        
         $object = $this->model::find($id);
@@ -248,102 +265,60 @@ class AppointmentsController extends BaseController implements BaseInterface
         return redirect("$this->other_route/$object->idpac");
     }
 
-    private function getItemsByDate($selec, $fechde, $fechha)
+    private function getItemsByDate($select, $date_from, $date_to)
     {
-        $msg_type = true;
+        switch ($select) {
 
-        if ( $selec == 'todas' ) {
+            case 'today_appointments':
+                $msg = Lang::get('aroaden.today_appointments');
+                $main_loop = $this->model::AllTodayOrderByDay();
+                break;
 
-            $appointments_of = 'todas';
-            $main_loop = $this->model::AllOrderByDay();
+            case '1week_appointments':
+                $date_from = date('Y-m-d');
+                $date_to = date('Y-m-d', strtotime('+1 Week'));
+                $msg = Lang::get('aroaden.1week_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
 
-        } elseif ( $selec == 'hoy' ) {
+            case '1month_appointments':
+                $date_from = date('Y-m-d');
+                $date_to = date('Y-m-d', strtotime('+1 Month'));
+                $msg = Lang::get('aroaden.1month_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
 
-            $appointments_of = 'hoy';
-            $main_loop = $this->model::AllTodayOrderByDay();
+            case 'minus1week_appointments':
+                $date_to = date('Y-m-d');
+                $date_from = date('Y-m-d', strtotime('-1 Week'));
+                $msg = Lang::get('aroaden.minus1week_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
 
-        } elseif ($selec == '1semana' ) {
+            case 'minus1month_appointments':
+                $date_to = date('Y-m-d');
+                $date_from = date('Y-m-d', strtotime('-1 Month'));
+                $msg = Lang::get('aroaden.minus1month_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
 
-            $selfe1 = date('Y-m-d');
-            $selfe2 = date('Y-m-d', strtotime('+1 Week'));
-            $appointments_of = '+1 semana';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-                        
-        } elseif ($selec == '1mes' ) {
-
-            $selfe1 = date('Y-m-d');
-            $selfe2 = date('Y-m-d', strtotime('+1 Month'));
-            $appointments_of = '+1 mes';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == '3mes' ) {
-
-            $selfe1 = date('Y-m-d');
-            $selfe2 = date('Y-m-d', strtotime('+3 Month'));
-            $appointments_of = '+3 meses';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == '1ano' ) {
-
-            $selfe1 = date('Y-m-d');
-            $selfe2 = date('Y-m-d', strtotime('+1 Year'));
-            $appointments_of = '+1 año';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == 'menos1mes' ) {
-
-            $selfe2 = date('Y-m-d');
-            $selfe1 = date('Y-m-d', strtotime('-1 Month'));
-            $appointments_of = '-1 mes';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == 'menos3mes' ) {
-
-            $selfe2 = date('Y-m-d');
-            $selfe1 = date('Y-m-d', strtotime('-3 Month'));
-            $appointments_of = '-3 meses';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == 'menos1ano' ) {
-
-            $selfe2 = date('Y-m-d');
-            $selfe1 = date('Y-m-d', strtotime('-1 Year'));
-            $appointments_of = '-1 año';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == 'menos5ano' ) {
-
-            $selfe2 = date('Y-m-d');
-            $selfe1 = date('Y-m-d', strtotime('-5 Year'));
-            $appointments_of = '-5 años';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == 'menos20ano' ) {
-
-            $selfe2 = date('Y-m-d');
-            $selfe1 = date('Y-m-d', strtotime('-20 Year'));
-            $appointments_of = '-20 años';
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);
-
-        } elseif ($selec == 'rango' ) {
-
-            $selfe2 = $fechha;
-            $selfe1 = $fechde;
-            $appointments_of = "Citas entre ".$this->convertYmdToDmY($fechde)." y ".$this->convertYmdToDmY($fechha);
-            $msg_type = false;
-            $main_loop = $this->model::AllBetweenRangeOrderByDay($selfe1, $selfe2);                                                                      
+            case 'date_range':
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                $date_from = $this->convertYmdToDmY($date_from);
+                $date_to = $this->convertYmdToDmY($date_to);
+                $msg = Lang::get('aroaden.appointments_range', ['date_from' => $date_from, 'date_to' => $date_to]);
+                break;
         }
 
         $count = count($main_loop);
 
-        if ($count == 0)
-            throw new Exception( Lang::get('aroaden.no_query_results') );
+        if ((int)$count === 0)
+            throw new NoAppointmentsFoundException(Lang::get('aroaden.no_query_results'));
 
         $data = [];
         $data['main_loop'] = $main_loop;
-        $data['appointments_of'] = $appointments_of;       
-        $data['msg'] = false;
-        $data['msg_type'] = $msg_type;
+        $data['msg'] = $msg;
+        $data['error'] = false;
 
         return $data;
     }

@@ -68,25 +68,6 @@ class Patients extends Model
                         ->first();
     }
 
-    public function scopeAllCitasById($query, $id)
-    {
-        return DB::table('pacientes')
-                    ->join('citas','pacientes.idpac','=','citas.idpac')
-                    ->select('pacientes.*','citas.*')
-                    ->where('pacientes.idpac', $id)
-                    ->orderBy('day', 'DESC')
-                    ->orderBy('hour', 'DESC')
-                    ->get();
-    }
-
-    public function scopeServicesSumById($query, $id)
-    {
-        return DB::table('treatments')
-                    ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
-                    ->where('idpac', $id)
-                    ->get();
-    }
-
     public static function CheckIfExistsOnUpdate($id, $dni)
     {
         $exists = DB::table('pacientes')
@@ -101,27 +82,27 @@ class Patients extends Model
         return $exists;
     }
 
-    public function scopeFindStringOnField($query, $busen, $busca)
+    public function scopeFindStringOnField($query, $search_in, $string)
     {
         return $query->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
-                        ->where($busen, 'LIKE', '%'.$busca.'%')
+                        ->where($search_in, 'LIKE', '%'.$string.'%')
                         ->orderBy('surname','ASC')
                         ->orderBy('name','ASC')
                         ->get();
     }
 
-    public static function CountFindStringOnField($busen, $busca)
+    public static function CountFindStringOnField($search_in, $string)
     {
         $result = DB::table('pacientes')
                     ->whereNull('deleted_at')
-                    ->where($busen, 'LIKE', '%'.$busca.'%')
+                    ->where($search_in, 'LIKE', '%'.$string.'%')
                     ->get();
 
         return count($result);
     }
 
-    public static function GetTotalPayments($num_mostrado, $todos = false)
+    public static function GetTotalPayments($number, $all = false)
     {
         $query = "
             SELECT pac.surname, pac.name, pac.idpac, 
@@ -137,8 +118,8 @@ class Patients extends Model
             ORDER BY rest DESC
         ";
 
-        if (!$todos) {
-            $query .= " LIMIT $num_mostrado";
+        if (!$all) {
+            $query .= " LIMIT $number";
         }
 
         return DB::select($query);

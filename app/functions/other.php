@@ -1,11 +1,11 @@
 <?php
 
-function addtexto($texto) {  
+function addText($text) {  
 	echo ' 
 		<div class="row"> 
 		  <div class="col-sm-12">
-		    <p class="pad4"></i>
-		      '.htmlentities($texto).':
+		    <p class="pad4 text_underline"></i>
+		      '.htmlentities(trim($text), ENT_QUOTES, "UTF-8").'
 		    </p>
 		  </div>
 		</div>

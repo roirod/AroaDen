@@ -7,7 +7,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Crear factura") !!}
+	{!! addText("Crear factura") !!}
 
 	@include('form_fields.create.opendiv')
 

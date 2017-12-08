@@ -56,7 +56,6 @@ class StaffController extends BaseController implements BaseInterface
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
         $this->view_data['count'] = $count;
-        $this->view_data['form_route'] = $this->form_route;
 
         $this->setPageTitle(Lang::get('aroaden.staff'));
 
@@ -118,14 +117,13 @@ class StaffController extends BaseController implements BaseInterface
         $this->view_data['object'] = $personal;
         $this->view_data['trabajos'] = $trabajos;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $personal->idper;        
-        $this->view_data['other_route'] = $this->other_route;
+        $this->view_data['idnav'] = $personal->idper;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
         $this->setPageTitle($personal->surname.', '.$personal->name);
 
-        return view($this->views_folder.'.show', $this->view_data);       
+        return parent::show($request, $id);   
     }
 
     public function create(Request $request, $id = false)
@@ -212,7 +210,7 @@ class StaffController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['object'] = $object;
-        $this->view_data['object'] = $this->form_fields;        
+        $this->view_data['form_fields'] = $this->form_fields;        
         $this->view_data['idnav'] = $id;       
         $this->view_data['id'] = $id;
 

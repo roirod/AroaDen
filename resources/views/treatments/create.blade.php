@@ -7,7 +7,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Añadir Tratamientos al Paciente") !!}
+	{!! addText("Añadir Tratamientos al Paciente") !!}
 
 	<div class="row">
 	 <div class="col-sm-12 mar10">

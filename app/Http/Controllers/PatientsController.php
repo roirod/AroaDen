@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\NoPatientsFoundException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use App\Http\Controllers\Traits\DirFilesTrait;
 use Illuminate\Http\Request;
+use App\Models\Appointments;
 use App\Models\Treatments;
 use App\Models\Patients;
 use App\Models\Budgets;
@@ -83,35 +85,36 @@ class PatientsController extends BaseController implements BaseInterface
   
     public function list(Request $request)
     {   
+        $string = $this->sanitizeData($request->input('string'));
+        $search_in = $this->sanitizeData($request->input('search_in')); 
+
         $data = [];
+        $data['main_loop'] = false; 
+        $data['error'] = false; 
+        $data['msg'] = false;
 
         $count = $this->model::CountAll();
 
-        $data['main_loop'] = false;
-        $data['count'] = false;    
-        $data['msg'] = false; 
+        if ((int)$count === 0) {
 
-        if ($count == 0) {
-   
+            $data['error'] = true;  
             $data['msg'] = Lang::get('aroaden.no_patients_on_db');
+            $this->echoJsonOuptut($data);
 
-        } else {
-
-            try {
-
-                $busca = $this->sanitizeData($request->input('busca'));
-                $busen = $this->sanitizeData($request->input('busen'));                
-
-                $data = $this->getItems($busen, $busca);
-
-            } catch (Exception $e) {
-    
-                $data['msg'] = $e->getMessage();
-
-            }
         }
 
-        $this->echoJsonOuptut($data);
+        try {               
+
+            $data = $this->getQueryResult($search_in, $string);
+            $this->echoJsonOuptut($data);
+
+        } catch (NoPatientsFoundException $e) {
+
+            $data['error'] = true;  
+            $data['msg'] = $e->getMessage();
+            $this->echoJsonOuptut($data);
+
+        }
     } 
 
     public function show(Request $request, $id)
@@ -119,22 +122,22 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
 
+        $this->view_name = 'show';
+
         $this->createDir($id, true);
 
-        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
+        $patient = $this->model::FirstById($id);
 
-        $paciente = $this->model::FirstById($id);
-
-        if ( !isset($paciente->idpac) ) {
+        if ( !isset($patient->idpac) ) {
             $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_patient_or_deleted'));    
             return redirect($this->main_route);
         }
 
-        $citas = $this->model::AllCitasById($id);
-        $tratampacien = Treatments::ServicesById($id);
-        $suma = $this->model::ServicesSumById($id);
-
-	  	$birth = trim($paciente->birth);
+        $appointments = Appointments::AllByPatientId($id);
+        $treatments = Treatments::AllByPatientId($id);
+        $treatments_sum = Treatments::SumByPatientId($id);
+	  	$birth = trim($patient->birth);
+        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
 
 	  	if (isset($birth)) {
             $date = explode("-", $birth, 3);	  	  
@@ -143,24 +146,20 @@ class PatientsController extends BaseController implements BaseInterface
             $age = 0;
 	  	}
 
-        $this->setPageTitle($paciente->surname.', '.$paciente->name);
+        $this->setPageTitle($patient->surname.', '.$patient->name);
 
         $this->view_data['request'] = $request;
-        $this->view_data['object'] = $paciente;
-        $this->view_data['citas'] = $citas;
-        $this->view_data['tratampacien'] = $tratampacien;
-        $this->view_data['suma'] = $suma;
+        $this->view_data['object'] = $patient;
+        $this->view_data['appointments'] = $appointments;
+        $this->view_data['treatments'] = $treatments;
+        $this->view_data['treatments_sum'] = $treatments_sum;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;        
         $this->view_data['age'] = $age;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
-        return response()->view($this->views_folder.'.show', $this->view_data)
-           ->header('Expires', 'Sun, 01 Jan 1966 00:00:00 GMT')
-           ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
-           ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
-           ->header('Pragma', 'no-cache');     
+        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data, true);
     }
 
     public function create(Request $request, $id = false)
@@ -315,55 +314,65 @@ class PatientsController extends BaseController implements BaseInterface
 		}    
     }
 
-    public function ficha(Request $request, $id)
+    public function record(Request $request, $id)
     {  
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $ficha = Record::find($id);
+        $this->view_name = 'record';
 
-        if (is_null($ficha)) {
+        $record = Record::find($id);
+
+        if (is_null($record)) {
             Record::create([
               'idpac' => $id
             ]);
 
-            return redirect("/$this->main_route/$id/ficha");
+            return redirect("/$this->main_route/$id/record");
         }
 
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
+        $this->form_route = 'recordEdit';
+
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
-        $this->view_data['ficha'] = $ficha;
+        $this->view_data['record'] = $record;
 
-        return view($this->views_folder.'.ficha', $this->view_data);
+        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data);
     } 
 
-    public function fiedit(Request $request, $id)
+    public function recordEdit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $ficha = Record::find($id);
+        $this->view_name = 'recordEdit';
+
+        $record = Record::find($id);
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
+
+        $this->form_route = 'recordSave';
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
-        $this->view_data['ficha'] = $ficha;
+        $this->view_data['record'] = $record;
 
-        return view($this->views_folder.'.fiedit', $this->view_data);
+        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data);
     }
 
-    public function fisave(Request $request, $id)
+    public function recordSave(Request $request, $id)
     {   
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);     
        
-        $ficha = Record::find($id);
+        $this->view_name = 'record';
+
+        $record = Record::find($id);
                 
         $histo = ucfirst(strtolower( $request->input('histo') ) );
         $enfer = ucfirst(strtolower( $request->input('enfer') ) );
@@ -371,17 +380,17 @@ class PatientsController extends BaseController implements BaseInterface
         $aler = ucfirst(strtolower( $request->input('aler') ) );
         $notes = ucfirst(strtolower( $request->input('notes') ) );
         
-        $ficha->histo = $this->sanitizeData($histo);   
-        $ficha->enfer = $this->sanitizeData($enfer);   
-        $ficha->medic = $this->sanitizeData($medic);   
-        $ficha->aler = $this->sanitizeData($aler);   
-        $ficha->notes = $this->sanitizeData($notes);   
+        $record->histo = $this->sanitizeData($histo);   
+        $record->enfer = $this->sanitizeData($enfer);   
+        $record->medic = $this->sanitizeData($medic);   
+        $record->aler = $this->sanitizeData($aler);   
+        $record->notes = $this->sanitizeData($notes);   
         
-        $ficha->save();
+        $record->save();
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
-        return redirect("$this->main_route/$id/ficha");
+        return redirect("$this->main_route/$id/$this->view_name");
     }  
 
     public function file(Request $request, $id)
@@ -394,6 +403,8 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
 
+        $this->view_name = 'odogram';
+
         $odogram = "/$this->files_dir/$id/$this->odog_dir/$this->odogram";
 
         $object = $this->model::FirstById($id);
@@ -404,11 +415,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['odogram'] = $odogram;
 
-        return response()->view($this->views_folder.'.odogram', $this->view_data)
-           ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
-           ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
-           ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
-           ->header('Pragma', 'no-cache');
+        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data, true);
     }
 
     public function upodog(Request $request)
@@ -420,23 +427,25 @@ class PatientsController extends BaseController implements BaseInterface
             $this->redirectIfIdIsNull($id, $this->main_route);
             $id = $this->sanitizeData($id);
 
+            $this->view_name = 'odogram';
+
             $extension = $request->file('upodog')->getClientOriginalExtension();
 
             if ( $extension != 'jpg' ) {
-                $request->session()->flash($this->error_message_name, 'No es una imagen jpg');
-                return redirect("$this->main_route/$id/odogram");
+                $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_jpg_img'));
+                return redirect("$this->main_route/$id/$this->view_name");
             } 
 
             $odogram = storage_path("$this->files_dir/$id")."/$this->odog_dir/";
 
             $upodog->move($odogram, $this->odogram);
 
-            return redirect("$this->main_route/$id/odogram");
+            return redirect("$this->main_route/$id/$this->view_name");
 
         } else {
 
-            $request->session()->flash($this->error_message_name, 'Error');
-            return redirect("$this->main_route/$id/odogram");
+            $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));
+            return redirect("$this->main_route/$id/$this->view_name");
         }    
     }   
 
@@ -458,6 +467,8 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route); 	
     	$id = $this->sanitizeData($id);
  		 
+        $this->view_name = 'odogram';
+
 		if ( $resodog == 1 ) {
 
             $odogram = "/$this->own_dir/$id/$this->odog_dir/$this->odogram";
@@ -466,31 +477,32 @@ class PatientsController extends BaseController implements BaseInterface
             Storage::delete($odogram);           
 	    	Storage::copy($img, $odogram);
 	    	  
-	    	return redirect("/$this->main_route/$id/odogram");
+	    	return redirect("/$this->main_route/$id/$this->view_name");
 
 		} else {
 
-		 	$request->session()->flash($this->error_message_name, 'Error');
-		 	return redirect("/$this->main_route/$id/odogram");
+		 	$request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));
+		 	return redirect("/$this->main_route/$id/$this->view_name");
 		}	
     }
 
-    public function presup(Request $request, $id)
+    public function budgets(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $presup = Budgets::AllById($query, $id);
+        $this->view_name = 'budgets';
 
+        $budgets = Budgets::AllById($query, $id);
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
-        $this->view_data['presup'] = $presup;
+        $this->view_data['budgets'] = $budgets;
 
-        return view($this->views_folder.'.presup', $this->view_data);
+        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data);
     }    
 
     public function destroy(Request $request, $id)
@@ -505,26 +517,18 @@ class PatientsController extends BaseController implements BaseInterface
         return redirect($this->main_route);
     }
 
-    public function getItems($busen, $busca)
+    public function getQueryResult($search_in, $string)
     {
+        $main_loop = $this->model::FindStringOnField($search_in, $string);
+        $count = $this->model::CountFindStringOnField($search_in, $string);
+
+        if ((int)$count === 0)
+            throw new NoPatientsFoundException(Lang::get('aroaden.no_query_results'));
+
         $data = [];
-
-        $main_loop = $this->model::FindStringOnField($busen, $busca);
-        $count = $this->model::CountFindStringOnField($busen, $busca);
-
-        if ($count == 0) {
-
-            throw new Exception( Lang::get('aroaden.no_query_results') );
-
-        } else {
-
-            $data['main_loop'] = $main_loop;
-            $data['count'] = $count;        
-            $data['msg'] = false;
-            return $data;
-        }
-
-        throw new Exception( Lang::get('aroaden.db_query_error') );
+        $data['main_loop'] = $main_loop;      
+        $data['msg'] = $count;
+        return $data;
     }
 
 }

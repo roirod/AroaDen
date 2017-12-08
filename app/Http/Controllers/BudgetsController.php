@@ -142,7 +142,7 @@ class BudgetsController extends BaseController
         $this->view_data['idpac'] = $idpac;
         $this->view_data['idnav'] = $idpac;        
 
-        return view($this->views_folder.'.show', $this->view_data);   
+        return parent::show($request, $id);
     }
 
     public function presuedit(Request $request)
@@ -166,7 +166,7 @@ class BudgetsController extends BaseController
         $this->view_data['idpac'] = $idpac;
         $this->view_data['idnav'] = $idpac;     
 
-        return view($this->views_folder.'.edit', $this->view_data);   
+        return $this->loadView($this->views_folder.'.edit', $this->view_data);
     }
 
     public function presmod(Request $request)
@@ -208,12 +208,12 @@ class BudgetsController extends BaseController
 
         if ($presmod == 'imp') {
 
-            return view($this->views_folder.'.imp', $this->view_data);  
+            return $this->loadView($this->views_folder.'.imp', $this->view_data);
 
         } else {
   
-            return view($this->views_folder.'.mod', $this->view_data);  
- 
+            return $this->loadView($this->views_folder.'.mod', $this->view_data);
+            
         }      
     } 
 

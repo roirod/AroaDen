@@ -78,6 +78,15 @@ class Appointments extends Model
         return (int)$count;
     }
 
+    public function scopeAllByPatientId($query, $id)
+    {
+        return $query->select('citas.*')
+                    ->where('idpac', $id)
+                    ->orderBy('day', 'DESC')
+                    ->orderBy('hour', 'DESC')
+                    ->get();
+    }
+
     public function scopeFirstById($query, $id)
     {
         return DB::table('citas')

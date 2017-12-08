@@ -30,21 +30,29 @@ class Treatments extends Model
             ->first();
     }
 
-    public static function ServicesById($id)
+    public static function AllByPatientId($id)
     {
         return DB::table('treatments')
                     ->join('servicios','treatments.idser','=','servicios.idser')
-                    ->select('treatments.*','servicios.name as servicios_name')
+                    ->select('treatments.*','servicios.name as service_name')
                     ->where('idpac', $id)
                     ->orderBy('day','DESC')
                     ->get();
     }
 
-    public static function PaidServicesById($id)
+    public static function SumByPatientId($id)
+    {
+        return DB::table('treatments')
+                    ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
+                    ->where('idpac', $id)
+                    ->get();
+    }
+
+    public static function PaidByPatientId($id)
     {
         $collection = DB::table('treatments')
                     ->join('servicios','treatments.idser','=','servicios.idser')
-                    ->select('treatments.*','servicios.name as servicios_name', DB::raw('treatments.units*treatments.price AS total'))
+                    ->select('treatments.*','servicios.name as service_name', DB::raw('treatments.units*treatments.price AS total'))
                     ->where('idpac', $id)
                     ->orderBy('day','DESC')
                     ->get();

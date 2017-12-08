@@ -88,7 +88,7 @@ class UsersController extends BaseController
 
         $this->setPageTitle(Lang::get('aroaden.users'));        
 
-        return view($this->views_folder.'.userEdit', $this->view_data);
+        return $this->loadView($this->views_folder.'.userEdit', $this->view_data);
     }
 
     public function userDeleteViev(Request $request)
@@ -101,7 +101,7 @@ class UsersController extends BaseController
 
         $this->setPageTitle(Lang::get('aroaden.users'));   
 
-        return view($this->views_folder.'.userDeleteViev', $this->view_data);
+        return $this->loadView($this->views_folder.'.userDeleteViev', $this->view_data);
     }
 
     public function userUpdate(Request $request)

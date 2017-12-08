@@ -8,7 +8,7 @@
 @include('includes.errors')
 
 
-{!! addtexto("Editar Datos") !!}
+{!! addText("Editar Datos") !!}
 
 <div class="row">
  <div class="col-sm-12">

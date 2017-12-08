@@ -47,6 +47,11 @@ class BaseController extends Controller
     protected $views_folder = '';
 
     /**
+     * @var string $view_name  view name
+     */
+    protected $view_name = '';
+
+    /**
      * @var array $form_fields  input fields showed in form
      */
     protected $form_fields = [];
@@ -132,6 +137,11 @@ class BaseController extends Controller
     protected $has_odogram = false;   
 
     /**
+     * @var bool $has_odogram  si tiene odontograma o no
+     */
+    protected $date_max_days = 60;
+
+    /**
      *  construct method
      */
     public function __construct()
@@ -145,7 +155,6 @@ class BaseController extends Controller
         $this->file_max_size = 1024 * 1024 * $file_max_size;
 
         $this->checkIfSettingExists();
-        $this->passVarsToViews();
 
         $this->form_fields = [
             'surname' => false,
@@ -181,9 +190,7 @@ class BaseController extends Controller
      */
     public function index(Request $request)
     {
-        $this->passVarsToViews();
-
-        return view($this->views_folder.'.index', $this->view_data);
+        return $this->loadView($this->views_folder.'.index', $this->view_data);
     }
 
     /**
@@ -195,9 +202,19 @@ class BaseController extends Controller
      */
     public function create(Request $request, $id = false)
     {
-        $this->passVarsToViews();
+        return $this->loadView($this->views_folder.'.create', $this->view_data);
+    }
 
-        return view($this->views_folder.'.create', $this->view_data);   
+    /**
+     *  get show view
+     * 
+     *  @param object $request     
+     *  @param int $id
+     *  @return string       
+     */
+    public function show(Request $request, $id)
+    {
+        return $this->loadView($this->views_folder.'.show', $this->view_data);
     }
 
     /**
@@ -209,9 +226,28 @@ class BaseController extends Controller
      */
     public function edit(Request $request, $id)
     {
+        return $this->loadView($this->views_folder.'.edit', $this->view_data);
+    }
+
+    /**
+     *  costumize load View
+     * 
+     *  @param string $view
+     *  @param array $view_data     
+     */
+    protected function loadView($view, $view_data, $response = false)
+    {       
         $this->passVarsToViews();
 
-        return view($this->views_folder.'.edit', $this->view_data);   
+        if ($response) {
+            return response()->view($view, $view_data)
+               ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
+               ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
+               ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
+               ->header('Pragma', 'no-cache');
+        }
+
+        return view($view, $view_data);
     }
 
     /**
@@ -275,8 +311,6 @@ class BaseController extends Controller
     protected function setPageTitle($data)
     {   
         $this->page_title = $data.' - '.$this->page_title;
-        
-        $this->passVarsToViews();
     }
 
 }

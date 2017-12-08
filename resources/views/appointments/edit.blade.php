@@ -7,7 +7,7 @@
     @include('includes.messages')
     @include('includes.errors')
 
-    {{ addtexto("Editar Cita") }}
+    {{ addText("Editar Cita") }}
 
     @include('form_fields.edit.opendiv')
 

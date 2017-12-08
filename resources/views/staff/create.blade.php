@@ -5,7 +5,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addtexto("Añadir Personal") !!}
+	{!! addText("Añadir Personal") !!}
 
 	@include('form_fields.create')
     

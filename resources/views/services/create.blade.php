@@ -5,7 +5,7 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{{ addtexto("Añadir servicio") }}
+	{{ addText("Añadir servicio") }}
 
 	@include('form_fields.create')
     

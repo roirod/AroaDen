@@ -85,7 +85,7 @@
 </div> </div> </div> </div>
 
 
-{!! addtexto("Añadidos") !!}
+{!! addText("Añadidos") !!}
 
 
 <div class="row">
