@@ -105,9 +105,9 @@
 
 			@endif 
 
-			@if ($form_fields['per'])
+			@if ($form_fields['staff'])
 
-				@include('form_fields.create.per')
+				@include('form_fields.create.staff')
 
 			@endif
 

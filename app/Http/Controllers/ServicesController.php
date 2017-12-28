@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use Illuminate\Http\Request;
 use App\Models\Services;
@@ -67,31 +68,28 @@ class ServicesController extends BaseController implements BaseInterface
      */
     public function list(Request $request)
     {   
+        $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
         $data = [];
 
         $count = $this->model::CountAll();
 
-        $data['main_loop'] = false;
-        $data['count'] = false;    
-        $data['msg'] = false; 
+        if ((int)$count === 0) {
 
-        if ($count == 0) {
-   
+            $data['error'] = true;   
             $data['msg'] = Lang::get('aroaden.no_services_on_db');
+            $this->echoJsonOuptut($data);
 
-        } else {
+        }
 
-            try {
+        try {  
 
-                $busca = $this->sanitizeData($request->input('busca'));          
+            $data = $this->getQueryResult();
 
-                $data = $this->getItems($busca);
+        } catch (NoQueryResultException $e) {
 
-            } catch (Exception $e) {
-    
-                $data['msg'] = $e->getMessage();
+            $data['error'] = true;    
+            $data['msg'] = $e->getMessage();
 
-            }
         }
 
         $this->echoJsonOuptut($data);
@@ -254,27 +252,25 @@ class ServicesController extends BaseController implements BaseInterface
 
     /**
      *  get query result, using ajax
+     *
      *  @return json
      */
-    public function getItems($busca)
+    private function getQueryResult()
     {
+        $string = $this->misc_array['string'];
+
+        $main_loop = $this->model::FindStringOnField($string);
+        $count = $this->model::CountFindStringOnField($string);
+
+
+
+
+        if ((int)$count === 0)
+            throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));
+
         $data = [];
-
-        $main_loop = $this->model::FindStringOnField($busca);
-        $count = $this->model::CountFindStringOnField($busca);
-
-        if ($count == 0) {
-
-            throw new Exception( Lang::get('aroaden.no_query_results') );
-
-        } else {
-
-            $data['main_loop'] = $main_loop;
-            $data['count'] = $count;        
-            $data['msg'] = false;
-            return $data;
-        }
-
-        throw new Exception( Lang::get('aroaden.db_query_error') );
+        $data['main_loop'] = $main_loop;      
+        $data['msg'] = $count;
+        return $data;
     }
 }

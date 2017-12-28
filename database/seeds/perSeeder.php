@@ -18,7 +18,7 @@ class perSeeder extends Seeder
     		$k = array_rand($position);
 			$v = $position[$k];
 
-	        DB::table('personal')->insert([
+	        DB::table('staff')->insert([
 	            'surname' => htmlentities ($faker->lastName, ENT_QUOTES, "UTF-8").' '.htmlentities ($faker->lastName, ENT_QUOTES, "UTF-8"),
 	            'name' => htmlentities ($faker->firstName, ENT_QUOTES, "UTF-8"),
 	            'dni' => $faker->numberBetween($min = 10000000, $max = 99999999),

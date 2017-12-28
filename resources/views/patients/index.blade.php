@@ -58,20 +58,20 @@
 						
 					<tr> 
 						<td class="wid50">
-							<a href="{!! url("/$main_route/$obj->idpac")!!}" target="_blank" class="btn btn-default" role="button">
+							<a href="{!! url("/$main_route/$obj->idpat") !!}" target="_blank" class="btn btn-default" role="button">
 								<i class="fa fa-hand-pointer-o"></i>
 							</a> 
 						</td>
 
 						<td class="wid290">
-							<a href="{!! url("/$main_route/$obj->idpac")!!}" class="pad4" target="_blank">
-								{!!$obj->surname!!}, {!!$obj->name!!}
+							<a href="{!! url("/$main_route/$obj->idpat") !!}" class="pad4" target="_blank">
+								{!! $obj->surname !!}, {!! $obj->name !!}
 							</a>
 						</td>
 
-						<td class="wid110">{!!$obj->dni!!}</td>
-						<td class="wid110">{!!$obj->tel1!!}</td>
-						<td class="wid230">{!!$obj->city!!}</td> 
+						<td class="wid110">{!! $obj->dni !!}</td>
+						<td class="wid110">{!! $obj->tel1 !!}</td>
+						<td class="wid230">{!! $obj->city !!}</td> 
 						
 					</tr>
 								
@@ -81,7 +81,7 @@
 					<tr> 
 						<div class="textcent">
 							<hr>
-							{!!$main_loop->links()!!}
+							{!! $main_loop->links() !!}
 						</div>
 					</tr> 
 				</table>
@@ -167,12 +167,12 @@
 					    		$.each(response.main_loop, function(index, object){
 						    		html += '  <tr>';
 						    		html += '    <td class="wid50">';
-						    		html += '      <a href="/{{ $patients_route }}/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
+						    		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default" role="button">';
 						    		html += '        <i class="fa fa-hand-pointer-o"></i>';
 						    		html += '      </a>';
 						    		html += '    </td>';
 						    		html += '    <td class="wid290">';
-						    		html += '      <a href="/{{ $patients_route }}/'+object.idpac+'" class="pad4" target="_blank">';
+						    		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" class="pad4" target="_blank">';
 						    		html += 		  object.surname + ', ' + object.name;
 						    		html += '      </a>';
 						    		html += '    </td>';

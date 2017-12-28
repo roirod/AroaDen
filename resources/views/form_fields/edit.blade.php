@@ -105,6 +105,12 @@
 
 			@endif 
 
+			@if ($form_fields['staff'])
+
+				@include('form_fields.edit.staff')
+
+			@endif 
+
 			@if ($form_fields['notes'])
 
 				@include('form_fields.edit.notes')

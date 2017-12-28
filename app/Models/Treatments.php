@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\DB;
 class Treatments extends Model
 {
 	protected $table = 'treatments';
-    protected $fillable = ['idpac','idser','price','units','paid','day','tax','per1','per2'];
-    protected $primaryKey = 'idtra';
+    protected $fillable = ['idpat','idser','price','units','paid','day','tax'];
+    protected $primaryKey = 'idtre';
 
     public function patients()
     {
-        return $this->belongsTo('App\Models\Patients', 'idpac', 'idpac');
+        return $this->belongsTo('App\Models\Patients', 'idpat', 'idpat');
     }
 
     public function services()
@@ -24,36 +24,48 @@ class Treatments extends Model
     public static function FirstById($id)
     {
         return DB::table('treatments')
-            ->join('servicios','treatments.idser','=','servicios.idser')
-            ->select('treatments.*','servicios.name')
-            ->where('idtra', $id)
+            ->join('services','treatments.idser','=','services.idser')
+            ->select('treatments.*','services.name')
+            ->where('idtre', $id)
             ->first();
     }
 
-    public static function AllByPatientId($id)
+    public function scopeAllByPatientId($query, $id)
     {
-        return DB::table('treatments')
-                    ->join('servicios','treatments.idser','=','servicios.idser')
-                    ->select('treatments.*','servicios.name as service_name')
-                    ->where('idpac', $id)
+        $data = [];
+
+        $data['treatments'] = $query->join('services','treatments.idser','=','services.idser')
+                    ->select('treatments.*','services.name as service_name')
+                    ->where('idpat', $id)
                     ->orderBy('day','DESC')
                     ->get();
+
+        $treatments = $data['treatments']->toArray();
+
+        $idtre_array = array_column($treatments, 'idtre');
+
+        $data['staff_works'] = DB::table('staff_works')
+                    ->select('idsta','idtre')
+                    ->whereIn('idtre', $idtre_array)
+                    ->get();
+
+        return $data;
     }
 
     public static function SumByPatientId($id)
     {
         return DB::table('treatments')
                     ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
-                    ->where('idpac', $id)
+                    ->where('idpat', $id)
                     ->get();
     }
 
     public static function PaidByPatientId($id)
     {
         $collection = DB::table('treatments')
-                    ->join('servicios','treatments.idser','=','servicios.idser')
-                    ->select('treatments.*','servicios.name as service_name', DB::raw('treatments.units*treatments.price AS total'))
-                    ->where('idpac', $id)
+                    ->join('services','treatments.idser','=','services.idser')
+                    ->select('treatments.*','services.name as service_name', DB::raw('treatments.units*treatments.price AS total'))
+                    ->where('idpat', $id)
                     ->orderBy('day','DESC')
                     ->get();
 

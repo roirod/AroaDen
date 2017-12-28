@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class Budgets extends Model
 {
-	protected $table = 'presup';
-    protected $fillable = ['idpac','idser','price','units','uniqid','created_at','tax'];
-    protected $primaryKey = 'idpre';
+	protected $table = 'budgets';
+    protected $fillable = ['idpat','idser','price','units','uniqid','tax','created_at'];
+    protected $primaryKey = 'idbud';
 
     public function patients()
     {
@@ -18,40 +18,40 @@ class Budgets extends Model
 
     public static function AllById($id)
     {
-        return DB::table('presup')
-                    ->join('servicios','presup.idser','=','servicios.idser')
-                    ->select('presup.*','servicios.name')
-                    ->where('presup.idpac', $id)
+        return DB::table('budgets')
+                    ->join('services','budgets.idser','=','services.idser')
+                    ->select('budgets.*','services.name')
+                    ->where('budgets.idpat', $id)
                     ->orderBy('created_at','DESC')
                     ->get(); 
     }
 
     public static function AllByCode($uniqid)
     {
-        return DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.name')
+        return DB::table('budgets')
+                ->join('services', 'budgets.idser','=','services.idser')
+                ->select('budgets.*','services.name')
                 ->where('uniqid', $uniqid)
-                ->orderBy('servicios.name' , 'ASC')
+                ->orderBy('services.name' , 'ASC')
                 ->get();
     }
 
     public static function AllByIdOrderByName($id, $uniqid)
     {
-        return DB::table('presup')
-                    ->join('servicios', 'presup.idser','=','servicios.idser')
-                    ->select('presup.*','servicios.name')
-                    ->where('idpac', $id)
+        return DB::table('budgets')
+                    ->join('services', 'budgets.idser','=','services.idser')
+                    ->select('budgets.*','services.name')
+                    ->where('idpat', $id)
                     ->where('uniqid', $uniqid)
-                    ->orderBy('servicios.name' , 'ASC')
+                    ->orderBy('services.name' , 'ASC')
                     ->get();  
     }
 
     public static function AllGroupByCode($id)
     {
-        return DB::table('presup')
+        return DB::table('budgets')
                 ->groupBy('uniqid')
-                ->having('idpac','=', $id)
+                ->having('idpat','=', $id)
                 ->orderBy('created_at' , 'DESC')
                 ->get(); 
     }
@@ -59,7 +59,7 @@ class Budgets extends Model
 
     public static function GetTaxTotal($uniqid)
     {
-        return DB::table('presup')
+        return DB::table('budgets')
                 ->selectRaw('SUM((units*price*tax)/100) AS tot')
                 ->where('uniqid', $uniqid)
                 ->get();
@@ -67,7 +67,7 @@ class Budgets extends Model
 
     public static function GetNoTaxTotal($uniqid)
     {
-        return DB::table('presup')
+        return DB::table('budgets')
                 ->selectRaw('SUM(units*price)-SUM((units*price*tax)/100) AS tot')
                 ->where('uniqid', $uniqid)
                 ->get();   
@@ -75,7 +75,7 @@ class Budgets extends Model
 
     public static function GetTotal($uniqid)
     {
-        return DB::table('presup')
+        return DB::table('budgets')
                 ->selectRaw('SUM(units*price) AS tot')
                 ->where('uniqid', $uniqid)
                 ->get();   

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCitasTable extends Migration
+class CreateAppointmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,23 +12,24 @@ class CreateCitasTable extends Migration
      */
     public function up()
     {
-        Schema::create('citas', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->bigIncrements('idcit');
-            $table->integer('idpac')->unsigned();
+            $table->bigIncrements('idapp');
+            $table->integer('idpat')->unsigned();
             $table->date('day');
             $table->time('hour');
             $table->text('notes')->nullable();
             $table->timestamps();
-            $table->index(['day', 'hour'], 'horadia');
-            $table->foreign('idpac')
-				  ->references('idpac')->on('pacientes')
+            $table->index(['day', 'hour'], 'hoday');
+
+            $table->foreign('idpat')
+				  ->references('idpat')->on('patients')
 				  ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::drop('citas');
+        Schema::drop('appointments');
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Traits\BaseTrait;
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use Exception;
 use Config;
 use Redis;
 use View;
+use Lang;
 use DB;
 
 class BaseController extends Controller
@@ -142,6 +145,11 @@ class BaseController extends Controller
     protected $date_max_days = 60;
 
     /**
+     * @var array $misc_array  miscelaneus array
+     */
+    protected $misc_array = [];
+
+    /**
      *  construct method
      */
     public function __construct()
@@ -176,7 +184,7 @@ class BaseController extends Controller
             'day' => false,
             'issue_date' => false,
             'no_tax_msg' => false,
-            'per' => false,            
+            'staff' => false,            
             'notes' => false,
             'save' => false,
         ];
@@ -230,10 +238,39 @@ class BaseController extends Controller
     }
 
     /**
+     *  get list
+     * 
+     *  @param object $request     
+     *  @param int $id
+     *  @return string       
+     */
+    public function list(Request $request)
+    {
+        $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
+        $this->misc_array['search_in'] = $this->sanitizeData($request->input('search_in'));
+
+        $data = [];
+
+        try {               
+
+            $data = $this->getArrayResult();
+
+        } catch (Exception $e) {
+
+            $data['error'] = true; 
+            $data['msg'] = $e->getMessage();
+
+        }
+
+        $this->echoJsonOuptut($data);
+    }
+
+    /**
      *  costumize load View
      * 
      *  @param string $view
-     *  @param array $view_data     
+     *  @param array $view_data
+     *  @return string
      */
     protected function loadView($view, $view_data, $response = false)
     {       
@@ -251,7 +288,9 @@ class BaseController extends Controller
     }
 
     /**
-     *  check If Setting Exists 
+     *  check If Setting Exists
+     *  
+     *  @return object
      */
     private function checkIfSettingExists()
     {
@@ -276,7 +315,7 @@ class BaseController extends Controller
             Redis::set('settings', json_encode($settings));
         }
 
-        return redirect()->back(); 
+        return redirect()->back();
     }
 
     /**
@@ -312,5 +351,51 @@ class BaseController extends Controller
     {   
         $this->page_title = $data.' - '.$this->page_title;
     }
+
+    /**
+     *  get Query Result
+     *  
+     *  @throws NoQueryResultException
+     *  @return array data
+     */
+    private function getQueryResult()
+    {
+        $string = $this->misc_array['string'];
+        $search_in = $this->misc_array['search_in'];
+
+        $main_loop = $this->model::FindStringOnField($search_in, $string);
+        $count = $this->model::CountFindStringOnField($search_in, $string);
+
+        if ((int)$count === 0)
+            throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));
+
+        $data = [];
+        $data['main_loop'] = $main_loop;      
+        $data['msg'] = $count;
+        return $data;
+    }
+
+    /**
+     *  get Array Result
+     *  
+     *  @return array data
+     */
+    protected function getArrayResult()
+    {   
+        $count = $this->model::CountAll();
+
+        if ((int)$count === 0)
+            throw new Exception(Lang::get('aroaden.empty_db'));
+
+        try {               
+
+            return $this->getQueryResult();
+
+        } catch (NoQueryResultException $e) {
+
+            throw $e;
+
+        }
+    } 
 
 }

@@ -10,10 +10,10 @@ class Staff extends Model
 {
 	use SoftDeletes;
 	
-	protected $table = 'personal';
+	protected $table = 'staff';
 	protected $dates = ['deleted_at'];
     protected $fillable = ['name','surname','position','dni','tel1','tel2','address','city','birth','notes'];
-    protected $primaryKey = 'idper';
+    protected $primaryKey = 'idsta';
 
     public function scopeAllOrderBySurname($query, $num_paginate)
     {
@@ -39,7 +39,7 @@ class Staff extends Model
 
     public function scopeFirstById($query, $id)
     {
-        return $query->where('idper', $id)
+        return $query->where('idsta', $id)
                         ->whereNull('deleted_at')
                         ->first();
     }
@@ -50,12 +50,12 @@ class Staff extends Model
                         ->first();
     }
 
-    public function scopeAllCitasById($query, $id)
+    public function scopeAllAppointmentsById($query, $id)
     {
-        return DB::table('pacientes')
-                    ->join('citas','pacientes.idper','=','citas.idper')
-                    ->select('pacientes.*','citas.*')
-                    ->where('pacientes.idper', $id)
+        return DB::table('patients')
+                    ->join('appointments','patients.idsta','=','appointments.idsta')
+                    ->select('patients.*','appointments.*')
+                    ->where('patients.idsta', $id)
                     ->orderBy('day', 'DESC')
                     ->orderBy('hour', 'DESC')
                     ->get();
@@ -64,12 +64,10 @@ class Staff extends Model
     public function scopeServicesById($query, $id)
     {
         return DB::table('treatments')
-                ->join('pacientes', 'treatments.idpac','=','pacientes.idpac')
-                ->join('servicios', 'treatments.idser','=','servicios.idser')
-                ->select('treatments.*','pacientes.surname','pacientes.name','servicios.name as servicio_name')
-                ->whereNull('pacientes.deleted_at')
-                ->where('per1', $id)
-                ->orWhere('per2', $id)
+                ->join('patients', 'treatments.idpat','=','patients.idpat')
+                ->join('services', 'treatments.idser','=','services.idser')
+                ->select('treatments.*','patients.surname','patients.name','services.name as service_name')
+                ->whereNull('patients.deleted_at')
                 ->orderBy('day' , 'DESC')
                 ->get();    
     }
@@ -78,16 +76,16 @@ class Staff extends Model
     {
         return DB::table('treatments')
                     ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
-                    ->where('idper', $id)
+                    ->where('idsta', $id)
                     ->get();
     }
 
     public static function CheckIfExistsOnUpdate($id, $dni)
     {
-        $exists = DB::table('personal')
-                        ->where('idper', '!=', $id)
-                        ->where('dni', $dni)
-                        ->first();
+        $exists = DB::table('staff')
+                    ->where('idsta', '!=', $id)
+                    ->where('dni', $dni)
+                    ->first();
 
         if ( is_null($exists) ) {
             return true;
@@ -96,23 +94,24 @@ class Staff extends Model
         return $exists;
     }
 
-    public function scopeFindStringOnField($query, $busen, $busca)
+    public function scopeFindStringOnField($query, $search_in, $string)
     {
-        return $query->select('idper', 'surname', 'name', 'dni', 'tel1', 'city')
+        return $query->select('idsta', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
-                        ->where($busen, 'LIKE', '%'.$busca.'%')
+                        ->where($search_in, 'LIKE', '%'.$string.'%')
                         ->orderBy('surname', 'ASC')
                         ->orderBy('name', 'ASC')
                         ->get();
     }
 
-    public static function CountFindStringOnField($busen, $busca)
+    public static function CountFindStringOnField($search_in, $string)
     {
-        $result = DB::table('personal')
+        $result = DB::table('staff')
                         ->whereNull('deleted_at')
-                        ->where($busen, 'LIKE', '%'.$busca.'%')
+                        ->where($search_in, 'LIKE', '%'.$string.'%')
                         ->get();
 
         return count($result);
     }
+
 }

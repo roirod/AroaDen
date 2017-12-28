@@ -12,7 +12,7 @@
     <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
     	{!! csrf_field() !!}
 
-    	<input type="hidden" name="id" value="{{$idpac}}">
+    	<input type="hidden" name="id" value="{{ $idpat }}">
     	
   		<div class="input-group">
   		 	<div class="input-group-btn pad10"> 

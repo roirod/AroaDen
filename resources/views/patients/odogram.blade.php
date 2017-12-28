@@ -13,7 +13,7 @@
   	 	
   		<div class="btn-toolbar pad4" role="toolbar">
         <div class="btn-group">
-          <p class="pad4"> Odontograma: &nbsp; </p>
+          <p class="pad4"> Odontograma &nbsp; </p>
         </div>
   			<div class="btn-group">
   				<a href="{!! url("/$main_route/$id/downodog") !!}" class="btn btn-sm btn-primary" role="button"> 
@@ -49,7 +49,7 @@
 
           <div class="btn-toolbar pad4" role="toolbar">
              <div class="btn-group">
-                <span class="input-group-btn pad10">  <p> Subir: </p> </span>
+                <span class="input-group-btn pad10">  <p> Subir </p> </span>
              </div>
              <div class="btn-group">
                 <input type="file" class="btn btn-default btn-sm" name="upodog"/>

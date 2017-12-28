@@ -54,13 +54,13 @@
 	   	  	@foreach($main_loop as $pago)
 		   	  	<tr>
 		   	  	  	<td class="wid50">
-						         <a href="{!! url("/$other_route/$pago->idpac") !!}" target="_blank" class="btn btn-default" role="button">
+						         <a href="{!! url("/$other_route/$pago->idpat") !!}" target="_blank" class="btn btn-default" role="button">
 							         <i class="fa fa-hand-pointer-o"></i>
 						         </a>
                 </td> 
 
                 <td class="wid290">
-                  <a href="{!! url("/$other_route/$pago->idpac") !!}" class="pad4" target="_blank">
+                  <a href="{!! url("/$other_route/$pago->idpat") !!}" class="pad4" target="_blank">
                     {!!$pago->surname!!}, {!!$pago->name!!}
                   </a>
                 </td>

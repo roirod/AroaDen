@@ -17,5 +17,5 @@
 @section('js')
     @parent   
 	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
 @endsection

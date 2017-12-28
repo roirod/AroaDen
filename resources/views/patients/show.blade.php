@@ -18,7 +18,7 @@
 	    </a>
 	 </div>	
 	<div class="btn-group">
-	 	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
+	 	<form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
 	  		{!! csrf_field() !!}
 			<input type="hidden" name="_method" value="DELETE">
 
@@ -105,14 +105,14 @@
  			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
  			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
  			<td class="wid50">	
-				<a href="{!! url("/$appointments_route/$appo->idcit/edit") !!}" class="btn btn-xs btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+				<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" class="btn btn-xs btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
 			<td class="wid50"> 	
 				<div class="btn-group">
 
-				 	<form role="form" class="form" id="form" role="form" action="{!! url("/$appointments_route/$appo->idcit") !!}" method="POST">		
+				 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" method="POST">		
 				  		{!! csrf_field() !!}
 
 						<input type="hidden" name="_method" value="DELETE">
@@ -128,7 +128,7 @@
 
 				</div> 
 			</td>
-			<td class="wid290">{!!$appo->notes!!}</td>
+			<td class="wid290">{!! $appo->notes !!}</td>
 		</tr>
     @endforeach
     
@@ -141,15 +141,13 @@
 <div class="row">
   <div class="col-sm-12"> 
   <div class="input-group">
-   <span class="input-group-btn pad10">  <p> {!! @trans("aroaden.appointments") !!} </p> </span>
+   <span class="input-group-btn pad10">  <p> {!! @trans("aroaden.treatments") !!} </p> </span>
    	<div class="btn-toolbar pad4" role="toolbar"> 
    	<div class="btn-group">
        <a href="{!! url("/$treatments_route/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
           <i class="fa fa-plus"></i> {!! @trans("aroaden.new") !!}
        </a>
 </div> </div> </div> 
-
- {!! @trans("aroaden.staff_msg") !!}
 
 </div> </div>
 
@@ -166,24 +164,23 @@
 		  <td class="wid70">{!! @trans("aroaden.date") !!}</td>
 		  <td class="wid50 textcent"></td>
 		  <td class="wid50 textcent"></td> 
-		  <td class="wid50 textcent">{!! @trans("aroaden.staff1") !!}</td>
-		  <td class="wid50 textcent">{!! @trans("aroaden.staff2") !!}</td>
+		  <td class="wid110">{!! @trans("aroaden.staff") !!}</td>
 	   </tr> 
    </table> 
    <div class="box260">
    <table class="table table-striped">
 
-    @foreach($treatments as $treat)		
+    @foreach($treatments["treatments"] as $treat)
     	<tr>
-    		<td class="wid140">{!!$treat->service_name!!}</td> 
-			<td class="wid70 textcent">{!!numformat($treat->price)!!} €</td>
-			<td class="wid70 textcent">{!!$treat->units!!}</td>
-			<td class="wid70 textcent">{!!numformat($treat->units * $treat->price)!!} €</td>
-			<td class="wid70 textcent">{!!numformat($treat->paid)!!} €</td>
-			<td class="wid70">{!!date ('d-m-Y', strtotime ($treat->day) )!!}</td>
+    		<td class="wid140">{!! $treat->service_name !!}</td> 
+			<td class="wid70 textcent">{!! numformat($treat->price) !!} €</td>
+			<td class="wid70 textcent">{!! $treat->units !!}</td>
+			<td class="wid70 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
+			<td class="wid70 textcent">{!! numformat($treat->paid) !!} €</td>
+			<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 			<td class="wid50 textcent">
-				<a href="{!! url("/$treatments_route/$treat->idtra/edit") !!}" class="btn btn-xs btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+				<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" class="btn btn-xs btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
@@ -191,7 +188,7 @@
 			<td class="wid50 textcent"> 	
 				<div class="btn-group">
 
-				 	<form role="form" class="form" id="form" role="form" action="{!! url("/$treatments_route/$treat->idtra") !!}" method="POST">	
+				 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" method="POST">	
 				  		{!! csrf_field() !!}
 
 						<input type="hidden" name="_method" value="DELETE">
@@ -208,27 +205,24 @@
 			 		</form>
 
 				</div> 
-			</td>  			
+			</td>
+
+			<td class="wid110">		
 			
-			@if ( $treat->per1 == 0 )
-				<td class="wid50 textcent"> <i class="fa fa-hand-rock-o"></i> </td> 
-			@else 
-				<td class="wid50 textcent">
-					<a href="{!! url("/$staff_route/$treat->per1") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
+			@foreach ($treatments["staff_works"] as $staff_work)
+
+				@if ($treat->idtre == $staff_work->idtre)
+
+					<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
 						<i class="fa fa-hand-pointer-o"></i>
 					</a>
-				</td> 
-			@endif
-			 
-			@if ( $treat->per2 == 0 )
-				<td class="wid50 textcent"> <i class="fa fa-hand-rock-o"></i> </td>
-			@else
-				<td class="wid50 textcent">
-					<a href="{!! url("/$staff_route/$treat->per2") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
-						<i class="fa fa-hand-pointer-o"></i>
-					</a>
-				</td> 
-			@endif		 
+
+				@endif
+				
+			@endforeach
+
+			</td>
+			 	 
 		</tr>
 	@endforeach
 

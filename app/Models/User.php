@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
 	protected $table = 'users';
     protected $fillable = ['username','password','type'];
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password'];
     protected $primaryKey = 'uid';
 
     public function scopeAllOrderByUsername($query)
@@ -24,5 +24,22 @@ class User extends Authenticatable
                         ->where('username', $username)
                         ->exists();
     }
+
+
+    public function getRememberToken()
+    {
+        return null; // not supported
+    }
+
+    public function setRememberToken($value)
+    {
+    // not supported
+    }
+
+    public function getRememberTokenName()
+    {
+        return null; // not supported
+    }
+
 
 }

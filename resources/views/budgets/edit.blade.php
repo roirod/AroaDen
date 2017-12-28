@@ -8,18 +8,18 @@
 @include('includes.errors')
 
 
-<div id="delurl" value="{!!$delurl!!}"> </div>
+<div id="delurl" value="{!! $del_url !!}"> </div>
 
-<meta name="_token" content="{!!csrf_token()!!}"/>
+<meta name="_token" content="{!! csrf_token() !!}"/>
 
 <div class="row">
   	<div class="col-sm-3"> 
 
-	 	<form role="form" class="form" role="form" action="{!!url("/$main_route/delcod")!!}" method="POST">	
+	 	<form role="form" class="form" role="form" action="{!! url("/$main_route/delcod") !!}" method="POST">	
 	 		{!! csrf_field() !!}
 
 			<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-			<input type="hidden" name="idpac" value="{!! $idpac !!}">	
+			<input type="hidden" name="idpat" value="{!! $idpat !!}">	
 
 			<div class="input-group"> 
 				<span class="input-group-btn pad10">  <p> Eliminar todo: </p> </span>
@@ -46,7 +46,7 @@
    	<span class="input-group-btn pad10"> <p> Finalizar: </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
-	      		<a href="{!!url("/$main_route/$idpac")!!}" role="button" class="btn btn-sm btn-primary">
+	      		<a href="{!! url("/$main_route/$idpat") !!}" role="button" class="btn btn-sm btn-primary">
 	          		Finalizar
 	       		</a>
        		</div>
@@ -85,8 +85,8 @@
 									<input type="hidden" name="idpre" value="{!! $presu->idpre !!}">
 									<input type="hidden" name="uniqid" value="{!! $uniqid !!}">
 
-									  <td class="wid140">{!!$presu->name!!}</td>
-									  <td class="wid95 textcent">{!!$presu->units!!} </td>
+									  <td class="wid140">{!! $presu->name !!}</td>
+									  <td class="wid95 textcent">{!! $presu->units !!} </td>
 									  <td class="wid95 textcent">{!! numformat($presu->price) !!} €</td>
 									  <td class="wid50">
 									    <div class="btn-group"> 
@@ -121,7 +121,7 @@
 
 <div class="col-sm-12">
 
-	<form role="form" class="form presmod" role="form" action="{!!url("/$main_route/presmod")!!}" method="POST">	
+	<form role="form" class="form presmod" role="form" action="{!! url("/$main_route/presmod") !!}" method="POST">	
 	 	{!! csrf_field() !!}
 
 		<div class="form-group"> 
@@ -133,7 +133,7 @@
 <div class="col-sm-12 text-right">
 
 		<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-		<input type="hidden" name="idpac" value="{!! $idpac !!}">
+		<input type="hidden" name="idpat" value="{!! $idpat !!}">
 
 		<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
 		<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Ver</button>

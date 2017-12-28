@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Exceptions\NoPatientsFoundException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use App\Http\Controllers\Traits\DirFilesTrait;
 use Illuminate\Http\Request;
@@ -80,42 +79,13 @@ class PatientsController extends BaseController implements BaseInterface
 
         $this->setPageTitle(Lang::get('aroaden.patients'));
 
-        return parent::index($request);    
+        return parent::index($request);
     }
   
     public function list(Request $request)
     {   
-        $string = $this->sanitizeData($request->input('string'));
-        $search_in = $this->sanitizeData($request->input('search_in')); 
-
-        $data = [];
-        $data['main_loop'] = false; 
-        $data['error'] = false; 
-        $data['msg'] = false;
-
-        $count = $this->model::CountAll();
-
-        if ((int)$count === 0) {
-
-            $data['error'] = true;  
-            $data['msg'] = Lang::get('aroaden.no_patients_on_db');
-            $this->echoJsonOuptut($data);
-
-        }
-
-        try {               
-
-            $data = $this->getQueryResult($search_in, $string);
-            $this->echoJsonOuptut($data);
-
-        } catch (NoPatientsFoundException $e) {
-
-            $data['error'] = true;  
-            $data['msg'] = $e->getMessage();
-            $this->echoJsonOuptut($data);
-
-        }
-    } 
+        return parent::list($request);        
+    }
 
     public function show(Request $request, $id)
     {
@@ -128,7 +98,7 @@ class PatientsController extends BaseController implements BaseInterface
 
         $patient = $this->model::FirstById($id);
 
-        if ( !isset($patient->idpac) ) {
+        if ( !isset($patient->idpat) ) {
             $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_patient_or_deleted'));    
             return redirect($this->main_route);
         }
@@ -175,13 +145,15 @@ class PatientsController extends BaseController implements BaseInterface
     public function store(Request $request)
     {        
         $dni = $this->sanitizeData($request->input('dni'));
-    
+
+        $this->view_name = 'create';
+
         $exists = $this->model::FirstByDniDeleted($dni);
 
         if ( isset($exists->dni) ) {
             $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
             $request->session()->flash($this->error_message_name, $msg);
-            return redirect($this->main_route.'/create')->withInput();
+            return redirect("$this->main_route/$this->view_name")->withInput();
         }
 
         $validator = Validator::make($request->all(),[
@@ -199,7 +171,7 @@ class PatientsController extends BaseController implements BaseInterface
 	    ]);
             
         if ($validator->fails()) {
-	         return redirect($this->main_route.'/create')
+	        return redirect("$this->main_route/$this->view_name")
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {
@@ -226,12 +198,12 @@ class PatientsController extends BaseController implements BaseInterface
 		    ]);
 
             Record::create([
-              'idpac' => $insertGetId
+              'idpat' => $insertGetId
             ]);
 	      
 	        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
         	        	
-        	return redirect($this->main_route.'/create');
+        	return redirect("$this->main_route/$this->view_name");
         }      
     }
 
@@ -256,8 +228,9 @@ class PatientsController extends BaseController implements BaseInterface
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-
         $input_dni = $this->sanitizeData($request->input('dni'));
+
+        $this->view_name = 'edit';
 
         $patient = $this->model::FirstById($id);
         $exists = $this->model::CheckIfExistsOnUpdate($id, $input_dni);
@@ -265,7 +238,7 @@ class PatientsController extends BaseController implements BaseInterface
         if ( isset($exists->dni) ) {
             $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
             $request->session()->flash($this->error_message_name, $msg);
-            return redirect("$this->main_route/$id/edit")->withInput();
+            return redirect("$this->main_route/$id/$this->view_name")->withInput();
         }
 
         $validator = Validator::make($request->all(),[
@@ -283,7 +256,7 @@ class PatientsController extends BaseController implements BaseInterface
 	    ]);
             
         if ($validator->fails()) {
-	        return redirect("$this->main_route/$id/edit")
+	        return redirect("$this->main_route/$id/$this->view_name")
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {		
@@ -325,10 +298,10 @@ class PatientsController extends BaseController implements BaseInterface
 
         if (is_null($record)) {
             Record::create([
-              'idpac' => $id
+              'idpat' => $id
             ]);
 
-            return redirect("/$this->main_route/$id/record");
+            return redirect("/$this->main_route/$id/$this->view_name");
         }
 
         $object = $this->model::FirstById($id);
@@ -374,16 +347,16 @@ class PatientsController extends BaseController implements BaseInterface
 
         $record = Record::find($id);
                 
-        $histo = ucfirst(strtolower( $request->input('histo') ) );
-        $enfer = ucfirst(strtolower( $request->input('enfer') ) );
-        $medic = ucfirst(strtolower( $request->input('medic') ) );
-        $aler = ucfirst(strtolower( $request->input('aler') ) );
+        $medical_record = ucfirst(strtolower( $request->input('medical_record') ) );
+        $diseases = ucfirst(strtolower( $request->input('diseases') ) );
+        $medicines = ucfirst(strtolower( $request->input('medicines') ) );
+        $allergies = ucfirst(strtolower( $request->input('allergies') ) );
         $notes = ucfirst(strtolower( $request->input('notes') ) );
         
-        $record->histo = $this->sanitizeData($histo);   
-        $record->enfer = $this->sanitizeData($enfer);   
-        $record->medic = $this->sanitizeData($medic);   
-        $record->aler = $this->sanitizeData($aler);   
+        $record->medical_record = $this->sanitizeData($medical_record);   
+        $record->diseases = $this->sanitizeData($diseases);   
+        $record->medicines = $this->sanitizeData($medicines);   
+        $record->allergies = $this->sanitizeData($allergies);   
         $record->notes = $this->sanitizeData($notes);   
         
         $record->save();
@@ -516,19 +489,4 @@ class PatientsController extends BaseController implements BaseInterface
         
         return redirect($this->main_route);
     }
-
-    public function getQueryResult($search_in, $string)
-    {
-        $main_loop = $this->model::FindStringOnField($search_in, $string);
-        $count = $this->model::CountFindStringOnField($search_in, $string);
-
-        if ((int)$count === 0)
-            throw new NoPatientsFoundException(Lang::get('aroaden.no_query_results'));
-
-        $data = [];
-        $data['main_loop'] = $main_loop;      
-        $data['msg'] = $count;
-        return $data;
-    }
-
 }

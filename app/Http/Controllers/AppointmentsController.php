@@ -128,25 +128,24 @@ class AppointmentsController extends BaseController implements BaseInterface
     public function create(Request $request, $id = false)
     {  	  
         $this->redirectIfIdIsNull($id, $this->other_route);
-    	
-    	$object = $this->model2::FirstById($id);
+
+        $object = $this->model2::FirstById($id);
+        $this->setPageTitle($object->surname.', '.$object->name);
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $object->idpac;
+        $this->view_data['idnav'] = $object->idpat;
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;
-
-        $this->setPageTitle($object->surname.', '.$object->name); 
 
         return parent::create($request, $id);  
     }
 
     public function store(Request $request)
     {
-    	$id = $request->input('idpac');
-        $this->redirectIfIdIsNull($id, $this->other_route);  	
+    	$idpat = $request->input('idpat');
+        $this->redirectIfIdIsNull($idpat, $this->other_route);  	
     	
     	$hour = trim ( $request->input('hour') );
     	$day = trim ( $request->input('day') );
@@ -154,7 +153,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
         if ( !$this->validateDate($day) || !$this->validateTime($hour) ) {
 		  	$request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail'));	
-			return redirect("/$this->main_route/$id/create");
+			return redirect("/$this->main_route/$idpat/create");
 		}
 	    	  
         $validator = Validator::make($request->all(), [
@@ -164,13 +163,13 @@ class AppointmentsController extends BaseController implements BaseInterface
 	    ]);
             
         if ($validator->fails()) {
-	        return redirect("/$this->main_route/$id/create")
+	        return redirect("/$this->main_route/$idpat/create")
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {
 	        	
 		    $this->model::create([
-		        'idpac' => $id,
+		        'idpat' => $idpat,
 		        'hour' => $hour,
 		        'day' => $day,
 		        'notes' => $notes
@@ -178,7 +177,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 		      
 		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
 	        	        	
-	        return redirect("/$this->main_route/$id/create");
+	        return redirect("/$this->main_route/$idpat/create");
         }     
     }
 
@@ -192,7 +191,7 @@ class AppointmentsController extends BaseController implements BaseInterface
         $this->view_data['request'] = $request;
         $this->view_data['object'] = $object;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $object->idpac;
+        $this->view_data['idnav'] = $object->idpat;
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;
@@ -233,7 +232,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
             if ( !$this->validateTime($hour) || !$this->validateDate($day) ) {
                 $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail'));  
-                return redirect("/$this->main_route/$id/$idcit/edit");
+                return redirect("/$this->main_route/$id/$idapp/edit");
             }
 				
 			$object = $this->model::find($id);
@@ -248,7 +247,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
 			$request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
-			return redirect("$this->other_route/$object->idpac");
+			return redirect("$this->other_route/$object->idpat");
 		}   
     }
 
@@ -262,7 +261,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect("$this->other_route/$object->idpac");
+        return redirect("$this->other_route/$object->idpat");
     }
 
     private function getItemsByDate($select, $date_from, $date_to)

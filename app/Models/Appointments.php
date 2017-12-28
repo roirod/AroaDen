@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class Appointments extends Model
 {
-    protected $table = 'citas';
-    protected $fillable = ['idpac','day','hour','notes'];
-    protected $primaryKey = 'idcit';
+    protected $table = 'appointments';
+    protected $fillable = ['idpat','day','hour','notes'];
+    protected $primaryKey = 'idapp';
 
     public function patients()
     {
@@ -18,20 +18,20 @@ class Appointments extends Model
 
     public function scopeAllOrderByDay($query)
     {
-        return $query->join('pacientes','citas.idpac','=','pacientes.idpac')
-                        ->select('citas.*','pacientes.surname','pacientes.name')
-                        ->whereNull('pacientes.deleted_at')
-                        ->orderBy('citas.day' , 'DESC')
-                        ->orderBy('citas.hour' , 'ASC')
+        return $query->join('patients','appointments.idpat','=','patients.idpat')
+                        ->select('appointments.*','patients.surname','patients.name')
+                        ->whereNull('patients.deleted_at')
+                        ->orderBy('appointments.day' , 'DESC')
+                        ->orderBy('appointments.hour' , 'ASC')
                         ->get();
     }
 
     public static function CountAll()
     {
-        $result = DB::table('citas')
-            ->join('pacientes','citas.idpac','=','pacientes.idpac')
-            ->select('citas.*','pacientes.surname','pacientes.name')
-            ->whereNull('pacientes.deleted_at')
+        $result = DB::table('appointments')
+            ->join('patients','appointments.idpat','=','patients.idpat')
+            ->select('appointments.*','patients.surname','patients.name')
+            ->whereNull('patients.deleted_at')
             ->count();
 
         $count = count($result);
@@ -39,12 +39,12 @@ class Appointments extends Model
         return (int)$count;
     }
 
-    public function scopeAllBetweenRangeOrderByDay($query, $selfe1, $selfe2)
+    public function scopeAllBetweenRangeOrderByDay($query, $date1, $date2)
     {
-        return $query->join('pacientes','citas.idpac','=','pacientes.idpac')
-                        ->select('citas.*','pacientes.surname','pacientes.name')
-                        ->whereBetween('day', [$selfe1, $selfe2])
-                        ->whereNull('pacientes.deleted_at')
+        return $query->join('patients','appointments.idpat','=','patients.idpat')
+                        ->select('appointments.*','patients.surname','patients.name')
+                        ->whereBetween('day', [$date1, $date2])
+                        ->whereNull('patients.deleted_at')
                         ->orderBy('day' , 'DESC')
                         ->orderBy('hour' , 'ASC')
                         ->get(); 
@@ -54,12 +54,12 @@ class Appointments extends Model
     {
         $today = date('Y-m-d');
 
-        return $query->join('pacientes','citas.idpac','=','pacientes.idpac')
-                        ->select('citas.*','pacientes.surname','pacientes.name')
-                        ->where('citas.day', $today)
-                        ->whereNull('pacientes.deleted_at')
-                        ->orderBy('citas.day' , 'DESC')
-                        ->orderBy('citas.hour' , 'ASC')
+        return $query->join('patients','appointments.idpat','=','patients.idpat')
+                        ->select('appointments.*','patients.surname','patients.name')
+                        ->where('appointments.day', $today)
+                        ->whereNull('patients.deleted_at')
+                        ->orderBy('appointments.day' , 'DESC')
+                        ->orderBy('appointments.hour' , 'ASC')
                         ->get();
     }
 
@@ -67,10 +67,10 @@ class Appointments extends Model
     {
         $today = date('Y-m-d');
 
-        $result = DB::table('citas')
-                        ->join('pacientes','citas.idpac','=','pacientes.idpac')
-                        ->where('citas.day', $today)
-                        ->whereNull('pacientes.deleted_at')
+        $result = DB::table('appointments')
+                        ->join('patients','appointments.idpat','=','patients.idpat')
+                        ->where('appointments.day', $today)
+                        ->whereNull('patients.deleted_at')
                         ->get();
 
         $count = count($result);
@@ -80,8 +80,8 @@ class Appointments extends Model
 
     public function scopeAllByPatientId($query, $id)
     {
-        return $query->select('citas.*')
-                    ->where('idpac', $id)
+        return $query->select('appointments.*')
+                    ->where('idpat', $id)
                     ->orderBy('day', 'DESC')
                     ->orderBy('hour', 'DESC')
                     ->get();
@@ -89,16 +89,16 @@ class Appointments extends Model
 
     public function scopeFirstById($query, $id)
     {
-        return DB::table('citas')
-            ->join('pacientes','citas.idpac','=','pacientes.idpac')
-            ->select('citas.*', 'pacientes.name', 'pacientes.surname', 'pacientes.idpac')
-            ->where('idcit', $id)
+        return DB::table('appointments')
+            ->join('patients','appointments.idpat','=','patients.idpat')
+            ->select('appointments.*', 'patients.name', 'patients.surname', 'patients.idpat')
+            ->where('idapp', $id)
             ->first();
     }
 
     public function scopeCheckIfIdExists($query, $id)
     {
-        return $query->where('idcit', $id)
+        return $query->where('idapp', $id)
                         ->exists();
     }
 

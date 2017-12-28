@@ -80,20 +80,20 @@
           @foreach ($main_loop as $obj)
             <tr>
                 <td class="wid50">
-                  <a href="{{ url("/$patients_route/$obj->idpac") }}" target="_blank" class="btn btn-default" role="button">
+                  <a href="{{ url("/$patients_route/$obj->idpat") }}" target="_blank" class="btn btn-default" role="button">
                     <i class="fa fa-hand-pointer-o"></i>
                   </a> 
                 </td>
 
                 <td class="wid290"> 
-                  <a href="{{ url("/$patients_route/$obj->idpac") }}" class="pad4" target="_blank">
-                      {{$obj->surname}}, {{$obj->name}} 
+                  <a href="{{ url("/$patients_route/$obj->idpat") }}" class="pad4" target="_blank">
+                      {{ $obj->surname }}, {{ $obj->name }} 
                   </a>
                 </td>
 
-                <td class="wid110"> {{ substr( $obj->hour, 0, -3 ) }} </td>
-                <td class="wid110"> {{date( 'd-m-Y', strtotime($obj->day) )}} </td>
-                <td class="wid230"> {{$obj->notes}} </td>
+                <td class="wid110">{{ substr( $obj->hour, 0, -3 ) }}</td>
+                <td class="wid110">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
+                <td class="wid230">{{ $obj->notes }}</td>
             </tr>
           @endforeach
 
@@ -111,7 +111,7 @@
     @parent
 
 	  <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+	  <script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
 @endsection
 
 @section('footer_script')
@@ -211,12 +211,12 @@
               $.each(response.main_loop, function(index, object){
                 html += '  <tr>';
                 html += '    <td class="wid50">';
-                html += '      <a href="/{{ $patients_route }}/'+object.idpac+'" target="_blank" class="btn btn-default" role="button">';
+                html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default" role="button">';
                 html += '        <i class="fa fa-hand-pointer-o"></i>';
                 html += '      </a>';
                 html += '    </td>';
                 html += '    <td class="wid290">';
-                html += '      <a href="/{{ $patients_route }}/'+object.idpac+'" class="pad4" target="_blank">';
+                html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" class="pad4" target="_blank">';
                 html +=           object.surname + ', ' + object.name;
                 html += '      </a>';
                 html += '    </td>';

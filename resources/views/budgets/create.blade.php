@@ -10,8 +10,8 @@
 
 <meta name="_token" content="{!!csrf_token()!!}"/>
 
-<div id="nueurl" value="{!!$nueurl!!}"> </div>
-<div id="delurl" value="{!!$delurl!!}"> </div>
+<div id="nueurl" value="{!! $new_url !!}"> </div>
+<div id="delurl" value="{!! $del_url !!}"> </div>
 
 <div class="row">
   <div class="col-sm-12"> 
@@ -19,7 +19,7 @@
    	<span class="input-group-btn pad10"> <p> Finalizar: </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
-	      		<a href="{!! url("/$main_route/$idpac") !!}" role="button" class="btn btn-sm btn-primary">
+	      		<a href="{!! url("/$main_route/$idpat") !!}" role="button" class="btn btn-sm btn-primary">
 	          		Finalizar
 	       		</a>
        		</div>
@@ -45,21 +45,21 @@
    		<div class="box230">
 	   		<table class="table table-striped">      	  	
 
-		   		@foreach ($main_loop as $servicio)
+		   		@foreach ($main_loop as $service)
 
 					<tr>
 					 	<form id="nueform">
 
-							<input type="hidden" name="idpac" value="{!! $idpac !!}">
-							<input type="hidden" name="idser" value="{!! $servicio->idser !!}">
-							<input type="hidden" name="price" value="{!! $servicio->price !!}">
-							<input type="hidden" name="tax" value="{!! $servicio->tax !!}">
+							<input type="hidden" name="idpat" value="{!! $idpat !!}">
+							<input type="hidden" name="idser" value="{!! $service->idser !!}">
+							<input type="hidden" name="price" value="{!! $service->price !!}">
+							<input type="hidden" name="tax" value="{!! $service->tax !!}">
 							<input type="hidden" name="uniqid" value="{!! $uniqid !!}">
 							<input type="hidden" name="created_at" value="{!! $created_at !!}">						 	
 
-							  <td class="wid140">{!! $servicio->name !!}</td>
+							  <td class="wid140">{!! $service->name !!}</td>
 
-							  <td class="wid95 textcent">{!! $servicio->price !!} €</td>
+							  <td class="wid95 textcent">{!! $service->price !!} €</td>
 
 							  <td class="wid50 textcent">
 							  	 	<div class="form-group">

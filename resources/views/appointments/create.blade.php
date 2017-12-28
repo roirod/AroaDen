@@ -15,12 +15,23 @@
 
 		@include('form_fields.create.openform')
 
-			<input type="hidden" name="idpac" value="{{$id}}">
+			<input type="hidden" name="idpat" value="{{ $id }}">
 
 			@include('form_fields.create_alternative')
 
 		@include('form_fields.create.closeform')
 	@include('form_fields.create.closediv')
+
+@endsection
+
+@section('footer_script')
+
+	<script>
+		$(document).ready(function() {
+			$('input[name="day"]').attr('value', util.getTodayDate());
+			$('input[name="hour"]').attr('value', '12:00');
+		});
+	</script>
 
 @endsection
 
@@ -30,7 +41,8 @@
 	<script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/js/minified/shims/i18n/formcfg-es.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/util.js') }}"></script>	
 @endsection

@@ -10,7 +10,7 @@ class Services extends Model
 {
 	use SoftDeletes;
 
-	protected $table = 'servicios';
+	protected $table = 'services';
 	protected $dates = ['deleted_at'];
     protected $fillable = ['name','price','tax'];
     protected $primaryKey = 'idser';
@@ -49,7 +49,7 @@ class Services extends Model
 
     public static function CheckIfExistsOnUpdate($id, $name)
     {
-        $exists = DB::table('servicios')
+        $exists = DB::table('services')
                         ->where('name', $name)
                         ->where('idser', '!=', $id)
                         ->first();
@@ -61,19 +61,19 @@ class Services extends Model
         return $exists;
     }
 
-    public function scopeFindStringOnField($query, $busca)
+    public function scopeFindStringOnField($query, $string)
     {
         return $query->whereNull('deleted_at')
-                        ->where('name', 'LIKE', '%'.$busca.'%')
+                        ->where('name', 'LIKE', '%'.$string.'%')
                         ->orderBy('name','ASC')
                         ->get();
     }
 
-    public static function CountFindStringOnField($busca)
+    public static function CountFindStringOnField($string)
     {
-        $result = DB::table('servicios')
+        $result = DB::table('services')
                     ->whereNull('deleted_at')
-                    ->where('name', 'LIKE', '%'.$busca.'%')
+                    ->where('name', 'LIKE', '%'.$string.'%')
                     ->get();
 
         return count($result);
