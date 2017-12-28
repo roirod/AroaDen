@@ -8,7 +8,7 @@
 @include('includes.errors')
 
 
-{!! addtexto("Editar Datos") !!}
+{!! addText(@trans('aroaden.company_edit_data')) !!}
 
 <div class="row">
  <div class="col-sm-12">
@@ -28,7 +28,7 @@
 			@if ($item['type'] == 'text')
 
 				<div class="form-group {{ $item['col'] }}">
-				  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}:</label>
+				  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}</label>
 				  <input type="{!!  $item_type !!}" class="form-control" name="{{ $item_name }}" 
 					  value="{!! $obj->$item_name !!}" 
 
@@ -55,7 +55,7 @@
 			@elseif ($item['type'] == 'textarea')
 
 				<div class="form-group {{ $item['col'] }}">
-				  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}:</label>
+				  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}</label>
 				  <textarea class="form-control" name="{!! $item_name !!}" rows="{{ $item['rows'] }}">{!! $obj->$item_name !!}</textarea>
 				</div>
 				<br>
@@ -77,8 +77,8 @@
     
 	  <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/minified/polyfiller.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/main.js') !!}"></script>
+	  <script type="text/javascript" src="{!! asset('assets/js/webshims.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/guarda.js') !!}"></script>
+	  <script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
 	 	  
 @endsection

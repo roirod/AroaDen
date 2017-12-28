@@ -3,26 +3,27 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePrestexesTable extends Migration
+class CreateBudgetsTextTable extends Migration
 {
     public function up()
     {
-        Schema::create('prestex', function (Blueprint $table) {
+        Schema::create('budgets_text', function (Blueprint $table) {
             $table->engine = 'InnoDB';            
-            $table->increments('idprestex');
-            $table->Integer('idpac')->unsigned();
+            $table->increments('idbute');
+            $table->Integer('idpat')->unsigned();
             $table->string('uniqid', 16);
             $table->text('text')->nullable();
             $table->timestamps();
             $table->unique('uniqid');
-            $table->foreign('idpac')
-                  ->references('idpac')->on('pacientes')
+
+            $table->foreign('idpat')
+                  ->references('idpat')->on('patients')
                   ->onDelete('cascade');         
         });
     }
 
     public function down()
     {
-        Schema::drop('prestex');
+        Schema::drop('budgets_text');
     }
 }

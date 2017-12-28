@@ -3,11 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateServiciosTable extends Migration
+class CreateServicesTable extends Migration
 {
     public function up()
     {
-        Schema::create('servicios', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->engine = 'InnoDB';            
             $table->increments('idser');
             $table->string('name',111);
@@ -21,6 +21,6 @@ class CreateServiciosTable extends Migration
     
     public function down()
     {
-        Schema::drop('servicios');
+        Schema::drop('services');
     }
 }

@@ -7,7 +7,7 @@
     @include('includes.messages')
     @include('includes.errors')
 
-    {{ addtexto("Editar Tratamiento") }}
+    {{ addText("Editar Tratamiento") }}
 
     <div class="row">
      <div class="col-sm-12 mar10">
@@ -52,25 +52,29 @@
     <script>
         
         $(document).ready(function() {
-
-            $('input[name="units"]').on('change', function(evt) {
-                var price = {{ $object->price }};
-                multi(this.value, price);
-
-                evt.preventDefault();
-                evt.stopPropagation();
-            });
-
-            var append = ' <span><small><a id="borrar" class="pad4">borrar</a></small></span>';
+            var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.multiply_units_price') }}"><i class="fa fa-lg fa-close"></i></a>';
             $('input[name="paid"]').parent().find('label').append(append);
 
-            $('#borrar').click(function (evt) {
-                $('input[name="paid"]').val(0);
+            var append = ' <a id="put_zero" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.put_zero') }}"><i class="fa fa-close fa-lg text-danger"></i></a>';
+            $('input[name="paid"]').parent().find('label').append(append);
+
+            $('#multiply_units_price').click(function (evt) {
+                var price = {{ $object->price }};
+                var units = $('input[name="units"]').val();
+                var paid = util.multiply(units, price);    
+
+                $('input[name="paid"]').val(paid);
 
                 evt.preventDefault();
                 evt.stopPropagation();              
             });
 
+            $('#put_zero').click(function (evt) {
+                $('input[name="paid"]').val(0);
+
+                evt.preventDefault();
+                evt.stopPropagation();              
+            });
         });
 
     </script>
@@ -81,8 +85,8 @@
     @parent   
       <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
       <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+      <script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
       <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/guarda.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/calcula.js') }}"></script>
+      <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+      <script type="text/javascript" src="{{ asset('assets/js/util.js') }}"></script>
 @endsection

@@ -10,11 +10,11 @@
 <div class="row"> 
   <div class="col-sm-12"> 
     <div class="input-group"> 
-      <span class="input-group-btn pad10">  <p> Servicio: </p> </span>
+      <span class="input-group-btn pad10">  <p> {{ Lang::get('aroaden.service') }} </p> </span>
       <div class="btn-toolbar pad4" role="toolbar"> 
         <div class="btn-group">
-          <a href="{{url("/$main_route/create")}}" role="button" class="btn btn-sm btn-primary">
-            <i class="fa fa-plus"></i> Nuevo
+          <a href="{{ url("/$main_route/create") }}" role="button" class="btn btn-sm btn-primary">
+            <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
           </a>
         </div>  
 </div> </div> </div> </div>
@@ -24,13 +24,13 @@
 		{!! csrf_field() !!}	 
 		
 		<div class="input-group">
-			<span class="input-group-btn pad10"> <p> &nbsp; Buscar Servicio:</p> </span>
+			<span class="input-group-btn pad10"> <p> &nbsp; {{ Lang::get('aroaden.search_service') }}</p> </span>
 			<div class="col-sm-4">
-				<input type="search" name="busca" id="busca" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
+				<input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
 			</div>
 			<div class="col-sm-3">
-			  <a href="{{url("/$main_route")}}" role="button" class="btn btn-md btn-danger">
-			    <i class="fa fa-trash"></i> Borrar texto
+			  <a href="{{ url("/$main_route") }}" role="button" class="btn btn-md btn-danger">
+			    <i class="fa fa-trash"></i> {{ Lang::get('aroaden.remove_text') }}
 			  </a>
 			</div>
 		</div>
@@ -42,20 +42,22 @@
 
 	@if ($count == 0)
 
-		<p> No hay servicios. </p>
+	    <p>
+	      <span class="text-danger">{{ @trans('aroaden.no_services_on_db') }}</span>
+	    </p>
 
 	@else
 
 	    <p>
-	      <span class="label label-success"> {!! $count !!} Servicios </span>
+	      <span class="label label-success"> {!! $count !!} {{ @trans('aroaden.services') }}</span>
 	    </p>
 
 	  	<div class="panel panel-default">
 		  	<table class="table">
 			  	 <tr class="fonsi15 success">
-					<td class="wid290">Servicio</td>
-					<td class="wid110 textcent">Precio</td>
-					<td class="wid95 textcent">IVA</td>
+					<td class="wid290">{{ @trans('aroaden.service') }}</td>
+					<td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>
+					<td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
 					<td class="wid50"></td>
 					<td class="wid50"></td>
 					<td class="wid290"></td>
@@ -65,22 +67,22 @@
 
 		 	  <table class="table table-striped table-hover">
 
-				  @foreach ($main_loop as $servicio)
+				  @foreach ($main_loop as $obj)
 
 					 <tr>
-						  <td class="wid290">{{$servicio->name}}</td>
-						  <td class="wid110 textcent">{{$servicio->price}} €</td>
-						  <td class="wid95 textcent">{{$servicio->tax}} %</td>
+						  <td class="wid290">{{ $obj->name }}</td>
+						  <td class="wid110 textcent">{{ $obj->price }} €</td>
+						  <td class="wid95 textcent">{{ $obj->tax }} %</td>
 
 						  <td class="wid50">
-						  	<a class="btn btn-xs btn-success" type="button" href="{{url("/$main_route/$servicio->idser/edit")}}">
+						  	<a class="btn btn-xs btn-success" type="button" href="{{ url("/$main_route/$obj->idser/edit") }}">
 						  		<i class="fa fa-edit"></i>
 						  	</a>
 						  </td>
 						  
 						  <td class="wid50"> 
 						    <div class="btn-group"> 
-						    	<form role="form" class="form" id="form" role="form" action="{!!url("/$main_route/$servicio->idser")!!}" method="POST">		
+						    	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$obj->idser") !!}" method="POST">		
 							  		{!! csrf_field() !!}
 
 									<input type="hidden" name="_method" value="DELETE">
@@ -123,11 +125,11 @@
 			   	}
 			}); 
 
-			$("#busca").on('keyup change', function(evt) {
-				var busca_val = $(this).val();
-				var busca_val_length = busca_val.length;
+			$("#string").on('keyup change', function(evt) {
+				var string_val = $(this).val();
+				var string_val_length = string_val.length;
 
-				if (busca_val != '' && busca_val_length >= 2) {
+				if (string_val != '' && string_val_length >= 2) {
 					var event = evt;
 
 			        Module.run(event);
@@ -142,9 +144,9 @@
 				function runApp(event) {
 
 				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-				    	var wait = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted"> Buscando... </span>';
+				    	var msg = '<img src="/assets/img/loading.gif"/> &nbsp; &nbsp; <span class="text-muted fonsi16">{{ Lang::get('aroaden.searching') }}</span>';
 				    	$('#item_list').empty();
-						$('#item_list').html(wait);
+						$('#item_list').html(msg);
 
 					    var data = $("form").serialize();
 		     
@@ -158,20 +160,20 @@
 					    }).done(function(response) {
 					    	var html = '';
 
-					    	if (response.msg !== false) {
+				            if (response.error) {
 
-					    		html = '<p>' + response.msg + '</p>';
+				              html = '<p class="text-danger">' + response.msg + '</p>';
 
 					    	} else {
 
-					    		html = '<p id="buscado"> <span class="label label-success">' + response.count + ' Servicios</span></p>';
+					    		html = '<p id="searched"> <span class="label label-success">' + response.msg + ' {{ Lang::get('aroaden.services') }}</span></p>';
 
 					    		html += '<div class="panel panel-default">';
 					    		html += '   <table class="table">';
 					    		html += '     <tr class="fonsi15 success">';
-					    		html += '       <td class="wid290">Servicio</td>';
-					    		html += '       <td class="wid110 textcent">Precio</td>';
-					    		html += '       <td class="wid95 textcent">IVA</td>';
+					    		html += '       <td class="wid290">{{ Lang::get('aroaden.service') }}</td>';
+					    		html += '       <td class="wid110 textcent">{{ Lang::get('aroaden.price') }}</td>';
+					    		html += '       <td class="wid95 textcent">{{ Lang::get('aroaden.tax') }}</td>';
 					    		html += '       <td class="wid50"></td>';
 					    		html += '       <td class="wid50"></td>';
 					    		html += '       <td class="wid290"></td>';
@@ -186,13 +188,13 @@
 						    		html += '    <td class="wid110 textcent">' + object.price + ' €</td>';
 						    		html += '    <td class="wid95 textcent">' + object.tax + ' %</td>';
 						    		html += '    <td class="wid50">';
-						    		html += '      <a href="/Servicios/'+object.idser+'/edit" class="btn btn-xs btn-success" role="button">';
+						    		html += '      <a href="/{!! $main_route !!}/' + object.idser + '/edit" class="btn btn-xs btn-success" role="button">';
 						    		html += '        <i class="fa fa-edit"></i>';
 						    		html += '      </a>';
 						    		html += '    </td>';
 						    		html += '    <td class="wid50">';
 						    		html += '      <div class="btn-group">';
-						    		html += '        <form class="form" id="form" action="/Servicios/'+object.idser+'" method="POST">';
+						    		html += '        <form class="form" id="form" action="/{!! $main_route !!}/'+object.idser+'" method="POST">';
 						    		html += '          {!! csrf_field() !!}';
 						    		html += '          <input type="hidden" name="_method" value="DELETE">';
 						    		html += '          <button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">';
@@ -200,7 +202,7 @@
 						    		html += '             <ul class="dropdown-menu" role="menu">';
 						    		html += '               <li>';
 						    		html += '					<button type="submit" class="btn btn-sm btn-danger del_btn">';
-						    		html += '						<i class="fa fa-times"></i> Eliminar </button>';
+						    		html += '						<i class="fa fa-times"></i>{{ Lang::get('aroaden.delete') }}</button>';
 						    		html += '               </li>';
 						    		html += '             </ul>';
 						    		html += '         </form>';
@@ -217,12 +219,12 @@
 
 					    	$('#item_list').empty();
 					        $('#item_list').hide().html(html).fadeIn('slow');
-					        $('#buscado').prepend(' <span class="label label-primary"> Texto buscado: ' + $('#busca').val() + '</span>');
+					        $('#searched').prepend(' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>');
 
 					    }).fail(function() {
 
 					    	$('#item_list').empty();
-					    	$('#item_list').hide().html('<h3> Hubo un problema. </h3>').fadeIn('slow');
+					    	$('#item_list').hide().html('<h3>{{ Lang::get('aroaden.error') }}</h3>').fadeIn('slow');
 					    	
 					    });
 				    }

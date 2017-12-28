@@ -70,7 +70,7 @@ class CompanyController extends BaseController
 
         }
 
-        return view($this->views_folder.".$view_name", $this->view_data);
+        return $this->loadView($this->views_folder.".$view_name", $this->view_data);
     }
 
     /**

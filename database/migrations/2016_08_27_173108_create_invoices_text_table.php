@@ -3,11 +3,12 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFactutexesTable extends Migration
+class CreateInvoicesTextTable extends Migration
 {
     public function up()
     {
-        Schema::create('factutex', function (Blueprint $table) {
+/*
+        Schema::create('invoices_text', function (Blueprint $table) {
             $table->engine = 'InnoDB';            
             $table->increments('idfactex');
             $table->Integer('idpac')->unsigned();
@@ -24,10 +25,13 @@ class CreateFactutexesTable extends Migration
                   ->references('code')->on('facturas')
                   ->onDelete('cascade');                  
         });
+
+*/
+
     }
 
     public function down()
     {
-        Schema::drop('factutex');
+        Schema::drop('invoices_text');
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Traits\BaseTrait;
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use Exception;
 use Config;
 use Redis;
 use View;
+use Lang;
 use DB;
 
 class BaseController extends Controller
@@ -45,6 +48,11 @@ class BaseController extends Controller
      * @var string $views_folder  views_folder name
      */
     protected $views_folder = '';
+
+    /**
+     * @var string $view_name  view name
+     */
+    protected $view_name = '';
 
     /**
      * @var array $form_fields  input fields showed in form
@@ -132,6 +140,16 @@ class BaseController extends Controller
     protected $has_odogram = false;   
 
     /**
+     * @var bool $has_odogram  si tiene odontograma o no
+     */
+    protected $date_max_days = 60;
+
+    /**
+     * @var array $misc_array  miscelaneus array
+     */
+    protected $misc_array = [];
+
+    /**
      *  construct method
      */
     public function __construct()
@@ -145,7 +163,6 @@ class BaseController extends Controller
         $this->file_max_size = 1024 * 1024 * $file_max_size;
 
         $this->checkIfSettingExists();
-        $this->passVarsToViews();
 
         $this->form_fields = [
             'surname' => false,
@@ -167,7 +184,7 @@ class BaseController extends Controller
             'day' => false,
             'issue_date' => false,
             'no_tax_msg' => false,
-            'per' => false,            
+            'staff' => false,            
             'notes' => false,
             'save' => false,
         ];
@@ -181,9 +198,7 @@ class BaseController extends Controller
      */
     public function index(Request $request)
     {
-        $this->passVarsToViews();
-
-        return view($this->views_folder.'.index', $this->view_data);
+        return $this->loadView($this->views_folder.'.index', $this->view_data);
     }
 
     /**
@@ -195,9 +210,19 @@ class BaseController extends Controller
      */
     public function create(Request $request, $id = false)
     {
-        $this->passVarsToViews();
+        return $this->loadView($this->views_folder.'.create', $this->view_data);
+    }
 
-        return view($this->views_folder.'.create', $this->view_data);   
+    /**
+     *  get show view
+     * 
+     *  @param object $request     
+     *  @param int $id
+     *  @return string       
+     */
+    public function show(Request $request, $id)
+    {
+        return $this->loadView($this->views_folder.'.show', $this->view_data);
     }
 
     /**
@@ -209,13 +234,62 @@ class BaseController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $this->passVarsToViews();
-
-        return view($this->views_folder.'.edit', $this->view_data);   
+        return $this->loadView($this->views_folder.'.edit', $this->view_data);
     }
 
     /**
-     *  check If Setting Exists 
+     *  get list
+     * 
+     *  @param object $request     
+     *  @return string       
+     */
+    public function list(Request $request)
+    {
+        $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
+        $this->misc_array['search_in'] = $this->sanitizeData($request->input('search_in'));
+
+        $data = [];
+
+        try {               
+
+            $data = $this->getArrayResult();
+
+        } catch (Exception $e) {
+
+            $data['error'] = true; 
+            $data['msg'] = $e->getMessage();
+
+        }
+
+        $this->echoJsonOuptut($data);
+    }
+
+    /**
+     *  costumize load View
+     * 
+     *  @param string $view
+     *  @param array $view_data
+     *  @return string
+     */
+    protected function loadView($view, $view_data, $response = false)
+    {       
+        $this->passVarsToViews();
+
+        if ($response) {
+            return response()->view($view, $view_data)
+               ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
+               ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
+               ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
+               ->header('Pragma', 'no-cache');
+        }
+
+        return view($view, $view_data);
+    }
+
+    /**
+     *  check If Setting Exists
+     *  
+     *  @return object
      */
     private function checkIfSettingExists()
     {
@@ -240,7 +314,7 @@ class BaseController extends Controller
             Redis::set('settings', json_encode($settings));
         }
 
-        return redirect()->back(); 
+        return redirect()->back();
     }
 
     /**
@@ -275,8 +349,52 @@ class BaseController extends Controller
     protected function setPageTitle($data)
     {   
         $this->page_title = $data.' - '.$this->page_title;
-        
-        $this->passVarsToViews();
+    }
+
+    /**
+     *  get Query Result
+     *  
+     *  @throws NoQueryResultException
+     *  @return array data
+     */
+    private function getQueryResult()
+    {
+        $string = $this->misc_array['string'];
+        $search_in = $this->misc_array['search_in'];
+
+        $main_loop = $this->model::FindStringOnField($search_in, $string);
+        $count = $this->model::CountFindStringOnField($search_in, $string);
+
+        if ((int)$count === 0)
+            throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));
+
+        $data = [];
+        $data['main_loop'] = $main_loop;      
+        $data['msg'] = $count;
+        return $data;
+    }
+
+    /**
+     *  get Array Result
+     *  
+     *  @return array data
+     */
+    protected function getArrayResult()
+    {   
+        $count = $this->model::CountAll();
+
+        if ((int)$count === 0)
+            throw new Exception(Lang::get('aroaden.empty_db'));
+
+        try {               
+
+            return $this->getQueryResult();
+
+        } catch (NoQueryResultException $e) {
+
+            throw $e;
+
+        }
     }
 
 }

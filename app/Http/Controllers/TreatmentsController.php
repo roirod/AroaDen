@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Treatments;
+use App\Models\StaffWorks;
 use App\Models\Patients;
 use App\Models\Services;
 use App\Models\Staff;
@@ -29,7 +30,7 @@ class TreatmentsController extends BaseController
             'units' => true,
             'paid' => true,
             'day' => true,
-            'per' => true,
+            'staff' => true,
             'save' => true,
         ];
 
@@ -40,18 +41,17 @@ class TreatmentsController extends BaseController
     {  
         $this->redirectIfIdIsNull($id, $this->other_route);
 
-        $servicios = Services::AllOrderByName();
-        $personal = Staff::AllOrderBySurnameNoPagination();
+        $services = Services::AllOrderByName();
+        $staff = Staff::AllOrderBySurnameNoPagination();
         $object = Patients::FirstById($id);
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $object->idpac;
-        $this->view_data['servicios'] = $servicios;
-        $this->view_data['personal'] = $personal;        
+        $this->view_data['idnav'] = $object->idpat;
+        $this->view_data['services'] = $services;
+        $this->view_data['staff'] = $staff;        
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
-        $this->view_data['form_route'] = $this->form_route;
         $this->view_data['form_fields'] = $this->form_fields;
 
         $this->setPageTitle($object->surname.', '.$object->name);
@@ -61,63 +61,67 @@ class TreatmentsController extends BaseController
 
     public function select(Request $request)
     {
-        $id = $this->sanitizeData( $request->input('idser_select') );
+        $id = $this->sanitizeData($request->input('idser_select'));
 
-        $servicio = Services::FirstById($id);
+        $service = Services::FirstById($id);
 
         $data = [];
-        $data['idser'] = $servicio->idser;
-        $data['name'] = $servicio->name;        
-        $data['price'] = $servicio->price;
-        $data['tax'] = $servicio->tax;   
+        $data['idser'] = $id;
+        $data['name'] = $service->name;        
+        $data['price'] = $service->price;
+        $data['tax'] = $service->tax;   
         
         $this->echoJsonOuptut($data);
     }
 
     public function store(Request $request)
     {
-        $idpac = $this->sanitizeData( $request->input('idpac') );
+        $idpat = $this->sanitizeData( $request->input('idpat') );
         $idser = $this->sanitizeData( $request->input('idser') );
-
-        $this->redirectIfIdIsNull($idpac, $this->other_route);
+        $this->redirectIfIdIsNull($idpat, $this->other_route);
         $this->redirectIfIdIsNull($idser, $this->other_route);
 
-        $servicio = Services::FirstById($idser);     
+        $service = Services::FirstById($idser);
 
-        $price = $servicio->price;
+        $price = $service->price;
         $units = $this->sanitizeData( $request->input('units') );
         $paid = $this->sanitizeData( $request->input('paid') );
         $day = $this->sanitizeData( $request->input('day') );
-        $tax = $servicio->tax;
-        $per1 = $this->sanitizeData( $request->input('per1') );
-        $per2 = $this->sanitizeData( $request->input('per2') );
+        $tax = $service->tax;
+        $staff = $request->input('staff');
 
         $data = [];
 
         try {
 
-            Treatments::create([
-                'idpac' => $idpac,
+            $idtre = Treatments::insertGetId([
+                'idpat' => $idpat,
                 'idser' => $idser,
                 'price' => $price,
                 'units' => $units,
                 'paid' => $paid,
                 'day' => $day,
                 'tax' => $tax,
-                'per1' => $per1,
-                'per2' => $per2
-            ]);           
+                'created_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            if (count($staff) > 0) {
+                foreach ($staff as $idsta) {
+                    StaffWorks::create([
+                      'idsta' => $idsta,
+                      'idtre' => $idtre
+                    ]);
+                }
+            }
 
         } catch(Exception $e) {
 
             $data['msg'] = $e->getMessage();
-
             $this->echoJsonOuptut($data);
 
         }
 
         $data['msg'] = Lang::get('aroaden.success_message');
-       
         $this->echoJsonOuptut($data);                      
     }
 
@@ -126,15 +130,17 @@ class TreatmentsController extends BaseController
         $this->redirectIfIdIsNull($id, $this->other_route);
         $id = $this->sanitizeData($id);
     
-        $object = Treatments::FirstById($id); 
-        $personal = Staff::AllOrderBySurnameNoPagination();
-        $paciente = Patients::FirstById($object->idpac);
+        $object = Treatments::FirstById($id);
+        $staff_works = StaffWorks::AllById($id)->toArray();        
+        $staff = Staff::AllOrderBySurnameNoPagination();
+        $paciente = Patients::FirstById($object->idpat);
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $object->idpac;        
+        $this->view_data['idnav'] = $object->idpat;        
         $this->view_data['object'] = $object;
-        $this->view_data['personal'] = $personal;        
+        $this->view_data['staff_works'] = $staff_works;
+        $this->view_data['staff'] = $staff;        
         $this->view_data['name'] = $paciente->name;
         $this->view_data['surname'] = $paciente->surname;
         $this->view_data['form_fields'] = $this->form_fields;        
@@ -153,9 +159,7 @@ class TreatmentsController extends BaseController
             'units' => 'required',            
             'paid' => 'required',
             'price' => 'required',
-            'day' => 'required|date',
-            'per1' => '',
-            'per2' => ''
+            'day' => 'required|date'
         ]);
             
         if ($validator->fails()) {
@@ -167,22 +171,32 @@ class TreatmentsController extends BaseController
             $units = $this->sanitizeData($request->input('units'));
             $price = $this->sanitizeData($request->input('price'));
             $paid = $this->sanitizeData($request->input('paid'));
+            $day = $this->sanitizeData($request->input('day'));
+            $staff = $request->input('staff');
 
             try {
 
-                $tratampacien = Treatments::find($id);
+                $treatment = Treatments::find($id);
 
                 if ($this->checkIfPaidIsHigher($units, $price, $paid))
                     throw new Exception(Lang::get('aroaden.paid_is_higher'));
 
-                $tratampacien->units = $units;
-                $tratampacien->paid = $paid;
-                $tratampacien->day = $this->sanitizeData($request->input('day'));
-                $tratampacien->per1 = $this->sanitizeData($request->input('per1'));
-                $tratampacien->per2 = $this->sanitizeData($request->input('per2'));
-                $tratampacien->updated_at = date('Y-m-d H:i:s');
+                $treatment->units = $units;
+                $treatment->paid = $paid;
+                $treatment->day = $day;
+                $treatment->updated_at = date('Y-m-d H:i:s');
+                $treatment->save();
 
-                $tratampacien->save();
+                StaffWorks::where('idtre', $id)->delete();
+
+                if (count($staff) > 0) {
+                    foreach ($staff as $idsta) {
+                        StaffWorks::create([
+                          'idsta' => $idsta,
+                          'idtre' => $id
+                        ]);
+                    }
+                }
 
             } catch(Exception $e) {
 
@@ -200,16 +214,16 @@ class TreatmentsController extends BaseController
 
     public function destroy(Request $request, $id)
     {               
-        $id = $this->sanitizeData($id);  
-
-        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
+        $this->redirectIfIdIsNull($id, $this->other_route);
                 
-        $tratampacien = Treatments::find($id);
-      
-        $tratampacien->delete();
+        $treatment = Treatments::find($id);
+        $treatment->delete();
+
+        StaffWorks::where('idtre', $id)->delete();
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
-        return redirect("$this->main_route/$tratampacien->idpac");
+        return redirect("$this->other_route/$treatment->idpat");
     }
 }

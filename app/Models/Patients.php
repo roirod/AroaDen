@@ -10,39 +10,39 @@ class Patients extends Model
 {
     use SoftDeletes;
     
-	protected $table = 'pacientes';
+	protected $table = 'patients';
     protected $dates = ['deleted_at'];
     protected $fillable = ['surname','name','dni','tel1','tel2','tel3','sex','address','city','birth','notes'];
-    protected $primaryKey = 'idpac';
+    protected $primaryKey = 'idpat';
 
     public function record()
     {
-        return $this->hasOne('App\Models\Record', 'idpac', 'idpac');
+        return $this->hasOne('App\Models\Record', 'idpat', 'idpat');
     }
 
     public function treatments()
     {
-        return $this->hasMany('App\Models\Treatments', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Treatments', 'idpat', 'idpat');
     }
 
     public function appointments()
     {
-        return $this->hasMany('App\Models\Appointments', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Appointments', 'idpat', 'idpat');
     }
 
     public function invoices()
     {
-        return $this->hasMany('App\Models\Invoices', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Invoices', 'idpat', 'idpat');
     }
 
     public function budgets()
     {
-        return $this->hasMany('App\Models\Budgets', 'idpac', 'idpac');
+        return $this->hasMany('App\Models\Budgets', 'idpat', 'idpat');
     }
 
     public function scopeAllOrderBySurname($query, $num_paginate)
     {
-        return $query->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
+        return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
                         ->orderBy('surname', 'ASC')
                         ->orderBy('name', 'ASC')
@@ -57,7 +57,7 @@ class Patients extends Model
 
     public function scopeFirstById($query, $id)
     {
-        return $query->where('idpac', $id)
+        return $query->where('idpat', $id)
                         ->whereNull('deleted_at')
                         ->first();
     }
@@ -70,10 +70,10 @@ class Patients extends Model
 
     public function scopeAllCitasById($query, $id)
     {
-        return DB::table('pacientes')
-                    ->join('citas','pacientes.idpac','=','citas.idpac')
-                    ->select('pacientes.*','citas.*')
-                    ->where('pacientes.idpac', $id)
+        return DB::table('patients')
+                    ->join('citas','patients.idpat','=','citas.idpat')
+                    ->select('patients.*','citas.*')
+                    ->where('patients.idpat', $id)
                     ->orderBy('day', 'DESC')
                     ->orderBy('hour', 'DESC')
                     ->get();
@@ -83,14 +83,14 @@ class Patients extends Model
     {
         return DB::table('treatments')
                     ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
-                    ->where('idpac', $id)
+                    ->where('idpat', $id)
                     ->get();
     }
 
     public static function CheckIfExistsOnUpdate($id, $dni)
     {
-        $exists = DB::table('pacientes')
-                        ->where('idpac', '!=', $id)
+        $exists = DB::table('patients')
+                        ->where('idpat', '!=', $id)
                         ->where('dni', $dni)
                         ->first();
 
@@ -103,7 +103,7 @@ class Patients extends Model
 
     public function scopeFindStringOnField($query, $busen, $busca)
     {
-        return $query->select('idpac', 'surname', 'name', 'dni', 'tel1', 'city')
+        return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
                         ->whereNull('deleted_at')
                         ->where($busen, 'LIKE', '%'.$busca.'%')
                         ->orderBy('surname','ASC')
@@ -113,7 +113,7 @@ class Patients extends Model
 
     public static function CountFindStringOnField($busen, $busca)
     {
-        $result = DB::table('pacientes')
+        $result = DB::table('patients')
                     ->whereNull('deleted_at')
                     ->where($busen, 'LIKE', '%'.$busca.'%')
                     ->get();
@@ -121,24 +121,24 @@ class Patients extends Model
         return count($result);
     }
 
-    public static function GetTotalPayments($num_mostrado, $todos = false)
+    public static function GetTotalPayments($number, $all = false)
     {
         $query = "
-            SELECT pac.surname, pac.name, pac.idpac, 
-            SUM(tra.units*tra.price) as total, 
-            SUM(tra.paid) as paid, 
-            SUM(tra.units*tra.price)-SUM(tra.paid) as rest 
-            FROM treatments tra
-            INNER JOIN pacientes pac
-            ON tra.idpac=pac.idpac 
-            WHERE pac.deleted_at IS NULL 
-            GROUP BY tra.idpac 
-            HAVING tra.idpac=tra.idpac  
+            SELECT pat.surname, pat.name, pat.idpat, 
+            SUM(tre.units*tre.price) as total, 
+            SUM(tre.paid) as paid, 
+            SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+            FROM treatments tre
+            INNER JOIN patients pat
+            ON tre.idpat=pat.idpat 
+            WHERE pat.deleted_at IS NULL 
+            GROUP BY tre.idpat 
+            HAVING tre.idpat=tre.idpat  
             ORDER BY rest DESC
         ";
 
-        if (!$todos) {
-            $query .= " LIMIT $num_mostrado";
+        if (!$all) {
+            $query .= " LIMIT $number";
         }
 
         return DB::select($query);

@@ -10,20 +10,21 @@
 <div class="row"> 
  <div class="col-sm-12"> 
 	<div class="input-group"> 
-	<span class="input-group-btn pad10">  <p> Paciente: </p> </span>
+	<span class="input-group-btn pad10">  <p> {!! @trans("aroaden.patient") !!} </p> </span>
 	<div class="btn-toolbar pad4" role="toolbar">
 	 <div class="btn-group">
 	    <a href="{!! url("/$main_route/$id/edit") !!}" role="button" class="btn btn-sm btn-success">
-	       <i class="fa fa-edit"></i> Editar
+	       <i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
 	    </a>
 	 </div>	
 	<div class="btn-group">
-	 	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
+	 	<form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
 	  		{!! csrf_field() !!}
 			<input type="hidden" name="_method" value="DELETE">
 
 			<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-			<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
+				<i class="fa fa-times"></i> {!! @trans("aroaden.delete") !!} <span class="caret"></span>  
+			</button>
 			<ul class="dropdown-menu" role="menu"> 
 				<li>
 					@include('includes.delete_button')
@@ -34,9 +35,7 @@
 
 </div> </div> </div> </div> </div>
 
-
 @include('form_fields.show.upload_photo')
-
 
 <hr>
 
@@ -79,11 +78,11 @@
 <div class="row">
   <div class="col-sm-12"> 
   <div class="input-group">
-   <span class="input-group-btn pad10"> <p> Citas: </p> </span>
+   <span class="input-group-btn pad10"> <p> {!! @trans("aroaden.appointments") !!} </p> </span>
    <div class="btn-toolbar pad4" role="toolbar"> 
     <div class="btn-group">
        <a href="{!! url("/$appointments_route/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
-          <i class="fa fa-plus"></i> Nueva
+          <i class="fa fa-plus"></i> {!! @trans("aroaden.new") !!}
        </a>
 </div> </div> </div>  </div> </div>
 
@@ -91,29 +90,28 @@
    <div class="panel panel-default">
     <table class="table">
      <tr class="fonsi15 success">
-		  <td class="wid95">Hora</td>
-		  <td class="wid95">Día</td>
+		  <td class="wid95">{!! @trans("aroaden.hour") !!}</td>
+		  <td class="wid95">{!! @trans("aroaden.day") !!}</td>
 		  <td class="wid50"></td>
 		  <td class="wid50"></td> 		  
-		  <td class="wid290">Notas</td>
+		  <td class="wid290">{!! @trans("aroaden.notes") !!}</td>
      </tr>
     </table>
    	<div class="box260">
    	<table class="table table-striped">      	  	
 
-    @foreach($citas as $cita)
+    @foreach($appointments as $appo)
 		<tr>
- 			<td class="wid95">{!! mb_substr($cita->hour, 0, -3) !!}</td>
- 			<td class="wid95">{!!date('d-m-Y', strtotime($cita->day) )!!}</td>
+ 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
+ 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
  			<td class="wid50">	
-				<a href="{!! url("/$appointments_route/$cita->idcit/edit") !!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" class="btn btn-xs btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
 			<td class="wid50"> 	
 				<div class="btn-group">
-
-				 	<form role="form" class="form" id="form" role="form" action="{!! url("/$appointments_route/$cita->idcit") !!}" method="POST">		
+				 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" method="POST">
 				  		{!! csrf_field() !!}
 
 						<input type="hidden" name="_method" value="DELETE">
@@ -129,7 +127,7 @@
 
 				</div> 
 			</td>
-			<td class="wid290">{!!$cita->notes!!}</td>
+			<td class="wid290">{!! $appo->notes !!}</td>
 		</tr>
     @endforeach
     
@@ -142,14 +140,14 @@
 <div class="row">
   <div class="col-sm-12"> 
   <div class="input-group">
-   <span class="input-group-btn pad10">  <p> Tratramientos: </p> </span>
+   <span class="input-group-btn pad10">  <p> {!! @trans("aroaden.treatments") !!} </p> </span>
    	<div class="btn-toolbar pad4" role="toolbar"> 
    	<div class="btn-group">
        <a href="{!! url("/$treatments_route/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
-          <i class="fa fa-plus"></i> Añadir
+          <i class="fa fa-plus"></i> {!! @trans("aroaden.new") !!}
        </a>
 </div> </div> </div> 
-*Pe1 y Pe2: personal1 y personal2.
+
 </div> </div>
 
 <div class="row">
@@ -157,46 +155,45 @@
  <div class="panel panel-default">
   <table class="table"> 
 	  <tr class="fonsi15 success">
-		  <td class="wid140">Servicio</td>
-		  <td class="wid70 textcent">Precio</td>
-		  <td class="wid70 textcent">Cantidad</td>
-		  <td class="wid70 textcent">Total</td>
-		  <td class="wid70 textcent">Pagado</td>
-		  <td class="wid70">Fecha</td>
+		  <td class="wid140">{!! @trans("aroaden.service") !!}</td>
+		  <td class="wid70 textcent">{!! @trans("aroaden.price") !!}</td>
+		  <td class="wid70 textcent">{!! @trans("aroaden.units") !!}</td>
+		  <td class="wid70 textcent">{!! @trans("aroaden.total") !!}</td>
+		  <td class="wid70 textcent">{!! @trans("aroaden.paid") !!}</td>
+		  <td class="wid70">{!! @trans("aroaden.date") !!}</td>
 		  <td class="wid50 textcent"></td>
 		  <td class="wid50 textcent"></td> 
-		  <td class="wid50 textcent">*Pe1</td>
-		  <td class="wid50 textcent">*Pe2</td>
+		  <td class="wid110">{!! @trans("aroaden.staff") !!}</td>
 	   </tr> 
    </table> 
    <div class="box260">
    <table class="table table-striped">
 
-    @foreach($tratampacien as $tratam)		
+    @foreach($treatments["treatments"] as $treat)
     	<tr>
-    		<td class="wid140">{!!$tratam->servicios_name!!}</td> 
-			<td class="wid70 textcent">{!!numformat($tratam->price)!!} €</td>
-			<td class="wid70 textcent">{!!$tratam->units!!}</td>
-			<td class="wid70 textcent">{!!numformat($tratam->units * $tratam->price)!!} €</td>
-			<td class="wid70 textcent">{!!numformat($tratam->paid)!!} €</td>
-			<td class="wid70">{!!date ('d-m-Y', strtotime ($tratam->day) )!!}</td>
+    		<td class="wid140">{!! $treat->service_name !!}</td> 
+			<td class="wid70 textcent">{!! numformat($treat->price) !!} €</td>
+			<td class="wid70 textcent">{!! $treat->units !!}</td>
+			<td class="wid70 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
+			<td class="wid70 textcent">{!! numformat($treat->paid) !!} €</td>
+			<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 			<td class="wid50 textcent">
-				<a href="{!! url("/$treatments_route/$tratam->idtra/edit") !!}" class="btn btn-xs btn-success" role="button" title="Editar">
+				<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" class="btn btn-xs btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 					<i class="fa fa-edit"></i>
 				</a>
 			</td>
 
 			<td class="wid50 textcent"> 	
 				<div class="btn-group">
-
-				 	<form role="form" class="form" id="form" role="form" action="{!! url("/$treatments_route/$tratam->idtra") !!}" method="POST">	
+				 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" method="POST">
 				  		{!! csrf_field() !!}
 
 						<input type="hidden" name="_method" value="DELETE">
 
 						<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-						<i class="fa fa-times"></i> <span class="caret"></span>  </button>
+							<i class="fa fa-times"></i> <span class="caret"></span>  
+						</button>
 						<ul class="dropdown-menu" role="menu"> 
 							<li>
 								@include('includes.delete_button')
@@ -206,27 +203,24 @@
 			 		</form>
 
 				</div> 
-			</td>  			
+			</td>
+
+			<td class="wid110">		
 			
-			@if ( $tratam->per1 === 0 )
-				<td class="wid50 textcent"> <i class="fa fa-hand-rock-o"></i> </td> 
-			@else 
-				<td class="wid50 textcent">
-					<a href="{!! url("/$staff_route/$tratam->per1") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
+			@foreach ($treatments["staff_works"] as $staff_work)
+
+				@if ($treat->idtre == $staff_work->idtre)
+
+					<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
 						<i class="fa fa-hand-pointer-o"></i>
 					</a>
-				</td> 
-			@endif
-			 
-			@if ( $tratam->per2 === 0 )
-				<td class="wid50 textcent"> <i class="fa fa-hand-rock-o"></i> </td>
-			@else
-				<td class="wid50 textcent">
-					<a href="{!! url("/$staff_route/$tratam->per2") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
-						<i class="fa fa-hand-pointer-o"></i>
-					</a>
-				</td> 
-			@endif		 
+
+				@endif
+				
+			@endforeach
+
+			</td>
+			 	 
 		</tr>
 	@endforeach
 
@@ -239,25 +233,23 @@
 <div class="row">
   <div class="col-sm-12"> 
 
-<?php
- addtexto("Pagos");
-?>
+	{!! addText(@trans("aroaden.payments")) !!}
  
-	@foreach( $suma as $sum )
+	@foreach( $treatments_sum as $sum )
 
 	 	<div class="row mar10 fonsi15">
 	 	    <div class="col-sm-5">
 	 	      <table class="table table-bordered">
 	 	     	<tr class="text-info pad10">
-		 	     	 <td class="wid180"> <i class="fa fa-minus"></i> &nbsp; Suma tratamientos:</td>
+		 	     	 <td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.treatments_sum") !!}</td>
 		 	     	 <td class="wid95 textder"> {!!numformat($sum->total_sum)!!} €</td>
 	 	     	</tr> 
 	 		    <tr class="text-info pad10">
-	 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; Pagado:</td>
+	 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.paid") !!}</td>
 	 		    	<td class="wid95 textder"> {!!numformat($sum->total_paid)!!} € </td>
 	 		    </tr>
 	 		    <tr class="text-danger pad10">
-	 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; Resto:</td>
+	 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.rest") !!}</td>
 	 		    	<td class="wid95 textder"> {!!numformat($sum->rest)!!} € </td>
 	 		    </tr>
 	 		  </table>

@@ -86,6 +86,10 @@ table { table-layout:fixed !important; }
     text-overflow: ellipsis !important;
 }
  
+.text_underline {
+    text-decoration: underline;
+}
+
 .fonsi46  {  font-size: 46px !important;  }
 .fonsi36  {  font-size: 36px !important;  }
 .fonsi26  {  font-size: 26px !important;  }

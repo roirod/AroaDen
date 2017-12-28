@@ -3,38 +3,35 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTratampacienTable extends Migration
+class CreateTreatmentsTable extends Migration
 {
-
     public function up()
     {
-        Schema::create('tratampacien', function (Blueprint $table) {
+        Schema::create('treatments', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->bigIncrements('idtra');
-            $table->Integer('idpac')->unsigned();
+            $table->bigIncrements('idtre');
+            $table->Integer('idpat')->unsigned();
             $table->Integer('idser')->unsigned();
             $table->tinyInteger('units')->unsigned()->default(1);            
             $table->mediumInteger('price')->unsigned();
             $table->mediumInteger('paid')->unsigned()->default(0);
             $table->date('day');
             $table->tinyInteger('tax')->unsigned()->default(0);
-            $table->tinyInteger('per1')->unsigned();
-            $table->tinyInteger('per2')->unsigned();
             $table->timestamps();
             $table->index('day');
-            $table->index('per1');
-            $table->index('per2');
-            $table->foreign('idpac')
-        			->references('idpac')->on('pacientes')
+
+            $table->foreign('idpat')
+        			->references('idpat')->on('patients')
         			->onDelete('cascade');
+                    
             $table->foreign('idser')
-                    ->references('idser')->on('servicios')
+                    ->references('idser')->on('services')
                     ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::drop('tratampacien');
+        Schema::drop('treatments');
     }
 }

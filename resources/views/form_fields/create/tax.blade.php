@@ -2,8 +2,8 @@
 	<label class="control-label text-left mar10">{{ Lang::get('aroaden.tax') }}</label>
 	<select name="tax" class="form-control" required>
  
-		@foreach ($tax_types as $clave => $valor) 
-			 <option value="{{$valor}}">{{$clave}}</option>
+		@foreach ($tax_types as $key => $value) 
+			 <option value="{{ $value }}">{{ $key }}</option>
 		@endforeach
  
 	</select>

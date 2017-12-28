@@ -3,33 +3,33 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class serviciosSeeder extends Seeder
+class servicesSeeder extends Seeder
 {
     public function run()
     {
     	$array = [
     		[
-    			'name' => 'empaste',
+    			'name' => 'Empaste',
     			'price' => '44',
     		],
     		[
-    			'name' => 'endodoncia',
+    			'name' => 'Endodoncia',
     			'price' => '333',
     		],
     		[
-    			'name' => 'endodoncia compleja',
+    			'name' => 'Endodoncia compleja',
     			'price' => '444',
     		],
     		[
-    			'name' => 'ortodoncia',
+    			'name' => 'Ortodoncia',
     			'price' => '222',
     		],
     		[
-    			'name' => 'ortodoncia compleja',
+    			'name' => 'Ortodoncia compleja',
     			'price' => '44',
     		],
     		[
-    			'name' => 'limpieza',
+    			'name' => 'Limpieza',
     			'price' => '55',
     		]
     	];
@@ -41,7 +41,7 @@ class serviciosSeeder extends Seeder
             $k = array_rand($tax);
             $v = $tax[$k];
 
-	        DB::table('servicios')->insert([
+	        DB::table('services')->insert([
 	            'name' => htmlentities ($arr['name'], ENT_QUOTES, "UTF-8"),
 	            'price' => htmlentities ($arr['price'], ENT_QUOTES, "UTF-8"),
 	            'tax' => $v,

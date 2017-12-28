@@ -12,11 +12,11 @@
 <div class="row"> 
   <div class="col-sm-12"> 
     <div class="input-group"> 
-      <span class="input-group-btn pad10">  <p> Datos empresa: </p> </span>
+      <span class="input-group-btn pad10">  <p>{!! @trans('aroaden.company_data') !!}</p> </span>
       <div class="btn-toolbar pad4" role="toolbar"> 
         <div class="btn-group">
           <a href="{{ url("/$main_route/$form_route") }}" role="button" class="btn btn-sm btn-success">
-            <i class="fa fa-edit"></i> Editar
+            <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
           </a>
         </div>  
 </div> </div> </div> </div>
@@ -36,7 +36,7 @@
 
          <br>
          <div class="{{ $item['col'] }} pad10">
-            <i class="fa fa-minus-square"></i> {!! @trans($aroaden_item_name) !!}: <br>
+            <i class="fa fa-minus-square"></i> {!! @trans($aroaden_item_name) !!} <br>
             <div class="box200">{!! nl2br(e($obj->$item_name)) !!}</div>
 
             <hr> <br>
@@ -45,7 +45,7 @@
       @else
 
           <div class="{{ $item['col'] }} pad10">
-            <i class="fa fa-minus-square"></i> {!! @trans($aroaden_item_name) !!}: &nbsp; 
+            <i class="fa fa-minus-square"></i> {!! @trans($aroaden_item_name) !!} &nbsp; 
             <span class="text-muted"> {!! $obj->$item_name !!} </span>  
           </div> 
 

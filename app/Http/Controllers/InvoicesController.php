@@ -54,10 +54,9 @@ class InvoicesController extends BaseController
     public function show(Request $request, $id)
     {     
         $this->redirectIfIdIsNull($id, $this->other_route);
-        $idpac = $this->sanitizeData($id);
+        $idpat = $this->sanitizeData($id);
 
-        $object = Patients::FirstById($idpac);
-
+        $object = Patients::FirstById($idpat);
         $this->setPageTitle($object->surname.', '.$object->name);
 
         $this->form_route = 'invoicesFactory';
@@ -66,10 +65,10 @@ class InvoicesController extends BaseController
         $this->view_data['form_route'] = $this->form_route;
         $this->view_data['invoice_types'] = $this->invoice_types;
         $this->view_data['default_type'] = self::COMPLETE;
-        $this->view_data['idpac'] = $idpac;
-        $this->view_data['idnav'] = $idpac;        
+        $this->view_data['idpat'] = $idpat;
+        $this->view_data['idnav'] = $idpat;        
 
-        return view($this->views_folder.'.show', $this->view_data);
+        return parent::show($request, $id);
     }
 
     public function invoicesFactory(Request $request)
@@ -121,7 +120,7 @@ exit();
 
         $this->view_data['request'] = $request;
         $this->view_data['form_fields'] = $this->form_fields;        
-        $this->view_data['idpac'] = $id;
+        $this->view_data['idpat'] = $id;
         $this->view_data['idnav'] = $id;
 
         return parent::create($request, $id);
@@ -130,7 +129,7 @@ exit();
 
     public function store(Request $request)
     {
-        $idpac = htmlentities (trim( $request->input('idpac')),ENT_QUOTES,"UTF-8");
+        $idpat = htmlentities (trim( $request->input('idpat')),ENT_QUOTES,"UTF-8");
         $idser = htmlentities (trim( $request->input('idser')),ENT_QUOTES,"UTF-8");
         $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
         $canti = htmlentities (trim( $request->input('canti')),ENT_QUOTES,"UTF-8");
@@ -138,12 +137,12 @@ exit();
         $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");
         $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");            
 
-        if ( null == $idpac ) {
+        if ( null == $idpat ) {
             return redirect('Pacientes');
         }         
           
         $validator = Validator::make($request->all(), [
-            'idpac' => 'required',
+            'idpat' => 'required',
             'idser' => 'required',
             'precio' => 'required',
             'canti' => 'required',
@@ -153,13 +152,13 @@ exit();
         ]);
             
         if ($validator->fails()) {
-            return redirect("/Facturas/$idpac/create")
+            return redirect("/Facturas/$idpat/create")
                          ->withErrors($validator)
                          ->withInput();
         } else {
                 
             facturas::create([
-                'idpac' => $idpac,
+                'idpat' => $idpat,
                 'idser' => $idser,
                 'precio' => $precio,
                 'canti' => $canti,
@@ -171,7 +170,7 @@ exit();
             $facturas = DB::table('facturas')
                     ->join('servicios', 'facturas.idser','=','servicios.idser')
                     ->select('facturas.*','servicios.nomser')
-                    ->where('idpac', $idpac)
+                    ->where('idpat', $idpat)
                     ->where('cod', $cod)
                     ->orderBy('nomser' , 'ASC')
                     ->get();  
@@ -215,24 +214,24 @@ exit();
     public function delcod(Request $request)
     {
         $cod = $request->input('cod');
-        $idpac = $request->input('idpac');
+        $idpat = $request->input('idpat');
 
         if ( null == $cod ) {
             return redirect('Pacientes');
         }
         
-        if ( null == $idpac ) {
+        if ( null == $idpat ) {
             return redirect('Pacientes');
         }
 
         $presup = DB::table('presup')
                 ->where('cod', $cod)
-                ->where('idpac', $idpac)
+                ->where('idpat', $idpat)
                 ->delete();
 
-        $prestex = DB::table('prestex')->where('idpac', $idpac)->where('cod', $cod)->delete();
+        $prestex = DB::table('prestex')->where('idpat', $idpat)->where('cod', $cod)->delete();
         
-        return redirect("/Presup/$idpac");
+        return redirect("/Presup/$idpat");
     }
 
     public function delid(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use App\Http\Controllers\Traits\DirFilesTrait;
 use Illuminate\Http\Request;
@@ -56,7 +57,8 @@ class StaffController extends BaseController implements BaseInterface
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
         $this->view_data['count'] = $count;
-        $this->view_data['form_route'] = $this->form_route;
+
+        $this->setPageTitle(Lang::get('aroaden.staff'));
 
         $this->setPageTitle(Lang::get('aroaden.staff'));
 
@@ -64,37 +66,9 @@ class StaffController extends BaseController implements BaseInterface
     }
   
     public function list(Request $request)
-    {                                    
-        $data = [];
-
-        $count = $this->model::CountAll();
-
-        $data['main_loop'] = false;
-        $data['count'] = false;    
-        $data['msg'] = false; 
-
-        if ($count == 0) {
-   
-            $data['msg'] = Lang::get('aroaden.no_staff_on_db');
-
-        } else {
-
-            try {
-
-                $busca = $this->sanitizeData($request->input('busca'));
-                $busen = $this->sanitizeData($request->input('busen'));                
-
-                $data = $this->getItems($busen, $busca);
-
-            } catch (Exception $e) {
-    
-                $data['msg'] = $e->getMessage();
-
-            }
-        }
-
-        $this->echoJsonOuptut($data);
-    } 
+    {   
+        return parent::list($request);        
+    }
 
     public function show(Request $request, $id)
     {
@@ -103,9 +77,9 @@ class StaffController extends BaseController implements BaseInterface
           
         $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
 
-        $personal = $this->model::FirstById($id);
+        $staff = $this->model::FirstById($id);
 
-        if (is_null($personal)) {
+        if (is_null($staff)) {
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
             return redirect($this->main_route);
         }
@@ -115,17 +89,16 @@ class StaffController extends BaseController implements BaseInterface
         $trabajos = $this->model::ServicesById($id);
             
         $this->view_data['request'] = $request;
-        $this->view_data['object'] = $personal;
+        $this->view_data['object'] = $staff;
         $this->view_data['trabajos'] = $trabajos;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $personal->idper;        
-        $this->view_data['other_route'] = $this->other_route;
+        $this->view_data['idnav'] = $staff->idper;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
-        $this->setPageTitle($personal->surname.', '.$personal->name);
+        $this->setPageTitle($staff->surname.', '.$staff->name);
 
-        return view($this->views_folder.'.show', $this->view_data);       
+        return parent::show($request, $id);
     }
 
     public function create(Request $request, $id = false)
@@ -151,7 +124,7 @@ class StaffController extends BaseController implements BaseInterface
         $validator = Validator::make($request->all(),[
            'name' => 'required|max:111',
            'surname' => 'required|max:111',
-           'dni' => 'unique:personal|max:12',
+           'dni' => 'unique:staff|max:12',
            'tel1' => 'max:11',
            'tel2' => 'max:11',
            'position' => 'max:66',
@@ -212,7 +185,7 @@ class StaffController extends BaseController implements BaseInterface
 
         $this->view_data['request'] = $request;
         $this->view_data['object'] = $object;
-        $this->view_data['object'] = $this->form_fields;        
+        $this->view_data['form_fields'] = $this->form_fields;
         $this->view_data['idnav'] = $id;       
         $this->view_data['id'] = $id;
 
@@ -265,7 +238,7 @@ class StaffController extends BaseController implements BaseInterface
           
             $id = $this->sanitizeData($id);
             
-            $personal = $this->model::FirstById($id);
+            $staff = $this->model::FirstById($id);
                     
             $name = ucfirst(strtolower( $request->input('name') ) );
             $surname = ucwords(strtolower( $request->input('surname') ) );
@@ -273,18 +246,18 @@ class StaffController extends BaseController implements BaseInterface
             $address = ucfirst(strtolower( $request->input('address') ) );
             $city = ucfirst(strtolower( $request->input('city') ) );
             
-            $personal->name = $this->sanitizeData($name);
-            $personal->surname = $this->sanitizeData($surname);
-            $personal->dni = $this->sanitizeData($request->input('dni'));
-            $personal->tel1 = $this->sanitizeData($request->input('tel1'));
-            $personal->tel2 = $this->sanitizeData($request->input('tel2'));
-            $personal->position = $this->sanitizeData($request->input('position'));
-            $personal->notes = $this->sanitizeData($notes);
-            $personal->address = $this->sanitizeData($address);
-            $personal->city = $this->sanitizeData($city);
-            $personal->birth = $this->sanitizeData($request->input('birth'));
+            $staff->name = $this->sanitizeData($name);
+            $staff->surname = $this->sanitizeData($surname);
+            $staff->dni = $this->sanitizeData($request->input('dni'));
+            $staff->tel1 = $this->sanitizeData($request->input('tel1'));
+            $staff->tel2 = $this->sanitizeData($request->input('tel2'));
+            $staff->position = $this->sanitizeData($request->input('position'));
+            $staff->notes = $this->sanitizeData($notes);
+            $staff->address = $this->sanitizeData($address);
+            $staff->city = $this->sanitizeData($city);
+            $staff->birth = $this->sanitizeData($request->input('birth'));
             
-            $personal->save();
+            $staff->save();
 
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 
@@ -327,9 +300,8 @@ class StaffController extends BaseController implements BaseInterface
             $data['count'] = $count;        
             $data['msg'] = false;
             return $data;
-        }
 
-        throw new Exception( Lang::get('aroaden.db_query_error') );
+        }
     }
 
 }

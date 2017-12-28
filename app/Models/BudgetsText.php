@@ -7,21 +7,21 @@ use Illuminate\Support\Facades\DB;
 
 class BudgetsText extends Model
 {
-	protected $table = 'prestex';
-    protected $fillable = ['idpac','uniqid','created_at','text'];
-    protected $primaryKey = 'idprestex';
+	protected $table = 'budgets_text';
+    protected $fillable = ['idpat','uniqid','text'];
+    protected $primaryKey = 'idbute';
 
     public static function FirstById($id, $uniqid)
     {
-        return DB::table('prestex')
-				->where('idpac', $id)
+        return DB::table('budgets_text')
+				->where('idpat', $id)
 				->where('uniqid', $uniqid)
 				->first();
     }
 
     public static function FirstByUniqid($uniqid)
     {
-        return DB::table('prestex')
+        return DB::table('budgets_text')
                 ->where('uniqid', $uniqid)
                 ->first();
     }
