@@ -8,21 +8,21 @@
 @include('includes.errors')
 
 
-<div id="delurl" value="{!! $del_url !!}"> </div>
+<div id="del_url" value="{!! $del_url !!}"> </div>
 
 <meta name="_token" content="{!! csrf_token() !!}"/>
 
 <div class="row">
   	<div class="col-sm-3"> 
 
-	 	<form role="form" class="form" role="form" action="{!! url("/$main_route/delcod") !!}" method="POST">	
+	 	<form class="form" action="{!! url("/$main_route/delCode") !!}" method="POST">	
 	 		{!! csrf_field() !!}
 
 			<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
 			<input type="hidden" name="idpat" value="{!! $idpat !!}">	
 
 			<div class="input-group"> 
-				<span class="input-group-btn pad10">  <p> Eliminar todo: </p> </span>
+				<span class="input-group-btn pad10">  <p> Eliminar todo </p> </span>
 				<div class="btn-toolbar pad4" role="toolbar">
 
 					<div class="btn-group">
@@ -43,7 +43,7 @@
 
   <div class="col-sm-4"> 
  	 <div class="input-group">
-   	<span class="input-group-btn pad10"> <p> Finalizar: </p> </span>
+   	<span class="input-group-btn pad10"> <p> Finalizar </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
 	      		<a href="{!! url("/$main_route/$idpat") !!}" role="button" class="btn btn-sm btn-primary">
@@ -75,19 +75,18 @@
    		<div class="box230">
 	   		<table class="table table-striped">
 
-	   			<tbody id="presup">   	  	
+	   			<tbody id="budgets_list">   	  	
 
-			   		@foreach ($presup as $presu)
+			   		@foreach ($budgets as $bud)
 
 							<tr>
-							 	<form id="delform">
-
-									<input type="hidden" name="idpre" value="{!! $presu->idpre !!}">
+							 	<form id="del_budgets_form">
+									<input type="hidden" name="idbud" value="{!! $bud->idbud !!}">
 									<input type="hidden" name="uniqid" value="{!! $uniqid !!}">
 
-									  <td class="wid140">{!! $presu->name !!}</td>
-									  <td class="wid95 textcent">{!! $presu->units !!} </td>
-									  <td class="wid95 textcent">{!! numformat($presu->price) !!} €</td>
+									  <td class="wid140">{!! $bud->name !!}</td>
+									  <td class="wid95 textcent">{!! $bud->units !!} </td>
+									  <td class="wid95 textcent">{!! numformat($bud->price) !!} €</td>
 									  <td class="wid50">
 									    <div class="btn-group"> 
 									    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -104,7 +103,6 @@
 									  	</div>	
 									   </td>
 									  <td class="wid230"></td>
-
 								</form>  
 							</tr>	
 
@@ -121,12 +119,12 @@
 
 <div class="col-sm-12">
 
-	<form role="form" class="form presmod" role="form" action="{!! url("/$main_route/presmod") !!}" method="POST">	
+	<form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">	
 	 	{!! csrf_field() !!}
 
 		<div class="form-group"> 
 		    <label class="control-label text-left mar10">Texto:</label>
-		    <textarea class="form-control" name="text" rows="4">{!! $prestex->text !!}</textarea> 
+		    <textarea class="form-control" name="text" rows="4">{!! $budgetstext->text !!}</textarea> 
 		</div>
 </div>
 
@@ -135,9 +133,9 @@
 		<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
 		<input type="hidden" name="idpat" value="{!! $idpat !!}">
 
-		<button type="submit" formtarget="_blank" name="presmod" value="imp" class="btn btn-default btn-md">Imprimir</button>
-		<button type="submit" formtarget="_blank" name="presmod" value="cre" class="btn btn-primary btn-md">Ver</button>
-		<button type="submit" name="presmod" value="save_text" class="btn btn-success btn-md save_text">Guardar texto</button>
+		<button type="submit" formtarget="_blank" name="mode" value="print" class="btn btn-default btn-md">Imprimir</button>
+		<button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-primary btn-md">Ver</button>
+		<button type="submit" name="mode" value="save_text" class="btn btn-success btn-md save_text">Guardar texto</button>
 	</form>
 	
 </div>
@@ -157,44 +155,38 @@
 			}); 
 
 			$('.save_text').click(function (evt) {
-				Module.saveAction();
+				Module.saveText();
 
 		        evt.preventDefault();
 		        evt.stopPropagation();				
 			});
 
 			var Module = (function( window, undefined ){
-				function saveAction() {
-				    var data = $("form.presmod").serialize();
-				    data += '&presmod=save_text';
+				function saveText() {
+				    var data = $("form.mode").serialize();
+				    data += '&mode=save_text';
 
 				    $.ajax({
 
 				        type : 'POST',
-				        url  : '/{{ $main_route }}/presmod',
+				        url  : '/{{ $main_route }}/mode',
 				        dataType: "json",
 				        data : data,
 
 				    }).done(function(response) {
 
-						swal({
-				            title: response.msg,
-				            type: 'success',
-				            showConfirmButton: false,	            
-				            timer: 1000
-				        });
+						util.showPopup(response.msg);
 	          
 				    }).fail(function() {
-						swal({
-				            text: 'Error!!!',
-				            type: 'warning'
-				        });
+
+						util.showPopup('{{ Lang::get('aroaden.error_message') }}', false);
+
 				    });
 				}
 
 		        return {
-		          saveAction: function() {
-		            saveAction();
+		          saveText: function() {
+		            saveText();
 		          }
 		        }
 
@@ -209,6 +201,5 @@
 @section('js')
     @parent
 
-	  	<script type="text/javascript" src="{!! asset('assets/js/presdel.js') !!}"></script>
-
+	  	<script type="text/javascript" src="{!! asset('assets/js/del_budgets.js') !!}"></script>
 @endsection

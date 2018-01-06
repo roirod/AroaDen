@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\StaffWorks;
 
 class Treatments extends Model
 {
@@ -44,10 +45,12 @@ class Treatments extends Model
 
         $idtre_array = array_column($treatments, 'idtre');
 
-        $data['staff_works'] = DB::table('staff_works')
-                    ->select('idsta','idtre')
-                    ->whereIn('idtre', $idtre_array)
-                    ->get();
+        $data['staff_works'] = StaffWorks::join('staff','staff_works.idsta','=','staff.idsta')
+                        ->select('staff_works.*','staff.surname','staff.name')
+                        ->whereNull('staff.deleted_at')
+                        ->whereIn('staff_works.idtre', $idtre_array)
+                        ->orderBy('staff_works.idtre' , 'ASC')
+                        ->get();
 
         return $data;
     }

@@ -16,6 +16,7 @@
     <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/confirm.js') !!}"></script>
+    <script type="text/javascript" src="{!! asset('assets/js/util.js') !!}"></script>
   @show
 
 </head>

@@ -18,11 +18,17 @@ class BaseController extends Controller
     use BaseTrait;
 
     const APP_NAME = 'Aroa<small>Den</small>';
+    const APP_NAME_TEXT = 'AroaDen';
 
     /**
      * @var array $config  config
      */
     protected $config;
+
+    /**
+     * @var array $config  config
+     */
+    protected $table_name;
 
     /**
      * @var array $tax_types  file contains that returns an array
@@ -324,6 +330,7 @@ class BaseController extends Controller
     protected function passVarsToViews()
     {
         View::share('app_name', self::APP_NAME);
+        View::share('app_name_text', self::APP_NAME_TEXT);
         View::share('page_title', $this->page_title);
         View::share('autofocus', $this->autofocus);
         View::share('main_route', $this->main_route);

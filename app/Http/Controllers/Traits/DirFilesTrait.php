@@ -41,13 +41,13 @@ trait DirFilesTrait {
         $dir = "/$this->own_dir/$id";
 
         if ( !Storage::exists($dir) )
-            Storage::makeDirectory($dir,0770,true);
+            Storage::makeDirectory($dir, 0770, true);
 
         if ($odogram) {
 	        $odogdir = "$dir/$this->odog_dir";
 
 	        if ( !Storage::exists($odogdir) )
-	            Storage::makeDirectory($odogdir,0770,true);
+	            Storage::makeDirectory($odogdir, 0770, true);
 
 	        $odogram = "/$dir/$this->odog_dir/$this->odogram";
 	        $img = "$this->img_folder/$this->odogram";
@@ -57,15 +57,15 @@ trait DirFilesTrait {
         }
 
         $profile_photo = "/$dir/$this->profile_photo_name";
-        $foto = "$this->img_folder/profile_photo.jpg";
+        $photo = "$this->img_folder/profile_photo.jpg";
           
         if ( !Storage::exists($profile_photo) )
-            Storage::copy($foto,$profile_photo);   
+            Storage::copy($photo, $profile_photo);   
 
         $thumbdir = "$dir/$this->thumb_dir";
 
         if ( !Storage::exists($thumbdir) )
-            Storage::makeDirectory($thumbdir,0770,true);
+            Storage::makeDirectory($thumbdir, 0770, true);
     }
 
     public function upload(Request $request)
@@ -171,12 +171,12 @@ trait DirFilesTrait {
 
         $dir = storage_path("$this->files_dir/$id");
 
-        $partes_ruta = pathinfo($file);
+        $path_parts = pathinfo($file);
 
-        if ( isset($partes_ruta['extension']) ) {
+        if ( isset($path_parts['extension']) ) {
 
-            $extension = $partes_ruta['extension'];
-            $thumb_filename = $partes_ruta['filename'];
+            $extension = $path_parts['extension'];
+            $thumb_filename = $path_parts['filename'];
             $thumb = "$dir/$this->thumb_dir/$thumb_filename.jpg";
 
         } else {

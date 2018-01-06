@@ -1,18 +1,18 @@
 
 <div class="row">
 	<div class="col-sm-12">
-		<div class="fonsi26">
-  			{!! $empre->company_name !!}
-  		</div> 
+		<p class="fonsi18">
+  			{!! $company->company_name !!}
+  		</p> 
 
-  		<p class="fonsi15">
-  			NIF: {!! $empre->company_nif !!}
+  		<p class="fonsi14">
+  			NIF: {!! $company->company_nif !!}
   			<br> 
-  			Telf.: {!! $empre->company_tel1 !!}
+  			Telf.: {!! $company->company_tel1 !!}
   			<br> 
-  			{!! $empre->company_address !!}
+  			{!! $company->company_address !!}
   			<br> 
-  			{!! $empre->company_city !!}
+  			{!! $company->company_city !!}
   			<br><br>
 
 			Presupuesto: {!! DatTime($created_at) !!}
@@ -20,7 +20,6 @@
   		<br>
   	</div>
 </div>
-
 
 <div class="row">
 	<div class="col-sm-12 fonsi15">
@@ -33,13 +32,13 @@
 					<td class="wid70 textcent">Precio</td>			
 				 </tr>
 
-				@foreach ($presup as $pres)
+				@foreach ($budgets as $bud)
 						
 					<tr> 
-						<td class="wid230"> {!! $pres->name !!} </td>
-						<td class="wid70 textcent"> {!! $pres->tax !!} % </td>
-						<td class="wid70 textcent"> {!! $pres->units !!} </td>
-						<td class="wid70 textcent"> {!! numformat($pres->price) !!} € </td>
+						<td class="wid230"> {!! $bud->name !!} </td>
+						<td class="wid70 textcent"> {!! $bud->tax !!} % </td>
+						<td class="wid70 textcent"> {!! $bud->units !!} </td>
+						<td class="wid70 textcent"> {!! numformat($bud->price) !!} € </td>
 					</tr>
 								
 				@endforeach
@@ -50,52 +49,35 @@
 					<td class="wid70">&nbsp;</td>
 					<td class="wid70">&nbsp;</td>
 				</tr>
-
-				@foreach ($taxtotal as $totiv)
-
-					<tr>
-						<td class="wid230"></td>
-						<td class="wid70">&nbsp;</td>
-						<td class="wid70 textder">Total IVA:</td>
-						<td class="wid70 textcent"> {!! numformat($totiv->tot) !!} € </td> 
-					</tr>
-
-				@endforeach				
-
-				@foreach ($notaxtotal as $sini)
-
-					<tr>
-						<td class="wid230"></td>
-						<td class="wid70">&nbsp;</td>
-						<td class="wid70 textder">Total sin IVA:</td>
-						<td class="wid70 textcent"> {!! numformat($sini->tot) !!} € </td> 
-					</tr>
-
-				@endforeach
-
-				@foreach ($total as $sum)
-
-					<tr>
-						<td class="wid230"></td>
-						<td class="wid70">&nbsp;</td>
-						<td class="wid70 textder">Total:</td>
-						<td class="wid70 textcent"> {!! numformat($sum->tot) !!} € </td> 
-					</tr>
-
-				@endforeach
-
+				<tr>
+					<td class="wid230"></td>
+					<td class="wid70">&nbsp;</td>
+					<td class="wid70 textder">Total IVA</td>
+					<td class="wid70 textcent"> {!! numformat($taxtotal) !!} € </td> 
+				</tr>
+				<tr>
+					<td class="wid230"></td>
+					<td class="wid70">&nbsp;</td>
+					<td class="wid70 textder">Total sin IVA</td>
+					<td class="wid70 textcent"> {!! numformat($notaxtotal) !!} € </td> 
+				</tr>
+				<tr>
+					<td class="wid230"></td>
+					<td class="wid70">&nbsp;</td>
+					<td class="wid70 textder">Total</td>
+					<td class="wid70 textcent"> {!! numformat($total) !!} € </td> 
+				</tr>
 			</table>
-
 		</div> 
 
    <br> <br>
 
-   <p class="fonsi18">
+   <p class="fonsi14">
    	{!! nl2br(e($text)) !!}
    </p>
 
-   <p class="fonsi18">
-   	{!! nl2br(e($empre->budget_text)) !!}
+   <p class="fonsi14">
+   	{!! nl2br(e($company->budget_text)) !!}
    </p>
 
 </div> </div>	

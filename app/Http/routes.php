@@ -54,8 +54,8 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 		Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
 		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		
-		Route::post($route["budgets"].'/delcod', 'BudgetsController@delcod');
-		Route::post($route["budgets"].'/delid', 'BudgetsController@delid');
+		Route::post($route["budgets"].'/delCode', 'BudgetsController@delCode');
+		Route::post($route["budgets"].'/delId', 'BudgetsController@delId');
 	});
 
 	Route::get(Config::get('aroaden.routes.company'), 'CompanyController@index');
@@ -90,10 +90,10 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::get($route["pays"], 'PaysController@index');
 
 	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');
-	Route::post($route["budgets"].'/presuedit', 'BudgetsController@presuedit');
-	Route::post($route["budgets"].'/presmod', 'BudgetsController@presmod');
+	Route::post($route["budgets"].'/editBudget', 'BudgetsController@editBudget');
+	Route::post($route["budgets"].'/mode', 'BudgetsController@mode');
 	Route::resource($route["budgets"], 'BudgetsController', ['except' => 
-		['index', 'update', 'edit', 'destroy']]);
+		['index', 'edit', 'update', 'destroy']]);
 
 	Route::get($route["invoices"].'/{id}/create', 'InvoicesController@create');
 	Route::post($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');

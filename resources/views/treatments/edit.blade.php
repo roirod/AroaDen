@@ -88,5 +88,4 @@
       <script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
       <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
       <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/util.js') }}"></script>
 @endsection

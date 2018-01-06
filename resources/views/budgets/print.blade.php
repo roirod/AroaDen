@@ -1,11 +1,11 @@
-@extends('layouts.presmod')
+@extends('layouts.budgets')
 
 @section('content')
 
-@include('presup.common')
+@include('budgets.common')
 
 <?php
-	if ( isset($presmod) && $presmod == 'imp' ) {
+	if ( isset($mode) && $mode == 'print' ) {
 		?>
 			<script>
 				window.print();

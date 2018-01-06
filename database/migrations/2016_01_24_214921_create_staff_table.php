@@ -12,12 +12,12 @@ class CreateStaffTable extends Migration
             $table->increments('idsta');
             $table->string('surname', 111);
             $table->string('name', 111);
-            $table->string('position', 66)->nullable();            
-            $table->string('address', 111)->nullable();
-            $table->string('city', 111)->nullable();            
+            $table->string('position', 66)->nullable()->default(' ');        
+            $table->string('address', 111)->nullable()->default(' ');
+            $table->string('city', 111)->nullable()->default(' ');
             $table->string('dni', 18);
-            $table->string('tel1', 18)->nullable();
-            $table->string('tel2', 18)->nullable();
+            $table->string('tel1', 18)->nullable()->default(' ');
+            $table->string('tel2', 18)->nullable()->default(' ');
             $table->date('birth')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

@@ -10,7 +10,7 @@
 <div class="row"> 
   <div class="col-sm-12"> 
 		<div class="input-group"> 
-			<span class="input-group-btn pad10">  <p> Personal: </p> </span>
+			<span class="input-group-btn pad10">  <p> Personal </p> </span>
 			<div class="btn-toolbar pad4" role="toolbar"> 
 				<div class="btn-group">
 					<a href="{{ url("/$main_route/$id/edit") }}" role="button" class="btn btn-sm btn-success">
@@ -18,7 +18,7 @@
 					</a>
 				</div>	
 			<div class="btn-group">
-			 	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
+			 	<form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
 			  		{!! csrf_field() !!}
 
 					<input type="hidden" name="_method" value="DELETE">
@@ -94,16 +94,16 @@
    <div class="box500">
      <table class="table table-striped">
 
-		@foreach ($trabajos as $traba)
+		@foreach ($treatments as $treat)
 			<tr>
 				<td class="wid180">
-					<a href="{{ url("/$other_route/$traba->idpat") }}" class="pad4" target="_blank">
-						{{ $traba->surname }}, {{ $traba->name }}
+					<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
+						{{ $treat->surname }}, {{ $treat->name }}
 					</a>
 				</td>
-			   	<td class="wid180">{{ $traba->service_name }}</td>
-			   	<td class="wid95 textcent">{{ $traba->units }}</td>
-			   	<td class="wid95">{{ date('d-m-Y',strtotime ($traba->day)) }}</td>
+			   	<td class="wid180">{{ $treat->service_name }}</td>
+			   	<td class="wid95 textcent">{{ $treat->units }}</td>
+			   	<td class="wid95">{{ date('d-m-Y',strtotime ($treat->day)) }}</td>
 			   	<td class="wid95"></td>
 	   		</tr>						
 		@endforeach

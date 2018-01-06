@@ -49,6 +49,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->own_dir = 'patients_dir';
         $this->files_dir = "app/".$this->own_dir;
         $this->has_odogram = true;
+        $this->table_name = 'patients';
 
         $fields = [
             'surname' => true,
@@ -161,7 +162,7 @@ class PatientsController extends BaseController implements BaseInterface
             'surname' => 'required|max:111',
             'address' => 'max:111',
             'city' => 'max:111',
-            'dni' => 'unique:pacientes|max:12',
+            'dni' => "unique:$this->table_name|max:12",
             'tel1' => 'max:11',
             'tel2' => 'max:11',
             'tel3' => 'max:11',
@@ -175,13 +176,13 @@ class PatientsController extends BaseController implements BaseInterface
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {
+             
+            $name = ucfirst($request->input('name'));
+            $surname = ucwords($request->input('surname'));
+            $address = ucfirst($request->input('address'));
+            $city = ucfirst($request->input('city'));
+            $notes = ucfirst($request->input('notes'));
 
-        	$name = ucfirst(strtolower( $request->input('name') ) );
-        	$surname = ucwords(strtolower( $request->input('surname') ) );
-        	$address = ucfirst(strtolower( $request->input('address') ) );
-        	$city = ucfirst(strtolower( $request->input('city') ) );
-            $notes = ucfirst(strtolower( $request->input('notes') ) );
-              
             $insertGetId = $this->model::insertGetId([
 	          'name' => $this->sanitizeData($name),
 	          'surname' => $this->sanitizeData($surname),
@@ -261,11 +262,11 @@ class PatientsController extends BaseController implements BaseInterface
 	                     ->withInput();
 	    } else {		
 					  		
-            $name = ucfirst(strtolower( $request->input('name') ) );
-            $surname = ucwords(strtolower( $request->input('surname') ) );
-            $address = ucfirst(strtolower( $request->input('address') ) );
-            $city = ucfirst(strtolower( $request->input('city') ) );
-            $notes = ucfirst(strtolower( $request->input('notes') ) );
+            $name = ucfirst($request->input('name'));
+            $surname = ucwords($request->input('surname'));
+            $address = ucfirst($request->input('address'));
+            $city = ucfirst($request->input('city'));
+            $notes = ucfirst($request->input('notes'));
 
             $patient->name = $this->sanitizeData($name);
             $patient->surname = $this->sanitizeData($surname);
@@ -347,11 +348,11 @@ class PatientsController extends BaseController implements BaseInterface
 
         $record = Record::find($id);
                 
-        $medical_record = ucfirst(strtolower( $request->input('medical_record') ) );
-        $diseases = ucfirst(strtolower( $request->input('diseases') ) );
-        $medicines = ucfirst(strtolower( $request->input('medicines') ) );
-        $allergies = ucfirst(strtolower( $request->input('allergies') ) );
-        $notes = ucfirst(strtolower( $request->input('notes') ) );
+        $medical_record = ucfirst($request->input('medical_record'));
+        $diseases = ucfirst($request->input('diseases'));
+        $medicines = ucfirst($request->input('medicines'));
+        $allergies = ucfirst($request->input('allergies'));
+        $notes = ucfirst($request->input('notes'));
         
         $record->medical_record = $this->sanitizeData($medical_record);   
         $record->diseases = $this->sanitizeData($diseases);   
@@ -442,7 +443,7 @@ class PatientsController extends BaseController implements BaseInterface
  		 
         $this->view_name = 'odogram';
 
-		if ( $resodog == 1 ) {
+		if ($resodog == 1) {
 
             $odogram = "/$this->own_dir/$id/$this->odog_dir/$this->odogram";
             $img = "/img/$this->odogram"; 
@@ -466,7 +467,7 @@ class PatientsController extends BaseController implements BaseInterface
 
         $this->view_name = 'budgets';
 
-        $budgets = Budgets::AllById($query, $id);
+        $budgets = Budgets::AllById($id);
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 

@@ -27,6 +27,7 @@ class ServicesController extends BaseController implements BaseInterface
         $this->views_folder = $this->config['routes']['services'];
         $this->tax_types = $this->config['tax_types'];
         $this->form_route = 'list';
+        $this->table_name = 'services';
         $this->model = $services;     
 
         $fields = [
@@ -124,7 +125,7 @@ class ServicesController extends BaseController implements BaseInterface
      */
     public function store(Request $request)
     {          
-        $name = ucfirst(strtolower( $request->input('name') ) );
+        $name = ucfirst($request->input('name'));
 
         $name = $this->sanitizeData($name);
         $price = $this->sanitizeData($request->input('price'));
@@ -133,12 +134,12 @@ class ServicesController extends BaseController implements BaseInterface
         $exists = $this->model::FirstByNameDeleted($name);
 
         if ( isset($exists->name) ) {
-           $request->session()->flash($this->error_message_name, Lang::get('aroaden.name_in_use', ['name' => $name]) );
+           $request->session()->flash($this->error_message_name, Lang::get('aroaden.name_in_use', ['name' => $name]));
            return redirect($this->main_route.'/create')->withInput();
         }
 
     	$validator = Validator::make($request->all(), [
-            'name' => 'required|unique:servicios|max:111',
+            'name' => "required|unique:$this->table_name|max:111",
             'price' => 'required',
             'tax' => ''
 	    ]);
@@ -261,9 +262,6 @@ class ServicesController extends BaseController implements BaseInterface
 
         $main_loop = $this->model::FindStringOnField($string);
         $count = $this->model::CountFindStringOnField($string);
-
-
-
 
         if ((int)$count === 0)
             throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));

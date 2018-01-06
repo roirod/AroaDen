@@ -13,6 +13,9 @@ use DB;
 
 class BudgetsController extends BaseController
 {
+    private $_new_url;
+    private $_del_url;
+
     public function __construct(Budgets $budgets, Patients $patients, Services $services)
     {
         parent::__construct();
@@ -24,7 +27,9 @@ class BudgetsController extends BaseController
         $this->views_folder = $this->config['routes']['budgets'];
         $this->model = $budgets;
         $this->model2 = $patients;
-        $this->model3 = $services;        
+        $this->model3 = $services;
+        $this->_new_url = url("/$this->main_route");
+        $this->_del_url = url("/$this->main_route/delId");
     }
 
     public function create(Request $request, $id = false)
@@ -37,14 +42,12 @@ class BudgetsController extends BaseController
 
         $uniqid = uniqid();
         $created_at = date('Y-m-d H:i:s');
-        $new_url = url("/$this->main_route");
-        $del_url = url("/$this->main_route/delid");
 
         $this->view_data['request'] = $request;
         $this->view_data['created_at'] = $created_at;
         $this->view_data['uniqid'] = $uniqid;        
-        $this->view_data['new_url'] = $new_url;
-        $this->view_data['del_url'] = $del_url;
+        $this->view_data['new_url'] = $this->_new_url;
+        $this->view_data['del_url'] = $this->_del_url;
         $this->view_data['main_loop'] = $main_loop;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;        
@@ -76,9 +79,9 @@ class BudgetsController extends BaseController
             'created_at' => $created_at               
         ]);
 
-        $prestex = BudgetsText::FirstById($idpat, $uniqid);
+        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
 
-        if (is_null($prestex)) {                 
+        if (is_null($budgetstext)) {                 
             BudgetsText::create([
                 'idpat' => $idpat,
                 'uniqid' => $uniqid,                
@@ -86,43 +89,11 @@ class BudgetsController extends BaseController
             ]);
         }
 
-        $presup = $this->model::AllByIdOrderByName($idpat, $uniqid);
+        $budgets = $this->model::AllByIdOrderByName($idpat, $uniqid);
 
-        $cadena = '';
+        $this->view_data['budgets'] = $budgets;
 
-        foreach ($presup as $presu) {
-
-            $cadena .= '
-                <tr>
-                    <td class="wid140">'.$presu->name.'</td>
-                    <td class="wid95 textcent">'.$presu->units.'</td>
-                    <td class="wid95 textcent">'.$presu->price.' €</td>
-
-                    <td class="wid50">
-
-                      <form id="delform">
-                      
-                        <input type="hidden" name="idpre" value="'.$presu->idpre.'">
-                        <input type="hidden" name="uniqid" value="'.$uniqid.'">
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-times"></i>  <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                              <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
-                            </ul> 
-                        </div>
-
-                      </form>   
-                    </td>
-
-                    <td class="wid230"> </td>                            
-                </tr> 
-            ';
-        }
-                         
-        return $cadena;     
+        return $this->loadView($this->views_folder.'.budgetsTable', $this->view_data);  
     }
 
     public function show(Request $request, $id)
@@ -133,19 +104,19 @@ class BudgetsController extends BaseController
         $patient = $this->model2::FirstById($idpat);
         $this->setPageTitle($patient->surname.', '.$patient->name);
 
-        $presup = $this->model::AllById($idpat);
-        $presgroup = $this->model::AllGroupByCode($idpat);
+        $budgets = $this->model::AllById($idpat);
+        $budgets_group = $this->model::AllGroupByCode($idpat);
 
         $this->view_data['request'] = $request;
-        $this->view_data['presup'] = $presup;
-        $this->view_data['presgroup'] = $presgroup;
+        $this->view_data['budgets'] = $budgets;
+        $this->view_data['budgets_group'] = $budgets_group;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;        
 
         return parent::show($request, $id);
     }
 
-    public function presuedit(Request $request)
+    public function editBudget(Request $request)
     {
         $idpat = $this->sanitizeData($request->input('idpat'));
         $uniqid = $this->sanitizeData($request->input('uniqid'));     
@@ -153,15 +124,13 @@ class BudgetsController extends BaseController
         $patient = $this->model2::FirstById($idpat);
         $this->setPageTitle($patient->surname.', '.$patient->name);
 
-        $delurl = url("/$this->main_route/delid");
-
-        $presup = $this->model::AllByIdOrderByName($idpat, $uniqid);
-        $prestex = BudgetsText::FirstById($idpat, $uniqid);
+        $budgets = $this->model::AllByIdOrderByName($idpat, $uniqid);
+        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
 
         $this->view_data['request'] = $request;
-        $this->view_data['presup'] = $presup;
-        $this->view_data['delurl'] = $delurl;
-        $this->view_data['prestex'] = $prestex;
+        $this->view_data['budgets'] = $budgets;
+        $this->view_data['del_url'] = $this->_del_url;
+        $this->view_data['budgetstext'] = $budgetstext;
         $this->view_data['uniqid'] = $uniqid;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;     
@@ -169,14 +138,14 @@ class BudgetsController extends BaseController
         return $this->loadView($this->views_folder.'.edit', $this->view_data);
     }
 
-    public function presmod(Request $request)
+    public function mode(Request $request)
     {
         $uniqid = $this->sanitizeData($request->input('uniqid')); 
-        $presmod = $this->sanitizeData($request->input('presmod'));     
+        $mode = $this->sanitizeData($request->input('mode'));     
         $text = $this->sanitizeData($request->input('text'));   
         $idpat = $this->sanitizeData($request->input('idpat'));   
 
-        if ($presmod == 'save_text') {
+        if ($mode == 'save_text') {
             BudgetsText::where('uniqid', $uniqid)->update(['text' => $text]);
 
             $data = [];
@@ -185,39 +154,39 @@ class BudgetsController extends BaseController
             $this->echoJsonOuptut($data);
         }
 
-        $presup = $this->model::AllByCode($uniqid);
-        $created_at = $presup[0]->created_at;
+        $budgets = $this->model::AllByCode($uniqid);
+        $created_at = $budgets[0]->created_at;
 
         $taxtotal = $this->model::GetTaxTotal($uniqid);
         $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
         $total = $this->model::GetTotal($uniqid);
-        $empre = $this->getSettings();
-  
+        $company = $this->getSettings();
+
         $this->view_data['request'] = $request;
         $this->view_data['text'] = $text;
-        $this->view_data['presup'] = $presup;
+        $this->view_data['budgets'] = $budgets;
         $this->view_data['uniqid'] = $uniqid;
         $this->view_data['created_at'] = $created_at;
-        $this->view_data['presmod'] = $presmod;
+        $this->view_data['mode'] = $mode;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;  
-        $this->view_data['taxtotal'] = $taxtotal;
-        $this->view_data['notaxtotal'] = $notaxtotal;
-        $this->view_data['total'] = $total;
-        $this->view_data['empre'] = $empre;  
+        $this->view_data['taxtotal'] = $taxtotal[0]->total;
+        $this->view_data['notaxtotal'] = $notaxtotal[0]->total;
+        $this->view_data['total'] = $total[0]->total;
+        $this->view_data['company'] = $company;  
 
-        if ($presmod == 'imp') {
+        if ($mode == 'print') {
 
-            return $this->loadView($this->views_folder.'.imp', $this->view_data);
+            return $this->loadView($this->views_folder.'.print', $this->view_data);
 
         } else {
   
-            return $this->loadView($this->views_folder.'.mod', $this->view_data);
+            return $this->loadView($this->views_folder.'.mode', $this->view_data);
             
         }      
     } 
 
-    public function delcod(Request $request)
+    public function delCode(Request $request)
     {
         $uniqid = $request->input('uniqid');
         $idpat = $request->input('idpat');
@@ -228,53 +197,22 @@ class BudgetsController extends BaseController
         return redirect("/$this->main_route/$idpat");
     }
 
-    public function delid(Request $request)
+    public function delId(Request $request)
     {      
-        $idpre = $this->sanitizeData($request->input('idpre'));
+        $idbud = $this->sanitizeData($request->input('idbud'));
         $uniqid = $this->sanitizeData($request->input('uniqid'));  
 
-        $presup = Budgets::find($idpre);
-        $presup->delete();
+        $budget = Budgets::find($idbud);
+        $budget->delete();
         
-        $presup = DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.name')
-                ->where('uniqid', $uniqid)
-                ->orderBy('servicios.name' , 'ASC')
-                ->get();  
+        $budgets = Budgets::AllByCode($uniqid);  
 
-        if (count($presup) == 0)
+        if (count($budgets) == 0)
             BudgetsText::where('uniqid', $uniqid)->delete();
 
-        $cadena = '';
+        $this->view_data['budgets'] = $budgets;
 
-        foreach ($presup as $presu) {
-            $cadena .= '
-                <tr>
-                    <td class="wid140">'.$presu->name.'</td>
-                    <td class="wid95 textcent">'.$presu->units.'</td>
-                    <td class="wid95 textcent">'.$presu->price.' €</td>
-                    <td class="wid50">
-                      <form id="delform">
-                        <input type="hidden" name="idpre" value="'.$presu->idpre.'">
-                        <input type="hidden" name="uniqid" value="'.$uniqid.'">
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-times"></i>  <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                              <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
-                            </ul> 
-                        </div>
-                      </form>   
-                    </td>
-                    <td class="wid230"> </td>                            
-                </tr> 
-            ';
-        }
-                         
-        return $cadena;
+        return $this->loadView($this->views_folder.'.budgetsTable', $this->view_data);
     }
 
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use App\Http\Controllers\Traits\DirFilesTrait;
 use Illuminate\Http\Request;
+use App\Models\Treatments;
+use App\Models\StaffWorks;
 use App\Models\Staff;
 use Carbon\Carbon;
 use Validator;
@@ -84,13 +86,13 @@ class StaffController extends BaseController implements BaseInterface
 
         $this->createDir($id);
 
-        $trabajos = $this->model::ServicesById($id);
+        $treatments = StaffWorks::AllByStaffId($id);
             
         $this->view_data['request'] = $request;
         $this->view_data['object'] = $staff;
-        $this->view_data['trabajos'] = $trabajos;
+        $this->view_data['treatments'] = $treatments;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $staff->idper;
+        $this->view_data['idnav'] = $staff->idsta;
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
@@ -138,11 +140,11 @@ class StaffController extends BaseController implements BaseInterface
                          ->withInput();
         } else {
 
-            $name = ucfirst(strtolower( $request->input('name') ) );
-            $surname = ucwords(strtolower( $request->input('surname') ) );
-            $address = ucfirst(strtolower( $request->input('address') ) );
-            $city = ucfirst(strtolower( $request->input('city') ) );
-            $notes = ucfirst(strtolower( $request->input('notes') ) );
+            $name = ucfirst($request->input('name'));
+            $surname = ucwords($request->input('surname'));
+            $address = ucfirst($request->input('address'));
+            $city = ucfirst($request->input('city'));
+            $notes = ucfirst($request->input('notes'));
             
             $name = $this->sanitizeData($name);
             $surname = $this->sanitizeData($surname);
@@ -229,7 +231,7 @@ class StaffController extends BaseController implements BaseInterface
 
             $birth = $request->input('birth');
                       
-            if ( $this->validateDate($birth) ) {
+            if (!$this->validateDate($birth)) {
                $request->session()->flash($this->error_message_name, 'Fecha/s incorrecta');
                return redirect("/$this->main_route/$id/edit");
             }
@@ -237,13 +239,13 @@ class StaffController extends BaseController implements BaseInterface
             $id = $this->sanitizeData($id);
             
             $staff = $this->model::FirstById($id);
-                    
-            $name = ucfirst(strtolower( $request->input('name') ) );
-            $surname = ucwords(strtolower( $request->input('surname') ) );
-            $notes = ucfirst(strtolower( $request->input('notes') ) );
-            $address = ucfirst(strtolower( $request->input('address') ) );
-            $city = ucfirst(strtolower( $request->input('city') ) );
-            
+           
+            $name = ucfirst($request->input('name'));
+            $surname = ucwords($request->input('surname'));
+            $address = ucfirst($request->input('address'));
+            $city = ucfirst($request->input('city'));
+            $notes = ucfirst($request->input('notes'));
+
             $staff->name = $this->sanitizeData($name);
             $staff->surname = $this->sanitizeData($surname);
             $staff->dni = $this->sanitizeData($request->input('dni'));
@@ -278,28 +280,6 @@ class StaffController extends BaseController implements BaseInterface
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         
         return redirect($this->main_route);
-    }
-
-
-    public function getItems($busen, $busca)
-    {
-        $data = [];
-
-        $main_loop = $this->model::FindStringOnField($busen, $busca);
-        $count = $this->model::CountFindStringOnField($busen, $busca);
-
-        if ($count == 0) {
-
-            throw new Exception( Lang::get('aroaden.no_query_results') );
-
-        } else {
-
-            $data['main_loop'] = $main_loop;
-            $data['count'] = $count;        
-            $data['msg'] = false;
-            return $data;
-
-        }
     }
 
 }

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Record extends Model
 {
 	protected $table = 'record';
-    protected $fillable = ['idpac','medical_record','diseases','medicines','allergies','notes'];
-    protected $primaryKey = 'idpac';
+    protected $fillable = ['idpat','medical_record','diseases','medicines','allergies','notes'];
+    protected $primaryKey = 'idpat';
 
     public function patients()
     {

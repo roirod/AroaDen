@@ -17,4 +17,14 @@ class StaffWorks extends Model
                     ->get();
     }
 
+    public function scopeAllByStaffId($query, $id)
+    {
+        return $query->join('treatments','treatments.idtre','=','staff_works.idtre')
+        			->join('patients','patients.idpat','=','treatments.idpat')
+        			->join('services','services.idser','=','treatments.idser')
+                    ->select('treatments.*','patients.*','services.name as service_name')
+                    ->where('staff_works.idsta', $id)
+                    ->orderBy('treatments.day','DESC')
+                    ->get();
+    }
 }

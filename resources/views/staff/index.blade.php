@@ -56,18 +56,18 @@
 			@foreach ($main_loop as $obj)	
 				<tr> 
 					<td class="wid50"> 
-						<a class="btn btn-default" href="{{ url("/$main_route/$obj->idper") }}" target="_blank" role="button">
+						<a class="btn btn-default" href="{{ url("/$main_route/$obj->idsta") }}" target="_blank" role="button">
 							<i class="fa fa-hand-pointer-o"></i>
 						</a>
 					</td>
 
 					<td class="wid290">
-						<a href="{{ url("/$main_route/$obj->idper") }}" class="pad4" target="_blank">
+						<a href="{{ url("/$main_route/$obj->idsta") }}" class="pad4" target="_blank">
 							{{ $obj->surname }}, {{ $obj->name }}
 						</a>
 					</td>
 
-					<td class="wid110">{ {$obj->dni }}</td>
+					<td class="wid110">{{ $obj->dni }}</td>
 					<td class="wid110">{{ $obj->position }}</td> 
 					<td class="wid110 textcent">{{ $obj->tel1 }}</td>
 				</tr>		
@@ -163,12 +163,12 @@
 	   							$.each(response.main_loop, function(index, object){			
 						    		html += '  <tr>';
 						    		html += '    <td class="wid50">';
-						    		html += '      <a href="/{!! $main_route !!}/'+object.idper+'" target="_blank" class="btn btn-default" role="button">';
+						    		html += '      <a href="/{!! $main_route !!}/'+object.idsta+'" target="_blank" class="btn btn-default" role="button">';
 						    		html += '        <i class="fa fa-hand-pointer-o"></i>';
 						    		html += '      </a>';
 						    		html += '    </td>';
 						    		html += '    <td class="wid290">';
-						    		html += '      <a href="/{!! $main_route !!}/'+object.idper+'" class="pad4" target="_blank">';
+						    		html += '      <a href="/{!! $main_route !!}/'+object.idsta+'" class="pad4" target="_blank">';
 						    		html += 		  object.surname + ', ' + object.name;
 						    		html += '      </a>';
 						    		html += '    </td>';

@@ -96,7 +96,7 @@ class Staff extends Model
 
     public function scopeFindStringOnField($query, $search_in, $string)
     {
-        return $query->select('idsta', 'surname', 'name', 'dni', 'tel1', 'city')
+        return $query->select('idsta', 'surname', 'name', 'dni', 'position', 'tel1')
                         ->whereNull('deleted_at')
                         ->where($search_in, 'LIKE', '%'.$string.'%')
                         ->orderBy('surname', 'ASC')

@@ -9,7 +9,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
+    <form class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
   		<div class="input-group">
   		 	<div class="input-group-btn pad10"> 
           <p> &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}</p>
@@ -27,7 +27,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
+    <form class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
       <input type="hidden" name="select" value="date_range">
 
       <div class="input-group pad4"> 

@@ -56,8 +56,8 @@
 		  	<table class="table">
 			  	 <tr class="fonsi15 success">
 					<td class="wid290">{{ @trans('aroaden.service') }}</td>
-					<td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>
 					<td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
+					<td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>					
 					<td class="wid50"></td>
 					<td class="wid50"></td>
 					<td class="wid290"></td>
@@ -71,8 +71,8 @@
 
 					 <tr>
 						  <td class="wid290">{{ $obj->name }}</td>
+						  <td class="wid95 textcent">{{ $obj->tax }} %</td>						  
 						  <td class="wid110 textcent">{{ $obj->price }} €</td>
-						  <td class="wid95 textcent">{{ $obj->tax }} %</td>
 
 						  <td class="wid50">
 						  	<a class="btn btn-xs btn-success" type="button" href="{{ url("/$main_route/$obj->idser/edit") }}">
@@ -172,8 +172,8 @@
 					    		html += '   <table class="table">';
 					    		html += '     <tr class="fonsi15 success">';
 					    		html += '       <td class="wid290">{{ Lang::get('aroaden.service') }}</td>';
-					    		html += '       <td class="wid110 textcent">{{ Lang::get('aroaden.price') }}</td>';
 					    		html += '       <td class="wid95 textcent">{{ Lang::get('aroaden.tax') }}</td>';
+					    		html += '       <td class="wid110 textcent">{{ Lang::get('aroaden.price') }}</td>';
 					    		html += '       <td class="wid50"></td>';
 					    		html += '       <td class="wid50"></td>';
 					    		html += '       <td class="wid290"></td>';
@@ -185,8 +185,8 @@
 					    		$.each(response.main_loop, function(index, object){
 						    		html += '  <tr>';
 						    		html += '    <td class="wid290">' + object.name + '</td>';
-						    		html += '    <td class="wid110 textcent">' + object.price + ' €</td>';
 						    		html += '    <td class="wid95 textcent">' + object.tax + ' %</td>';
+						    		html += '    <td class="wid110 textcent">' + object.price + ' €</td>';			    		
 						    		html += '    <td class="wid50">';
 						    		html += '      <a href="/{!! $main_route !!}/' + object.idser + '/edit" class="btn btn-xs btn-success" role="button">';
 						    		html += '        <i class="fa fa-edit"></i>';

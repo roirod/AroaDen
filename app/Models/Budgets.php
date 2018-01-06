@@ -60,7 +60,7 @@ class Budgets extends Model
     public static function GetTaxTotal($uniqid)
     {
         return DB::table('budgets')
-                ->selectRaw('SUM((units*price*tax)/100) AS tot')
+                ->selectRaw('SUM((units*price*tax)/100) AS total')
                 ->where('uniqid', $uniqid)
                 ->get();
     }
@@ -68,7 +68,7 @@ class Budgets extends Model
     public static function GetNoTaxTotal($uniqid)
     {
         return DB::table('budgets')
-                ->selectRaw('SUM(units*price)-SUM((units*price*tax)/100) AS tot')
+                ->selectRaw('SUM(units*price)-SUM((units*price*tax)/100) AS total')
                 ->where('uniqid', $uniqid)
                 ->get();   
     }
@@ -76,7 +76,7 @@ class Budgets extends Model
     public static function GetTotal($uniqid)
     {
         return DB::table('budgets')
-                ->selectRaw('SUM(units*price) AS tot')
+                ->selectRaw('SUM(units*price) AS total')
                 ->where('uniqid', $uniqid)
                 ->get();   
     }

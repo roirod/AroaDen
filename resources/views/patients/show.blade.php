@@ -213,7 +213,7 @@
 
 				@if ($treat->idtre == $staff_work->idtre)
 
-					<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" target="_blank" class="btn btn-xs btn-default" role="button">
+					<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-xs btn-default" role="button">
 						<i class="fa fa-hand-pointer-o"></i>
 					</a>
 
@@ -264,4 +264,14 @@
   </div>
 </div>
  
+@endsection
+
+@section('footer_script')
+
+	<script>
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
+	
 @endsection

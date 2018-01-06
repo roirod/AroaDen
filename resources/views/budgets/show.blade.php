@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-sm-12"> 
  	 <div class="input-group">
-   	<span class="input-group-btn pad10"> <p> Presupuesto: </p> </span>
+   	<span class="input-group-btn pad10"> <p> Presupuesto </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
 	      		<a href="{!! url("/$main_route/$idpat/create") !!}" role="button" class="btn btn-sm btn-primary">
@@ -37,9 +37,9 @@
    	<div class="box260">
 	   	<table class="table table-striped">      	  	
 
-		    @foreach($presup as $presu)
+		    @foreach($budgets as $bud)
 
-		    	<?php $created_at = $presu->created_at; ?>
+		    	<?php $created_at = $bud->created_at; ?>
 
 		    	@if( isset($created_at2) && $created_at != $created_at2 )
 		    		<tr class="info">
@@ -65,13 +65,13 @@
 		    		</tr>
 	   			@endif
 
-				<?php $created_at2 = $presu->created_at; ?>
+				<?php $created_at2 = $bud->created_at; ?>
 
 				<tr>
-		 			<td class="wid110"> {!! DatTime($presu->created_at) !!} </td>
-		 			<td class="wid180">{!! $presu->name !!}</td>
-		 			<td class="wid95 textcent">{!! $presu->units !!}</td>
-		 			<td class="wid95 textcent">{!! $presu->price !!} €</td>
+		 			<td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
+		 			<td class="wid180">{!! $bud->name !!}</td>
+		 			<td class="wid95 textcent">{!! $bud->units !!}</td>
+		 			<td class="wid95 textcent">{!! $bud->price !!} €</td>
 		 			<td class="wid180"></td>
 				</tr>
 				
@@ -94,13 +94,13 @@
 <div class="row">
   	<div class="col-sm-12">
 
-  		@if (count($presgroup) == 0)
+  		@if (count($budgets_group) == 0)
 
   			<p class="pad10"> No hay presupuestos a editar </p>
 
   		@else
 
-			<form role="form" id="form" class="form" action="{!! url("/$main_route/presuedit") !!}" method="post">
+			<form id="form" class="form" action="{!! url("/$main_route/editBudget") !!}" method="post">
 				{!! csrf_field() !!}
 
 				<input type="hidden" name="idpat" value="{!!$idpat!!}">	
@@ -110,9 +110,9 @@
 					<div class="col-sm-9">
 						<select name="uniqid" class="form-control">
 
-							@foreach ($presgroup as $presgro)
+							@foreach ($budgets_group as $bud_group)
 
-								<option value="{!!$presgro->uniqid!!}">{!! DatTime($presgro->created_at) !!}</option>
+								<option value="{!! $bud_group->uniqid !!}">{!! DatTime($bud_group->created_at) !!}</option>
 										
 							@endforeach
 

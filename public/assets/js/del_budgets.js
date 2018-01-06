@@ -1,13 +1,12 @@
 $(document).ready(function() {
 
-   $(document).on('submit','#delform',function(evt){
+   $(document).on('submit','#del_budgets_form',function(evt){
 
       $.ajaxSetup({
          headers: { 'X-CSRF-Token' : $('meta[name=_token]').attr('content') }
       });
  	   	 	   	 
-     	 var delurl = $("#delurl").attr("value");
-     	 
+     	 var del_url = $("#del_url").attr("value");
      	 var eventrig = $(this);
      	 
      	 $("input[type=submit]").attr("disabled", "disabled");
@@ -15,27 +14,22 @@ $(document).ready(function() {
         $.ajax({
         	
             type     : 'POST',
-            url      : delurl,
+            url      : del_url,
             data     : $(eventrig).serialize(),
             
         }).done(function(response) {
         	
-       		   $("#presup").html(response);
-       		   
+       		   $("#budgets_list").html(response);
        		   $("input[type=submit]").removeAttr("disabled");
    		   		   		          
    	    }).fail(function() {
    	  	         
             $("input[type=submit]").removeAttr("disabled");
-            
-            alert("Hubo un problema");
+            alert("Error!!!");
                  	         
         });
         
         $("input[type=submit]").removeAttr("disabled");
-        
-        evt.preventDefault();   
-          	
+        evt.preventDefault();
    });
-      
 });
