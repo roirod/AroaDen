@@ -116,13 +116,13 @@ class TreatmentsController extends BaseController
 
         } catch(Exception $e) {
 
-            $data['msg'] = $e->getMessage();
-            $this->echoJsonOuptut($data);
+            $request->session()->flash($this->error_message_name, $e->getMessage());  
+            return redirect("/$this->other_route/$idpat");
 
         }
 
-        $data['msg'] = Lang::get('aroaden.success_message');
-        $this->echoJsonOuptut($data);                      
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
+        return redirect("/$this->other_route/$idpat");
     }
 
     public function edit(Request $request, $id)
@@ -203,14 +203,12 @@ class TreatmentsController extends BaseController
             } catch(Exception $e) {
 
                 $request->session()->flash($this->error_message_name, $e->getMessage());  
-                                
                 return redirect("/$this->main_route/$id/edit");
 
             }
               
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
-                            
-            return redirect("/$this->main_route/$id/edit");
+            return redirect("/$this->other_route/$treatment->idpat");
         }     
     }
 

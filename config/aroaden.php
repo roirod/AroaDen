@@ -32,7 +32,7 @@ return [
         [
             'username' => 'admin',
             'password' => 'admin',
-            'type' => 'medio'
+            'type' => 'normal'
         ],
         [
             'username' => 'normal',
@@ -40,9 +40,9 @@ return [
             'type' => 'normal'
         ],
         [
-            'username' => 'medio',
-            'password' => 'medio',
-            'type' => 'medio'
+            'username' => 'basic',
+            'password' => 'basic',
+            'type' => 'basic'
         ]
     ],
 

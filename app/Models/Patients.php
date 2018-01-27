@@ -49,10 +49,13 @@ class Patients extends Model
                         ->paginate($num_paginate);
     }
 
-    public function scopeCountAll($query)
+    public static function CountAll()
     {
-        return $query->whereNull('deleted_at')
-                    ->count();
+        $result = DB::table('patients')
+                    ->whereNull('deleted_at')
+                    ->get();
+
+        return (int)count($result);
     }
 
     public function scopeFirstById($query, $id)

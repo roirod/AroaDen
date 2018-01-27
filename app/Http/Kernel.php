@@ -28,8 +28,8 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\AdminMiddleware::class
         ],
 
-        'medio' => [
-            \App\Http\Middleware\MedioMiddleware::class
+        'normal' => [
+            \App\Http\Middleware\NormalMiddleware::class
         ]        
     ];
 

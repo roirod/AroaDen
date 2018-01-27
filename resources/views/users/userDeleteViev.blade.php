@@ -26,7 +26,7 @@
 
 							@continue($user->username == 'admin')
 			   
-			  				<option value="{!!$user->uid!!}">{!!$user->username!!}</option> 
+			  				<option value="{!! $user->uid !!}">{!! $user->username !!}</option> 
 			
 						@endforeach
  

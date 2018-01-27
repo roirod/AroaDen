@@ -35,10 +35,13 @@ class Services extends Model
                         ->first();
     }
 
-    public function scopeCountAll($query)
+    public static function CountAll()
     {
-        return $query->whereNull('deleted_at')
-                    ->count();
+        $result = DB::table('services')
+                    ->whereNull('deleted_at')
+                    ->get();
+
+        return (int)count($result);
     }
 
     public function scopeFirstByNameDeleted($query, $name)

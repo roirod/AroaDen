@@ -360,6 +360,33 @@ class BaseController extends Controller
     }
 
     /**
+     *  get Array Result
+     *  
+     *  @return array data
+     */
+    protected function getArrayResult()
+    {   
+        $count = $this->model::CountAll();
+
+
+echo "<pre>";
+echo "<br>";
+echo "------------ result ------------------";
+echo "<br>";
+var_dump($count);
+echo "<br>";
+echo "</pre>";
+
+exit();
+        
+
+        if ((int)$count === 0)
+            throw new Exception(Lang::get('aroaden.empty_db'));
+
+        return $this->getQueryResult();
+    } 
+
+    /**
      *  get Query Result
      *  
      *  @throws NoQueryResultException
@@ -381,28 +408,5 @@ class BaseController extends Controller
         $data['msg'] = $count;
         return $data;
     }
-
-    /**
-     *  get Array Result
-     *  
-     *  @return array data
-     */
-    protected function getArrayResult()
-    {   
-        $count = $this->model::CountAll();
-
-        if ((int)$count === 0)
-            throw new Exception(Lang::get('aroaden.empty_db'));
-
-        try {               
-
-            return $this->getQueryResult();
-
-        } catch (NoQueryResultException $e) {
-
-            throw $e;
-
-        }
-    } 
 
 }

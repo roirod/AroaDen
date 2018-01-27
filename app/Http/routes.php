@@ -9,7 +9,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::get('/', 'Auth\AuthController@getLogin');
 	Route::get('/login', 'Auth\AuthController@getLogin');
 	Route::post('/login', 'Auth\AuthController@postLogin');
-	Route::get('/logout', 'Auth\AuthController@getLogout');	
+	Route::get('/logout', 'Auth\AuthController@logout');	
 
 	Route::get('/home', 'AppointmentsController@index');
 
@@ -32,7 +32,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	 	Route::get($route["settings"], 'SettingsController@index');
 	});
 
-	Route::group(['middleware' => ['medio']], function () use ($route) {
+	Route::group(['middleware' => ['normal']], function () use ($route) {
 		Route::get($route["patients"].'/{id}/edit', 'PatientsController@edit');
 		Route::put($route["patients"].'/{id}', 'PatientsController@update');
 		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');

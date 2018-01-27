@@ -30,7 +30,20 @@
 						
 					<tr> 
 						<td class="wid110">{!! $user->username !!}</td>
-						<td class="wid110">{!! $user->type !!}</td>				
+						<td class="wid110">
+
+							@if($user->type == 'basic')
+
+								{{ @trans('aroaden.basic') }}
+
+							@else
+
+								{{ @trans('aroaden.normal') }}
+
+							@endif
+
+						</td>			
+
 					</tr>
 								
 				@endforeach

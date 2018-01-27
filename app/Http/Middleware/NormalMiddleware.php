@@ -6,13 +6,13 @@ use Closure;
 use Auth;
 use Lang;
 
-class MedioMiddleware
+class NormalMiddleware
 {
     public function handle($request, Closure $next)
     {         
         $type = Auth::user()->type;
           
-        if ($type != 'medio') {
+        if ($type != 'normal') {
     		$request->session()->flash('error_message', Lang::get('aroaden.deny_access') );  
 	    	return redirect()->back(); 
     	} 

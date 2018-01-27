@@ -5,7 +5,7 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<meta name="_token" content="{!!csrf_token()!!}"/>
+<meta name="_token" content="{!! csrf_token() !!}"/>
 
 <div class="row"> 
   <div class="col-sm-12"> 

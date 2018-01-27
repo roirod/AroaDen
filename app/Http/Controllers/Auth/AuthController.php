@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use DB;
-use Validator;
-use Config;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use App\Models\User;
+use Validator;
+use Config;
+use Auth;
 
 class AuthController extends Controller
 {
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     protected $username = 'username';  
-    protected $redirectTo = '/home';
-    protected $redirectAfterLogout = '/login';
-    protected $loginPath = '/login';
+    protected $redirectTo = 'home';
+    protected $redirectAfterLogout = 'login';
+    protected $loginPath = 'login';
     
     
     public function __construct()
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
                 if ($exits == null) {
 
-                    DB::table('users')->insert([
+                    User::insert([
                         'username' => $user["username"],
                         'password' => bcrypt($user["password"]),
                         'type' => $user["type"]
@@ -50,6 +50,13 @@ class AuthController extends Controller
 
             return redirect("/login");
         }
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : 'login');
     }
 
     protected function validator(array $data) {}

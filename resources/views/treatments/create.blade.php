@@ -29,7 +29,6 @@
 		@include('form_fields.create.closeform')
 	@include('form_fields.create.closediv')
 
-
 	<div id="loading"></div>
 
 	<hr>
@@ -37,9 +36,9 @@
 	<div class="row">
 	 <div class="col-sm-12 mar10" id="ajax_content">
 
-	    <p class="pad4" id="name_price"></p>   
+	    <p class="pad4" id="name_price"></p>
 
-		<form id="form" class="form save_form">
+	    @include('form_fields.create.openform')
 
 	        <input type="hidden" name="idpat" value="{{ $id }}">
 	        <input type="hidden" name="idser" value="">
@@ -76,10 +75,12 @@
 		        evt.stopPropagation();
 			});
 
-            var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.multiply_units_price') }}"><i class="fa fa-lg fa-close"></i></a>';
+            var msg = "{{ Lang::get('aroaden.multiply_units_price') }}";
+            var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="'+msg+'"><i class="fa fa-lg fa-close"></i></a>';
             $('input[name="paid"]').parent().find('label').append(append);
 
-            var append = ' <a id="put_zero" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.put_zero') }}"><i class="fa fa-close fa-lg text-danger"></i></a>';
+            var msg = "{{ Lang::get('aroaden.put_zero') }}";
+            var append = ' <a id="put_zero" class="pad4 bgwi fuengrisoscu" title="'+msg+'"><i class="fa fa-close fa-lg text-danger"></i></a>';
             $('input[name="paid"]').parent().find('label').append(append);
 
             $('#multiply_units_price').click(function (evt) {
@@ -101,14 +102,6 @@
 			});
 
 			$("#ajax_content").hide();
-
-			$(document).on('submit','form.save_form', function(evt){
-				Module.saveAction();
-
-		        evt.preventDefault();
-		        evt.stopPropagation();
-			});
-
 
 			$("#idser_select").on('change', function(evt) {
 		        $("#staff option:selected").removeAttr("selected");
@@ -150,8 +143,7 @@
 				    	$('input[name="paid"]').val("");
 
 				    	$('input[name="idser"]').attr('value', response.idser);
-				    	$('input[name="price"]').attr('value', response.price);
-				    	$('input[name="day"]').attr('value', util.getTodayDate());
+				    	$('input[name="price"]').attr('value', response.price);		    	
 				    	$('input[name="paid"]').val(response.price);
 
 				    	$('#name_price').empty();
@@ -160,7 +152,7 @@
 
 	     				$('#loading').delay(600).empty();
 						$("#ajax_content").delay(300).fadeIn(300).show(0);
-          
+         
 				    }).fail(function() {
 
 				    	$('#ajax_content').hide().html('<h3>{{ Lang::get('aroaden.error_message') }}</h3>').fadeIn('slow');
@@ -168,38 +160,9 @@
 				    });
 				}
 
-				function saveAction() {
-				    var data = $("form.save_form").serialize();
-	    
-				    $.ajax({
-
-				    	type: "POST",
-				        url  : '/{{ $main_route }}',
-				        dataType: "json",
-				        data : data,
-
-				    }).done(function(response) {
-
-				    	util.showPopup(response.msg);
-
-				        location.reload();
-	          
-				        $("#idser_select").val('none').change();
-				        $("#staff option:selected").removeAttr("selected");
-	          
-				    }).fail(function() {
-
-				    	util.showPopup('{{ Lang::get('aroaden.error_message') }}', false);
-
-				    });
-				}
-
 		        return {
 		          processSelect: function() {
 		            processSelect();
-		          },
-		          saveAction: function() {
-		            saveAction();
 		          }
 		        }
 

@@ -31,10 +31,13 @@ class Staff extends Model
                         ->get();
     }
 
-    public function scopeCountAll($query)
+    public static function CountAll()
     {
-        return $query->whereNull('deleted_at')
-                    ->count();
+        $result = DB::table('staff')
+                    ->whereNull('deleted_at')
+                    ->get();
+
+        return (int)count($result);
     }
 
     public function scopeFirstById($query, $id)

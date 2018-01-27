@@ -28,31 +28,29 @@
 
            <br>
           </div>
-
-
-         
+        
           <div class="col-md-12">
             <input type="password" class="form-control input_login_form" name="password" placeholder="{{ trans('aroaden.password') }}" required >
+            <br> 
           </div> 
 
-        	  @if ($errors->has('username'))
-        	      <span class="help-block">
-        	          <strong>{{ $errors->first('username') }}</strong>
-        	      </span>
-        	  @endif  
-         
-             @if ($errors->has('password'))
-                 <span class="help-block">
-                     <strong>{{ $errors->first('password') }}</strong>
-                 </span>
-             @endif 
-  
-         <div class="col-md-12">
-          <br> 
+      	  @if ($errors->has('username'))
+               <span class="help-block pad10 mar4">
+      	          <strong>{{ $errors->first('username') }}</strong>
+      	      </span>
+      	  @endif  
+       
+           @if ($errors->has('password'))
+               <span class="help-block pad10 mar4">
+                   <strong>{{ $errors->first('password') }}</strong>
+               </span>
+           @endif 
+
+          <div class="col-md-12">
             <button type="submit" class="btn btn_login">
               Acceder <i class="fa fa-chevron-circle-right"></i> 
             </button> 
-           </div>
+          </div>
 
       </form> 
 

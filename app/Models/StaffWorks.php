@@ -9,7 +9,8 @@ class StaffWorks extends Model
 	protected $table = 'staff_works';
     protected $fillable = ['idsta','idtre'];
     protected $primaryKey = 'idstwo';
-
+    public $timestamps = false;
+    
     public function scopeAllById($query, $id)
     {
         return $query->select('idsta','idtre')
