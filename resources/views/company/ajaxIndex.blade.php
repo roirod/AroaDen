@@ -1,11 +1,3 @@
-@extends('layouts.main')
-
-@section('content')
-
-@include('includes.company_nav')
-
-  <div id="ajax_content">
-
     @include('includes.messages')
     @include('includes.errors')
 
@@ -58,16 +50,6 @@
         @endforeach
 
      </div>
-    </div> 
+    </div>
 
-  </div>
-
-@endsection
-
-@section('js')
-
-  @parent
-
-  @include('company.jsInclude')
-    
-@endsection
+    @include('company.jsInclude')

@@ -58,7 +58,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 		Route::post($route["budgets"].'/delId', 'BudgetsController@delId');
 	});
 
-	Route::get(Config::get('aroaden.routes.company'), 'CompanyController@index');
+	Route::get($route["company"].'/ajaxIndex', 'CompanyController@ajaxIndex');
 
 	Route::post($route["appointments"].'/list', 'AppointmentsController@list');
 	Route::get($route["appointments"].'/{id}/create', 'AppointmentsController@create');

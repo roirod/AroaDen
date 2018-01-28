@@ -36,13 +36,23 @@ class CompanyController extends BaseController
     }
 
     /**
+     *  get index page, show the company data
+     * 
+     *  @return view       
+     */
+    public function ajaxIndex(Request $request)
+    {
+        return $this->commonProcess($request, 'ajaxIndex');
+    }
+
+    /**
      *  edit the company data
      * 
      *  @return view         
      */
     public function editData(Request $request)
     {
-        return $this->commonProcess($request, 'edit');
+        return $this->commonProcess($request, 'editPartial');
     }
 
     /**
@@ -63,7 +73,12 @@ class CompanyController extends BaseController
             $this->view_data['form_route'] = 'editData';
             $this->setPageTitle(Lang::get('aroaden.company_data'));
 
-        } elseif ($view_name == 'edit') {
+        } elseif ($view_name == 'ajaxIndex') {
+
+            $this->view_data['form_route'] = 'editData';
+            $this->setPageTitle(Lang::get('aroaden.company_data'));
+
+        } elseif ($view_name == 'editPartial') {
 
             $this->view_data['form_route'] = 'saveData';
             $this->setPageTitle(Lang::get('aroaden.company_edit_data'));
@@ -97,9 +112,7 @@ class CompanyController extends BaseController
 
         Redis::set('settings', json_encode($settings));       
 
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-
-        return redirect("/$this->main_route");
+        return $this->ajaxIndex($request);
     }
 
 }
