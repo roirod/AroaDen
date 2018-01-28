@@ -59,6 +59,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	});
 
 	Route::get($route["company"].'/ajaxIndex', 'CompanyController@ajaxIndex');
+	Route::get($route["company"], 'CompanyController@index');
 
 	Route::post($route["appointments"].'/list', 'AppointmentsController@list');
 	Route::get($route["appointments"].'/{id}/create', 'AppointmentsController@create');
