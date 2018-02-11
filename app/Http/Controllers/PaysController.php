@@ -18,7 +18,7 @@ class PaysController extends BaseController
         $this->other_route = $this->config['routes']['patients'];
         $this->view_data['pays_route'] = $this->config['routes']['pays'];
         $this->views_folder = $this->config['routes']['pays'];
-        $this->form_route = 'index';        
+        $this->form_route = 'list';        
         $this->model = $patients;      
     }
 
@@ -26,9 +26,40 @@ class PaysController extends BaseController
     {
         $this->setPageTitle(Lang::get('aroaden.payments'));
 
+        return $this->commonProcess($request, 'index');
+    }
+
+    /**
+     *  get index page, show the company data
+     * 
+     *  @return view       
+     */
+    public function ajaxIndex(Request $request)
+    {
+        return $this->commonProcess($request, 'ajaxIndex');
+    }
+
+    /**
+     *  get index page, show the company data
+     * 
+     *  @return view       
+     */
+    public function list(Request $request)
+    {
+        return $this->commonProcess($request, 'list');
+    }
+
+    private function commonProcess($request, $view_name)
+    {
         $this->view_data['request'] = $request;
 
-        if ($request->isMethod('post')) {
+        if ($view_name == 'index' || $view_name == 'ajaxIndex') {
+
+            $num_mostrado = 100;
+            $main_loop = $this->model::GetTotalPayments($num_mostrado);
+
+        } elseif ($view_name == 'list') {
+
             $num_mostrado = $this->sanitizeData($request->input('num_mostrado'));
 
             if ($num_mostrado == 'todos') {
@@ -43,19 +74,12 @@ class PaysController extends BaseController
 
             }
 
-            $this->view_data['main_loop'] = $main_loop;
-            $this->view_data['num_mostrado'] = $num_mostrado;
-
-            return $this->loadView($this->views_folder.'.list', $this->view_data);
         }
 
-        $num_mostrado = 100;
-        $main_loop = $this->model::GetTotalPayments($num_mostrado);
-
         $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['num_mostrado'] = $num_mostrado;
-       
-        return parent::index($request);
+        $this->view_data['num_mostrado'] = $num_mostrado;        
+
+        return $this->loadView($this->views_folder.".$view_name", $this->view_data);
     }
 
 }

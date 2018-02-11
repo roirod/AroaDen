@@ -9,6 +9,12 @@ html,body { height:100%; padding:0; margin:0; }
 	font-style: normal;
 }
 
+img.center {
+    display: block;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
 .box500 { height: 500px; overflow: auto; border: 1px solid grey; }
 .box400 { height: 400px; overflow: auto; border: 1px solid grey; }
 .box350 { height: 350px; overflow: auto; border: 1px solid grey; }

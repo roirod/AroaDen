@@ -366,19 +366,7 @@ class BaseController extends Controller
      */
     protected function getArrayResult()
     {   
-        $count = $this->model::CountAll();
-
-
-echo "<pre>";
-echo "<br>";
-echo "------------ result ------------------";
-echo "<br>";
-var_dump($count);
-echo "<br>";
-echo "</pre>";
-
-exit();
-        
+        $count = $this->model::CountAll();  
 
         if ((int)$count === 0)
             throw new Exception(Lang::get('aroaden.empty_db'));

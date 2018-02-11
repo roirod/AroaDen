@@ -52,7 +52,7 @@ class CompanyController extends BaseController
      */
     public function editData(Request $request)
     {
-        return $this->commonProcess($request, 'editPartial');
+        return $this->commonProcess($request, 'edit');
     }
 
     /**
@@ -78,7 +78,7 @@ class CompanyController extends BaseController
             $this->view_data['form_route'] = 'editData';
             $this->setPageTitle(Lang::get('aroaden.company_data'));
 
-        } elseif ($view_name == 'editPartial') {
+        } elseif ($view_name == 'edit') {
 
             $this->view_data['form_route'] = 'saveData';
             $this->setPageTitle(Lang::get('aroaden.company_edit_data'));

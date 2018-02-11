@@ -2,27 +2,21 @@
     
 var util = {
 
-  processAjax: function(obj) {
+  processAjaxReturnsHtml: function(obj) {
     var _this = this;
     var cancel = false;
 
     var id = obj.id == null ? cancel = true : obj.id;
-    var url = obj.url == null ? cancel = true : obj.url;
     var data = obj.data == null ? false : obj.data;
     var type = obj.type == null ? "GET" : obj.type;
-    var dataType = obj.dataType == null ? "html" : obj.type;
     var popup = obj.popup == null ? false : obj.popup;
-
-    if (cancel) {
-      _this.showPopup("{{ Lang::get('aroaden.error_message') }}");
-    }
 
     _this.showLoadingGif(id);
 
     var ajax_data = {
       type : type,
-      url  : url,
-      dataType: dataType,
+      url  : obj.url,
+      dataType: "html",
       data : data
     };
 
@@ -37,10 +31,23 @@ var util = {
 
     }).fail(function() {
 
-      $('#'+id).empty();
-      $('#'+id).hide().html('<h3>{{ Lang::get('aroaden.error_message') }}</h3>').fadeIn();
+      _this.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
 
     });
+  },
+
+  processAjaxReturnsJson: function(obj) {
+    var data = obj.data || false;
+    var type = obj.type || "POST";
+
+    var ajax_data = {
+      type : type,
+      url  : obj.url,
+      dataType: "json",
+      data : data
+    };
+
+    return $.ajax(ajax_data);
   },
 
   getTodayDate: function() {
@@ -62,19 +69,20 @@ var util = {
     return today;
   },
 
-  showPopup: function(msg, success = true, timer = 1000) {
+  showPopup: function(msg, success = true, time = 1000) {
     if (success) {
       swal({
         title: msg,
         type: 'success',
         showConfirmButton: false,             
-        timer: timer
+        timer: time
       });
     } else {
       swal({
         text: msg,
         type: 'warning',
-        showConfirmButton: false
+        showConfirmButton: false,
+        timer: time
       });
     }
   },
@@ -88,7 +96,7 @@ var util = {
   },
 
   showLoadingGif: function(id) {
-    var loading = '<img src="/assets/img/loading.gif"/>';
+    var loading = '<img class="center" src="/assets/img/loading.gif"/>';
     $('#'+id).empty();
     $('#'+id).html(loading);
   },

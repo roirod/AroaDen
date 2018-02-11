@@ -47,6 +47,26 @@ class ServicesController extends BaseController implements BaseInterface
      */
     public function index(Request $request)
     {
+        return $this->commonProcess($request, 'index');  
+    }
+
+    /**
+     *  get index page, show the company data
+     * 
+     *  @return view       
+     */
+    public function ajaxIndex(Request $request)
+    {
+        return $this->commonProcess($request, 'ajaxIndex');
+    }
+
+    /**
+     *  commonProcess
+     * 
+     *  @return object $obj get object          
+     */
+    private function commonProcess($request, $view_name)
+    {
         $main_loop = $this->model::AllOrderByName($this->num_paginate);
         $count = $this->model::CountAll();       
 
@@ -57,7 +77,7 @@ class ServicesController extends BaseController implements BaseInterface
 
         $this->setPageTitle(Lang::get('aroaden.services'));
 
-        return parent::index($request);        
+        return $this->loadView($this->views_folder.".$view_name", $this->view_data);
     }
 
     /**

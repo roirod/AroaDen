@@ -82,12 +82,14 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::get($route["staff"].'/{id}/{file}/down', 'StaffController@download');
 	Route::resource($route["staff"], 'StaffController');
 
+	Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');
 	Route::post($route["services"].'/list', 'ServicesController@list');
 	Route::resource($route["services"], 'ServicesController', ['except' => ['show']]);
 
 	Route::get($route["accounting"], 'AccountingController@index');
 
-	Route::post($route["pays"].'/index', 'PaysController@index');
+	Route::get($route["pays"].'/ajaxIndex', 'PaysController@ajaxIndex');
+	Route::post($route["pays"].'/list', 'PaysController@list');
 	Route::get($route["pays"], 'PaysController@index');
 
 	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');

@@ -172,19 +172,14 @@
         }
 
         function sendAjaxRequest(data) {
-          var msg = '';
-          msg = '<img src="/assets/img/loading.gif"/>&nbsp;&nbsp;<span class="text-muted fonsi16">{{ @trans('aroaden.loading') }}</span>';
-          $('#item_list').empty();
-          $('#item_list').html(msg);
+          util.showLoadingGif('item_list');
 
-          $.ajax({
+          var obj = {
+            data  : data,          
+            url  : '/{!! $main_route !!}/{!! $form_route !!}'
+          };
 
-              type : 'POST',
-              url  : '/{!! $main_route !!}/{!! $form_route !!}',
-              dataType: "json",
-              data : data,
-
-          }).done(function(response) {
+          util.processAjaxReturnsJson(obj).done(function(response) {
             var html = '';
 
             if (response.error) {

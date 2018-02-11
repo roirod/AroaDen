@@ -1,7 +1,7 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form role="form" class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
+    <form class="form" id="form" action="{{ url("/$main_route/$form_route") }}" method="post">
       {!! csrf_field() !!}   
 
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">

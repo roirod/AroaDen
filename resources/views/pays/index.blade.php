@@ -2,11 +2,23 @@
 
 @section('content')
 
-  @include('includes.accounting_nav')
+	@include('includes.accounting_nav')
 
-  @include('includes.messages')
-  @include('includes.errors')
+	<div id="ajax_content">
 
-  @include('pays.common')
+		@include('includes.messages')
+		@include('includes.errors')
 
+		@include('pays.common')
+
+	</div>
+
+@endsection
+
+@section('js')
+
+  @parent
+
+  @include('pays.jsInclude')
+    
 @endsection

@@ -108,108 +108,100 @@
 			   	}
 			}); 
 
-			$(".string_class").on('keyup change', function(evt) {
+			$(".string_class").on('keyup change', function(event) {
 				var string_val = $('#string').val();
 				var string_val_length = string_val.length;
 
-				if (string_val != '' && string_val_length >= 2) {
-					var event = evt;
-
-			        Module.run(event);
+				if (string_val != '' && string_val_length > 1) {
+					if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
+			      Module.run();
+          }
 				}
 
-		        evt.preventDefault();
-		        evt.stopPropagation();
-      		});
+        event.preventDefault();
+        event.stopPropagation();
+  		});
 
 			var Module = (function( window, undefined ){
+				function runApp() {
+        	util.showLoadingGif('item_list');
 
-				function runApp(event) {
+          var data = $("form").serialize();
 
-				    if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-				    	var msg = '<img src="/assets/img/loading.gif"/>&nbsp;&nbsp;<span class="text-muted fonsi16">{{ Lang::get('aroaden.searching') }}</span>';
-				    	$('#item_list').empty();
-						$('#item_list').html(msg);
+          var obj = {
+            data  : data,          
+            url  : '/{!! $main_route !!}/{!! $form_route !!}'
+          };
 
-					    var data = $("form").serialize();
-		     
-					    $.ajax({
+          util.processAjaxReturnsJson(obj).done(function(response) {
+          	var html = '';
 
-					        type : 'POST',
-					        url  : '/{!! $main_route !!}/{!! $form_route !!}',
-					        dataType: "json",
-					        data : data,
+                if (response.error) {
 
-					    }).done(function(response) {
-					    	var html = '';
+                  html = '<p class="text-danger">' + response.msg + '</p>';
 
-				            if (response.error) {
+          	} else {
 
-				              html = '<p class="text-danger">' + response.msg + '</p>';
+          		html = '<p id="searched"> <span class="label label-success">' + response.msg + ' {{ Lang::get('aroaden.patients') }}</span></p>';
 
-					    	} else {
+          		html += '<div class="panel panel-default">';
+          		html += '   <table class="table">';
+          		html += '     <tr class="fonsi15 success">';
+          		html += '       <td class="wid50">&nbsp;</td>';
+          		html += '       <td class="wid290">{{ Lang::get('aroaden.name') }}</td>';
+          		html += '       <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>';
+          		html += '       <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>';
+          		html += '       <td class="wid230">{{ Lang::get('aroaden.city') }}</td>';
+          		html += '     </tr>';
+          		html += '   </table>';
+          		html += '  <div class="box400">';
+          		html += '    <table class="table table-hover">';
 
-					    		html = '<p id="searched"> <span class="label label-success">' + response.msg + ' {{ Lang::get('aroaden.patients') }}</span></p>';
+          		$.each(response.main_loop, function(index, object){
+            		html += '  <tr>';
+            		html += '    <td class="wid50">';
+            		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default" role="button">';
+            		html += '        <i class="fa fa-hand-pointer-o"></i>';
+            		html += '      </a>';
+            		html += '    </td>';
+            		html += '    <td class="wid290">';
+            		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" class="pad4" target="_blank">';
+            		html += 		  object.surname + ', ' + object.name;
+            		html += '      </a>';
+            		html += '    </td>';
+            		html += '    <td class="wid110">' + object.dni + '</td>';
+        	    	html += '    <td class="wid110">' + object.tel1 + '</td>';
+            		html += '    <td class="wid230">' + object.city + '</td>';
+            		html += '  </tr>';
+          		});
 
-					    		html += '<div class="panel panel-default">';
-					    		html += '   <table class="table">';
-					    		html += '     <tr class="fonsi15 success">';
-					    		html += '       <td class="wid50">&nbsp;</td>';
-					    		html += '       <td class="wid290">{{ Lang::get('aroaden.name') }}</td>';
-					    		html += '       <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>';
-					    		html += '       <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>';
-					    		html += '       <td class="wid230">{{ Lang::get('aroaden.city') }}</td>';
-					    		html += '     </tr>';
-					    		html += '   </table>';
-					    		html += '  <div class="box400">';
-					    		html += '    <table class="table table-hover">';
+            	html += '    </table>';
+          		html += '  </div> </div>';
+          		html += ' </div> </div>';				    		
+          	}
 
-					    		$.each(response.main_loop, function(index, object){
-						    		html += '  <tr>';
-						    		html += '    <td class="wid50">';
-						    		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default" role="button">';
-						    		html += '        <i class="fa fa-hand-pointer-o"></i>';
-						    		html += '      </a>';
-						    		html += '    </td>';
-						    		html += '    <td class="wid290">';
-						    		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" class="pad4" target="_blank">';
-						    		html += 		  object.surname + ', ' + object.name;
-						    		html += '      </a>';
-						    		html += '    </td>';
-						    		html += '    <td class="wid110">' + object.dni + '</td>';
-	 					    		html += '    <td class="wid110">' + object.tel1 + '</td>';
-						    		html += '    <td class="wid230">' + object.city + '</td>';
-						    		html += '  </tr>';
-					    		});
+          	$('#item_list').empty();
+            $('#item_list').hide().html(html).fadeIn('slow');
+            $('#searched').prepend(' <span class="label label-primary"> {{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>');
 
-						    	html += '    </table>';
-					    		html += '  </div> </div>';
-					    		html += ' </div> </div>';				    		
-					    	}
+          }).fail(function() {
 
-					    	$('#item_list').empty();
-					        $('#item_list').hide().html(html).fadeIn('slow');
-					        $('#searched').prepend(' <span class="label label-primary"> {{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>');
-
-					    }).fail(function() {
-
-					    	$('#item_list').empty();
-					    	$('#item_list').hide().html('<h3>{{ Lang::get('aroaden.error') }}</h3>').fadeIn('slow');
-					    	
-					    });
-				    }
+          	$('#item_list').empty();
+          	$('#item_list').hide().html('<h3>{{ Lang::get('aroaden.error_message') }}</h3>').fadeIn('slow');
+          	
+          });
 				}
 
-		        return {
-		          run: function(event) {
-		            runApp(event);
-		          }
-		        }
+        return {
+          run: function() {
+            runApp();
+          }
+        }
 
-		    })(window);
+	    })(window);
 
-    	});
+  	});
 
-  	</script>
+	</script>
 
 @endsection

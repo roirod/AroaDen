@@ -157,6 +157,7 @@ return [
     'company_tel1' => 'Tel&#xE9;fono',
     'company_tel2' => 'Tel&#xE9;fono',
     'company_tel3' => 'Tel&#xE9;fono',
+    'company_email' => 'Email',
     'company_notes' => 'Notas',
     'invoice_text' => 'Texto de facturas',    
     'budget_text' => 'Texto de presupuestos',
