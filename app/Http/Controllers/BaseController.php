@@ -355,8 +355,12 @@ class BaseController extends Controller
      *  @param string $data
      */
     protected function setPageTitle($data)
-    {   
-        $this->page_title = $data.' - '.$this->page_title;
+    {
+        $data = $data.' - '.$this->page_title;
+
+        $this->page_title = $data;
+
+        session(['page_title' => $data]);
     }
 
     /**

@@ -1,3 +1,7 @@
+
+
+<script id="templateHandlebars" type="text/x-handlebars-template">
+
   @{{#if error}}
 
     <p>
@@ -65,3 +69,5 @@
     </div> </div>
 
   @{{/if}}
+
+</script>

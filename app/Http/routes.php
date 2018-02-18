@@ -58,6 +58,8 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 		Route::post($route["budgets"].'/delId', 'BudgetsController@delId');
 	});
 
+	Route::get($route["settings"].'/jsonSettings', 'SettingsController@jsonSettings');
+
 	Route::get($route["company"].'/ajaxIndex', 'CompanyController@ajaxIndex');
 	Route::get($route["company"], 'CompanyController@index');
 

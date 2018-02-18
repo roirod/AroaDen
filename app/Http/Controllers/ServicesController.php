@@ -176,8 +176,7 @@ class ServicesController extends BaseController implements BaseInterface
 		        'tax' => $tax
 		    ]);
 		      
-		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
-	        	        	
+		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 	        return redirect($this->main_route.'/create');
         }     
     }
@@ -250,7 +249,6 @@ class ServicesController extends BaseController implements BaseInterface
             $object->save();
 
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-
             return redirect($this->main_route);
         }   
     }
@@ -267,7 +265,6 @@ class ServicesController extends BaseController implements BaseInterface
         $this->model::destroy($id); 
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
         return redirect($this->main_route);
     }
 

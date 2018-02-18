@@ -94,6 +94,8 @@ class TreatmentsController extends BaseController
 
         try {
 
+            DB::beginTransaction();
+
             $idtre = Treatments::insertGetId([
                 'idpat' => $idpat,
                 'idser' => $idser,
@@ -114,7 +116,11 @@ class TreatmentsController extends BaseController
                 }
             }
 
-        } catch(Exception $e) {
+            DB::commit();
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
 
             $request->session()->flash($this->error_message_name, $e->getMessage());  
             return redirect("/$this->other_route/$idpat");
@@ -178,6 +184,8 @@ class TreatmentsController extends BaseController
 
             try {
 
+                DB::beginTransaction();
+
                 $treatment = Treatments::find($id);
 
                 if ($this->checkIfPaidIsHigher($units, $price, $paid))
@@ -200,13 +208,17 @@ class TreatmentsController extends BaseController
                     }
                 }
 
-            } catch(Exception $e) {
+                DB::commit();
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
 
                 $request->session()->flash($this->error_message_name, $e->getMessage());  
                 return redirect("/$this->main_route/$id/edit");
 
             }
-              
+             
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
             return redirect("/$this->other_route/$treatment->idpat");
         }     
@@ -217,13 +229,27 @@ class TreatmentsController extends BaseController
         $id = $this->sanitizeData($id);
         $this->redirectIfIdIsNull($id, $this->other_route);
                 
-        $treatment = Treatments::find($id);
-        $treatment->delete();
+        try {
 
-        StaffWorks::where('idtre', $id)->delete();
+            DB::beginTransaction();
+
+            $treatment = Treatments::find($id);
+            $treatment->delete();
+
+            StaffWorks::where('idtre', $id)->delete();
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            $request->session()->flash($this->error_message_name, $e->getMessage());  
+            return redirect("$this->other_route/$treatment->idpat");
+
+        }
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
         return redirect("$this->other_route/$treatment->idpat");
     }
 }

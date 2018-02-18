@@ -30,4 +30,14 @@ class SettingsController extends BaseController
 
         return parent::index($request);
     }
+
+    public function jsonSettings(Request $request)
+    {         
+        $data = [];
+        $data['page_title'] = $request->session()->get('page_title');
+
+        $this->echoJsonOuptut($data);
+    }
+
+
 }

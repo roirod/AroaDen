@@ -20,28 +20,12 @@
           </a>
         </div>  
 </div> </div> </div> </div>
-
-
-@include('form_fields.show.search_in')
-
 	
 <div class="row">
-	<div class="col-sm-12" id="item_list">
-
-	@if ($count == 0)
-
-	    <p>
-	      <span class="text-danger">{{ @trans('aroaden.no_patients') }}</span>
-	    </p>
-
-	@else
-
-		<p>
-			<span class="label label-success"> {!! $count !!} {{ Lang::get('aroaden.patients') }}</span>
-		</p>
+	<div class="col-sm-12">
 
 		  <div class="panel panel-default">
-			 <table class="table">
+			 <table class="table table-hover" id="PatientsTable">
 			  	 <tr class="fonsi15 success">
 					<td class="wid50">&nbsp;</td>
 					<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
@@ -50,13 +34,8 @@
 					<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
 				 </tr>
 			 </table>
-	 		 <div class="box400">
 
-		 	  <table class="table table-hover">
-				
-				@foreach ($main_loop as $obj)
-						
-					<tr> 
+
 						<td class="wid50">
 							<a href="{!! url("/$main_route/$obj->idpat") !!}" target="_blank" class="btn btn-default" role="button">
 								<i class="fa fa-hand-pointer-o"></i>
@@ -73,28 +52,19 @@
 						<td class="wid110">{!! $obj->tel1 !!}</td>
 						<td class="wid230">{!! $obj->city !!}</td> 
 						
-					</tr>
-								
-				@endforeach
-					
-				<table class="table table-hover">
-					<tr> 
-						<div class="textcent">
-							<hr>
-							{!! $main_loop->links() !!}
-						</div>
-					</tr> 
-				</table>
-			
-			</table>
 
-		</div> </div>
+		</div>
 
 	@endif
 
  </div> </div>
 
 @endsection
+
+
+    <link href="{!! asset('assets/css/datatables.min.css') !!}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{!! asset('assets/js/datatables.min.js') !!}"></script>
+
 
 @section('footer_script')
 
@@ -106,7 +76,32 @@
 			   	headers: { 
 			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
 			   	}
-			}); 
+			});
+
+			$("#PatientsTable").dataTable();
+
+      var PatientsTable = {
+        "processing": true,
+        "serverSide": true,
+        "ajax":{
+           "url": '/{!! $main_route !!}/{!! $form_route !!}',
+           "dataType": "json",
+           "type": "POST",
+           "data":{ _token: "{{ csrf_token() }}"}
+         },
+        "columns": [
+            { "data": "id" },
+            { "data": "title" },
+            { "data": "body" },
+            { "data": "created_at" },
+            { "data": "options" }
+        ]	 
+
+      };
+
+
+
+
 
 			$(".string_class").on('keyup change', function(event) {
 				var string_val = $('#string').val();

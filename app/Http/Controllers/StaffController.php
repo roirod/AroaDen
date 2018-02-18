@@ -170,8 +170,7 @@ class StaffController extends BaseController implements BaseInterface
               'notes' => $notes
             ]);
           
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
-                        
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
             return redirect("/$this->main_route/create");
         }      
     }
@@ -260,7 +259,6 @@ class StaffController extends BaseController implements BaseInterface
             $staff->save();
 
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-
             return redirect("/$this->main_route/$id");
         }   
     }
@@ -278,7 +276,6 @@ class StaffController extends BaseController implements BaseInterface
         $this->model::destroy($id);     
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
         return redirect($this->main_route);
     }
 

@@ -175,8 +175,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 		        'notes' => $notes
 		    ]);
 		      
-		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
-	        	        	
+		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
 	        return redirect("/$this->main_route/$idpat/create");
         }     
     }
@@ -246,7 +245,6 @@ class AppointmentsController extends BaseController implements BaseInterface
 			$object->save();
 
 			$request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-
 			return redirect("$this->other_route/$object->idpat");
 		}   
     }
@@ -260,7 +258,6 @@ class AppointmentsController extends BaseController implements BaseInterface
         $object->delete();
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
         return redirect("$this->other_route/$object->idpat");
     }
 

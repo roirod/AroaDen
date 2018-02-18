@@ -1,5 +1,9 @@
 <script>
-    
+
+$( document ).ajaxError(function( event, xhr, settings ) {
+  util.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
+});
+
 var util = {
 
   processAjaxReturnsHtml: function(obj) {
@@ -21,18 +25,13 @@ var util = {
     };
 
     $.ajax(ajax_data).done(function(response) {
-
       $('#'+id).empty();
       $('#'+id).hide().html(response).fadeIn();
 
-      if (popup) {
+      if (popup)
         _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
-      }
 
-    }).fail(function() {
-
-      _this.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
-
+      _this.getSettings();
     });
   },
 
@@ -69,7 +68,10 @@ var util = {
     return today;
   },
 
-  showPopup: function(msg, success = true, time = 1000) {
+  showPopup: function(msg, success, time) {
+    var success = success || true;
+    var time = time || 1000;
+
     if (success) {
       swal({
         title: msg,
@@ -99,6 +101,18 @@ var util = {
     var loading = '<img class="center" src="/assets/img/loading.gif"/>';
     $('#'+id).empty();
     $('#'+id).html(loading);
+  },
+
+  getSettings: function() {
+    var ajax_data = {
+      type : "GET",
+      url  : "settings/jsonSettings",
+      dataType: "json"
+    };
+
+    $.ajax(ajax_data).done(function(response) {
+      document.title = response.page_title;
+    });
   },
 
 }

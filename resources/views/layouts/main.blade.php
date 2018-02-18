@@ -20,8 +20,6 @@
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/confirm.js') !!}"></script>
 
-    @include('includes.util')
-
   @show
 
 </head>
@@ -103,6 +101,8 @@
  </div>
   
   @yield('footer_script')
+
+  @include('includes.util')
      
 </body>
 </html>
