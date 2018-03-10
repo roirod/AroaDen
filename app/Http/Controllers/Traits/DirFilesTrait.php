@@ -33,7 +33,9 @@ trait DirFilesTrait {
         $this->view_data['thumb_dir'] = $thumb_dir;        
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
-        return $this->loadView($this->views_folder.'.file', $this->view_data);
+        $this->view_name = 'file';
+
+        return $this->loadView();
     }
 
     public function createDir($id, $odogram = false)

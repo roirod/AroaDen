@@ -83,14 +83,12 @@ class PatientsController extends BaseController implements BaseInterface
   
     public function list(Request $request)
     {   
-
-
         $columns = [ 
-            0 =>'id', 
-            1 =>'title',
-            2 => 'body',
-            3 => 'created_at',
-            4 => 'id',
+            0 =>'idpat', 
+            1 =>'surname_name',
+            2 => 'dni',
+            3 => 'tel1',
+            4 => 'city',
         ];
   
         $totalData = $this->model::CountAll();
@@ -102,56 +100,42 @@ class PatientsController extends BaseController implements BaseInterface
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
             
-        if(empty($request->input('search.value'))) {            
-            $posts = $this->model::offset($start)
+
+
+echo "<pre>";
+echo "<br>";
+echo "------------ result ------------------";
+echo "<br>";
+var_dump($request->input);
+echo "<br>";
+echo "</pre>";
+
+exit();
+
+
+        if(empty($request->input('search.value'))) {
+
+            $data = $this->model::offset($start)
                          ->limit($limit)
-                         ->orderBy($order,$dir)
+                         ->orderBy('surname', $dir)
                          ->get();
+
         } else {
+
             $search = $request->input('search.value'); 
+            $data = $this->model::FindStringOnField($search, $order, $start, $limit);
+            $totalFiltered = $this->model::FindStringOnField($search);
 
-            $posts =  $this->model::where('id','LIKE',"%{$search}%")
-                            ->orWhere('title', 'LIKE',"%{$search}%")
-                            ->offset($start)
-                            ->limit($limit)
-                            ->orderBy($order,$dir)
-                            ->get();
-
-            $totalFiltered = $this->model::where('id','LIKE',"%{$search}%")
-                             ->orWhere('title', 'LIKE',"%{$search}%")
-                             ->count();
         }
-
-        $data = array();
-        if(!empty($posts))
-        {
-            foreach ($posts as $post)
-            {
-                $show =  route('posts.show',$post->id);
-                $edit =  route('posts.edit',$post->id);
-
-                $nestedData['id'] = $post->id;
-                $nestedData['title'] = $post->title;
-                $nestedData['body'] = substr(strip_tags($post->body),0,50)."...";
-                $nestedData['created_at'] = date('j M Y h:i a',strtotime($post->created_at));
-                $nestedData['options'] = "&emsp;<a href='{$show}' title='SHOW' ><span class='glyphicon glyphicon-list'></span></a>
-                                          &emsp;<a href='{$edit}' title='EDIT' ><span class='glyphicon glyphicon-edit'></span></a>";
-                $data[] = $nestedData;
-
-            }
-        }
-          
-        $json_data = array(
-                    "draw"            => intval($request->input('draw')),  
-                    "recordsTotal"    => intval($totalData),  
-                    "recordsFiltered" => intval($totalFiltered), 
-                    "data"            => $data   
-                    );
+         
+        $json_data = [
+            "draw"            => intval($request->input('draw')),  
+            "recordsTotal"    => intval($totalData),  
+            "recordsFiltered" => intval($totalFiltered), 
+            "data"            => $data   
+        ];
             
-        echo json_encode($json_data); 
-
-
-     
+        echo json_encode($json_data);     
     }
 
     public function show(Request $request, $id)

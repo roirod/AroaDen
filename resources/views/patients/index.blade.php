@@ -22,179 +22,104 @@
 </div> </div> </div> </div>
 	
 <div class="row">
-	<div class="col-sm-12">
-
-		  <div class="panel panel-default">
-			 <table class="table table-hover" id="PatientsTable">
-			  	 <tr class="fonsi15 success">
-					<td class="wid50">&nbsp;</td>
-					<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-					<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-					<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-					<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-				 </tr>
-			 </table>
-
-
-						<td class="wid50">
-							<a href="{!! url("/$main_route/$obj->idpat") !!}" target="_blank" class="btn btn-default" role="button">
-								<i class="fa fa-hand-pointer-o"></i>
-							</a> 
-						</td>
-
-						<td class="wid290">
-							<a href="{!! url("/$main_route/$obj->idpat") !!}" class="pad4" target="_blank">
-								{!! $obj->surname !!}, {!! $obj->name !!}
-							</a>
-						</td>
-
-						<td class="wid110">{!! $obj->dni !!}</td>
-						<td class="wid110">{!! $obj->tel1 !!}</td>
-						<td class="wid230">{!! $obj->city !!}</td> 
-						
+	<div class="col-sm-12"> 
+	  <div class="panel panel-default">
+		 <table class="table table-hover stripe" id="PatientsTable">
+        <thead>
+  			  <tr class="fonsi15 success">
+  					<td class="wid50">&nbsp;</td>
+  					<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+  					<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+  					<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+  					<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+  				</tr>
+        </thead>
+        <tfoot>
+          <tr class="fonsi15 success">
+            <td class="wid50">&nbsp;</td>
+            <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+            <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+            <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+            <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+           </tr>
+        </tfoot>  
+		 </table>					
 
 		</div>
-
-	@endif
-
  </div> </div>
 
 @endsection
 
-
-    <link href="{!! asset('assets/css/datatables.min.css') !!}" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="{!! asset('assets/js/datatables.min.js') !!}"></script>
-
-
 @section('footer_script')
+
+  <link href="{!! asset('assets/css/datatables.min.css') !!}" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="{!! asset('assets/js/datatables.min.js') !!}"></script>
 
 	<script>
 		
 		$(document).ready(function() {
-
 			$.ajaxSetup({
-			   	headers: { 
-			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-			   	}
+		   	headers: { 
+		   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
+		   	}
 			});
 
-			$("#PatientsTable").dataTable();
+			$("#PatientsTable").dataTable(PatientsTable);
 
       var PatientsTable = {
-        "processing": true,
-        "serverSide": true,
-        "ajax":{
-           "url": '/{!! $main_route !!}/{!! $form_route !!}',
-           "dataType": "json",
-           "type": "POST",
-           "data":{ _token: "{{ csrf_token() }}"}
-         },
-        "columns": [
-            { "data": "id" },
-            { "data": "title" },
-            { "data": "body" },
-            { "data": "created_at" },
-            { "data": "options" }
-        ]	 
+        'oLanguage': {
+          'sProcessing': 'Procesando...',
+          'sLengthMenu': 'Mostrar _MENU_ registros',
+          'sZeroRecords': 'Registros no encontrados',
+          'sInfo': 'Mostrando desde _START_ hasta _END_ de _TOTAL_ registros',
+          'sInfoEmpty': 'No hay datos registrados',
+          'sInfoFiltered': '(filtrados de _MAX_ total de entradas)',
+          'sSearch': 'Búsqueda rápida:',
+          "oPaginate": {
+            "sFirst":    "❮❮",
+            "sLast":     "❯❯",
+            "sNext":     "❯",
+            "sPrevious": "❮"
+          },
+        },
+        'bPaginate': true,
+        'bLengthChange': true,
+        "sPaginationType": "full_numbers",
+        "bProcessing": true,
+        "sDom": "<'row'<'col-sm-6'lfipr><'col-sm-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "bServerSide": true,
+        "iDisplayStart": 0,
+        "iDisplayLength": 25,
+        "bAutoWidth": false,
+        "sAjaxSource": "/{!! $main_route !!}/{!! $form_route !!}",        
+        "sServerMethod": "POST",
+        "aLengthMenu": [
+          [25, 50, 100, 500, 1000, 10000, -1],
+          [25, 50, 100, 500, 1000, 10000, "Todos"],
+        ],
+        "aoColumnDefs": [
+          {
+            "aTargets": [0],
+            "mData": null,
+            "bSortable": false,
+            "bSearchable": false,
+            "mRender": function (data, type, full) {
+              var resultado = '<a href="{!! url("/$main_route") !!}/'+ full[0] +'" target="_blank" class="btn btn-default" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
+              return resultado;
+            }
+          },
+          {
+            "aTargets": [1],
+            "mRender": function (data, type, full) {
+              var resultado = '<a href="{!! url("/$main_route") !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              return resultado;
+            }
+          }
+        ],
 
       };
-
-
-
-
-
-			$(".string_class").on('keyup change', function(event) {
-				var string_val = $('#string').val();
-				var string_val_length = string_val.length;
-
-				if (string_val != '' && string_val_length > 1) {
-					if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-			      Module.run();
-          }
-				}
-
-        event.preventDefault();
-        event.stopPropagation();
-  		});
-
-			var Module = (function( window, undefined ){
-				function runApp() {
-        	util.showLoadingGif('item_list');
-
-          var data = $("form").serialize();
-
-          var obj = {
-            data  : data,          
-            url  : '/{!! $main_route !!}/{!! $form_route !!}'
-          };
-
-          util.processAjaxReturnsJson(obj).done(function(response) {
-          	var html = '';
-
-                if (response.error) {
-
-                  html = '<p class="text-danger">' + response.msg + '</p>';
-
-          	} else {
-
-          		html = '<p id="searched"> <span class="label label-success">' + response.msg + ' {{ Lang::get('aroaden.patients') }}</span></p>';
-
-          		html += '<div class="panel panel-default">';
-          		html += '   <table class="table">';
-          		html += '     <tr class="fonsi15 success">';
-          		html += '       <td class="wid50">&nbsp;</td>';
-          		html += '       <td class="wid290">{{ Lang::get('aroaden.name') }}</td>';
-          		html += '       <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>';
-          		html += '       <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>';
-          		html += '       <td class="wid230">{{ Lang::get('aroaden.city') }}</td>';
-          		html += '     </tr>';
-          		html += '   </table>';
-          		html += '  <div class="box400">';
-          		html += '    <table class="table table-hover">';
-
-          		$.each(response.main_loop, function(index, object){
-            		html += '  <tr>';
-            		html += '    <td class="wid50">';
-            		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default" role="button">';
-            		html += '        <i class="fa fa-hand-pointer-o"></i>';
-            		html += '      </a>';
-            		html += '    </td>';
-            		html += '    <td class="wid290">';
-            		html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" class="pad4" target="_blank">';
-            		html += 		  object.surname + ', ' + object.name;
-            		html += '      </a>';
-            		html += '    </td>';
-            		html += '    <td class="wid110">' + object.dni + '</td>';
-        	    	html += '    <td class="wid110">' + object.tel1 + '</td>';
-            		html += '    <td class="wid230">' + object.city + '</td>';
-            		html += '  </tr>';
-          		});
-
-            	html += '    </table>';
-          		html += '  </div> </div>';
-          		html += ' </div> </div>';				    		
-          	}
-
-          	$('#item_list').empty();
-            $('#item_list').hide().html(html).fadeIn('slow');
-            $('#searched').prepend(' <span class="label label-primary"> {{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>');
-
-          }).fail(function() {
-
-          	$('#item_list').empty();
-          	$('#item_list').hide().html('<h3>{{ Lang::get('aroaden.error_message') }}</h3>').fadeIn('slow');
-          	
-          });
-				}
-
-        return {
-          run: function() {
-            runApp();
-          }
-        }
-
-	    })(window);
-
   	});
 
 	</script>

@@ -1,6 +1,4 @@
-
-
-<script id="templateHandlebars" type="text/x-handlebars-template">
+<script id="servicesList" type="text/x-handlebars-template">
 
   @{{#if error}}
 
@@ -10,8 +8,8 @@
 
   @{{else}}
 
-    <p>
-      <span class="label label-success"> @{{ count }} {{ @trans('aroaden.services') }}</span>
+    <p id="searched">
+      <span class="label label-success"> @{{ msg }} {{ @trans('aroaden.services') }}</span>
     </p>
 
     <div class="panel panel-default">
@@ -36,14 +34,14 @@
             <td class="wid110 textcent">@{{ price }} €</td>
 
             <td class="wid50">
-              <a class="btn btn-xs btn-success" type="button" href="/@{{ ../main_route }}/@{{ idser }}/edit") }}">
+              <a class="btn btn-xs btn-success" type="button" href="/{{ $services_route }}/@{{ idser }}/edit") }}">
                 <i class="fa fa-edit"></i>
               </a>
             </td>
             
             <td class="wid50"> 
               <div class="btn-group"> 
-                <form class="form" id="form" action="/@{{ ../main_route }}/@{{ idser }}" method="POST">    
+                <form class="form" id="form" action="/{{ $services_route }}/@{{ idser }}" method="POST">    
                   {!! csrf_field() !!}
 
                 <input type="hidden" name="_method" value="DELETE">

@@ -47,7 +47,9 @@ class ServicesController extends BaseController implements BaseInterface
      */
     public function index(Request $request)
     {
-        return $this->commonProcess($request, 'index');  
+        $this->view_name = 'index';
+
+        return $this->commonProcess($request);
     }
 
     /**
@@ -57,7 +59,9 @@ class ServicesController extends BaseController implements BaseInterface
      */
     public function ajaxIndex(Request $request)
     {
-        return $this->commonProcess($request, 'ajaxIndex');
+        $this->view_name = 'ajaxIndex';
+
+        return $this->commonProcess($request);
     }
 
     /**
@@ -65,7 +69,7 @@ class ServicesController extends BaseController implements BaseInterface
      * 
      *  @return object $obj get object          
      */
-    private function commonProcess($request, $view_name)
+    private function commonProcess($request)
     {
         $main_loop = $this->model::AllOrderByName($this->num_paginate);
         $count = $this->model::CountAll();       
@@ -77,7 +81,7 @@ class ServicesController extends BaseController implements BaseInterface
 
         $this->setPageTitle(Lang::get('aroaden.services'));
 
-        return $this->loadView($this->views_folder.".$view_name", $this->view_data);
+        return $this->loadView();
     }
 
     /**
@@ -144,41 +148,51 @@ class ServicesController extends BaseController implements BaseInterface
      *  @return redirect
      */
     public function store(Request $request)
-    {          
+    {
         $name = ucfirst($request->input('name'));
 
         $name = $this->sanitizeData($name);
         $price = $this->sanitizeData($request->input('price'));
         $tax = $this->sanitizeData($request->input('tax'));  
 
-        $exists = $this->model::FirstByNameDeleted($name);
+        $data = [];
+        $data['error'] = false; 
 
-        if ( isset($exists->name) ) {
-           $request->session()->flash($this->error_message_name, Lang::get('aroaden.name_in_use', ['name' => $name]));
-           return redirect($this->main_route.'/create')->withInput();
+        try {
+
+            $exists = $this->model::FirstByNameDeleted($name);         
+
+            if ( isset($exists->name) )
+                throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
+
+            $validator = Validator::make($request->all(), [
+                'name' => "required|unique:$this->table_name|max:111",
+                'price' => 'required',
+                'tax' => ''
+            ]);
+                
+            if ($validator->fails()) {
+
+                throw new Exception($validator);
+
+            } else {        
+                
+                $this->model::create([
+                    'name' => $name,
+                    'price' => $price,
+                    'tax' => $tax
+                ]);
+
+            }   
+
+        } catch (Exception $e) {
+
+            $data['error'] = true; 
+            $data['content'] = $e->getMessage();
+
         }
 
-    	$validator = Validator::make($request->all(), [
-            'name' => "required|unique:$this->table_name|max:111",
-            'price' => 'required',
-            'tax' => ''
-	    ]);
-    	        
-        if ($validator->fails()) {
-	        return redirect($this->main_route.'/create')
-	                     ->withErrors($validator)
-	                     ->withInput();
-	     } else {
-	        	
-		    $this->model::create([
-                'name' => $name,
-		        'price' => $price,
-		        'tax' => $tax
-		    ]);
-		      
-		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-	        return redirect($this->main_route.'/create');
-        }     
+        $this->echoJsonOuptut($data);
     }
  
     /**
@@ -220,37 +234,49 @@ class ServicesController extends BaseController implements BaseInterface
         $name = ucfirst(strtolower( $request->input('name') ) );
         $name = $this->sanitizeData($name);
         $price = $this->sanitizeData($request->input('price'));
-        $tax = $this->sanitizeData($request->input('tax'));  
+        $tax = $this->sanitizeData($request->input('tax'));
 
-        $exists = $this->model::CheckIfExistsOnUpdate($id, $name);
+        $data = [];
 
-        if ( isset($exists->name) ) {
-            $request->session()->flash($this->error_message_name, "Nombre: $name - ya en uso, use cualquier otro.");
-            return redirect("$this->main_route/$id/edit")->withInput();
+        try {
+
+            $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
+
+            if ( isset($exists->name) )
+                throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|max:111',
+                'price' => 'required',
+                'tax' => 'required'
+            ]);
+                
+            if ($validator->fails()) {
+
+                throw new Exception($validator);
+
+            } else {        
+                
+                $object = $this->model::find($id);
+                     
+                $object->name = $name;
+                $object->price = $price;
+                $object->tax = $tax;         
+                
+                $object->save();
+
+                $data['content'] = Lang::get('aroaden.success_message');
+
+            }   
+
+        } catch (Exception $e) {
+
+            $data['error'] = true; 
+            $data['content'] = $e->getMessage();
+
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:111',
-            'price' => 'required',
-            'tax' => 'required'
-        ]);
-            
-        if ($validator->fails()) {
-            return redirect("$this->main_route/$id/edit")
-                         ->withErrors($validator);
-        } else {        
-            
-            $object = $this->model::find($id);
-                 
-            $object->name = $name;
-            $object->price = $price;
-            $object->tax = $tax;         
-            
-            $object->save();
-
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-            return redirect($this->main_route);
-        }   
+        $this->echoJsonOuptut($data);
     }
 
      /**

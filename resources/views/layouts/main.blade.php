@@ -6,7 +6,7 @@
     <meta charset="UTF-8"/>
     <title>{{ $page_title }}</title>
     <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
-    <link href="{!! asset('assets/css/start.css') !!}" rel="stylesheet" type="text/css">
+    <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/font-awe/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/img/favicon.ico') !!}" rel="shortcut icon">
     <link rel="stylesheet" type="text/css" href="{!! asset('assets/css/sweetalert2.min.css') !!}">
@@ -65,7 +65,7 @@
       </div>  
     </div>
     
-    <div class="col-sm-10">
+    <div class="col-sm-10 minHeight">
       <div class="row">
         <div class="col-sm-10 fonsi15 pad4">
             &nbsp; &nbsp; {!! @trans("aroaden.user") !!} &nbsp;

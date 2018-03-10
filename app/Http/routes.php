@@ -68,7 +68,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::get($route["appointments"].'/{id}/edit', 'AppointmentsController@edit');
 	Route::resource($route["appointments"], 'AppointmentsController', ['except' => ['show']]);
 	  	  
-	Route::post($route["patients"].'/list', 'PatientsController@list');
+	Route::get($route["patients"].'/list', 'PatientsController@list');
 	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
 	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
 	Route::post($route["patients"].'/upload', 'PatientsController@upload');
@@ -85,6 +85,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::resource($route["staff"], 'StaffController');
 
 	Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');
+	Route::get($route["services"].'/create', 'ServicesController@create');	
 	Route::post($route["services"].'/list', 'ServicesController@list');
 	Route::resource($route["services"], 'ServicesController', ['except' => ['show']]);
 

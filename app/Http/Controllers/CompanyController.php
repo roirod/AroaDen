@@ -68,24 +68,21 @@ class CompanyController extends BaseController
         $this->view_data['obj'] = $obj;
         $this->view_data['main_loop'] = $this->config['settings_fields'];
 
-        if ($view_name == 'index') {
-
-            $this->view_data['form_route'] = 'editData';
-            $this->setPageTitle(Lang::get('aroaden.company_data'));
-
-        } elseif ($view_name == 'ajaxIndex') {
-
-            $this->view_data['form_route'] = 'editData';
-            $this->setPageTitle(Lang::get('aroaden.company_data'));
-
-        } elseif ($view_name == 'edit') {
+        if ($view_name == 'edit') {
 
             $this->view_data['form_route'] = 'saveData';
+            $this->view_name = $view_name;
             $this->setPageTitle(Lang::get('aroaden.company_edit_data'));
+
+        } else {
+
+            $this->view_data['form_route'] = 'editData';
+            $this->view_name = $view_name;
+            $this->setPageTitle(Lang::get('aroaden.company_data'));
 
         }
 
-        return $this->loadView($this->views_folder.".$view_name", $this->view_data);
+        return $this->loadView();
     }
 
     /**
@@ -102,9 +99,8 @@ class CompanyController extends BaseController
                 $request_value = ucfirst( strtolower($request_value) );
                 $request_value = $this->sanitizeData($request_value);
 
-                if ($value["key"] == $request_key) {
+                if ($value["key"] == $request_key)
                     $this->model::where('key', $request_key)->update(['value' => $request_value]);
-                }
             }
         }
 

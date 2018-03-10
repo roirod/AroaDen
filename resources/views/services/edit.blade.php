@@ -1,21 +1,19 @@
-@extends('layouts.main')
-
-@section('content')
 
 	@include('includes.messages')
 	@include('includes.errors')
 
 	{!! addText("Editar servicio") !!}
 
-	@include('form_fields.edit')
+	<form id="form" class="serviceForm form" action="{{ url("/$main_route/$id") }}" method="POST">
+		{!! csrf_field() !!}
 
-	  <br> <br> <br> <br> <br> <br> 
-	  <br> <br> <br> <br> <br> <br> <br>
+		<input type="hidden" name="_method" value="PUT">
 
-@endsection
+        @include('form_fields.edit_alternative')
 
-@section('js')
-    @parent   
-	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
-@endsection
+    @include('form_fields.edit.closeform')
+
+	<script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+
+    @include('services.jsInclude')

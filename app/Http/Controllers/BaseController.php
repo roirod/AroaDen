@@ -61,6 +61,11 @@ class BaseController extends Controller
     protected $view_name = '';
 
     /**
+     * @var bool $view_name  view response
+     */
+    protected $view_response = false;
+
+    /**
      * @var array $form_fields  input fields showed in form
      */
     protected $form_fields = [];
@@ -204,7 +209,9 @@ class BaseController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->loadView($this->views_folder.'.index', $this->view_data);
+        $this->view_name = 'index';
+
+        return $this->loadView();
     }
 
     /**
@@ -216,7 +223,9 @@ class BaseController extends Controller
      */
     public function create(Request $request, $id = false)
     {
-        return $this->loadView($this->views_folder.'.create', $this->view_data);
+        $this->view_name = 'create';
+
+        return $this->loadView();
     }
 
     /**
@@ -228,7 +237,9 @@ class BaseController extends Controller
      */
     public function show(Request $request, $id)
     {
-        return $this->loadView($this->views_folder.'.show', $this->view_data);
+        $this->view_name = 'show';
+
+        return $this->loadView();
     }
 
     /**
@@ -240,7 +251,9 @@ class BaseController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        return $this->loadView($this->views_folder.'.edit', $this->view_data);
+        $this->view_name = 'edit';
+
+        return $this->loadView();
     }
 
     /**
@@ -274,23 +287,26 @@ class BaseController extends Controller
     /**
      *  costumize load View
      * 
-     *  @param string $view
-     *  @param array $view_data
+     *  @param string $view view name
+     *  @param bool $response if true returns response
+     *  @param bool $string if true returns view html string
      *  @return string
      */
-    protected function loadView($view, $view_data, $response = false)
+    protected function loadView()
     {       
         $this->passVarsToViews();
 
-        if ($response) {
-            return response()->view($view, $view_data)
+        $view = $this->views_folder.".".$this->view_name;
+
+        if ($this->view_response) {
+            return response()->view($view, $this->view_data)
                ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
                ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
                ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
                ->header('Pragma', 'no-cache');
         }
 
-        return view($view, $view_data);
+        return view($view, $this->view_data);
     }
 
     /**

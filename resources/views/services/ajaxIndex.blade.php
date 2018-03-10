@@ -109,8 +109,7 @@
       </div>
     </div>
 
-    <script id="templateHandlebars" type="text/x-handlebars-template">
-      @include('services.hbsPartial')
-    </script>
+  <script type="text/javascript" src="{{ asset('assets/js/handlebars.js') }}"></script>
 
-    @include('services.jsInclude')
+  @include('services.servicesList')
+  @include('services.jsInclude')

@@ -77,9 +77,11 @@ class PaysController extends BaseController
         }
 
         $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['num_mostrado'] = $num_mostrado;        
+        $this->view_data['num_mostrado'] = $num_mostrado;
 
-        return $this->loadView($this->views_folder.".$view_name", $this->view_data);
+        $this->view_name = $view_name;   
+
+        return $this->loadView();
     }
 
 }

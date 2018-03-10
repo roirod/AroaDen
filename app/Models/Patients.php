@@ -85,24 +85,61 @@ class Patients extends Model
         return $exists;
     }
 
-    public function scopeFindStringOnField($query, $search_in, $string)
+    public static function FindStringOnField($where = '', $order = '', $start = '', $limit = '')
     {
-        return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
-                        ->whereNull('deleted_at')
-                        ->where($search_in, 'LIKE', '%'.$string.'%')
-                        ->orderBy('surname','ASC')
-                        ->orderBy('name','ASC')
-                        ->get();
+        if ($where != '') {
+          $where = "
+            AND (surname LIKE '%". $where ."%' 
+            OR name LIKE '%". $where ."%' OR dni LIKE '%". $where ."%'
+            OR tel1 LIKE '%". $where ."%' OR city LIKE '%". $where ."%') 
+          ";
+        }
+
+        if ($order != '') {
+          $order = "ORDER BY " . $order;
+        } else {
+          $order = 'ORDER BY surname ASC';
+        }
+
+
+  $iDisplayLength = $_POST['iDisplayLength'];
+
+  $sLimit = "";
+  if ( isset( $_POST['iDisplayStart'] ) && $iDisplayLength != '-1' ) {
+    $sLimit = "LIMIT ".$_POST['iDisplayStart'].",". $iDisplayLength;
+  }
+
+
+
+
+        $sql = "
+            SELECT idpat, CONCAT(surname, ', ', name) AS surname_name, dni, tel1, city
+            FROM patients
+            WHERE deleted_at IS NULL " . $where . " 
+            " . $order . " 
+            " . $limit . "
+        ;";
+
+        return DB::select($query);
     }
 
-    public static function CountFindStringOnField($search_in, $string)
+    public static function CountFindStringOnField($where ='')
     {
-        $result = DB::table('patients')
-                    ->whereNull('deleted_at')
-                    ->where($search_in, 'LIKE', '%'.$string.'%')
-                    ->get();
+        if ($where != '') {
+          $where = "
+            AND (surname LIKE '%". $where ."%' 
+            OR name LIKE '%". $where ."%' OR dni LIKE '%". $where ."%'
+            OR tel1 LIKE '%". $where ."%' OR city LIKE '%". $where ."%') 
+          ";
+        }
 
-        return count($result);
+        $sql = "
+            SELECT count(*) AS total
+            FROM patients
+            WHERE deleted_at IS NULL " . $where . "
+        ;";
+
+        return DB::select($query);
     }
 
     public static function GetTotalPayments($number, $all = false)
