@@ -13,17 +13,11 @@ class AccountingController extends BaseController
 
         $this->middleware('auth');
 
-        $this->views_folder = $this->config['routes']['accounting'];
-        $this->form_route = 'list';
+        $this->main_route = $this->config['routes']['pays'];
     }
 
     public function index(Request $request)
-    {   
-        $this->view_data['request'] = $request;
-        $this->view_data['pays_route'] = $this->config['routes']['pays'];
-
-        $this->setPageTitle(Lang::get('aroaden.accounting'));
-
-        return parent::index($request); 
+    {
+        return redirect($this->main_route);
     }
 }

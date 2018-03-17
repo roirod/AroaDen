@@ -20,45 +20,53 @@
             <br>
           </div> 
 
-       <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-          {!! csrf_field() !!}
+           <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+              {!! csrf_field() !!}
 
-          <div class="col-md-12">
-            <input type="text" class="form-control input_login_form" name="username" value="{{ old('username') }}" placeholder="{{ trans('aroaden.user') }}" autofocus required>
+              <div class="col-md-12">
+                <input type="text" class="form-control input_login_form" name="username" value="{{ old('username') }}" placeholder="{{ trans('aroaden.user') }}" autofocus required>
 
-           <br>
-          </div>
-        
-          <div class="col-md-12">
-            <input type="password" class="form-control input_login_form" name="password" placeholder="{{ trans('aroaden.password') }}" required >
-            <br> 
-          </div> 
+               <br>
+              </div>
+            
+              <div class="col-md-12">
+                <input type="password" class="form-control input_login_form" name="password" placeholder="{{ trans('aroaden.password') }}" required >
+                <br> 
+              </div> 
 
-      	  @if ($errors->has('username'))
-               <span class="help-block pad10 mar4">
-      	          <strong>{{ $errors->first('username') }}</strong>
-      	      </span>
-      	  @endif  
-       
-           @if ($errors->has('password'))
-               <span class="help-block pad10 mar4">
-                   <strong>{{ $errors->first('password') }}</strong>
-               </span>
-           @endif 
+          	  @if ($errors->has('username'))
+                   <span class="help-block pad10 mar4">
+          	          <strong>{{ $errors->first('username') }}</strong>
+          	      </span>
+          	  @endif  
+           
+               @if ($errors->has('password'))
+                   <span class="help-block pad10 mar4">
+                       <strong>{{ $errors->first('password') }}</strong>
+                   </span>
+               @endif 
 
-          <div class="col-md-12">
-            <button type="submit" class="btn btn_login">
-              Acceder <i class="fa fa-chevron-circle-right"></i> 
-            </button> 
-          </div>
+              <div class="col-md-12">
+                <button type="submit" class="btn btn_login">
+                  Acceder <i class="fa fa-chevron-circle-right"></i> 
+                </button> 
+              </div>
 
-      </form> 
+          </form> 
 
         </div>
       </div>
 
     <br> 
 
-</div> </div> </div>
+</div> 
+
+<div class="col-md-12 textcent">
+  <p class="login_text pad10 textcent">
+    {{ trans('aroaden.aroaden_full_name') }}
+  </p>
+</div> 
+
+</div> </div>
  
 @endsection

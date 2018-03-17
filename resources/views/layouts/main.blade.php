@@ -18,7 +18,6 @@
     <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
-    <script type="text/javascript" src="{!! asset('assets/js/confirm.js') !!}"></script>
 
   @show
 
@@ -28,10 +27,10 @@
 
 <br>
 
-<div class="jumbotron container bgwi pad20">
+<div class="jumbotron container bgwi pad10">
   <div class="row">  
 
-    <div class="col-sm-1 wid180 fonsi14">
+    <div class="col-sm-1 widCol1 fonsi14">
       <div class="affix">
 
         <h3 class="pad10 login_text textcent bgtra textshadow">
@@ -65,7 +64,7 @@
       </div>  
     </div>
     
-    <div class="col-sm-10 minHeight">
+    <div class="col-sm-10 minHeight widCol2">
       <div class="row">
         <div class="col-sm-10 fonsi15 pad4">
             &nbsp; &nbsp; {!! @trans("aroaden.user") !!} &nbsp;

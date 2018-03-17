@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Validator;
 use Config;
@@ -61,6 +61,6 @@ class AuthController extends Controller
 
     protected function validator(array $data) {}
 
-    protected function create(array $data) {}
+    public function create(array $data) {}
 
 }

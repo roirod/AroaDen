@@ -17,10 +17,6 @@ var routes = {
   settings_route: "{{ $settings_route }}"
 };
 
-$( document ).ajaxError(function( event, xhr, settings ) {
-  util.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
-});
-
 $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
   event.preventDefault();
   event.stopPropagation();
@@ -37,6 +33,14 @@ $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
   }
 
   return util.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
+});
+
+$(".del_btn").click(function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    var $this = $(this);
+    util.confirmAlert($this);
 });
 
 var util = {
@@ -170,6 +174,25 @@ var util = {
     var total = num1 * num2;
 
     return total;
+  },
+
+  confirmAlert: function($this) {
+    swal({
+      title: '{{ Lang::get('aroaden.are_you_sure') }}',
+      type: 'warning',
+      showCancelButton: true,
+      allowOutsideClick: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '{{ Lang::get('aroaden.yes') }}',
+      cancelButtonText: '{{ Lang::get('aroaden.no') }}',
+      confirmButtonClass: 'confirm-class',
+      cancelButtonClass: 'cancel-class',
+    }).then(
+      function(isConfirm) {
+        if (isConfirm) $this.closest('form').submit();
+      }
+    );
   },
 
 }
