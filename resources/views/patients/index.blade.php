@@ -22,31 +22,35 @@
 </div> </div> </div> </div>
 	
 <div class="row">
-	<div class="col-sm-12"> 
-	  <div class="panel panel-default">
-		 <table class="table table-hover stripe" id="PatientsTable">
-        <thead>
-  			  <tr class="fonsi15 success">
-  					<td class="wid50">&nbsp;</td>
-  					<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-  					<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-  					<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-  					<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-  				</tr>
-        </thead>
-        <tfoot>
-          <tr class="fonsi15 success">
-            <td class="wid50">&nbsp;</td>
-            <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-            <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-            <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-            <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-           </tr>
-        </tfoot>  
-		 </table>					
+	<div class="col-sm-12">
+    <fieldset>
+  	  <div class="panel panel-default">
 
-		</div>
- </div> </div>
+        <table class="table table-hover stripe" id="PatientsTable">
+          <thead>
+        	  <tr class="fonsi16 bgtra fonbla">
+        			<td class="wid50">&nbsp;</td>
+        			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+        			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+        		</tr>
+          </thead>
+          <tfoot>
+            <tr class="fonsi16 bgtra fonbla">
+              <td class="wid50">&nbsp;</td>
+              <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+              <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+             </tr>
+          </tfoot>  
+        </table>					
+
+		  </div>
+    </fieldset>
+  </div> 
+</div>
 
 @endsection
 
@@ -64,17 +68,19 @@
 		   	}
 			});
 
-			$("#PatientsTable").dataTable(PatientsTable);
+      setTimeout(function(){
+        $("#PatientsTable").dataTable(PatientsTable);
+      }, 300);
 
       var PatientsTable = {
         'oLanguage': {
-          'sProcessing': 'Procesando...',
-          'sLengthMenu': 'Mostrar _MENU_ registros',
-          'sZeroRecords': 'Registros no encontrados',
-          'sInfo': 'Mostrando desde _START_ hasta _END_ de _TOTAL_ registros',
-          'sInfoEmpty': 'No hay datos registrados',
-          'sInfoFiltered': '(filtrados de _MAX_ total de entradas)',
-          'sSearch': 'Búsqueda rápida:',
+          'sProcessing': 'Cargando...',
+          'sLengthMenu': 'Mostrar _MENU_',
+          'sZeroRecords': 'Pacientes no encontrados',
+          'sInfo': 'Mostrando desde _START_ hasta _END_ de _TOTAL_ pacientes',
+          'sInfoEmpty': 'No hay pacientes',
+          'sInfoFiltered': '(filtrados de _MAX_ total de pacientes)',
+          'sSearch': 'Búsqueda:',
           "oPaginate": {
             "sFirst":    "❮❮",
             "sLast":     "❯❯",
@@ -82,19 +88,35 @@
             "sPrevious": "❮"
           },
         },
+        "sDom": 
+          "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+          "<'row'<'col-sm-12'r>>" +
+          "<'row'<'col-sm-6'i><'col-sm-6'p>>" +
+          "<'row'<'col-sm-12't>>" +
+          "<br>" +
+          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "iDisplayStart": 0,
+        "iDisplayLength": 25,
+        "bAutoWidth": false,
         'bPaginate': true,
         'bLengthChange': true,
         "sPaginationType": "full_numbers",
         "bProcessing": true,
-        "sDom": "<'row'<'col-sm-6'lfipr><'col-sm-6'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "bServerSide": true,
-        "iDisplayStart": 0,
-        "iDisplayLength": 25,
-        "bAutoWidth": false,
-        "sAjaxSource": "/{!! $main_route !!}/{!! $form_route !!}",        
-        "sServerMethod": "POST",
+        "sAjaxSource": "{!! $patients_route.'/'.$form_route !!}",
+        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+          aoData.push( { "_token": $('meta[name=_token]').attr('content') } );
+          oSettings.jqXHR = $.ajax({
+            "dataType": 'json',
+            "type": "POST",
+            "url": sSource,
+            "data": aoData,
+            "success": fnCallback,
+            "error": function (e) {
+               console.log(e.message);
+            }
+          });
+        },
         "aLengthMenu": [
           [25, 50, 100, 500, 1000, 10000, -1],
           [25, 50, 100, 500, 1000, 10000, "Todos"],
@@ -106,7 +128,7 @@
             "bSortable": false,
             "bSearchable": false,
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! url("/$main_route") !!}/'+ full[0] +'" target="_blank" class="btn btn-default" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
+              var resultado = '<a href="{!! url("/$patients_route") !!}/'+ full[0] +'" target="_blank" class="btn btn-default" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
               return resultado;
             }
           },
@@ -118,7 +140,6 @@
             }
           }
         ],
-
       };
   	});
 

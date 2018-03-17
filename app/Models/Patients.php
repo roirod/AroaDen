@@ -85,55 +85,46 @@ class Patients extends Model
         return $exists;
     }
 
-    public static function FindStringOnField($where = '', $order = '', $start = '', $limit = '')
+    public static function FindStringOnField($sLimit, $sWhere, $sOrder)
     {
-        if ($where != '') {
-          $where = "
-            AND (surname LIKE '%". $where ."%' 
-            OR name LIKE '%". $where ."%' OR dni LIKE '%". $where ."%'
-            OR tel1 LIKE '%". $where ."%' OR city LIKE '%". $where ."%') 
-          ";
-        }
+        $where = '';
 
-        if ($order != '') {
-          $order = "ORDER BY " . $order;
+        if ($sWhere != '')
+          $where = "
+            AND (surname LIKE '%". $sWhere ."%' 
+            OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%') 
+          ";
+
+        if ($sOrder != '') {
+          $order = "ORDER BY " . $sOrder;
         } else {
           $order = 'ORDER BY surname ASC';
         }
 
-
-  $iDisplayLength = $_POST['iDisplayLength'];
-
-  $sLimit = "";
-  if ( isset( $_POST['iDisplayStart'] ) && $iDisplayLength != '-1' ) {
-    $sLimit = "LIMIT ".$_POST['iDisplayStart'].",". $iDisplayLength;
-  }
-
-
-
-
-        $sql = "
+        $query = "
             SELECT idpat, CONCAT(surname, ', ', name) AS surname_name, dni, tel1, city
             FROM patients
             WHERE deleted_at IS NULL " . $where . " 
             " . $order . " 
-            " . $limit . "
+            " . $sLimit . "
         ;";
 
         return DB::select($query);
     }
 
-    public static function CountFindStringOnField($where ='')
+    public static function CountFindStringOnField($sWhere = '')
     {
-        if ($where != '') {
+        $where = '';
+                
+        if ($sWhere != '')
           $where = "
-            AND (surname LIKE '%". $where ."%' 
-            OR name LIKE '%". $where ."%' OR dni LIKE '%". $where ."%'
-            OR tel1 LIKE '%". $where ."%' OR city LIKE '%". $where ."%') 
+            AND (surname LIKE '%". $sWhere ."%' 
+            OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%') 
           ";
-        }
 
-        $sql = "
+        $query = "
             SELECT count(*) AS total
             FROM patients
             WHERE deleted_at IS NULL " . $where . "
@@ -158,9 +149,8 @@ class Patients extends Model
             ORDER BY rest DESC
         ";
 
-        if (!$all) {
+        if (!$all)
             $query .= " LIMIT $number";
-        }
 
         return DB::select($query);
     }

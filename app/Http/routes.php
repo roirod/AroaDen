@@ -68,7 +68,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::get($route["appointments"].'/{id}/edit', 'AppointmentsController@edit');
 	Route::resource($route["appointments"], 'AppointmentsController', ['except' => ['show']]);
 	  	  
-	Route::get($route["patients"].'/list', 'PatientsController@list');
+	Route::post($route["patients"].'/list', 'PatientsController@list');
 	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
 	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
 	Route::post($route["patients"].'/upload', 'PatientsController@upload');

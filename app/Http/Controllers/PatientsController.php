@@ -83,7 +83,7 @@ class PatientsController extends BaseController implements BaseInterface
   
     public function list(Request $request)
     {   
-        $columns = [ 
+        $aColumns = [ 
             0 =>'idpat', 
             1 =>'surname_name',
             2 => 'dni',
@@ -91,51 +91,56 @@ class PatientsController extends BaseController implements BaseInterface
             4 => 'city',
         ];
   
-        $totalData = $this->model::CountAll();
-            
-        $totalFiltered = $totalData; 
+        $iDisplayLength = $request->input('iDisplayLength');
+        $iDisplayStart = $request->input('iDisplayStart');
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-            
+        $sLimit = "";
+        if ( isset( $iDisplayStart ) && $iDisplayLength != '-1' )
+            $sLimit = "LIMIT ".$iDisplayStart.",". $iDisplayLength;
 
+        $iSortCol_0 = (int) $request->input('iSortCol_0');
 
-echo "<pre>";
-echo "<br>";
-echo "------------ result ------------------";
-echo "<br>";
-var_dump($request->input);
-echo "<br>";
-echo "</pre>";
+        if ( isset( $iSortCol_0 ) ) {
+            $sOrder = " ";
+            $bSortable = $request->input("bSortable_$iSortCol_0");
+            $sSortDir_0 = $request->input('sSortDir_0');
 
-exit();
+            if ( $bSortable == "true" )
+              $sOrder = $aColumns[ $iSortCol_0 ] ." ". $sSortDir_0;
 
-
-        if(empty($request->input('search.value'))) {
-
-            $data = $this->model::offset($start)
-                         ->limit($limit)
-                         ->orderBy('surname', $dir)
-                         ->get();
-
-        } else {
-
-            $search = $request->input('search.value'); 
-            $data = $this->model::FindStringOnField($search, $order, $start, $limit);
-            $totalFiltered = $this->model::FindStringOnField($search);
-
+            if ( $sOrder == " " )
+              $sOrder = "";
         }
-         
-        $json_data = [
-            "draw"            => intval($request->input('draw')),  
-            "recordsTotal"    => intval($totalData),  
-            "recordsFiltered" => intval($totalFiltered), 
-            "data"            => $data   
+
+        $sWhere = "";
+        $sSearch = $request->input('sSearch');
+
+        if ($sSearch != "")
+            $sWhere = $this->sanitizeData($sSearch);
+
+        $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
+        $countTotal = $this->model::CountAll();
+        $countFiltered = $this->model::CountFindStringOnField($sWhere);
+        $countFiltered = (int)$countFiltered[0]->total;
+
+        $resultArray = [];
+
+        foreach ($data as $key => $value) {
+            $resultArray[$key][] = $value->idpat;
+            $resultArray[$key][] = $value->surname_name;
+            $resultArray[$key][] = $value->dni;
+            $resultArray[$key][] = $value->tel1;
+            $resultArray[$key][] = $value->city;
+        }
+
+        $output = [
+            "sEcho" => intval($request->input('sEcho')),
+            "iTotalRecords" => $countTotal,
+            "iTotalDisplayRecords" => $countFiltered,
+            "aaData" => array_values($resultArray)
         ];
-            
-        echo json_encode($json_data);     
+
+        $this->echoJsonOuptut($output);  
     }
 
     public function show(Request $request, $id)
