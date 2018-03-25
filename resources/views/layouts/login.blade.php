@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-
-  <title>AroaDen</title>
+  	<title>{{ trans('aroaden.aroaden_full_name') }}</title>
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ asset('assets/css/login.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ asset('assets/font-awe/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >

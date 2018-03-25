@@ -30,14 +30,49 @@ html,body { height:100%; padding:0; margin:0; }
 
 .fontwe4 {  font-weight: 400;  }
 
-.btnbig { 
-font-size: 20px;
-line-height: 1.1;
-border-radius: 6px !important;
-padding: 10px 14px; 
+
+.col_centered{
+  float: none;
+  margin: 0 auto;
 }
 
-.border2px { border: 2px solid #0cedde; }
+
+.input_login_form { 
+  background-color: #111 !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  outline: 0 none !important;
+  border-bottom: 1px solid #efefef !important;
+  color: #efefef !important;  
+}
+
+.login_text { 
+  color: #efefef !important;
+}
+
+.login_button { 
+  color: #efefef !important;
+  border: 1px solid #efefef !important;
+  background-color: #00B1CC !important;
+}
+
+.btn_login {
+  color: #efefef !important;
+  background-color: #06F !important;
+  display: block !important;
+  width: 100% !important;
+  height: 40px !important;  
+  border-radius: 4px !important;
+}
+
+.btn_login:hover {
+  color: #06F !important;
+  background-color: #efefef !important;
+}
+
+
+.border2px { border: 2px solid #06F; }
 
 .boxsha {
 -webkit-box-shadow: 0px 0px 19px -1px rgba(255,255,255,1);
@@ -58,14 +93,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .bgtra  { background-color: rgba(0, 0, 0, 0.66); }
 
 .boradius { 
--webkit-border-radius: 11px;
--moz-border-radius: 11px;
-border-radius: 11px;
-}
-
-.padlefrig { 
-padding-left: 47px;
-padding-right: 5px;
+  -webkit-border-radius: 11px;
+  -moz-border-radius: 11px;
+  border-radius: 11px;
 }
 
 .mar4 { margin: 4px; }

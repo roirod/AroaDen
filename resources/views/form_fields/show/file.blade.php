@@ -10,7 +10,7 @@
 
           <div class="btn-toolbar pad4" role="toolbar">
              <div class="btn-group">
-                <span class="input-group-btn pad10">  <p> Archivos: </p> </span>
+                <span class="input-group-btn pad10">  <p> Archivos </p> </span>
              </div>
              <div class="btn-group">
                 <input type="file" class="btn btn-default btn-sm" name="files[]" multiple />

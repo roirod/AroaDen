@@ -1,99 +1,115 @@
 <?php
 
-Route::group(['middleware' => 'web'], function () {
+use Illuminate\Support\Facades\Config;
+
+$route = Config::get('aroaden.routes');
+
+Route::group(['middleware' => 'web'], function () use ($route) {
 	
 	Route::get('/', 'Auth\AuthController@getLogin');
 	Route::get('/login', 'Auth\AuthController@getLogin');
 	Route::post('/login', 'Auth\AuthController@postLogin');
-	Route::get('/logout', 'Auth\AuthController@getLogout');	
+	Route::get('/logout', 'Auth\AuthController@logout');	
 
-	Route::get('/home', 'CitasController@index');
+	Route::get('/home', 'AppointmentsController@index');
 
-	Route::group(['middleware' => ['admin']], function () {
-		Route::get('Empresa/editData', 'EmpresaController@editData');
-		Route::post('Empresa/saveData', 'EmpresaController@saveData');
+	Route::group(['middleware' => ['admin']], function () use ($route) {
+		Route::get($route["company"].'/editData', 'CompanyController@editData');
+		Route::post($route["company"].'/saveData', 'CompanyController@saveData');
 
-		Route::delete('Pacientes/{id}', 'PacientesController@destroy');
+		Route::delete($route["patients"].'/{id}', 'PatientsController@destroy');
 
-		Route::delete('Personal/{id}', 'PersonalController@destroy');
+		Route::delete($route["staff"].'/{id}', 'StaffController@destroy');
 
-		Route::delete('Servicios/{id}', 'ServiciosController@destroy');
+		Route::delete($route["services"].'/{id}', 'ServicesController@destroy');
 
-		Route::get('Usuarios/userEdit', 'UsuariosController@userEdit');
-		Route::get('Usuarios/userDeleteViev', 'UsuariosController@userDeleteViev');
-		Route::post('Usuarios/userUpdate', 'UsuariosController@userUpdate');
-		Route::post('Usuarios/userDelete', 'UsuariosController@userDelete');
-		Route::resource('Usuarios', 'UsuariosController', ['except' => ['create', 'update', 'edit', 'destroy']]);
+		Route::get($route["users"].'/userEdit', 'UsersController@userEdit');
+		Route::get($route["users"].'/userDeleteViev', 'UsersController@userDeleteViev');
+		Route::post($route["users"].'/userUpdate', 'UsersController@userUpdate');
+		Route::post($route["users"].'/userDelete', 'UsersController@userDelete');
+		Route::resource($route["users"], 'UsersController', ['except' => ['create', 'update', 'edit', 'destroy']]);
 
-	 	Route::get('Settings', 'SettingsController@index');
+	 	Route::get($route["settings"], 'SettingsController@index');
 	});
 
-	Route::group(['middleware' => ['medio']], function () {
-		Route::get('Pacientes/{id}/edit', 'PacientesController@edit');
-		Route::put('Pacientes/{id}', 'PacientesController@update');
-		Route::get('Pacientes/{id}/fiedit', 'PacientesController@fiedit');
-		Route::put('Pacientes/{id}/fisave', 'PacientesController@fisave');
-		Route::post('Pacientes/filerem', 'PacientesController@filerem');
-		Route::post('Pacientes/upodog', 'PacientesController@upodog');
-		Route::post('Pacientes/resodog', 'PacientesController@resodog');
+	Route::group(['middleware' => ['normal']], function () use ($route) {
+		Route::get($route["patients"].'/{id}/edit', 'PatientsController@edit');
+		Route::put($route["patients"].'/{id}', 'PatientsController@update');
+		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');
+		Route::put($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
+		Route::post($route["patients"].'/filerem', 'PatientsController@filerem');
+		Route::post($route["patients"].'/upodog', 'PatientsController@upodog');
+		Route::post($route["patients"].'/resodog', 'PatientsController@resodog');
 
-		Route::get('Personal/{id}/edit', 'PersonalController@edit');
-		Route::put('Personal/{id}', 'PersonalController@update');
-		Route::post('Personal/filerem', 'PersonalController@filerem');
+		Route::get($route["staff"].'/{id}/edit', 'StaffController@edit');
+		Route::put($route["staff"].'/{id}', 'StaffController@update');
+		Route::post($route["staff"].'/filerem', 'StaffController@filerem');
 
-		Route::get('Servicios/{id}/edit', 'ServiciosController@edit');
-		Route::put('Servicios/{id}', 'ServiciosController@update');
+		Route::get($route["services"].'/{id}/edit', 'ServicesController@edit');
+		Route::put($route["services"].'/{id}', 'ServicesController@update');
 
-		Route::get('Citas/{id}/edit', 'CitasController@edit');
-		Route::delete('Citas/{id}', 'CitasController@destroy');	
+		Route::get($route["appointments"].'/{id}/edit', 'AppointmentsController@edit');
+		Route::delete($route["appointments"].'/{id}', 'AppointmentsController@destroy');	
 
-		Route::get('Trapac/{id}/edit', 'TratamientosController@edit');
-		Route::delete('Trapac/{id}', 'TratamientosController@destroy');
+		Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
+		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		
-		Route::post('Presup/delcod', 'PresupuestosController@delcod');
-		Route::post('Presup/delid', 'PresupuestosController@delid');
+		Route::post($route["budgets"].'/delCode', 'BudgetsController@delCode');
+		Route::post($route["budgets"].'/delId', 'BudgetsController@delId');
 	});
 
-	Route::get('Empresa', 'EmpresaController@index');
+	Route::get($route["settings"].'/jsonSettings', 'SettingsController@jsonSettings');
 
-	Route::post('Citas/list', 'CitasController@list');
-	Route::get('Citas/{id}/create', 'CitasController@create');
-	Route::get('Citas/{id}/edit', 'CitasController@edit');
-	Route::resource('Citas', 'CitasController', ['except' => ['show']]);
+	Route::get($route["company"].'/ajaxIndex', 'CompanyController@ajaxIndex');
+	Route::get($route["company"], 'CompanyController@index');
+
+	Route::post($route["appointments"].'/list', 'AppointmentsController@list');
+	Route::get($route["appointments"].'/{id}/create', 'AppointmentsController@create');
+	Route::get($route["appointments"].'/{id}/edit', 'AppointmentsController@edit');
+	Route::resource($route["appointments"], 'AppointmentsController', ['except' => ['show']]);
 	  	  
-	Route::post('Pacientes/list', 'PacientesController@list');
-	Route::get('Pacientes/{id}/ficha', 'PacientesController@ficha');
-	Route::get('Pacientes/{id}/file', 'PacientesController@file');
-	Route::post('Pacientes/upload', 'PacientesController@upload');
-	Route::get('Pacientes/{id}/{file}/down', 'PacientesController@download');
-	Route::get('Pacientes/{id}/odogram', 'PacientesController@odogram');	 
-	Route::get('Pacientes/{id}/downodog', 'PacientesController@downodog');
-	Route::get('Pacientes/{id}/presup', 'PacientesController@presup');
-	Route::resource('Pacientes', 'PacientesController');
+	Route::post($route["patients"].'/list', 'PatientsController@list');
+	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
+	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
+	Route::post($route["patients"].'/upload', 'PatientsController@upload');
+	Route::get($route["patients"].'/{id}/{file}/down', 'PatientsController@download');
+	Route::get($route["patients"].'/{id}/odogram', 'PatientsController@odogram');	 
+	Route::get($route["patients"].'/{id}/downodog', 'PatientsController@downodog');
+	Route::get($route["patients"].'/{id}/budgets', 'PatientsController@budgets');
+	Route::resource($route["patients"], 'PatientsController');
 
-	Route::post('Personal/list', 'PersonalController@list');
-	Route::get('Personal/{idper}/file', 'PersonalController@file');	 
-	Route::post('Personal/upload', 'PersonalController@upload');
-	Route::get('Personal/{id}/{file}/down', 'PersonalController@download');
-	Route::resource('Personal', 'PersonalController');
+	Route::post($route["staff"].'/list', 'StaffController@list');
+	Route::get($route["staff"].'/{idper}/file', 'StaffController@file');	 
+	Route::post($route["staff"].'/upload', 'StaffController@upload');
+	Route::get($route["staff"].'/{id}/{file}/down', 'StaffController@download');
+	Route::resource($route["staff"], 'StaffController');
 
-	Route::post('Servicios/list', 'ServiciosController@list');
-	Route::resource('Servicios', 'ServiciosController', ['except' => ['show']]);
+	Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');
+	Route::get($route["services"].'/create', 'ServicesController@create');	
+	Route::post($route["services"].'/list', 'ServicesController@list');
+	Route::resource($route["services"], 'ServicesController', ['except' => ['show']]);
 
-	Route::get('Contable', 'ContableController@index');
+	Route::get($route["accounting"], 'AccountingController@index');
 
-	Route::post('Pagos/list', 'PagosController@list');
-	Route::get('Pagos', 'PagosController@index');
+	Route::get($route["pays"].'/ajaxIndex', 'PaysController@ajaxIndex');
+	Route::post($route["pays"].'/list', 'PaysController@list');
+	Route::get($route["pays"], 'PaysController@index');
 
-	Route::get('Presup/{id}/create', 'PresupuestosController@create');
-	Route::post('Presup/presuedit', 'PresupuestosController@presuedit');
-	Route::post('Presup/presmod', 'PresupuestosController@presmod');
-	Route::resource('Presup', 'PresupuestosController', ['except' => ['index', 'update', 'edit', 'destroy']]);
+	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');
+	Route::post($route["budgets"].'/editBudget', 'BudgetsController@editBudget');
+	Route::post($route["budgets"].'/mode', 'BudgetsController@mode');
+	Route::resource($route["budgets"], 'BudgetsController', ['except' => 
+		['index', 'edit', 'update', 'destroy']]);
 
-	Route::get('Trapac/{id}/create','TratamientosController@create');
-	Route::post('Trapac/select', 'TratamientosController@select');  
-	Route::get('Trapac/{id}/edit', 'TratamientosController@edit');
-	Route::resource('Trapac', 'TratamientosController', ['except' => ['index', 'create', 'show']]);
+	Route::get($route["invoices"].'/{id}/create', 'InvoicesController@create');
+	Route::post($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');
+	Route::resource($route["invoices"], 'InvoicesController', ['except' => 
+		['index', 'update', 'edit', 'destroy']]);
+
+	Route::get($route["treatments"].'/{id}/create','TreatmentsController@create');
+	Route::post($route["treatments"].'/select', 'TreatmentsController@select');  
+	Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
+	Route::resource($route["treatments"], 'TreatmentsController', ['except' => ['index', 'create', 'show']]);
 
 });
 

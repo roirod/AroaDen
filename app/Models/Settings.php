@@ -18,22 +18,22 @@ class Settings extends Model
                 ->first();
     }
 
-    public static function getObject()
+    public static function getArray()
     {
-        $empre = DB::table('settings')
-        			->select('key', 'value')
-        			->get();
+        $settings = DB::table('settings')
+                    ->select('key', 'value')
+                    ->get();
 
-        $obj = new class {};
+        $array = [];
 
-        foreach ($empre as $arr => $value) {
-            $obj_key = $value->key;
-            $obj_val = $value->value;
+        foreach ($settings as $value) {
+            $array_key = $value->key;
+            $array_val = $value->value;
 
-            $obj->$obj_key = $obj_val;
+            $array[$array_key] = $array_val;
         }
 
-        return $obj;
-    }
+        return $array;
+    }    
 
 }

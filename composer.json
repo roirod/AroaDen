@@ -9,7 +9,10 @@
         "laravel/framework": "5.2.*",
         "nesbot/carbon": "^1.21",
         "laravelcollective/html": "5.2.*",
-        "intervention/image": "^2.3"
+        "intervention/image": "^2.3",
+        "predis/predis": "^1.1",
+        "doctrine/dbal": "^2.5",
+        "proai/laravel-handlebars": "~1.5.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
