@@ -62,12 +62,6 @@
 
   </div>
 
-@endsection
-
-@section('js')
-
-  @parent
-
   @include('company.jsInclude')
-    
+
 @endsection

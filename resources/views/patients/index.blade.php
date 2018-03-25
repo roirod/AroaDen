@@ -28,7 +28,7 @@
 
         <table class="table table-hover stripe" id="PatientsTable">
           <thead>
-        	  <tr class="fonsi16 bgtra fonbla">
+        	  <tr class="fonsi15 bgtra fonbla">
         			<td class="wid50">&nbsp;</td>
         			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
         			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
@@ -37,7 +37,7 @@
         		</tr>
           </thead>
           <tfoot>
-            <tr class="fonsi16 bgtra fonbla">
+            <tr class="fonsi15 bgtra fonbla">
               <td class="wid50">&nbsp;</td>
               <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
               <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
@@ -70,7 +70,7 @@
 
       setTimeout(function(){
         $("#PatientsTable").dataTable(PatientsTable);
-      }, 300);
+      }, 180);
 
       var PatientsTable = {
         'oLanguage': {
@@ -89,12 +89,12 @@
           },
         },
         "sDom": 
-          "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+          "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
           "<'row'<'col-sm-12'r>>" +
-          "<'row'<'col-sm-6'i><'col-sm-6'p>>" +
+          "<'row'<'col-sm-7'i><'col-sm-5'p>>" +
           "<'row'<'col-sm-12't>>" +
           "<br>" +
-          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          "<'row'<'col-sm-7'i><'col-sm-5'p>>",
         "iDisplayStart": 0,
         "iDisplayLength": 25,
         "bAutoWidth": false,
@@ -128,7 +128,7 @@
             "bSortable": false,
             "bSearchable": false,
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! url("/$patients_route") !!}/'+ full[0] +'" target="_blank" class="btn btn-default" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
+              var resultado = '<a href="{!! url("/$patients_route") !!}/'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
               return resultado;
             }
           },

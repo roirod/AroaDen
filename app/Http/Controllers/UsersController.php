@@ -86,9 +86,11 @@ class UsersController extends BaseController
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
 
-        $this->setPageTitle(Lang::get('aroaden.users'));        
+        $this->setPageTitle(Lang::get('aroaden.users'));
 
-        return $this->loadView($this->views_folder.'.userEdit', $this->view_data);
+        $this->view_name = 'userEdit';
+
+        return $this->loadView();
     }
 
     public function userDeleteViev(Request $request)
@@ -99,9 +101,11 @@ class UsersController extends BaseController
         $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
 
-        $this->setPageTitle(Lang::get('aroaden.users'));   
+        $this->setPageTitle(Lang::get('aroaden.users'));
 
-        return $this->loadView($this->views_folder.'.userDeleteViev', $this->view_data);
+        $this->view_name = 'userDeleteViev';
+
+        return $this->loadView();
     }
 
     public function userUpdate(Request $request)

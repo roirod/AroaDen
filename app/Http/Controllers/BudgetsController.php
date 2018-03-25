@@ -93,10 +93,12 @@ class BudgetsController extends BaseController
 
         $this->view_data['budgets'] = $budgets;
 
-        return $this->loadView($this->views_folder.'.budgetsTable', $this->view_data);  
+        $this->view_name = 'budgetsTable';
+
+        return $this->loadView();
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, $id = false)
     {
         $this->redirectIfIdIsNull($id, $this->other_route);
         $idpat = $this->sanitizeData($id);
@@ -135,7 +137,9 @@ class BudgetsController extends BaseController
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;     
 
-        return $this->loadView($this->views_folder.'.edit', $this->view_data);
+        $this->view_name = 'edit';
+
+        return $this->loadView();
     }
 
     public function mode(Request $request)
@@ -177,11 +181,15 @@ class BudgetsController extends BaseController
 
         if ($mode == 'print') {
 
-            return $this->loadView($this->views_folder.'.print', $this->view_data);
+            $this->view_name = 'print';
+
+            return $this->loadView();
 
         } else {
   
-            return $this->loadView($this->views_folder.'.mode', $this->view_data);
+            $this->view_name = 'mode';
+
+            return $this->loadView();
             
         }      
     } 
@@ -212,7 +220,9 @@ class BudgetsController extends BaseController
 
         $this->view_data['budgets'] = $budgets;
 
-        return $this->loadView($this->views_folder.'.budgetsTable', $this->view_data);
+        $this->view_name = 'budgetsTable';
+
+        return $this->loadView();
     }
 
 }

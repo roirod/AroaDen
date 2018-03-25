@@ -143,12 +143,10 @@ class PatientsController extends BaseController implements BaseInterface
         $this->echoJsonOuptut($output);  
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, $id = false)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
-
-        $this->view_name = 'show';
 
         $this->createDir($id, true);
 
@@ -164,12 +162,11 @@ class PatientsController extends BaseController implements BaseInterface
         $treatments_sum = Treatments::SumByPatientId($id);
 	  	$birth = trim($patient->birth);
         $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
+        $age = 0;
 
 	  	if (isset($birth)) {
             $date = explode("-", $birth, 3);	  	  
             $age = Carbon::createFromDate($date[0], $date[1], $date[2])->age;
-	  	} else {
-            $age = 0;
 	  	}
 
         $this->setPageTitle($patient->surname.', '.$patient->name);
@@ -185,7 +182,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
-        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data, true);
+        return parent::show($request);
     }
 
     public function create(Request $request, $id = false)
@@ -359,8 +356,6 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $this->view_name = 'record';
-
         $record = Record::find($id);
 
         if (is_null($record)) {
@@ -381,15 +376,15 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
 
-        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data);
+        $this->view_name = 'record';
+
+        return $this->loadView();
     } 
 
     public function recordEdit(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-
-        $this->view_name = 'recordEdit';
 
         $record = Record::find($id);
         $object = $this->model::FirstById($id);
@@ -402,7 +397,9 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
 
-        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data);
+        $this->view_name = 'recordEdit';
+
+        return $this->loadView();
     }
 
     public function recordSave(Request $request, $id)
@@ -442,8 +439,6 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
 
-        $this->view_name = 'odogram';
-
         $odogram = "/$this->files_dir/$id/$this->odog_dir/$this->odogram";
 
         $object = $this->model::FirstById($id);
@@ -454,7 +449,10 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['odogram'] = $odogram;
 
-        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data, true);
+        $this->view_name = 'odogram';
+        $this->view_response = true;
+        
+        return $this->loadView();
     }
 
     public function upodog(Request $request)
@@ -530,8 +528,6 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $this->view_name = 'budgets';
-
         $budgets = Budgets::AllById($id);
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
@@ -541,7 +537,9 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['budgets'] = $budgets;
 
-        return $this->loadView($this->views_folder.".$this->view_name", $this->view_data);
+        $this->view_name = 'budgets';
+
+        return $this->loadView();
     }    
 
     public function destroy(Request $request, $id)

@@ -11,7 +11,7 @@
         </div>
 
         <div class="btn-group mr-2" role="group">
-          <select name="num_mostrado" class="form-control">
+          <select name="entries_number" class="form-control">
             <option value="100">100</option> 
             <option value="200">200</option>
             <option value="500">500</option>
@@ -32,7 +32,7 @@
 </form>  </div>  </div>
 
 <p>
-  <span class="label label-success"> {!! $num_mostrado !!} pacientes, ordenados por resto descendiente. </span>
+  <span class="label label-success"> {!! $entries_number !!} pacientes, ordenados por resto descendiente. </span>
 </p>
 
 
@@ -54,7 +54,7 @@
 	   	  	@foreach($main_loop as $pago)
 		   	  	<tr>
 		   	  	  	<td class="wid50">
-						         <a href="{!! url("/$other_route/$pago->idpat") !!}" target="_blank" class="btn btn-default" role="button">
+						         <a href="{!! url("/$other_route/$pago->idpat") !!}" target="_blank" class="btn btn-default btn-sm" role="button">
 							         <i class="fa fa-hand-pointer-o"></i>
 						         </a>
                 </td> 

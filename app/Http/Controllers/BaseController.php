@@ -151,7 +151,7 @@ class BaseController extends Controller
     protected $has_odogram = false;   
 
     /**
-     * @var bool $has_odogram  si tiene odontograma o no
+     * @var int $has_odogram  si tiene odontograma o no
      */
     protected $date_max_days = 60;
 
@@ -235,10 +235,11 @@ class BaseController extends Controller
      *  @param int $id
      *  @return string       
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $id = false)
     {
         $this->view_name = 'show';
-
+        $this->view_response = true;
+        
         return $this->loadView();
     }
 
@@ -286,11 +287,8 @@ class BaseController extends Controller
 
     /**
      *  costumize load View
-     * 
-     *  @param string $view view name
-     *  @param bool $response if true returns response
-     *  @param bool $string if true returns view html string
-     *  @return string
+     *
+     *  @return string html code
      */
     protected function loadView()
     {       

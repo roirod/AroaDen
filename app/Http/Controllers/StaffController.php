@@ -70,7 +70,7 @@ class StaffController extends BaseController implements BaseInterface
         return parent::list($request);        
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, $id = false)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
@@ -98,7 +98,7 @@ class StaffController extends BaseController implements BaseInterface
 
         $this->setPageTitle($staff->surname.', '.$staff->name);
 
-        return parent::show($request, $id);   
+        return parent::show($request);   
     }
 
     public function create(Request $request, $id = false)

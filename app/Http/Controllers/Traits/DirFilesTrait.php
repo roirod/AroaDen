@@ -34,7 +34,8 @@ trait DirFilesTrait {
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
         $this->view_name = 'file';
-
+        $this->view_response = true;
+        
         return $this->loadView();
     }
 

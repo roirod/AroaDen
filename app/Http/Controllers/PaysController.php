@@ -55,29 +55,29 @@ class PaysController extends BaseController
 
         if ($view_name == 'index' || $view_name == 'ajaxIndex') {
 
-            $num_mostrado = 100;
-            $main_loop = $this->model::GetTotalPayments($num_mostrado);
+            $entries_number = 100;
+            $main_loop = $this->model::GetTotalPayments($entries_number);
 
         } elseif ($view_name == 'list') {
 
-            $num_mostrado = $this->sanitizeData($request->input('num_mostrado'));
+            $entries_number = $this->sanitizeData($request->input('entries_number'));
 
-            if ($num_mostrado == 'todos') {
+            if ($entries_number == 'todos') {
 
-                $main_loop = $this->model::GetTotalPayments($num_mostrado, true);
-                $num_mostrado = 'Todos los ';
+                $main_loop = $this->model::GetTotalPayments($entries_number, true);
+                $entries_number = 'Todos los ';
 
             } else {
 
-                $main_loop = $this->model::GetTotalPayments($num_mostrado);
-                $num_mostrado = $this->formatNumber($num_mostrado);
+                $main_loop = $this->model::GetTotalPayments($entries_number);
+                $entries_number = $this->formatNumber($entries_number);
 
             }
 
         }
 
         $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['num_mostrado'] = $num_mostrado;
+        $this->view_data['entries_number'] = $entries_number;
 
         $this->view_name = $view_name;   
 

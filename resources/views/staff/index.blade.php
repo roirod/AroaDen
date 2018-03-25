@@ -56,7 +56,7 @@
 			@foreach ($main_loop as $obj)	
 				<tr> 
 					<td class="wid50"> 
-						<a class="btn btn-default" href="{{ url("/$main_route/$obj->idsta") }}" target="_blank" role="button">
+						<a class="btn btn-default btn-sm" href="{{ url("/$main_route/$obj->idsta") }}" target="_blank" role="button">
 							<i class="fa fa-hand-pointer-o"></i>
 						</a>
 					</td>
@@ -156,7 +156,7 @@
  							$.each(response.main_loop, function(index, object){			
 				    		html += '  <tr>';
 				    		html += '    <td class="wid50">';
-				    		html += '      <a href="/{!! $main_route !!}/'+object.idsta+'" target="_blank" class="btn btn-default" role="button">';
+				    		html += '      <a href="/{!! $main_route !!}/'+object.idsta+'" target="_blank" class="btn btn-default btn-sm" role="button">';
 				    		html += '        <i class="fa fa-hand-pointer-o"></i>';
 				    		html += '      </a>';
 				    		html += '    </td>';
