@@ -1,0 +1,10 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## [1.2.0] - 2018-03-29
+
+## Added
+
+- Many spa pages.
+- Possibility to add many dentist to one treatment.
+
