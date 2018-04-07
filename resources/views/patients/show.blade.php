@@ -43,7 +43,9 @@
   <div class="col-sm-12"> 
     <div class="row fonsi15">
 
-		@include('form_fields.show.profile_photo')
+    	<div id="profile_photo">
+    	    @include('form_fields.show.profile_photo')
+    	</div>
 
 		<div class="col-sm-10">
 

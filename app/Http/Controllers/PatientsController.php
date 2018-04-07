@@ -161,7 +161,8 @@ class PatientsController extends BaseController implements BaseInterface
         $treatments = Treatments::AllByPatientId($id);
         $treatments_sum = Treatments::SumByPatientId($id);
 	  	$birth = trim($patient->birth);
-        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
+        $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
+        $profile_photo = url($this->getProfilePhoto($profile_photo_dir));
         $age = 0;
 
 	  	if (isset($birth)) {

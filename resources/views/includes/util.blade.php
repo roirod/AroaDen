@@ -17,7 +17,7 @@ var routes = {
   settings_route: "{{ $settings_route }}"
 };
 
-$( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+$( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
@@ -75,12 +75,18 @@ var util = {
   processAjaxReturnsJson: function(obj) {
     var data = (obj.data == undefined) ? false : obj.data;
     var type = (obj.type == undefined) ? "POST" : obj.type;
+    var processData = (obj.processData == undefined) ? false : obj.processData;
+    var contentType = (obj.contentType == undefined) ? false : obj.contentType;
+    var cache = (obj.cache == undefined) ? false : obj.cache;
 
     var ajax_data = {
       type : type,
       url  : obj.url,
       dataType: "json",
-      data : data
+      data : data,
+      processData : processData,
+      contentType : contentType,
+      cache : cache      
     };
 
     return $.ajax(ajax_data);

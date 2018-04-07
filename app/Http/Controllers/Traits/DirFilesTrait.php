@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use Illuminate\Http\Request;
 use Storage;
 use Image;
+use Lang;
 
 trait DirFilesTrait {
 
@@ -56,26 +57,86 @@ trait DirFilesTrait {
 	        $img = "$this->img_folder/$this->odogram";
 	          
 	        if ( !Storage::exists($odogram) )
-	            Storage::copy($img,$odogram);
+	            Storage::copy($img, $odogram);
         }
 
-        $profile_photo = "/$dir/$this->profile_photo_name";
-        $photo = "$this->img_folder/profile_photo.jpg";
-          
-        if ( !Storage::exists($profile_photo) )
-            Storage::copy($photo, $profile_photo);   
+        $user_profile_photo = "$dir/$this->profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.jpg';
+        $default_profile_photo = "$this->img_folder/$this->profile_photo_name.jpg";
+        $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
+        $getProfilePhoto = $this->getProfilePhoto($profile_photo_dir);
 
-        $thumbdir = "$dir/$this->thumb_dir";
+        if ($getProfilePhoto === false) {
+            Storage::copy($default_profile_photo, $user_profile_photo);
+        }
 
-        if ( !Storage::exists($thumbdir) )
-            Storage::makeDirectory($thumbdir, 0770, true);
+        $thumb_dir = "$dir/$this->thumb_dir";
+
+        if ( !Storage::exists($thumb_dir) )
+            Storage::makeDirectory($thumb_dir, 0770, true);
+    }
+
+    public function uploadProfilePhoto(Request $request)
+    {
+        $id = $request->input('id');
+        $files = $request->file('files');        
+
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
+
+        $dir = storage_path("$this->files_dir/$id");
+        $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
+
+        $extension = $files->getClientOriginalExtension();
+
+        $output = [];
+
+        if ( in_array($extension, $this->img_extensions) ) {
+            $this->deleteAllFilesOnDir(storage_path($profile_photo_dir));
+
+            $save_dir = storage_path("$profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.jpg');
+
+            Image::make($files)->encode('jpg', 60)
+                ->resize(150, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($save_dir);
+
+            $output['profile_photo'] = url($this->getProfilePhoto($profile_photo_dir));
+
+        } else {
+
+            $output['error'] = true;
+            $output['msg'] = Lang::get('aroaden.img_type_not_allow');
+            
+        }
+
+        $this->echoJsonOuptut($output);
+    }
+
+    private function getProfilePhoto($dir)
+    {
+        $files = glob($dir . "/*.jpg");
+
+        if ( isset($files[0]) )
+            return $files[0];
+
+        return false;        
+    }
+
+    private function deleteAllFilesOnDir($dir)
+    {
+        $files = glob($dir.'/*');
+
+        foreach($files as $file) {
+          if(is_file($file))
+            unlink($file);
+        }
     }
 
     public function upload(Request $request)
     {
         $id = $request->input('id');
         $files = $request->file('files');        
-        $profile_photo = $request->input('profile_photo');
 
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
@@ -83,72 +144,51 @@ trait DirFilesTrait {
         $dir = storage_path("$this->files_dir/$id");
         $thumbdir = "$dir/$this->thumb_dir";
 
-        if ($profile_photo == 1) {
-            $extension = $files->getClientOriginalExtension();
+        $ficount = count($files);
+        $upcount = 0;
 
-            if ($extension == 'jpg' || $extension == 'png') {
-                Image::make($files)->encode('jpg', 60)
-                    ->resize(150, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })
-                    ->save("$dir/$this->profile_photo_name");
+        foreach ($files as $file) {                       
+            $filename = $file->getClientOriginalName();
+            $size = $file->getClientSize();
+            $extension = $file->getClientOriginalExtension();
 
-                return redirect("$this->main_route/$id");
+            $filedisk = storage_path("$this->files_dir/$id/$filename");
+
+            if ( $size > $this->file_max_size ) {
+                $mess = "El archivo: $filename - es superior a $this->file_max_size MB";
+                $request->session()->flash($this->error_message_name, $mess);
+                return redirect("$this->main_route/$id/file");
+            }                
+
+            if ( file_exists($filedisk) ) {
+                $mess = "El archivo: $filename -- existe ya en su carpeta";
+                $request->session()->flash($this->error_message_name, $mess);
+                return redirect("$this->main_route/$id/file");
 
             } else {
 
-                $request->session()->flash($this->error_message_name, 'Formato no soportado, suba una imagen jpg o png.');
-                return redirect("$this->main_route/$id/file");
+                if ( in_array($extension, $this->img_extensions) ) {
+                    $file_name = pathinfo($filename, PATHINFO_FILENAME);
+                    
+                    Image::make($file)->encode('jpg', 50)
+                        ->resize(34, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })
+                        ->save("$thumbdir/$file_name.jpg");
+                }
+
+                $file->move($dir, $filename);
+                $upcount ++;
             }
+        }            
+         
+        if($upcount == $ficount){
+          return redirect("$this->main_route/$id/file");
 
         } else {
 
-            $ficount = count($files);
-            $upcount = 0;
-
-            foreach ($files as $file) {                       
-                $filename = $file->getClientOriginalName();
-                $size = $file->getClientSize();
-                $extension = $file->getClientOriginalExtension();
-
-                $filedisk = storage_path("$this->files_dir/$id/$filename");
-
-                if ( $size > $this->file_max_size ) {
-                    $mess = "El archivo: $filename - es superior a $this->file_max_size MB";
-                    $request->session()->flash($this->error_message_name, $mess);
-                    return redirect("$this->main_route/$id/file");
-                }                
-
-                if ( file_exists($filedisk) ) {
-                    $mess = "El archivo: $filename -- existe ya en su carpeta";
-                    $request->session()->flash($this->error_message_name, $mess);
-                    return redirect("$this->main_route/$id/file");
-
-                } else {
-
-                    if ($extension == 'jpg' || $extension == 'png' || $extension == 'jpeg' || $extension == 'gif') {
-                        $file_name = pathinfo($filename, PATHINFO_FILENAME);
-                        
-                        Image::make($file)->encode('jpg', 50)
-                            ->resize(34, null, function ($constraint) {
-                                $constraint->aspectRatio();
-                            })
-                            ->save("$thumbdir/$file_name.jpg");
-                    }
-
-                    $file->move($dir, $filename);
-                    $upcount ++;
-                }
-            }            
-             
-            if($upcount == $ficount){
-              return redirect("$this->main_route/$id/file");
-
-            } else {
-
-              $request->session()->flash($this->error_message_name, 'error!!!');
-              return redirect("$this->main_route/$id/file");
-            }
+          $request->session()->flash($this->error_message_name, 'error!!!');
+          return redirect("$this->main_route/$id/file");
         }
     }
 

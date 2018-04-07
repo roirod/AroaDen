@@ -41,6 +41,16 @@ class BaseController extends Controller
     protected $view_data = [];
 
     /**
+     * @var array $view_data  data that is sent to view
+     */
+    protected $img_extensions = [
+        'jpg',
+        'jpeg',        
+        'png',
+        'gif'
+    ];
+
+    /**
      * @var string $main_route  main_route
      */
     protected $main_route = '';
@@ -98,7 +108,12 @@ class BaseController extends Controller
     /**
      * @var string $error_message_name  error_message_name
      */
-    protected $profile_photo_name = '.profile_photo.jpg';
+    protected $profile_photo_name = 'profile_photo';
+
+    /**
+     * @var string $profile_photo_dir  profile_photo_dir
+     */
+    protected $profile_photo_dir = '.profile_photo_dir';
 
     /**
      * @var string $files_dir  files_dir

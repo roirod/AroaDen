@@ -72,6 +72,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
 	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
 	Route::post($route["patients"].'/upload', 'PatientsController@upload');
+	Route::post($route["patients"].'/uploadProfilePhoto', 'PatientsController@uploadProfilePhoto');
 	Route::get($route["patients"].'/{id}/{file}/down', 'PatientsController@download');
 	Route::get($route["patients"].'/{id}/odogram', 'PatientsController@odogram');	 
 	Route::get($route["patients"].'/{id}/downodog', 'PatientsController@downodog');
@@ -81,6 +82,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::post($route["staff"].'/list', 'StaffController@list');
 	Route::get($route["staff"].'/{idper}/file', 'StaffController@file');	 
 	Route::post($route["staff"].'/upload', 'StaffController@upload');
+	Route::post($route["staff"].'/uploadProfilePhoto', 'StaffController@uploadProfilePhoto');
 	Route::get($route["staff"].'/{id}/{file}/down', 'StaffController@download');
 	Route::resource($route["staff"], 'StaffController');
 

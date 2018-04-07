@@ -22,10 +22,12 @@ return [
   'tax'   => 'IVA',
   'dni'   => 'DNI/CIF/NIF',
   'sex'   => 'Sexo',
-
-
+  'download'   => 'Descargar',
+  'upload_profile_photo'   => 'Subir foto de perfil',
   'multiply_units_price'   => 'Multiplicar cantidad por precio',
   'put_zero'   => 'Poner a cero',
+  'img_type_not_allow'   => 'Tipo de imagen no soportada, sube una jpg, gif o png',
+
 
 
   'male'   => 'hombre',
