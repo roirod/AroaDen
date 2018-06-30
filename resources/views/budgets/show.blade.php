@@ -8,9 +8,14 @@
 @include('includes.errors')
 
 <div class="row">
-  <div class="col-sm-12"> 
- 	 <div class="input-group">
-   	<span class="input-group-btn pad10"> <p> Presupuesto </p> </span>
+  <div class="col-sm-12">
+
+	<div class="col-sm-12 pad10">
+	    @include('form_fields.show.name')
+	</div>
+
+ 	<div class="input-group">
+   		<span class="input-group-btn pad10"> <p> Presupuesto </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
 	      		<a href="{!! url("/$main_route/$idpat/create") !!}" role="button" class="btn btn-sm btn-primary">

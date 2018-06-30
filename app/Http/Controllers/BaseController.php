@@ -43,6 +43,11 @@ class BaseController extends Controller
     /**
      * @var array $view_data  data that is sent to view
      */
+    protected $default_img_type = 'jpg';
+
+    /**
+     * @var array $view_data  data that is sent to view
+     */
     protected $img_extensions = [
         'jpg',
         'jpeg',        
@@ -161,12 +166,12 @@ class BaseController extends Controller
     protected $model3;    
 
     /**
-     * @var bool $has_odogram  si tiene odontograma o no
+     * @var bool $has_odontogram  si tiene odontograma o no
      */
-    protected $has_odogram = false;   
+    protected $has_odontogram = false;   
 
     /**
-     * @var int $has_odogram  si tiene odontograma o no
+     * @var int $date_max_days
      */
     protected $date_max_days = 60;
 

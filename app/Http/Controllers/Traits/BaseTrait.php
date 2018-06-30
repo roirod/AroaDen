@@ -17,7 +17,8 @@ trait BaseTrait {
      */
     protected function sanitizeData($data)
     {   
-        $data = htmlentities(trim($data), ENT_QUOTES, "UTF-8");
+        $data = trim($data);
+        $data = htmlentities($data, ENT_QUOTES, "UTF-8");
 
         return $data;
     }
@@ -109,14 +110,14 @@ trait BaseTrait {
     }
 
     /**
-     *  sanitize Data / convert to html entities
+     *  check If Paid Is Higher
      * 
      *  @param int $units
      *  @param int $price
      *  @param int $paid
      *  @return bool       
      */
-    public function checkIfPaidIsHigher($units, $price, $paid)
+    protected function checkIfPaidIsHigher($units, $price, $paid)
     {   
         $total = (int)$units * (int)$price;
 

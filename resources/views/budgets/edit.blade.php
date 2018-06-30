@@ -13,6 +13,11 @@
 <meta name="_token" content="{!! csrf_token() !!}"/>
 
 <div class="row">
+
+	<div class="col-sm-12 pad10">
+	    @include('form_fields.show.name')
+	</div>
+
   	<div class="col-sm-3"> 
 
 	 	<form class="form" action="{!! url("/$main_route/delCode") !!}" method="POST">	

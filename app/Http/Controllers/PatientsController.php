@@ -26,12 +26,12 @@ class PatientsController extends BaseController implements BaseInterface
     /**
      * @var string $odog_dir  odog_dir
      */
-    private $odog_dir = '.odogdir';
+    private $odog_dir = '.odog_dir';
 
     /**
      * @var string $odogram  odogram
      */
-    private $odogram = 'odogram.jpg';
+    private $odogram = 'odogram';
 
     /**
      * 
@@ -48,7 +48,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->form_route = 'list';
         $this->own_dir = 'patients_dir';
         $this->files_dir = "app/".$this->own_dir;
-        $this->has_odogram = true;
+        $this->has_odontogram = true;
         $this->table_name = 'patients';
 
         $fields = [
@@ -121,7 +121,7 @@ class PatientsController extends BaseController implements BaseInterface
         $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
         $countTotal = $this->model::CountAll();
         $countFiltered = $this->model::CountFindStringOnField($sWhere);
-        $countFiltered = (int)$countFiltered[0]->total;
+        $countFiltered = (int) $countFiltered[0]->total;
 
         $resultArray = [];
 
@@ -162,7 +162,7 @@ class PatientsController extends BaseController implements BaseInterface
         $treatments_sum = Treatments::SumByPatientId($id);
 	  	$birth = trim($patient->birth);
         $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
-        $profile_photo = url($this->getProfilePhoto($profile_photo_dir));
+        $profile_photo = url($this->getFirstJpgOnDir($profile_photo_dir));
         $age = 0;
 
 	  	if (isset($birth)) {
@@ -376,6 +376,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
+        $this->view_data['object'] = $object;
 
         $this->view_name = 'record';
 
@@ -397,6 +398,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
+        $this->view_data['object'] = $object;
 
         $this->view_name = 'recordEdit';
 
@@ -449,7 +451,8 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
         $this->view_data['odogram'] = $odogram;
-
+        $this->view_data['object'] = $object;
+        
         $this->view_name = 'odogram';
         $this->view_response = true;
         
@@ -458,6 +461,73 @@ class PatientsController extends BaseController implements BaseInterface
 
     public function upodog(Request $request)
     {   
+        $id = $request->input('id');
+        $file = $request->file('upodog');
+
+
+
+
+
+$image_info = getimagesize($_FILES["files"]["tmp_name"]);
+$image_width = $image_info[0];
+$image_height = $image_info[1];
+
+
+
+
+
+
+
+
+        $output = [];
+
+        try {
+             
+            $id = $this->sanitizeData($id);
+            $file_path = "$this->files_dir/$id/$this->odog_dir";
+            $file_name = $this->odogram.'_'.uniqid();
+
+            if ($file->isValid()) {
+
+                $name = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+
+                if ($extension === 'jpg') {
+
+                    $this->deleteAllFilesOnDir(storage_path($file_path));          
+
+                    $this->misc_array['file'] = $file;
+                    $this->misc_array['file_path'] = $file_path.'/'.$file_name.'.'.$img_type;
+
+                    $this->processImage();
+
+                } else {
+
+                    throw new Exception(Lang::get('aroaden.img_type_not_allow'));
+
+                }
+
+            } else {
+
+                throw new Exception(Lang::get('aroaden.file_not_valid'));
+
+            }
+
+            $output['profile_photo'] = url($this->getFirstJpgOnDir($file_path));
+
+        } catch (Exception $e) {
+         
+            $output['error'] = true;
+            $output['msg'] = $e->getMessage();
+
+        } 
+
+        $this->echoJsonOuptut($output);
+
+
+
+
+
         if ($request->file('upodog')->isValid()) {
             $id = $request->input('id');
             $upodog = $request->file('upodog');

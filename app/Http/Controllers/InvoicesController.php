@@ -51,7 +51,7 @@ class InvoicesController extends BaseController
         ];
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, $id = false)
     {     
         $this->redirectIfIdIsNull($id, $this->other_route);
         $idpat = $this->sanitizeData($id);

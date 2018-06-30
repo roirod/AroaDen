@@ -53,6 +53,7 @@ class BudgetsController extends BaseController
         $this->view_data['idnav'] = $idpat;        
         $this->view_data['name'] = $patient->name;
         $this->view_data['surname'] = $patient->surname;
+        $this->view_data['object'] = $patient;
 
         $this->setPageTitle($patient->surname.', '.$patient->name);
 
@@ -114,6 +115,7 @@ class BudgetsController extends BaseController
         $this->view_data['budgets_group'] = $budgets_group;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;        
+        $this->view_data['object'] = $patient;
 
         return parent::show($request, $id);
     }
@@ -136,7 +138,8 @@ class BudgetsController extends BaseController
         $this->view_data['uniqid'] = $uniqid;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;     
-
+        $this->view_data['object'] = $patient;
+        
         $this->view_name = 'edit';
 
         return $this->loadView();

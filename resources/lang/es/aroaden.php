@@ -27,7 +27,11 @@ return [
   'multiply_units_price'   => 'Multiplicar cantidad por precio',
   'put_zero'   => 'Poner a cero',
   'img_type_not_allow'   => 'Tipo de imagen no soportada, sube una jpg, gif o png',
-
+  'file_not_valid'   => 'Archivo no válido',
+  'exists_on_folder'   => 'existe ya en su carpeta',
+  'file_max_size_error'   => 'supera tamaño máximo permitido',
+  'no_files_for_upload'   => 'No has seleccinado ningún archivo',
+  'no_file'   => 'No existe el archivo',
 
 
   'male'   => 'hombre',
