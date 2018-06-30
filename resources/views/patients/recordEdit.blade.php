@@ -8,10 +8,17 @@
 @include('includes.errors')
 
 
+<div class="col-sm-12 pad10">
+    @include('form_fields.show.name')
+</div>
+
+
 {!! addText(@trans('aroaden.edit_record')) !!}
+
 
 <div class="row">
  <div class="col-sm-12">
+
   	<form class="form" id="form" role="form" action="{!! url("/$main_route/$id/$form_route") !!}" method="POST">
 		{!! csrf_field() !!}
 		<input type="hidden" name="_method" value="PUT">

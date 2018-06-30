@@ -21,6 +21,18 @@ $( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
+
+     console.log('------------ thrownError ------------------');
+     console.dir(thrownError);
+     console.log('------------ thrownError ------------------');
+
+
+
+     console.log('------------ settings ------------------');
+     console.dir(settings);
+     console.log('------------ settings ------------------');
+
+
   if (thrownError == "Forbidden") {
     var obj = {     
       url: lastRoute
@@ -28,11 +40,10 @@ $( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
 
     util.processAjaxReturnsHtml(obj);
 
-    util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
-    return false;
+    return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
   }
 
-  return util.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
+  return util.showPopup("{{ Lang::get('aroaden.error_message') }} - ajaxError", false);
 });
 
 $(".del_btn").click(function(event) {
