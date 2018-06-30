@@ -4,12 +4,11 @@ use Illuminate\Support\Facades\Config;
 
 $route = Config::get('aroaden.routes');
 
-Route::group(['middleware' => 'web'], function () use ($route) {
-	
-	Route::get('/', 'Auth\AuthController@getLogin');
-	Route::get('/login', 'Auth\AuthController@getLogin');
-	Route::post('/login', 'Auth\AuthController@postLogin');
-	Route::get('/logout', 'Auth\AuthController@logout');	
+Route::group(['middleware' => ['web']], function () use ($route) {
+    Route::get('/', 'Auth\LoginController@showLoginForm');
+    Route::get('/login', 'Auth\LoginController@showLoginForm');
+    Route::post('/login', 'Auth\LoginController@login');
+    Route::post('/logout', 'Auth\LoginController@logout');
 
 	Route::get('/home', 'AppointmentsController@index');
 
@@ -37,13 +36,13 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 		Route::put($route["patients"].'/{id}', 'PatientsController@update');
 		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');
 		Route::put($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
-		Route::post($route["patients"].'/filerem', 'PatientsController@filerem');
+		Route::post($route["patients"].'/fileRemove', 'PatientsController@fileRemove');
 		Route::post($route["patients"].'/upodog', 'PatientsController@upodog');
 		Route::post($route["patients"].'/resodog', 'PatientsController@resodog');
 
 		Route::get($route["staff"].'/{id}/edit', 'StaffController@edit');
 		Route::put($route["staff"].'/{id}', 'StaffController@update');
-		Route::post($route["staff"].'/filerem', 'StaffController@filerem');
+		Route::post($route["staff"].'/fileRemove', 'StaffController@fileRemove');
 
 		Route::get($route["services"].'/{id}/edit', 'ServicesController@edit');
 		Route::put($route["services"].'/{id}', 'ServicesController@update');
@@ -71,6 +70,7 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::post($route["patients"].'/list', 'PatientsController@list');
 	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
 	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
+	Route::get($route["patients"].'/{id}/filesList', 'PatientsController@filesList');
 	Route::post($route["patients"].'/upload', 'PatientsController@upload');
 	Route::post($route["patients"].'/uploadProfilePhoto', 'PatientsController@uploadProfilePhoto');
 	Route::get($route["patients"].'/{id}/{file}/down', 'PatientsController@download');
@@ -80,7 +80,8 @@ Route::group(['middleware' => 'web'], function () use ($route) {
 	Route::resource($route["patients"], 'PatientsController');
 
 	Route::post($route["staff"].'/list', 'StaffController@list');
-	Route::get($route["staff"].'/{idper}/file', 'StaffController@file');	 
+	Route::get($route["staff"].'/{id}/file', 'StaffController@file');
+	Route::get($route["staff"].'/{id}/filesList', 'StaffController@filesList');
 	Route::post($route["staff"].'/upload', 'StaffController@upload');
 	Route::post($route["staff"].'/uploadProfilePhoto', 'StaffController@uploadProfilePhoto');
 	Route::get($route["staff"].'/{id}/{file}/down', 'StaffController@download');

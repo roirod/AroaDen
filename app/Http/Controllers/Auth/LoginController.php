@@ -2,28 +2,40 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Validator;
 use Config;
-use Auth;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    /*
+    |--------------------------------------------------------------------------
+    | Login Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles authenticating users for the application and
+    | redirecting them to your home screen. The controller uses a trait
+    | to conveniently provide its functionality to your applications.
+    |
+    */
 
-    protected $username = 'username';  
-    protected $redirectTo = 'home';
-    protected $redirectAfterLogout = 'login';
+    use AuthenticatesUsers;
+
+    protected $redirectTo = '/home';
+    protected $redirectAfterLogout = '/login';
     protected $loginPath = 'login';
-    
-    
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->checkIfUserExists();
-
+        
         $this->middleware('guest', ['except' => 'logout']);
     }
 
@@ -59,8 +71,9 @@ class AuthController extends Controller
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : 'login');
     }
 
-    protected function validator(array $data) {}
-
-    public function create(array $data) {}
+    public function username()
+    {
+        return 'username';
+    }
 
 }
