@@ -85,17 +85,25 @@ img.center {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 110px !important;
-  width: 110px !important;
+  max-width: 130px !important;
+  width: 130px !important;
 }
 
+.filena { 
+  text-align: center;
+  padding: 1px; 
+  margin: 7px; 
+}
+
+.visfile { border: 1px yellow solid; min-height: 600px; }
+
 .img_container {
-  max-width: 36px !important;
-  min-width: 36px !important;  
-  width: 36px !important;
-  max-height: 36px !important;
-  min-height: 36px !important;  
-  height: 36px !important;
+  max-width: 39px !important;
+  min-width: 39px !important;  
+  width: 39px !important;
+  max-height: 39px !important;
+  min-height: 39px !important;  
+  height: 39px !important;
   margin: auto;
   width: 50%;
 }
@@ -213,9 +221,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .textshadow { 
   text-shadow:  2px 2px 0px #000;
 }
-
-.filena { padding: 1px; margin: 7px; }
-.visfile { border: 1px yellow solid; min-height: 600px; }
 
 .rowcentered {
     text-align:center;

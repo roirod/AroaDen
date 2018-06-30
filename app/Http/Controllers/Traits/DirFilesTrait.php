@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Traits;
 
 use Illuminate\Http\Request;
+use App\Models\Files;
+use Exception;
 use Storage;
 use Image;
 use Lang;
@@ -10,14 +12,13 @@ use Lang;
 trait DirFilesTrait {
 
     public function loadFileView($request, $id)
-    {   
-        $this->redirectIfIdIsNull($id, $this->main_route);
+    {
         $id = $this->sanitizeData($id);
 
-        $this->createDir($id, $this->has_odogram);
+        $this->createDir($id);
 
         $dir = "/$this->own_dir/$id";
-        $files = Storage::files($dir);
+        $files = Files::GetFilesByUserId($id);
         $url = url("$this->main_route/$id");
         $user_dir = "/$this->files_dir/$id";
         $thumb_dir = "/$this->files_dir/$id/$this->thumb_dir";
@@ -32,7 +33,9 @@ trait DirFilesTrait {
         $this->view_data['url'] = $url;
         $this->view_data['user_dir'] = $user_dir;        
         $this->view_data['thumb_dir'] = $thumb_dir;        
-        $this->view_data['profile_photo_name'] = $this->profile_photo_name;
+        $this->view_data['object'] = $object;
+        $this->view_data['img_extensions'] = $this->img_extensions;
+        $this->view_data['default_img_type'] = $this->default_img_type;
 
         $this->view_name = 'file';
         $this->view_response = true;
@@ -40,34 +43,35 @@ trait DirFilesTrait {
         return $this->loadView();
     }
 
-    public function createDir($id, $odogram = false)
+    public function createDir($id)
     {               
         $dir = "/$this->own_dir/$id";
 
         if ( !Storage::exists($dir) )
             Storage::makeDirectory($dir, 0770, true);
 
-        if ($odogram) {
-	        $odogdir = "$dir/$this->odog_dir";
+        if ($this->has_odontogram) {
+	        $odogramDir = "$dir/$this->odog_dir";
 
-	        if ( !Storage::exists($odogdir) )
-	            Storage::makeDirectory($odogdir, 0770, true);
+	        if ( !Storage::exists($odogramDir) )
+	            Storage::makeDirectory($odogramDir, 0770, true);
 
-	        $odogram = "/$dir/$this->odog_dir/$this->odogram";
-	        $img = "$this->img_folder/$this->odogram";
-	          
-	        if ( !Storage::exists($odogram) )
-	            Storage::copy($img, $odogram);
+            $odogram = "/$dir/$this->odog_dir/$this->odogram".'_'.uniqid().'.jpg';
+            $default_odogram = "$this->img_folder/$this->odogram".'.jpg';
+            $odogram_dir = "$this->files_dir/$id/$this->odog_dir";
+            $getFirstJpgOnDir = $this->getFirstJpgOnDir($odogram_dir);
+
+            if ($getFirstJpgOnDir === false)
+                Storage::copy($default_odogram, $odogram);
         }
 
         $user_profile_photo = "$dir/$this->profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.jpg';
         $default_profile_photo = "$this->img_folder/$this->profile_photo_name.jpg";
         $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
-        $getProfilePhoto = $this->getProfilePhoto($profile_photo_dir);
+        $getFirstJpgOnDir = $this->getFirstJpgOnDir($profile_photo_dir);
 
-        if ($getProfilePhoto === false) {
+        if ($getFirstJpgOnDir === false)
             Storage::copy($default_profile_photo, $user_profile_photo);
-        }
 
         $thumb_dir = "$dir/$this->thumb_dir";
 
@@ -78,47 +82,159 @@ trait DirFilesTrait {
     public function uploadProfilePhoto(Request $request)
     {
         $id = $request->input('id');
-        $files = $request->file('files');        
-
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $id = $this->sanitizeData($id);
-
-        $dir = storage_path("$this->files_dir/$id");
-        $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
-
-        $extension = $files->getClientOriginalExtension();
-
+        $file = $request->file('files');
         $output = [];
 
-        if ( in_array($extension, $this->img_extensions) ) {
-            $this->deleteAllFilesOnDir(storage_path($profile_photo_dir));
+        try {
+             
+            $this->checkIfFileIsValid($file);
 
-            $save_dir = storage_path("$profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.jpg');
+            $id = $this->sanitizeData($id);
+            $file_path = "$this->files_dir/$id/$this->profile_photo_dir";
+            $file_name = $this->profile_photo_name.'_'.uniqid();
 
-            Image::make($files)->encode('jpg', 60)
-                ->resize(150, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save($save_dir);
+            $name = $file->getClientOriginalName();
+            $size = $file->getClientSize();
+            $extension = $file->getClientOriginalExtension();
 
-            $output['profile_photo'] = url($this->getProfilePhoto($profile_photo_dir));
+            if (in_array($extension, $this->img_extensions)) {
 
-        } else {
+                $this->deleteAllFilesOnDir(storage_path($file_path));          
 
+                $this->misc_array['file'] = $file;
+                $this->misc_array['file_path'] = $file_path.'/'.$file_name.'.'.$this->default_img_type;
+
+                $this->processImage();
+
+            } else {
+
+                throw new Exception(Lang::get('aroaden.img_type_not_allow'));
+
+            }
+
+            $output['profile_photo'] = url($this->getFirstJpgOnDir($file_path));
+
+        } catch (Exception $e) {
+         
             $output['error'] = true;
-            $output['msg'] = Lang::get('aroaden.img_type_not_allow');
-            
-        }
+            $output['msg'] = $e->getMessage();
+
+        } 
 
         $this->echoJsonOuptut($output);
     }
 
-    private function getProfilePhoto($dir)
+    public function upload(Request $request)
     {
-        $files = glob($dir . "/*.jpg");
+        $id = $request->input('id');
+        $files = $request->file('files');
+        $id = $this->sanitizeData($id);
+        $dir = storage_path("$this->files_dir/$id");
 
-        if ( isset($files[0]) )
-            return $files[0];
+        foreach ($files as $file) {
+
+            try {                 
+
+                $this->checkIfFileIsValid($file);
+
+                $originalName = $file->getClientOriginalName();
+                $size = $file->getClientSize();
+                $extension = $file->getClientOriginalExtension();
+                $fsFilenameNoExt = pathinfo($originalName, PATHINFO_FILENAME). '_' .uniqid();
+                $fsFilename = $fsFilenameNoExt. '.' .$extension;
+
+                if ($extension == '')
+                    $fsFilename = pathinfo($originalName, PATHINFO_FILENAME). '_' .uniqid();
+
+                $file_exists = Files::CheckIfFileExist($id, $originalName);
+
+                if ($file_exists) {
+                    throw new Exception("El archivo: - $originalName - existe ya en su carpeta");
+                }
+
+                if ( $size > $this->file_max_size )
+                    throw new Exception("El archivo: - $originalName - es superior a $this->file_max_size MB");
+    
+                $this->misc_array['file'] = $file;
+
+                if ( in_array($extension, $this->img_extensions) ) {
+                    $thumb_dir = "$this->files_dir/$id/$this->thumb_dir";
+
+                    $this->misc_array['img_px'] = 34;
+                    $this->misc_array['img_quality'] = 40;
+                    $this->misc_array['file_path'] = $thumb_dir.'/'.$fsFilenameNoExt.'.'.$this->default_img_type;
+
+                    $this->processImage();
+                }
+
+                $this->misc_array['save_path'] = $dir;
+                $this->misc_array['fsFilename'] = $fsFilename;
+
+                $this->saveFileOnDisk();
+
+                $info_arr = [
+                    'originalName' => $originalName,
+                    'fsFilename' => $fsFilename,
+                    'fsFilenameNoExt' => $fsFilenameNoExt,
+                    'size' => $size,
+                    'extension' => $extension
+                ];
+
+                $info_arr = json_encode($info_arr);
+
+                Files::create([
+                    'iduser' => $id,
+                    'originalName' => $originalName,                    
+                    'info' => $info_arr
+                ]);
+
+            } catch (Exception $e) {
+
+                $request->session()->flash($this->error_message_name, $e->getMessage());
+                return redirect("/$this->main_route/$id/file");      
+
+            }
+        }
+
+        return redirect("/$this->main_route/$id/file");
+    }
+
+    private function saveFileOnDisk()
+    {
+        $file = $this->misc_array['file'];        
+        $save_path = $this->misc_array['save_path'];
+        $fsFilename = $this->misc_array['fsFilename'];
+
+        $file->move($save_path, $fsFilename);
+    }
+
+    private function processImage()
+    {
+        $file = $this->misc_array['file'];
+        $img_px = (empty($this->misc_array['img_px'])) ? 150 : $this->misc_array['img_px'];
+        $img_quality = (empty($this->misc_array['img_quality'])) ? 60 : $this->misc_array['img_quality'];
+        $img_type = (empty($this->misc_array['img_type'])) ? $this->default_img_type : $this->misc_array['img_type'];
+        $file_path = $this->misc_array['file_path'];
+
+        Image::make($file)->encode($img_type, $img_quality)
+            ->resize($img_px, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })
+            ->save($file_path);
+    }
+
+    private function checkIfFileIsValid($file)
+    {
+        if (!$file->isValid())
+            throw new Exception(Lang::get('aroaden.file_not_valid'));
+    }
+
+    private function getFirstJpgOnDir($dir)
+    {
+        $jpg = glob($dir . "/*.jpg");
+
+        if ( isset($jpg[0]) )
+            return $jpg[0];
 
         return false;        
     }
@@ -133,65 +249,6 @@ trait DirFilesTrait {
         }
     }
 
-    public function upload(Request $request)
-    {
-        $id = $request->input('id');
-        $files = $request->file('files');        
-
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $id = $this->sanitizeData($id);
-
-        $dir = storage_path("$this->files_dir/$id");
-        $thumbdir = "$dir/$this->thumb_dir";
-
-        $ficount = count($files);
-        $upcount = 0;
-
-        foreach ($files as $file) {                       
-            $filename = $file->getClientOriginalName();
-            $size = $file->getClientSize();
-            $extension = $file->getClientOriginalExtension();
-
-            $filedisk = storage_path("$this->files_dir/$id/$filename");
-
-            if ( $size > $this->file_max_size ) {
-                $mess = "El archivo: $filename - es superior a $this->file_max_size MB";
-                $request->session()->flash($this->error_message_name, $mess);
-                return redirect("$this->main_route/$id/file");
-            }                
-
-            if ( file_exists($filedisk) ) {
-                $mess = "El archivo: $filename -- existe ya en su carpeta";
-                $request->session()->flash($this->error_message_name, $mess);
-                return redirect("$this->main_route/$id/file");
-
-            } else {
-
-                if ( in_array($extension, $this->img_extensions) ) {
-                    $file_name = pathinfo($filename, PATHINFO_FILENAME);
-                    
-                    Image::make($file)->encode('jpg', 50)
-                        ->resize(34, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                        })
-                        ->save("$thumbdir/$file_name.jpg");
-                }
-
-                $file->move($dir, $filename);
-                $upcount ++;
-            }
-        }            
-         
-        if($upcount == $ficount){
-          return redirect("$this->main_route/$id/file");
-
-        } else {
-
-          $request->session()->flash($this->error_message_name, 'error!!!');
-          return redirect("$this->main_route/$id/file");
-        }
-    }
-
     public function download(Request $request, $id, $file)
     {   
         $id = $this->sanitizeData($id);
@@ -203,41 +260,45 @@ trait DirFilesTrait {
         return response()->download($filedown);
     } 
 
-    public function filerem(Request $request)
-    {     
-        $id = $request->input('id');
-        $file = $request->input('filerem');
+    public function fileRemove(Request $request)
+    {
+        try {
 
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $this->redirectIfIdIsNull($file, $this->main_route);
-        $id = $this->sanitizeData($id);
+            $id = $request->input('id');
+            $idfiles = $request->input('idfiles');
 
-        $dir = storage_path("$this->files_dir/$id");
+            $getFile = Files::GetFileByUserId($id, $idfiles);
 
-        $path_parts = pathinfo($file);
+            $info = json_decode($getFile->info);
 
-        if ( isset($path_parts['extension']) ) {
+            $fsFilename = $info->fsFilename;
+            $fsFilenameNoExt = $info->fsFilenameNoExt;        
+            $extension = $info->extension;
 
-            $extension = $path_parts['extension'];
-            $thumb_filename = $path_parts['filename'];
-            $thumb = "$dir/$this->thumb_dir/$thumb_filename.jpg";
+            $dir = storage_path("$this->files_dir/$id");
+            $thumb_dir = "$dir/$this->thumb_dir";
+            $thumb_file = $thumb_dir.'/'.$fsFilenameNoExt.'.'.$this->default_img_type;
 
-        } else {
+            if ( in_array($extension, $this->img_extensions) ) {
+                if ( file_exists($thumb_file) )
+                    unlink($thumb_file);
+            }
 
-            $extension = '';
+            $object = Files::find($idfiles);
+            $object->delete();
+
+            $file_path = "$dir/$fsFilename";
+
+            if ( file_exists($file_path) )
+                unlink($file_path); 
+
+        } catch (Exception $e) {
+
+            $request->session()->flash($this->error_message_name, $e->getMessage());
+            return redirect("/$this->main_route/$id/file");      
 
         }
 
-        if ($extension == 'jpg' || $extension == 'png' || $extension == 'jpeg' || $extension == 'gif') {
-            if ( file_exists($thumb) )
-                unlink($thumb);
-        }
-
-        $file_path = "$dir/$file";
-
-        if ( file_exists($file_path) )
-            unlink($file_path); 
-          
         return redirect("$this->main_route/$id/file");
     }  
 
