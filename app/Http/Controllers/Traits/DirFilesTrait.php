@@ -56,8 +56,8 @@ trait DirFilesTrait {
 	        if ( !Storage::exists($odogramDir) )
 	            Storage::makeDirectory($odogramDir, 0770, true);
 
-            $odogram = "/$dir/$this->odog_dir/$this->odogram".'_'.uniqid().'.jpg';
-            $default_odogram = "$this->img_folder/$this->odogram".'.jpg';
+            $odogram = "/$dir/$this->odog_dir/$this->odogram".'_'.uniqid().'.'.$this->default_img_type;
+            $default_odogram = "$this->img_folder/$this->odogram".'.'.$this->default_img_type;
             $odogram_dir = "$this->files_dir/$id/$this->odog_dir";
             $getFirstJpgOnDir = $this->getFirstJpgOnDir($odogram_dir);
 

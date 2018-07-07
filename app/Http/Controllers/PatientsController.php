@@ -263,7 +263,7 @@ class PatientsController extends BaseController implements BaseInterface
 
                 DB::rollBack();
 
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message') ); 
+                $request->session()->flash($this->error_message_name, $e->getMessage()); 
                 return redirect("$this->main_route/$this->view_name");
 
             }
@@ -442,7 +442,8 @@ class PatientsController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
 
-        $odogram = "/$this->files_dir/$id/$this->odog_dir/$this->odogram";
+        $dir = "$this->files_dir/$id/$this->odog_dir";
+        $odogram = url($this->getFirstJpgOnDir($dir));
 
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name); 
@@ -454,7 +455,6 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['object'] = $object;
         
         $this->view_name = 'odogram';
-        $this->view_response = true;
         
         return $this->loadView();
     }
@@ -463,57 +463,36 @@ class PatientsController extends BaseController implements BaseInterface
     {   
         $id = $request->input('id');
         $file = $request->file('upodog');
-
-
-
-
-
-$image_info = getimagesize($_FILES["files"]["tmp_name"]);
-$image_width = $image_info[0];
-$image_height = $image_info[1];
-
-
-
-
-
-
-
-
+        $id = $this->sanitizeData($id);
+        $dir = "$this->files_dir/$id/$this->odog_dir";
+        $fsDir = storage_path($dir);
         $output = [];
 
         try {
              
-            $id = $this->sanitizeData($id);
-            $file_path = "$this->files_dir/$id/$this->odog_dir";
-            $file_name = $this->odogram.'_'.uniqid();
+            $this->checkIfFileIsValid($file);
 
-            if ($file->isValid()) {
+            $extension = $file->getClientOriginalExtension();
 
-                $name = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
+            if ($extension == $this->default_img_type) {
 
-                if ($extension === 'jpg') {
+                $this->deleteAllFilesOnDir($dir);
 
-                    $this->deleteAllFilesOnDir(storage_path($file_path));          
+                $file_name = $this->odogram.'_'.uniqid().'.'.$this->default_img_type;
 
-                    $this->misc_array['file'] = $file;
-                    $this->misc_array['file_path'] = $file_path.'/'.$file_name.'.'.$img_type;
+                $this->misc_array['file'] = $file;
+                $this->misc_array['save_path'] = $fsDir;
+                $this->misc_array['fsFilename'] = $file_name;
 
-                    $this->processImage();
-
-                } else {
-
-                    throw new Exception(Lang::get('aroaden.img_type_not_allow'));
-
-                }
+                $this->saveFileOnDisk();
 
             } else {
 
-                throw new Exception(Lang::get('aroaden.file_not_valid'));
+                throw new Exception(Lang::get('aroaden.no_jpg_img'));
 
             }
 
-            $output['profile_photo'] = url($this->getFirstJpgOnDir($file_path));
+            $output['odogram'] = url($this->getFirstJpgOnDir($dir));
 
         } catch (Exception $e) {
          
@@ -523,38 +502,6 @@ $image_height = $image_info[1];
         } 
 
         $this->echoJsonOuptut($output);
-
-
-
-
-
-        if ($request->file('upodog')->isValid()) {
-            $id = $request->input('id');
-            $upodog = $request->file('upodog');
-
-            $this->redirectIfIdIsNull($id, $this->main_route);
-            $id = $this->sanitizeData($id);
-
-            $this->view_name = 'odogram';
-
-            $extension = $request->file('upodog')->getClientOriginalExtension();
-
-            if ( $extension != 'jpg' ) {
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_jpg_img'));
-                return redirect("$this->main_route/$id/$this->view_name");
-            } 
-
-            $odogram = storage_path("$this->files_dir/$id")."/$this->odog_dir/";
-
-            $upodog->move($odogram, $this->odogram);
-
-            return redirect("$this->main_route/$id/$this->view_name");
-
-        } else {
-
-            $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));
-            return redirect("$this->main_route/$id/$this->view_name");
-        }    
     }   
 
     public function downodog(Request $request, $id)
@@ -562,7 +509,11 @@ $image_height = $image_info[1];
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $odogram = storage_path("$this->files_dir/$id")."/$this->odog_dir/$this->odogram";
+        $dir = "$this->files_dir/$id/$this->odog_dir";
+        $odogram = $this->getFirstJpgOnDir($dir);
+
+
+        $odogram = storage_path($odogram);
 
         return response()->download($odogram);
     }    
@@ -570,27 +521,29 @@ $image_height = $image_info[1];
     public function resodog(Request $request)
     {  
     	$id = $request->input('id');
-        $resodog = $request->input('resodog');
-
-        $this->redirectIfIdIsNull($id, $this->main_route); 	
     	$id = $this->sanitizeData($id);
  		 
         $this->view_name = 'odogram';
 
-		if ($resodog == 1) {
+        $dir = "$this->files_dir/$id/$this->odog_dir";
 
-            $odogram = "/$this->own_dir/$id/$this->odog_dir/$this->odogram";
-            $img = "/img/$this->odogram"; 
+        try {
+             
+            $this->deleteAllFilesOnDir($dir);
 
-            Storage::delete($odogram);           
-	    	Storage::copy($img, $odogram);
-	    	  
-	    	return redirect("/$this->main_route/$id/$this->view_name");
+            $dir = "/$this->own_dir/$id";
+            $odogram = "/$dir/$this->odog_dir/$this->odogram".'_'.uniqid().'.'.$this->default_img_type;
+            $default_odogram = "$this->img_folder/$this->odogram".'.'.$this->default_img_type;
 
-		} else {
+            Storage::copy($default_odogram, $odogram);
+              
+            return redirect("/$this->main_route/$id/$this->view_name");
 
-		 	$request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));
-		 	return redirect("/$this->main_route/$id/$this->view_name");
+        } catch (Exception $e) {
+
+            $request->session()->flash($this->error_message_name, $e->getMessage());
+            return redirect("/$this->main_route/$id/$this->view_name");
+
 		}	
     }
 
