@@ -16,6 +16,7 @@
   @section('js')
 
     <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
+    <script type="text/javascript" src="{!! asset('assets/js/serializeobject.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
 
@@ -82,7 +83,12 @@
             <span class="caret"></span> &nbsp; <i class="fa fa-close"></i>
           </button> 
           <ul class="dropdown-menu" role="menu">
-  		      <li><a href="{!! url("/logout") !!}" class="btn btn-default btn-md" role="button"> {!! @trans("aroaden.logout") !!} </a></li>
+             <form action="{!! url("/logout") !!}" method="post">
+              {!! csrf_field() !!}
+              <li>
+                 <input type="submit" class="btn btn-danger btn-md" value="{!! @trans("aroaden.logout") !!}">
+              </li>
+            </form>
           </ul>
         </div>
       </div>

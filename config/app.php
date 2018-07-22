@@ -46,6 +46,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -56,8 +57,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        ProAI\Handlebars\HandlebarsServiceProvider::class,
-
+        ProAI\Handlebars\HandlebarsServiceProvider::class
     ],
 
     /*
@@ -106,7 +106,7 @@ return [
         'Form'      => Collective\Html\FormFacade::class,
 	    'Html'      => Collective\Html\HtmlFacade::class,
         'Image'     => Intervention\Image\Facades\Image::class,
-
+        'Notification' => Illuminate\Support\Facades\Notification::class
     ],
 
 ];

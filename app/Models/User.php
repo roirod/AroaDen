@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
+    use Notifiable;
+    
 	protected $table = 'users';
     protected $fillable = ['username','password','type'];
     protected $hidden = ['password'];

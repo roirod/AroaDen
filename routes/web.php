@@ -33,19 +33,19 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 	Route::group(['middleware' => ['normal']], function () use ($route) {
 		Route::get($route["patients"].'/{id}/edit', 'PatientsController@edit');
-		Route::put($route["patients"].'/{id}', 'PatientsController@update');
+		Route::post($route["patients"].'/{id}', 'PatientsController@update');
 		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');
-		Route::put($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
+		Route::post($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
 		Route::post($route["patients"].'/fileRemove', 'PatientsController@fileRemove');
 		Route::post($route["patients"].'/upodog', 'PatientsController@upodog');
 		Route::post($route["patients"].'/resodog', 'PatientsController@resodog');
 
 		Route::get($route["staff"].'/{id}/edit', 'StaffController@edit');
-		Route::put($route["staff"].'/{id}', 'StaffController@update');
+		Route::post($route["staff"].'/{id}', 'StaffController@update');
 		Route::post($route["staff"].'/fileRemove', 'StaffController@fileRemove');
 
 		Route::get($route["services"].'/{id}/edit', 'ServicesController@edit');
-		Route::put($route["services"].'/{id}', 'ServicesController@update');
+		Route::post($route["services"].'/{id}', 'ServicesController@update');
 
 		Route::get($route["appointments"].'/{id}/edit', 'AppointmentsController@edit');
 		Route::delete($route["appointments"].'/{id}', 'AppointmentsController@destroy');	
