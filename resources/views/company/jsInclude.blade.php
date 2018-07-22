@@ -18,7 +18,8 @@
 
         var obj = {
           id  : 'ajax_content',          
-          url  : $(this).attr('href') + '/ajaxIndex'
+          url  : $(this).attr('href') + '/ajaxIndex',
+          method  : 'GET'
         };
 
         return Module.processAjax(obj);
@@ -30,7 +31,8 @@
 
         var obj = {
           id  : 'ajax_content',          
-          url  : $(this).attr('href')     
+          url  : $(this).attr('href'),
+          method  : 'GET',
         };
 
         return Module.processAjax(obj);
@@ -44,7 +46,7 @@
           id  : 'ajax_content',          
           url  : $(this).attr('action'),
           data : $(this).serialize(),
-          type  : 'POST',
+          method  : 'POST',
           popup: true          
         };
 

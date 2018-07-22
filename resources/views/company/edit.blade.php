@@ -2,7 +2,6 @@
 @include('includes.messages')
 @include('includes.errors')
 
-
 {!! addText(@trans('aroaden.company_edit_data')) !!}
 
 <div class="row">
@@ -14,7 +13,6 @@
 		@foreach ($main_loop as $item)
 
 			<?php
-
 				$aroaden_item_name = "aroaden.".$item['name'];
 				$item_name = $item['name'];
 				$item_type = $item['type'];

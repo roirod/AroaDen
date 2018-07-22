@@ -61,13 +61,13 @@ var util = {
 
     var id = (obj.id == undefined) ? defaulId : obj.id;
     var data = (obj.data == undefined) ? false : obj.data;
-    var type = (obj.type == undefined) ? "GET" : obj.type;
+    var method = (obj.method == undefined) ? "GET" : obj.method;
     var popup = (obj.popup == undefined) ? false : obj.popup;
 
     _this.showLoadingGif();
 
     var ajax_data = {
-      type : type,
+      method : method,
       url  : obj.url,
       dataType: "html",
       data : data
@@ -85,13 +85,13 @@ var util = {
 
   processAjaxReturnsJson: function(obj) {
     var data = (obj.data == undefined) ? false : obj.data;
-    var type = (obj.type == undefined) ? "POST" : obj.type;
+    var method = (obj.method == undefined) ? "POST" : obj.method;
     var processData = (obj.processData == undefined) ? false : obj.processData;
     var contentType = (obj.contentType == undefined) ? false : obj.contentType;
     var cache = (obj.cache == undefined) ? false : obj.cache;
 
     var ajax_data = {
-      type : type,
+      method : method,
       url  : obj.url,
       dataType: "json",
       data : data,
@@ -99,6 +99,13 @@ var util = {
       contentType : contentType,
       cache : cache      
     };
+
+
+     console.log('------------ ajax_data ------------------');
+     console.dir(ajax_data);
+
+
+    
 
     return $.ajax(ajax_data);
   },
@@ -145,7 +152,7 @@ var util = {
     var _this = this;
 
     var ajax_data = {
-      type : "GET",
+      method : "GET",
       url  : "settings/jsonSettings",
       dataType: "json"
     };
