@@ -5,21 +5,13 @@
   <script>
     
     $(document).ready(function() {
-
-      $.ajaxSetup({
-          headers: { 
-            'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-          }
-      });
-
       $('a[href="{{ url("/$main_route") }}"]').on('click', function(evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
         var obj = {
           id  : 'ajax_content',          
-          url  : $(this).attr('href') + '/ajaxIndex',
-          method  : 'GET'
+          url  : $(this).attr('href') + '/ajaxIndex'
         };
 
         return Module.processAjax(obj);
@@ -31,8 +23,7 @@
 
         var obj = {
           id  : 'ajax_content',          
-          url  : $(this).attr('href'),
-          method  : 'GET',
+          url  : $(this).attr('href')
         };
 
         return Module.processAjax(obj);
