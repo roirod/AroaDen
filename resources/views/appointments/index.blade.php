@@ -9,13 +9,13 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
+    <form>
   		<div class="input-group">
   		 	<div class="input-group-btn pad10"> 
           <p> &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}</p>
         </div>
   		  <div class="col-sm-3"> 
-  		      <select name="select" class="form-control search_class">
+  		      <select name="select_val" class="form-control search_class">
   		        <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
   		        <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
   		        <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
@@ -27,8 +27,8 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <form class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
-      <input type="hidden" name="select" value="date_range">
+    <form>
+      <input type="hidden" name="select_val" value="date_range">
 
       <div class="input-group pad4"> 
         <span class="input-group-btn pad10"> <p>{{ @trans('aroaden.date_from') }}</p> </span>
@@ -80,7 +80,7 @@
           @foreach ($main_loop as $obj)
             <tr>
                 <td class="wid50">
-                  <a href="{{ url("/$patients_route/$obj->idpat") }}" target="_blank" class="btn btn-default" role="button">
+                  <a href="{{ url("/$patients_route/$obj->idpat") }}" target="_blank" class="btn btn-default btn-sm" role="button">
                     <i class="fa fa-hand-pointer-o"></i>
                   </a> 
                 </td>
@@ -118,65 +118,47 @@
 
   <script>
     
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+      }
+    });
+
     $(document).ready(function() {
-
-      $.ajaxSetup({
-          headers: { 
-            'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-          }
-      }); 
-
       $(".search_class").on('change', function(evt) {
-
         var $this = $(this);
 
         Module.run($this);
 
         evt.preventDefault();
         evt.stopPropagation();
-
       });
 
       var Module = (function( window, undefined ){
-
         function runApp($this) {
-        
-          var data = $this.parents('form').serialize();
+          var form = $this.parents('form');
+          var data = form.serialize();
 
-          var select = $this.parents('form').find("input[name=select]").val();
-          var date_from = $this.parents('form').find("input[name=date_from]").val();
-          var date_to = $this.parents('form').find("input[name=date_to]").val();
+          var select_val = form[0].elements.select_val.value.trim();
+          var _token = $('meta[name="_token"]').attr('content');
 
-          if (select == 'date_range') {
+          if (select_val == 'date_range') {
+            var date_from = form[0].elements.date_from.value.trim();
+            var date_to = form[0].elements.date_to.value.trim();
 
-            if (date_to !== '' || !typeof date_to == 'undefined') {
-
-              if (date_from == '' || date_to == '' || typeof date_from == 'undefined' || typeof date_to == 'undefined') {
-
-                var msg = '<p class="text-danger">{{ @trans('aroaden.date_format_fail') }}</p>';
-                $('#item_list').empty();
-                $('#item_list').hide().html(msg).fadeIn('slow');
-                return;
-
-              } else {
-
-                return sendAjaxRequest(data);               
-              }
-            }  
-
+            if (date_from != '' && date_to != '')
+              return sendAjaxRequest(data);
           } else {
-
             return sendAjaxRequest(data);
           }
-
         }
 
         function sendAjaxRequest(data) {
           util.showLoadingGif('item_list');
 
           var obj = {
-            data  : data,          
-            url  : '/{!! $main_route !!}/{!! $form_route !!}'
+            data  : data,
+            url  : '/{!! $main_route !!}/list'
           };
 
           util.processAjaxReturnsJson(obj).done(function(response) {
@@ -206,7 +188,7 @@
               $.each(response.main_loop, function(index, object){
                 html += '  <tr>';
                 html += '    <td class="wid50">';
-                html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default" role="button">';
+                html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default btn-sm" role="button">';
                 html += '        <i class="fa fa-hand-pointer-o"></i>';
                 html += '      </a>';
                 html += '    </td>';
@@ -235,7 +217,6 @@
             $("#item_list").hide().html('<h3>{{ @trans('aroaden.error_message') }}</h3>').fadeIn('slow');
             
           });
-
         }
              
         return {

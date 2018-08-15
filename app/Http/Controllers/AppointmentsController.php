@@ -55,7 +55,7 @@ class AppointmentsController extends BaseController implements BaseInterface
     
     public function list(Request $request)
     {
-        $select = $this->sanitizeData($request->input('select'));
+        $select_val = $this->sanitizeData($request->input('select_val'));
         $date_from = $this->sanitizeData($request->input('date_from'));
         $date_to = $this->sanitizeData($request->input('date_to'));
 
@@ -76,7 +76,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
         try {
 
-            if ($select == 'date_range') {
+            if ($select_val == 'date_range') {
 
                 if (!$this->validateDate($date_from) || !$this->validateDate($date_to)) {
 
@@ -108,12 +108,12 @@ class AppointmentsController extends BaseController implements BaseInterface
 
                 }
 
-                $data = $this->getItemsByDate($select, $date_from, $date_to);
+                $data = $this->getItemsByDate($select_val, $date_from, $date_to);
                 $this->echoJsonOuptut($data);
 
             }
 
-            $data = $this->getItemsByDate($select, $date_from, $date_to);
+            $data = $this->getItemsByDate($select_val);
             $this->echoJsonOuptut($data);
 
         } catch (NoAppointmentsFoundException $e) {
@@ -123,6 +123,64 @@ class AppointmentsController extends BaseController implements BaseInterface
             $this->echoJsonOuptut($data);
 
         }
+    }
+
+    private function getItemsByDate($select, $date_from = null, $date_to = null)
+    {
+        switch ($select) {
+
+            case 'today_appointments':
+                $msg = Lang::get('aroaden.today_appointments');
+                $main_loop = $this->model::AllTodayOrderByDay();
+                break;
+
+            case '1week_appointments':
+                $date_from = date('Y-m-d');
+                $date_to = date('Y-m-d', strtotime('+1 Week'));
+                $msg = Lang::get('aroaden.1week_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
+
+            case '1month_appointments':
+                $date_from = date('Y-m-d');
+                $date_to = date('Y-m-d', strtotime('+1 Month'));
+                $msg = Lang::get('aroaden.1month_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
+
+            case 'minus1week_appointments':
+                $date_to = date('Y-m-d');
+                $date_from = date('Y-m-d', strtotime('-1 Week'));
+                $msg = Lang::get('aroaden.minus1week_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
+
+            case 'minus1month_appointments':
+                $date_to = date('Y-m-d');
+                $date_from = date('Y-m-d', strtotime('-1 Month'));
+                $msg = Lang::get('aroaden.minus1month_appointments');
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                break;
+
+            case 'date_range':
+                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
+                $date_from = $this->convertYmdToDmY($date_from);
+                $date_to = $this->convertYmdToDmY($date_to);
+                $msg = Lang::get('aroaden.appointments_range', ['date_from' => $date_from, 'date_to' => $date_to]);
+                break;
+        }
+
+        $count = count($main_loop);
+
+        if ((int)$count === 0)
+            throw new NoAppointmentsFoundException(Lang::get('aroaden.no_query_results'));
+
+        $data = [];
+        $data['main_loop'] = $main_loop;
+        $data['msg'] = $msg;
+        $data['error'] = false;
+
+        return $data;
     }
 
     public function create(Request $request, $id = false)
@@ -259,64 +317,6 @@ class AppointmentsController extends BaseController implements BaseInterface
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
         return redirect("$this->other_route/$object->idpat");
-    }
-
-    private function getItemsByDate($select, $date_from, $date_to)
-    {
-        switch ($select) {
-
-            case 'today_appointments':
-                $msg = Lang::get('aroaden.today_appointments');
-                $main_loop = $this->model::AllTodayOrderByDay();
-                break;
-
-            case '1week_appointments':
-                $date_from = date('Y-m-d');
-                $date_to = date('Y-m-d', strtotime('+1 Week'));
-                $msg = Lang::get('aroaden.1week_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
-
-            case '1month_appointments':
-                $date_from = date('Y-m-d');
-                $date_to = date('Y-m-d', strtotime('+1 Month'));
-                $msg = Lang::get('aroaden.1month_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
-
-            case 'minus1week_appointments':
-                $date_to = date('Y-m-d');
-                $date_from = date('Y-m-d', strtotime('-1 Week'));
-                $msg = Lang::get('aroaden.minus1week_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
-
-            case 'minus1month_appointments':
-                $date_to = date('Y-m-d');
-                $date_from = date('Y-m-d', strtotime('-1 Month'));
-                $msg = Lang::get('aroaden.minus1month_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
-
-            case 'date_range':
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                $date_from = $this->convertYmdToDmY($date_from);
-                $date_to = $this->convertYmdToDmY($date_to);
-                $msg = Lang::get('aroaden.appointments_range', ['date_from' => $date_from, 'date_to' => $date_to]);
-                break;
-        }
-
-        $count = count($main_loop);
-
-        if ((int)$count === 0)
-            throw new NoAppointmentsFoundException(Lang::get('aroaden.no_query_results'));
-
-        $data = [];
-        $data['main_loop'] = $main_loop;
-        $data['msg'] = $msg;
-        $data['error'] = false;
-
-        return $data;
     }
 
 }
