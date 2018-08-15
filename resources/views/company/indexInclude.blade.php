@@ -8,7 +8,7 @@
           </span>
           <div class="btn-toolbar pad4" role="toolbar"> 
             <div class="btn-group">
-              <a href="{{ url("/$main_route/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
+              <a href="{{ url("/$company_route/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
                 <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
               </a>
             </div>  
@@ -28,10 +28,10 @@
           @if ($item['type'] == 'textarea')
 
              <br>
-             <div class="{{ $item['col'] }} pad10">
+             <div class="form-group {{ $item['col'] }} pad10">
                 {!! @trans($aroaden_item_name) !!}
                 <br>
-                <div class="box200 text-muted">{!! nl2br(e($obj->$item_name)) !!}</div>
+                <div class="box200">{!! nl2br(e($obj->$item_name)) !!}</div>
                 <hr>
                 <br>
              </div>

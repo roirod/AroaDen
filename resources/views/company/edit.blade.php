@@ -7,7 +7,7 @@
 <div class="row">
  <div class="col-sm-12">
   
-  	<form class="form" id="form" action="{!! url("/$main_route/$form_route") !!}" method="post">
+  	<form class="form" id="form" action="{!! url("/$company_route/$form_route") !!}" method="post">
 		{!! csrf_field() !!}
 
 		@foreach ($main_loop as $item)

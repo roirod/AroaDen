@@ -5,57 +5,41 @@
   <script>
     
     $(document).ready(function() {
-      $('a[href="{{ url("/$main_route") }}"]').on('click', function(evt) {
+      $('a[href="{{ url("/$company_route") }}"]').on('click', function(evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
-        var obj = {
-          id  : 'ajax_content',          
+        var obj = {      
           url  : $(this).attr('href') + '/ajaxIndex'
         };
 
-        return Module.processAjax(obj);
+        return util.processAjaxReturnsHtml(obj);
       }); 
 
       $("#edit_button").on('click', function(evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
-        var obj = {
-          id  : 'ajax_content',          
+        var obj = {      
           url  : $(this).attr('href')
         };
 
-        return Module.processAjax(obj);
+        return util.processAjaxReturnsHtml(obj);
       });
 
       $("form#form").on('submit', function(evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
-        var obj = {
-          id  : 'ajax_content',          
+        var obj = {  
           url  : $(this).attr('action'),
           data : $(this).serialize(),
           method  : 'POST',
           popup: true          
         };
 
-        return Module.processAjax(obj);
+        return util.processAjaxReturnsHtml(obj);
       }); 
-
-      var Module = (function( window, undefined ) {
-        function processAjax(obj) {
-          util.processAjaxReturnsHtml(obj);
-        }
-
-        return {
-          processAjax: function(obj) {
-            processAjax(obj);
-          }  
-        }
-      })(window);
-
     });
 
   </script>
