@@ -91,33 +91,20 @@ class ServicesController extends BaseController implements BaseInterface
      * 
      *  @return string JSON
      */
-    public function list(Request $request)
-    {   
-        $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
-        $data = [];
+    public function search(Request $request)
+    {
+        $string = $this->sanitizeData($request->input('string'));
+        $main_loop = $this->model::FindStringOnField($string);
+        $count = $this->model::CountFindStringOnField($string);
 
-        $count = $this->model::CountAll();
+        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['request'] = $request;
+        $this->view_data['count'] = $count;
+        $this->view_data['searched_text'] = $string;
 
-        if ((int)$count === 0) {
+        $this->view_name = 'servicesList';
 
-            $data['error'] = true;   
-            $data['msg'] = Lang::get('aroaden.no_services_on_db');
-            $this->echoJsonOuptut($data);
-
-        }
-
-        try {  
-
-            $data = $this->getQueryResult();
-
-        } catch (NoQueryResultException $e) {
-
-            $data['error'] = true;    
-            $data['msg'] = $e->getMessage();
-
-        }
-
-        $this->echoJsonOuptut($data);
+        return $this->loadView();
     }  
 
     /**
@@ -150,7 +137,6 @@ class ServicesController extends BaseController implements BaseInterface
     public function store(Request $request)
     {
         $name = ucfirst($request->input('name'));
-
         $name = $this->sanitizeData($name);
         $price = $this->sanitizeData($request->input('price'));
         $tax = $this->sanitizeData($request->input('tax'));  
@@ -245,29 +231,13 @@ class ServicesController extends BaseController implements BaseInterface
             if ( isset($exists->name) )
                 throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
 
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|max:111',
-                'price' => 'required',
-                'tax' => 'required'
-            ]);
-                
-            if ($validator->fails()) {
+            $object = $this->model::find($id);
+            $object->name = $name;
+            $object->price = $price;
+            $object->tax = $tax;            
+            $object->save();
 
-                throw new Exception($validator);
-
-            } else {        
-                
-                $object = $this->model::find($id);
-                     
-                $object->name = $name;
-                $object->price = $price;
-                $object->tax = $tax;         
-                
-                $object->save();
-
-                $data['content'] = Lang::get('aroaden.success_message');
-
-            }   
+            $data['content'] = Lang::get('aroaden.success_message');
 
         } catch (Exception $e) {
 
@@ -294,24 +264,4 @@ class ServicesController extends BaseController implements BaseInterface
         return redirect($this->main_route);
     }
 
-    /**
-     *  get query result, using ajax
-     *
-     *  @return json
-     */
-    private function getQueryResult()
-    {
-        $string = $this->misc_array['string'];
-
-        $main_loop = $this->model::FindStringOnField($string);
-        $count = $this->model::CountFindStringOnField($string);
-
-        if ((int)$count === 0)
-            throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));
-
-        $data = [];
-        $data['main_loop'] = $main_loop;      
-        $data['msg'] = $count;
-        return $data;
-    }
 }

@@ -1,8 +1,4 @@
-<script>
-
-var defaulId = 'ajax_content';
-var defaulTableId = 'item_list';
-var lastRoute = '';
+<script type="text/javascript">
 
 var routes = {
   patients_route: "{{ $patients_route }}",
@@ -17,21 +13,17 @@ var routes = {
   settings_route: "{{ $settings_route }}"
 };
 
+var defaulId = 'ajax_content';
+var defaulTableId = 'item_list';
+var lastRoute = '';
+
 $( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
-
      console.log('------------ thrownError ------------------');
      console.dir(thrownError);
      console.log('------------ thrownError ------------------');
-
-
-
-     console.log('------------ settings ------------------');
-     console.dir(settings);
-     console.log('------------ settings ------------------');
-
 
   if (thrownError == "Forbidden") {
     var obj = {     
@@ -64,7 +56,7 @@ var util = {
     var method = (obj.method == undefined) ? "GET" : obj.method;
     var popup = (obj.popup == undefined) ? false : obj.popup;
 
-    _this.showLoadingGif();
+    _this.showLoadingGif(id);
 
     var ajax_data = {
       method : method,
@@ -74,7 +66,7 @@ var util = {
     };
 
     $.ajax(ajax_data).done(function(response) {
-      _this.showContentOnPage(false, response);
+      _this.showContentOnPage(id, response);
 
       if (popup)
         _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
@@ -86,26 +78,19 @@ var util = {
   processAjaxReturnsJson: function(obj) {
     var data = (obj.data == undefined) ? false : obj.data;
     var method = (obj.method == undefined) ? "POST" : obj.method;
-    var processData = (obj.processData == undefined) ? false : obj.processData;
-    var contentType = (obj.contentType == undefined) ? false : obj.contentType;
-    var cache = (obj.cache == undefined) ? false : obj.cache;
 
     var ajax_data = {
       method : method,
       url  : obj.url,
       dataType: "json",
-      data : data,
-      processData : processData,
-      contentType : contentType,
-      cache : cache      
+      data : data
     };
 
-
-     console.log('------------ ajax_data ------------------');
-     console.dir(ajax_data);
-
-
-    
+    if (obj.uploadFiles) {
+      ajax_data.processData = false;
+      ajax_data.contentType = false;
+      ajax_data.cache = false;      
+    }
 
     return $.ajax(ajax_data);
   },
@@ -171,8 +156,10 @@ var util = {
   },
 
   showSearchText: function() {
-    var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
-    $('#searched').prepend(searched);
+    if (document.getElementById('searched')) {
+      var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
+      $('#searched').prepend(searched);
+    }
   },
 
   getTodayDate: function() {

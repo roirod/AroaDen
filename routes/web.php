@@ -35,7 +35,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::get($route["patients"].'/{id}/edit', 'PatientsController@edit');
 		Route::post($route["patients"].'/{id}', 'PatientsController@update');
 		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');
-		Route::post($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
+		Route::put($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
 		Route::post($route["patients"].'/fileRemove', 'PatientsController@fileRemove');
 		Route::post($route["patients"].'/upodog', 'PatientsController@upodog');
 		Route::post($route["patients"].'/resodog', 'PatientsController@resodog');
@@ -89,7 +89,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 	Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');
 	Route::get($route["services"].'/create', 'ServicesController@create');	
-	Route::post($route["services"].'/list', 'ServicesController@list');
+	Route::get($route["services"].'/search', 'ServicesController@search');
 	Route::resource($route["services"], 'ServicesController', ['except' => ['show']]);
 
 	Route::get($route["accounting"], 'AccountingController@index');
