@@ -5,8 +5,6 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<meta name="_token" content="{!! csrf_token() !!}"/>
-
 <div class="row"> 
   <div class="col-sm-12"> 
     <div class="input-group"> 
@@ -15,7 +13,7 @@
       </span>
       <div class="btn-toolbar pad4" role="toolbar"> 
         <div class="btn-group">
-          <a href="{{url("/$main_route/create")}}" role="button" class="btn btn-sm btn-primary">
+          <a href="{{ url("/$main_route/create") }}" role="button" class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
           </a>
         </div>  
@@ -62,12 +60,6 @@
 	<script>
 		
 		$(document).ready(function() {
-			$.ajaxSetup({
-		   	headers: { 
-		   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-		   	}
-			});
-
       setTimeout(function(){
         $("#PatientsTable").dataTable(PatientsTable);
       }, 180);
@@ -103,17 +95,20 @@
         "sPaginationType": "full_numbers",
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": "{!! $patients_route.'/'.$form_route !!}",
+        "sAjaxSource": "{!! $patients_route !!}/list",
         "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-          aoData.push( { "_token": $('meta[name=_token]').attr('content') } );
           oSettings.jqXHR = $.ajax({
             "dataType": 'json',
-            "type": "POST",
+            "method": "GET",
+            'headers': {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
             "url": sSource,
             "data": aoData,
             "success": fnCallback,
             "error": function (e) {
-               console.log(e.message);
+              console.dir(e);
+              console.log(e.message);
             }
           });
         },
@@ -128,14 +123,14 @@
             "bSortable": false,
             "bSearchable": false,
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! url("/$patients_route") !!}/'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
+              var resultado = '<a href="{!! $patients_route !!}/'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
               return resultado;
             }
           },
           {
             "aTargets": [1],
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! url("/$main_route") !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              var resultado = '<a href="{!! $patients_route !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
               return resultado;
             }
           }
