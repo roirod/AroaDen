@@ -58,9 +58,12 @@
           <hr>
         	      
           <li>
-            <form action="{!! url("/$main_route/fileRemove") !!}" method="post"> 
+            <form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">  
               {!! csrf_field() !!}
 
+              <input type="hidden" name="_method" value="DELETE">
+
+              <input type="hidden" name="fileRemove" value="1" />     
               <input type="hidden" name="idfiles" value="{!! $idfiles !!}" />
               <input type="hidden" name="id" value="{!! $id !!}" />          
 

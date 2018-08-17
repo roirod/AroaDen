@@ -6,6 +6,7 @@
       {!! csrf_field() !!}
 
        <input type="hidden" name="id" value="{!! $id !!}">
+       <input type="hidden" name="uploadProfilePhoto" value="1">
 
         <div class="btn-toolbar" role="toolbar">
            <div class="btn-group">

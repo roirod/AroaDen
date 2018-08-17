@@ -13,21 +13,18 @@
         $('input[type="file"]').val('');
 
         var obj = {
-          data  : formData,          
-          url  : '{!! "/$main_route/uploadProfilePhoto" !!}'
+          data: formData,          
+          url: '{!! "/$main_route" !!}',
+          uploadFiles: true
         };
 
         util.processAjaxReturnsJson(obj).done(function(response) {
-
           if (response.error)
             return util.showPopup(response.msg, false);
 
           $("#profile_photo div img").remove();
           $("#profile_photo div").append('<img src="' + response.profile_photo + '" class="max150 pad4" />').fadeIn(4000);
-
         });
-
       });
-
 	  });
 	</script>

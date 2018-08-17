@@ -92,6 +92,12 @@ var util = {
       ajax_data.cache = false;      
     }
 
+
+
+     console.log('------------ ajax_data ------------------');
+     console.dir(ajax_data);
+
+
     return $.ajax(ajax_data);
   },
 

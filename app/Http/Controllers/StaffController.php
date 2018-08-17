@@ -65,7 +65,7 @@ class StaffController extends BaseController implements BaseInterface
         return parent::index($request);
     }
   
-    public function list(Request $request)
+    public function search(Request $request)
     {   
         return parent::list($request);        
     }
@@ -75,7 +75,10 @@ class StaffController extends BaseController implements BaseInterface
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
           
-        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
+        $this->createDir($id);
+
+        $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
+        $profile_photo = url($this->getFirstJpgOnDir($profile_photo_dir));
 
         $staff = $this->model::FirstById($id);
 
@@ -83,8 +86,6 @@ class StaffController extends BaseController implements BaseInterface
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
             return redirect($this->main_route);
         }
-
-        $this->createDir($id);
 
         $treatments = StaffWorks::AllByStaffId($id);
             
@@ -111,6 +112,12 @@ class StaffController extends BaseController implements BaseInterface
 
     public function store(Request $request)
     {
+        if ($request->input('uploadProfilePhoto'))
+            return $this->uploadProfilePhoto($request);
+
+        if ($request->input('uploadFiles'))
+            return $this->upload($request);
+
         $dni = $this->sanitizeData($request->input('dni'));
 
         $exists = $this->model::FirstByDniDeleted($dni);
@@ -266,17 +273,6 @@ class StaffController extends BaseController implements BaseInterface
     public function file(Request $request, $id)
     {
         return $this->loadFileView($request, $id);
-    }
-     
-    public function destroy(Request $request, $id)
-    {      
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $id = $this->sanitizeData($id);    
-        
-        $this->model::destroy($id);     
-
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        return redirect($this->main_route);
     }
 
 }

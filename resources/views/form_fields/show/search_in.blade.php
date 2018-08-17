@@ -1,5 +1,5 @@
 <div class="row">
-	 <form role="form" class="form">
+	 <form class="form">
 
 		 <div class="input-group">
 
@@ -13,11 +13,11 @@
 			  </div>
 
 			  <div class="col-sm-4">
-			   		<input type="search" name="string" id="string" class="form-control string_class" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
+			   	<input type="search" name="string" id="string" class="form-control string_class" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
 			  </div>
 
 			  <div class="col-sm-3">
-		          <a href="{{ url("/$main_route") }}" role="button" class="btn btn-md btn-danger">
+		          <a href="{{ $main_route }}" role="button" class="btn btn-md btn-danger">
 		            <i class="fa fa-trash"></i> {{ Lang::get('aroaden.remove_text') }}
 		          </a>
 			  </div>

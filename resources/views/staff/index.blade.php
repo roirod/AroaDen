@@ -125,8 +125,9 @@
           var data = $("form").serialize();
 
           var obj = {
-            data  : data,          
-            url  : '/{!! $main_route !!}/{!! $form_route !!}'
+            data  : data,       
+            url  : '/{!! $main_route !!}/search',
+            method  : 'GET'
           };
 
           util.processAjaxReturnsJson(obj).done(function(response) {

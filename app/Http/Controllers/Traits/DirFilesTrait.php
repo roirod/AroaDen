@@ -65,8 +65,8 @@ trait DirFilesTrait {
                 Storage::copy($default_odogram, $odogram);
         }
 
-        $user_profile_photo = "$dir/$this->profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.jpg';
-        $default_profile_photo = "$this->img_folder/$this->profile_photo_name.jpg";
+        $user_profile_photo = "$dir/$this->profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.'.$this->default_img_type;
+        $default_profile_photo = "$this->img_folder/$this->profile_photo_name".'.'.$this->default_img_type;
         $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
         $getFirstJpgOnDir = $this->getFirstJpgOnDir($profile_photo_dir);
 
@@ -79,7 +79,7 @@ trait DirFilesTrait {
             Storage::makeDirectory($thumb_dir, 0770, true);
     }
 
-    public function uploadProfilePhoto(Request $request)
+    private function uploadProfilePhoto(Request $request)
     {
         $id = $request->input('id');
         $file = $request->file('files');
@@ -124,7 +124,7 @@ trait DirFilesTrait {
         $this->echoJsonOuptut($output);
     }
 
-    public function upload(Request $request)
+    private function upload(Request $request)
     {
         $id = $request->input('id');
         $files = $request->file('files');
@@ -144,7 +144,7 @@ trait DirFilesTrait {
                 $fsFilename = $fsFilenameNoExt. '.' .$extension;
 
                 if ($extension == '')
-                    $fsFilename = pathinfo($originalName, PATHINFO_FILENAME). '_' .uniqid();
+                    $fsFilename = $fsFilenameNoExt;
 
                 $file_exists = Files::CheckIfFileExist($id, $originalName);
 
@@ -258,9 +258,24 @@ trait DirFilesTrait {
         $filedown = storage_path("$this->files_dir/$id").'/'.$file;
 
         return response()->download($filedown);
-    } 
+    }
 
-    public function fileRemove(Request $request)
+    public function destroy(Request $request, $id)
+    {               
+        $this->redirectIfIdIsNull($id, $this->main_route); 
+        $id = $this->sanitizeData($id);
+        
+        if ($request->input('fileRemove'))
+            return $this->fileRemove($request);
+
+        $this->model::destroy($id);
+      
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+        
+        return redirect($this->main_route);
+    }
+
+    private function fileRemove(Request $request)
     {
         try {
 

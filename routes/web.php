@@ -79,7 +79,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	Route::get($route["patients"].'/{id}/budgets', 'PatientsController@budgets');
 	Route::resource($route["patients"], 'PatientsController');
 
-	Route::post($route["staff"].'/list', 'StaffController@list');
+	Route::get($route["staff"].'/search', 'StaffController@search');
 	Route::get($route["staff"].'/{id}/file', 'StaffController@file');
 	Route::get($route["staff"].'/{id}/filesList', 'StaffController@filesList');
 	Route::post($route["staff"].'/upload', 'StaffController@upload');

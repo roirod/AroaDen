@@ -3,10 +3,11 @@
   <div class="col-sm-12"> 
     <div class="input-group">
 
-      <form action="{!! "/$main_route/upload" !!}" method="post" enctype="multipart/form-data">
+      <form action="{!! "/$main_route" !!}" method="post" enctype="multipart/form-data">
         {!! csrf_field() !!}
 
         <input type="hidden" name="id" value="{!! $id !!}">
+        <input type="hidden" name="uploadFiles" value="1">
 
         <div class="btn-toolbar pad4" role="toolbar">
            <div class="btn-group">

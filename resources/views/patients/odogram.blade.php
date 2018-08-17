@@ -23,19 +23,20 @@
   			<div class="btn-group">
   				<a href="{!! url("/$main_route/$id/downodog") !!}" class="btn btn-sm btn-primary" role="button"> 
          		<i class="fa fa-download" aria-hidden="true"></i> Descargar
-            </a>
+          </a>
          </div>
          <div class="btn-group">
-         	<form role="form" class="form" action="{!! url("/$main_route/resodog") !!}" method="post">
+         	<form class="form" action="{!! url("/$main_route") !!}" method="post">
               {!! csrf_field() !!}
 
            		<input type="hidden" name="id" value="{!! $id !!}">
+              <input type="hidden" name="resetOdontogram" value="1">
 
            		<button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
            			Borrar Imagen <span class="caret"></span>
            		</button> 
            			<ul class="dropdown-menu" role="menu">
-           				<li><button name="nueva" value="nueva" type="submit"> Borrar</button></li>
+           				<li><button class="btn btn-danger btn-sm" type="submit"> Borrar</button></li>
            			</ul>
          	</form>
        	</div>
@@ -46,17 +47,18 @@
    <div class="col-sm-12"> 
     <div class="input-group">
 
-      <form id="upodog" enctype="multipart/form-data">
+      <form id="uploadOdontogram" enctype="multipart/form-data">
           {!! csrf_field() !!}
 
-           <input type="hidden" name="id" value="{!!$id!!}">
+          <input type="hidden" name="id" value="{!!$id!!}">
+          <input type="hidden" name="uploadOdontogram" value="1">
 
             <div class="btn-toolbar pad4" role="toolbar">
                <div class="btn-group">
                   <span class="input-group-btn pad10">  <p> Subir </p> </span>
                </div>
                <div class="btn-group">
-                  <input type="file" class="btn btn-default btn-sm" name="upodog"/>
+                  <input type="file" class="btn btn-default btn-sm" name="uploadOdontogram"/>
                </div>
               <div class="btn-group pad4"> 
                 <button type="submit" class="btn btn-info btn-sm">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
@@ -71,7 +73,7 @@
 
   <script>
     $(document).ready(function(){
-      $("#upodog").on('submit', function(event){
+      $("#uploadOdontogram").on('submit', function(event){
         event.stopPropagation();
         event.preventDefault();
 
@@ -80,9 +82,10 @@
         $('input[type="file"]').val('');
     
         var obj = {
-          data  : formData,          
-          url  : '{!! "/$main_route/upodog" !!}'
-        };
+          data: formData,          
+          url: '{!! "/$main_route" !!}',
+          uploadFiles: true
+        };       
 
         util.processAjaxReturnsJson(obj).done(function(response) {
           if (response.error)

@@ -71,9 +71,6 @@ class PatientsController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {  	
-        $main_loop = $this->model::AllOrderBySurname($this->num_paginate);
-        $count = $this->model::CountAll();
-
         $this->view_data['request'] = $request;
 
         $this->setPageTitle(Lang::get('aroaden.patients'));
@@ -90,7 +87,7 @@ class PatientsController extends BaseController implements BaseInterface
             3 => 'tel1',
             4 => 'city',
         ];
-  
+
         $iDisplayLength = $request->input('iDisplayLength');
         $iDisplayStart = $request->input('iDisplayStart');
 
@@ -121,7 +118,7 @@ class PatientsController extends BaseController implements BaseInterface
         $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
         $countTotal = $this->model::CountAll();
         $countFiltered = $this->model::CountFindStringOnField($sWhere);
-        $countFiltered = (int) $countFiltered[0]->total;
+        $countFiltered = (int)$countFiltered[0]->total;
 
         $resultArray = [];
 
@@ -197,9 +194,20 @@ class PatientsController extends BaseController implements BaseInterface
     }
 
     public function store(Request $request)
-    {        
-        $dni = $this->sanitizeData($request->input('dni'));
+    {
+        if ($request->input('uploadProfilePhoto'))
+            return $this->uploadProfilePhoto($request);
 
+        if ($request->input('uploadFiles'))
+            return $this->upload($request);
+
+        if ($request->input('uploadOdontogram'))
+            return $this->uploadOdontogram($request);
+
+        if ($request->input('resetOdontogram'))
+            return $this->resetOdontogram($request);
+
+        $dni = $this->sanitizeData($request->input('dni'));
         $this->view_name = 'create';
 
         $exists = $this->model::FirstByDniDeleted($dni);
@@ -459,10 +467,10 @@ class PatientsController extends BaseController implements BaseInterface
         return $this->loadView();
     }
 
-    public function upodog(Request $request)
+    private function uploadOdontogram(Request $request)
     {   
         $id = $request->input('id');
-        $file = $request->file('upodog');
+        $file = $request->file('uploadOdontogram');
         $id = $this->sanitizeData($id);
         $dir = "$this->files_dir/$id/$this->odog_dir";
         $fsDir = storage_path($dir);
@@ -518,7 +526,7 @@ class PatientsController extends BaseController implements BaseInterface
         return response()->download($odogram);
     }    
     
-    public function resodog(Request $request)
+    private function resetOdontogram(Request $request)
     {  
     	$id = $request->input('id');
     	$id = $this->sanitizeData($id);
@@ -566,15 +574,4 @@ class PatientsController extends BaseController implements BaseInterface
         return $this->loadView();
     }    
 
-    public function destroy(Request $request, $id)
-    {             	
-        $this->redirectIfIdIsNull($id, $this->main_route); 
-        $id = $this->sanitizeData($id);
-        
-        $this->model::destroy($id);
-      
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
-        return redirect($this->main_route);
-    }
 }
