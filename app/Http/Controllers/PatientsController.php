@@ -364,7 +364,8 @@ class PatientsController extends BaseController implements BaseInterface
     {  
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-
+        $this->view_name = 'record';
+        
         $record = Record::find($id);
 
         if (is_null($record)) {
@@ -385,8 +386,6 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
         $this->view_data['object'] = $object;
-
-        $this->view_name = 'record';
 
         return $this->loadView();
     } 
