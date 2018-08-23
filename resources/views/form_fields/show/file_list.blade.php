@@ -50,7 +50,7 @@
   	    </button> 
   	    <ul class="dropdown-menu" role="menu">
           <li>
-            <a href="{!! url("$main_route/$id").'/'.$fsFilename.'/down' !!}"> 
+            <a href="{!! url("$main_route/$id").'/'.$idfiles.'/download' !!}"> 
               <i class="fa fa-download" aria-hidden="true"></i> {{ @trans('aroaden.download') }}
             </a>
           </li>
@@ -58,13 +58,10 @@
           <hr>
         	      
           <li>
-            <form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">  
+            <form action="{!! url("$main_route/deleteFile/$idfiles") !!}" method="POST">  
               {!! csrf_field() !!}
 
               <input type="hidden" name="_method" value="DELETE">
-
-              <input type="hidden" name="fileRemove" value="1" />     
-              <input type="hidden" name="idfiles" value="{!! $idfiles !!}" />
               <input type="hidden" name="id" value="{!! $id !!}" />          
 
       	      <button type="submit" class="btn btn-sm btn-danger mar10"> 

@@ -14,7 +14,7 @@
 
         var obj = {
           data: formData,          
-          url: '{!! "/$main_route" !!}',
+          url: '{!! url("/$main_route/uploadProfilePhoto/$id") !!}',
           uploadFiles: true
         };
 

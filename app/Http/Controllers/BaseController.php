@@ -76,11 +76,6 @@ class BaseController extends Controller
     protected $view_name = '';
 
     /**
-     * @var bool $view_name  view response
-     */
-    protected $view_response = false;
-
-    /**
      * @var array $form_fields  input fields showed in form
      */
     protected $form_fields = [];
@@ -258,7 +253,6 @@ class BaseController extends Controller
     public function show(Request $request, $id = false)
     {
         $this->view_name = 'show';
-        $this->view_response = true;
         
         return $this->loadView();
     }
@@ -315,14 +309,6 @@ class BaseController extends Controller
         $this->passVarsToViews();
 
         $view = $this->views_folder.".".$this->view_name;
-
-        if ($this->view_response) {
-            return response()->view($view, $this->view_data)
-               ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
-               ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
-               ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
-               ->header('Pragma', 'no-cache');
-        }
 
         return view($view, $this->view_data);
     }

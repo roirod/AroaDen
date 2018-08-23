@@ -24,14 +24,14 @@ class PatientsController extends BaseController implements BaseInterface
     use DirFilesTrait;
 
     /**
-     * @var string $odog_dir  odog_dir
+     * @var string $odontogram_dir  odontogram_dir
      */
-    private $odog_dir = '.odog_dir';
+    private $odontogram_dir = '.odontogram_dir';
 
     /**
-     * @var string $odogram  odogram
+     * @var string $odontogram  odontogram
      */
-    private $odogram = 'odogram';
+    private $odontogram = 'odontogram';
 
     /**
      * 
@@ -195,18 +195,6 @@ class PatientsController extends BaseController implements BaseInterface
 
     public function store(Request $request)
     {
-        if ($request->input('uploadProfilePhoto'))
-            return $this->uploadProfilePhoto($request);
-
-        if ($request->input('uploadFiles'))
-            return $this->upload($request);
-
-        if ($request->input('uploadOdontogram'))
-            return $this->uploadOdontogram($request);
-
-        if ($request->input('resetOdontogram'))
-            return $this->resetOdontogram($request);
-
         $dni = $this->sanitizeData($request->input('dni'));
         $this->view_name = 'create';
 
@@ -379,7 +367,7 @@ class PatientsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->form_route = 'recordEdit';
+        $this->form_route = 'editRecord';
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
@@ -390,7 +378,7 @@ class PatientsController extends BaseController implements BaseInterface
         return $this->loadView();
     } 
 
-    public function recordEdit(Request $request, $id)
+    public function editRecord(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
@@ -399,7 +387,7 @@ class PatientsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->form_route = 'recordSave';
+        $this->form_route = 'saveRecord';
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
@@ -407,12 +395,12 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['record'] = $record;
         $this->view_data['object'] = $object;
 
-        $this->view_name = 'recordEdit';
+        $this->view_name = 'editRecord';
 
         return $this->loadView();
     }
 
-    public function recordSave(Request $request, $id)
+    public function saveRecord(Request $request, $id)
     {   
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);     
@@ -444,13 +432,13 @@ class PatientsController extends BaseController implements BaseInterface
         return $this->loadFileView($request, $id);
     }
    
-    public function odogram(Request $request, $id)
+    public function odontogram(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
 
-        $dir = "$this->files_dir/$id/$this->odog_dir";
-        $odogram = url($this->getFirstJpgOnDir($dir));
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $odontogram = url($this->getFirstJpgOnDir($dir));
 
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name); 
@@ -458,20 +446,19 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
-        $this->view_data['odogram'] = $odogram;
+        $this->view_data['odontogram'] = $odontogram;
         $this->view_data['object'] = $object;
         
-        $this->view_name = 'odogram';
+        $this->view_name = 'odontogram';
         
         return $this->loadView();
     }
 
-    private function uploadOdontogram(Request $request)
+    public function uploadOdontogram(Request $request, $id)
     {   
-        $id = $request->input('id');
-        $file = $request->file('uploadOdontogram');
+        $file = $request->file('file');
         $id = $this->sanitizeData($id);
-        $dir = "$this->files_dir/$id/$this->odog_dir";
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
         $fsDir = storage_path($dir);
         $output = [];
 
@@ -485,7 +472,7 @@ class PatientsController extends BaseController implements BaseInterface
 
                 $this->deleteAllFilesOnDir($dir);
 
-                $file_name = $this->odogram.'_'.uniqid().'.'.$this->default_img_type;
+                $file_name = $this->odontogram.'_'.uniqid().'.'.$this->default_img_type;
 
                 $this->misc_array['file'] = $file;
                 $this->misc_array['save_path'] = $fsDir;
@@ -499,7 +486,7 @@ class PatientsController extends BaseController implements BaseInterface
 
             }
 
-            $output['odogram'] = url($this->getFirstJpgOnDir($dir));
+            $output['odontogram'] = url($this->getFirstJpgOnDir($dir));
 
         } catch (Exception $e) {
          
@@ -511,38 +498,33 @@ class PatientsController extends BaseController implements BaseInterface
         $this->echoJsonOuptut($output);
     }   
 
-    public function downodog(Request $request, $id)
+    public function downloadOdontogram(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $dir = "$this->files_dir/$id/$this->odog_dir";
-        $odogram = $this->getFirstJpgOnDir($dir);
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $odontogram = $this->getFirstJpgOnDir($dir);
+        $odontogram = storage_path($odontogram);
 
-
-        $odogram = storage_path($odogram);
-
-        return response()->download($odogram);
+        return response()->download($odontogram);
     }    
     
-    private function resetOdontogram(Request $request)
+    public function resetOdontogram(Request $request, $id)
     {  
-    	$id = $request->input('id');
     	$id = $this->sanitizeData($id);
- 		 
-        $this->view_name = 'odogram';
-
-        $dir = "$this->files_dir/$id/$this->odog_dir";
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $this->view_name = 'odontogram';
 
         try {
              
             $this->deleteAllFilesOnDir($dir);
 
             $dir = "/$this->own_dir/$id";
-            $odogram = "/$dir/$this->odog_dir/$this->odogram".'_'.uniqid().'.'.$this->default_img_type;
-            $default_odogram = "$this->img_folder/$this->odogram".'.'.$this->default_img_type;
+            $odontogram = "/$dir/$this->odontogram_dir/$this->odontogram".'_'.uniqid().'.'.$this->default_img_type;
+            $default_odontogram = "$this->img_folder/$this->odontogram".'.'.$this->default_img_type;
 
-            Storage::copy($default_odogram, $odogram);
+            Storage::copy($default_odontogram, $odontogram);
               
             return redirect("/$this->main_route/$id/$this->view_name");
 

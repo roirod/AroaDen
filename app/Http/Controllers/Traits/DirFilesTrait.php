@@ -38,7 +38,6 @@ trait DirFilesTrait {
         $this->view_data['default_img_type'] = $this->default_img_type;
 
         $this->view_name = 'file';
-        $this->view_response = true;
         
         return $this->loadView();
     }
@@ -51,18 +50,18 @@ trait DirFilesTrait {
             Storage::makeDirectory($dir, 0770, true);
 
         if ($this->has_odontogram) {
-	        $odogramDir = "$dir/$this->odog_dir";
+	        $odontogram_dir = "$dir/$this->odontogram_dir";
 
-	        if ( !Storage::exists($odogramDir) )
-	            Storage::makeDirectory($odogramDir, 0770, true);
+	        if ( !Storage::exists($odontogram_dir) )
+	            Storage::makeDirectory($odontogram_dir, 0770, true);
 
-            $odogram = "/$dir/$this->odog_dir/$this->odogram".'_'.uniqid().'.'.$this->default_img_type;
-            $default_odogram = "$this->img_folder/$this->odogram".'.'.$this->default_img_type;
-            $odogram_dir = "$this->files_dir/$id/$this->odog_dir";
-            $getFirstJpgOnDir = $this->getFirstJpgOnDir($odogram_dir);
+            $odontogram = "/$dir/$this->odontogram_dir/$this->odontogram".'_'.uniqid().'.'.$this->default_img_type;
+            $default_odontogram = "$this->img_folder/$this->odontogram".'.'.$this->default_img_type;
+            $odontogram_dir = "$this->files_dir/$id/$this->odontogram_dir";
+            $getFirstJpgOnDir = $this->getFirstJpgOnDir($odontogram_dir);
 
             if ($getFirstJpgOnDir === false)
-                Storage::copy($default_odogram, $odogram);
+                Storage::copy($default_odontogram, $odontogram);
         }
 
         $user_profile_photo = "$dir/$this->profile_photo_dir/$this->profile_photo_name".'_'.uniqid().'.'.$this->default_img_type;
@@ -79,7 +78,7 @@ trait DirFilesTrait {
             Storage::makeDirectory($thumb_dir, 0770, true);
     }
 
-    private function uploadProfilePhoto(Request $request)
+    public function uploadProfilePhoto(Request $request, $id)
     {
         $id = $request->input('id');
         $file = $request->file('files');
@@ -124,9 +123,8 @@ trait DirFilesTrait {
         $this->echoJsonOuptut($output);
     }
 
-    private function upload(Request $request)
+    public function uploadFiles(Request $request, $id)
     {
-        $id = $request->input('id');
         $files = $request->file('files');
         $id = $this->sanitizeData($id);
         $dir = storage_path("$this->files_dir/$id");
@@ -249,13 +247,15 @@ trait DirFilesTrait {
         }
     }
 
-    public function download(Request $request, $id, $file)
+    public function download(Request $request, $id, $idfiles)
     {   
         $id = $this->sanitizeData($id);
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $this->redirectIfIdIsNull($file, $this->main_route);
-        
-        $filedown = storage_path("$this->files_dir/$id").'/'.$file;
+        $idfiles = $this->sanitizeData($idfiles);
+        $getFile = Files::GetFileByUserId($id, $idfiles);
+        $info = json_decode($getFile->info);
+        $fsFilename = $info->fsFilename;
+
+        $filedown = storage_path("$this->files_dir/$id").'/'.$fsFilename;
 
         return response()->download($filedown);
     }
@@ -265,9 +265,6 @@ trait DirFilesTrait {
         $this->redirectIfIdIsNull($id, $this->main_route); 
         $id = $this->sanitizeData($id);
         
-        if ($request->input('fileRemove'))
-            return $this->fileRemove($request);
-
         $this->model::destroy($id);
       
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
@@ -275,15 +272,15 @@ trait DirFilesTrait {
         return redirect($this->main_route);
     }
 
-    private function fileRemove(Request $request)
+    public function deleteFile(Request $request, $idfiles)
     {
         try {
 
             $id = $request->input('id');
-            $idfiles = $request->input('idfiles');
+            $id = $this->sanitizeData($id);
+            $idfiles = $this->sanitizeData($idfiles);
 
             $getFile = Files::GetFileByUserId($id, $idfiles);
-
             $info = json_decode($getFile->info);
 
             $fsFilename = $info->fsFilename;

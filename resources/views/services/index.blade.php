@@ -2,15 +2,11 @@
 
 @section('content')
 
-  <div id="ajax_content">
+	<div id="ajax_content">
 
-    @include('includes.messages')
-    @include('includes.errors')
+		@include('services.ajaxIndex')
 
-    @include('services.indexInclude')
-
-  	@include('services.jsInclude')
-
-  </div>
+	</div>
 
 @endsection
+

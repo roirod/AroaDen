@@ -112,12 +112,6 @@ class StaffController extends BaseController implements BaseInterface
 
     public function store(Request $request)
     {
-        if ($request->input('uploadProfilePhoto'))
-            return $this->uploadProfilePhoto($request);
-
-        if ($request->input('uploadFiles'))
-            return $this->upload($request);
-
         $dni = $this->sanitizeData($request->input('dni'));
 
         $exists = $this->model::FirstByDniDeleted($dni);

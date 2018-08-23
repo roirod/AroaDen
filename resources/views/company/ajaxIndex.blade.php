@@ -2,5 +2,3 @@
     @include('includes.errors')
 
     @include('company.indexInclude')
-
-    @include('company.jsInclude')

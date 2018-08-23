@@ -11,6 +11,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
     Route::post('/logout', 'Auth\LoginController@logout');
 
 	Route::get('/home', 'AppointmentsController@index');
+	Route::get('/index', 'AppointmentsController@index');	
 
 	Route::group(['middleware' => ['admin']], function () use ($route) {
 		Route::get($route["company"].'/editData', 'CompanyController@editData');
@@ -34,15 +35,16 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	Route::group(['middleware' => ['normal']], function () use ($route) {
 		Route::get($route["patients"].'/{id}/edit', 'PatientsController@edit');
 		Route::post($route["patients"].'/{id}', 'PatientsController@update');
-		Route::get($route["patients"].'/{id}/recordEdit', 'PatientsController@recordEdit');
-		Route::put($route["patients"].'/{id}/recordSave', 'PatientsController@recordSave');
-		Route::post($route["patients"].'/fileRemove', 'PatientsController@fileRemove');
-		Route::post($route["patients"].'/upodog', 'PatientsController@upodog');
-		Route::post($route["patients"].'/resodog', 'PatientsController@resodog');
+		Route::get($route["patients"].'/{id}/editRecord', 'PatientsController@editRecord');
+		Route::put($route["patients"].'/{id}/saveRecord', 'PatientsController@saveRecord');
+		Route::delete($route["patients"].'/deleteFile/{idfiles}', 'PatientsController@deleteFile');
+
+		Route::post($route["patients"].'/uploadOdontogram/{id}', 'PatientsController@uploadOdontogram');
+		Route::put($route["patients"].'/resetOdontogram/{id}', 'PatientsController@resetOdontogram');
 
 		Route::get($route["staff"].'/{id}/edit', 'StaffController@edit');
 		Route::post($route["staff"].'/{id}', 'StaffController@update');
-		Route::post($route["staff"].'/fileRemove', 'StaffController@fileRemove');
+		Route::delete($route["staff"].'/{idfiles}/deleteFile', 'StaffController@deleteFile');
 
 		Route::get($route["services"].'/{id}/edit', 'ServicesController@edit');
 		Route::post($route["services"].'/{id}', 'ServicesController@update');
@@ -71,20 +73,19 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	Route::get($route["patients"].'/{id}/record', 'PatientsController@record');
 	Route::get($route["patients"].'/{id}/file', 'PatientsController@file');
 	Route::get($route["patients"].'/{id}/filesList', 'PatientsController@filesList');
-	Route::post($route["patients"].'/upload', 'PatientsController@upload');
-	Route::post($route["patients"].'/uploadProfilePhoto', 'PatientsController@uploadProfilePhoto');
-	Route::get($route["patients"].'/{id}/{file}/down', 'PatientsController@download');
-	Route::get($route["patients"].'/{id}/odogram', 'PatientsController@odogram');	 
-	Route::get($route["patients"].'/{id}/downodog', 'PatientsController@downodog');
-	Route::get($route["patients"].'/{id}/budgets', 'PatientsController@budgets');
+	Route::post($route["patients"].'/uploadFiles/{id}', 'PatientsController@uploadFiles');
+	Route::post($route["patients"].'/uploadProfilePhoto/{id}', 'PatientsController@uploadProfilePhoto');
+	Route::get($route["patients"].'/{id}/{idfiles}/download', 'PatientsController@download');
+	Route::get($route["patients"].'/{id}/odontogram', 'PatientsController@odontogram');	 
+	Route::get($route["patients"].'/{id}/downloadOdontogram', 'PatientsController@downloadOdontogram');
 	Route::resource($route["patients"], 'PatientsController');
 
 	Route::get($route["staff"].'/search', 'StaffController@search');
 	Route::get($route["staff"].'/{id}/file', 'StaffController@file');
 	Route::get($route["staff"].'/{id}/filesList', 'StaffController@filesList');
-	Route::post($route["staff"].'/upload', 'StaffController@upload');
-	Route::post($route["staff"].'/uploadProfilePhoto', 'StaffController@uploadProfilePhoto');
-	Route::get($route["staff"].'/{id}/{file}/down', 'StaffController@download');
+	Route::post($route["staff"].'/uploadFiles/{id}', 'StaffController@uploadFiles');
+	Route::get($route["staff"].'/{id}/{file}/download', 'StaffController@download');	
+	Route::post($route["staff"].'/uploadProfilePhoto/{id}', 'StaffController@uploadProfilePhoto');
 	Route::resource($route["staff"], 'StaffController');
 
 	Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');

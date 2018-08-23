@@ -1,7 +1,3 @@
-
-@include('includes.messages')
-@include('includes.errors')
-
 {!! addText(@trans('aroaden.company_edit_data')) !!}
 
 <div class="row">
@@ -48,4 +44,24 @@
 
 </div> </div>
 
-@include('company.jsInclude')
+<script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
+
+<script type="text/javascript">    
+$(document).ready(function() {
+  $("form#form").on('submit', function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    var obj = {  
+      url  : $(this).attr('action'),
+      data : $(this).serialize(),
+      method  : 'POST',
+      popup: true          
+    };
+
+    return util.processAjaxReturnsHtml(obj);
+  }); 
+});
+</script>

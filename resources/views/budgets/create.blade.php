@@ -93,11 +93,11 @@
 
     	<table class="table">
 		     <tr class="fonsi15 success">
-				  <td class="wid140">Tratamiento</td>
-				  <td class="wid95 textcent">Precio</td>
-				  <td class="wid95 textcent">Cantidad</td>
-				  <td class="wid50"></td>
-				  <td class="wid230"></td>
+				<td class="wid140">Tratamiento</td>
+				<td class="wid95 textcent">Cantidad</td>
+				<td class="wid95 textcent">Precio</td>				  
+				<td class="wid50"></td>
+				<td class="wid230"></td>
 		     </tr>
     	</table>
 

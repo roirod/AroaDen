@@ -16,9 +16,10 @@
   @section('js')
 
     <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
-    <script type="text/javascript" src="{!! asset('assets/js/serializeobject.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
+
+    @include('includes.util')
 
   @show
 
@@ -106,8 +107,6 @@
  </div>
   
   @yield('footer_script')
-
-  @include('includes.util')
      
 </body>
 </html>

@@ -38,14 +38,6 @@ $( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
   return util.showPopup("{{ Lang::get('aroaden.error_message') }} - ajaxError", false);
 });
 
-$(".del_btn").click(function(event) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    var $this = $(this);
-    util.confirmAlert($this);
-});
-
 var util = {
 
   processAjaxReturnsHtml: function(obj) {
@@ -92,11 +84,8 @@ var util = {
       ajax_data.cache = false;      
     }
 
-
-
      console.log('------------ ajax_data ------------------');
      console.dir(ajax_data);
-
 
     return $.ajax(ajax_data);
   },
@@ -193,7 +182,7 @@ var util = {
     return total;
   },
 
-  confirmAlert: function($this) {
+  confirmDeleteAlert: function($this) {
     swal({
       title: '{{ Lang::get('aroaden.are_you_sure') }}',
       type: 'warning',
@@ -207,7 +196,8 @@ var util = {
       cancelButtonClass: 'cancel-class',
     }).then(
       function(isConfirm) {
-        if (isConfirm) $this.closest('form').submit();
+        if (isConfirm) 
+          $this.closest('form').submit();
       }
     );
   },
