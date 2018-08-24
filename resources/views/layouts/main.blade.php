@@ -80,7 +80,7 @@
           <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="{!! @trans("aroaden.manuals") !!}">
             <i class="fa fa-question"></i>
           </a>
-          <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+          <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" title="{!! @trans("aroaden.logout") !!}">
             <span class="caret"></span> &nbsp; <i class="fa fa-close"></i>
           </button> 
           <ul class="dropdown-menu" role="menu">
