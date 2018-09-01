@@ -96,7 +96,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	Route::get($route["accounting"], 'AccountingController@index');
 
 	Route::get($route["pays"].'/ajaxIndex', 'PaysController@ajaxIndex');
-	Route::post($route["pays"].'/list', 'PaysController@list');
+	Route::get($route["pays"].'/list', 'PaysController@list');
 	Route::get($route["pays"], 'PaysController@index');
 
 	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');

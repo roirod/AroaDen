@@ -133,10 +133,10 @@ class Patients extends Model
         return DB::select($query);
     }
 
-    public static function GetTotalPayments($number, $all = false)
+    public static function GetTotalPayments($sLimit)
     {
         $query = "
-            SELECT pa.surname, pa.name, pa.idpat, 
+            SELECT pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
             SUM(tre.units*tre.price) as total, 
             SUM(tre.paid) as paid, 
             SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
@@ -147,10 +147,24 @@ class Patients extends Model
             GROUP BY tre.idpat 
             HAVING tre.idpat=tre.idpat  
             ORDER BY rest DESC
+            " . $sLimit . "
         ";
 
-        if (!$all)
-            $query .= " LIMIT $number";
+        return DB::select($query);
+    }
+
+    public static function countTotalPatientsPayments()
+    {
+        $query = "
+            SELECT count(*) AS total
+            FROM (
+                SELECT DISTINCT pa.idpat
+                FROM treatments tre
+                INNER JOIN patients pa
+                ON tre.idpat=pa.idpat 
+                WHERE pa.deleted_at IS NULL
+            ) AS table1
+        ;";
 
         return DB::select($query);
     }

@@ -2,53 +2,53 @@
 
 @section('content')
 
-@include('includes.messages')
-@include('includes.errors')
+  @include('includes.messages')
+  @include('includes.errors')
 
-<div class="row"> 
-  <div class="col-sm-12"> 
-    <div class="input-group"> 
-      <span class="input-group-btn pad10">  
-      	<p>{{ Lang::get('aroaden.patient') }}</p>
-      </span>
-      <div class="btn-toolbar pad4" role="toolbar"> 
-        <div class="btn-group">
-          <a href="{{ url("/$main_route/create") }}" role="button" class="btn btn-sm btn-primary">
-            <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
-          </a>
-        </div>  
-</div> </div> </div> </div>
-	
-<div class="row">
-	<div class="col-sm-12">
-    <fieldset>
-  	  <div class="panel panel-default">
+  <div class="row"> 
+    <div class="col-sm-12"> 
+      <div class="input-group"> 
+        <span class="input-group-btn pad10">  
+        	<p>{{ Lang::get('aroaden.patient') }}</p>
+        </span>
+        <div class="btn-toolbar pad4" role="toolbar"> 
+          <div class="btn-group">
+            <a href="{{ url("/$main_route/create") }}" role="button" class="btn btn-sm btn-primary">
+              <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
+            </a>
+          </div>  
+  </div> </div> </div> </div>
+  	
+  <div class="row">
+  	<div class="col-sm-12">
+      <fieldset>
+    	  <div class="panel panel-default">
 
-        <table class="table table-hover stripe" id="PatientsTable">
-          <thead>
-        	  <tr class="fonsi15 bgtra fonbla">
-        			<td class="wid50">&nbsp;</td>
-        			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-        			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-        			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-        			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-        		</tr>
-          </thead>
-          <tfoot>
-            <tr class="fonsi15 bgtra fonbla">
-              <td class="wid50">&nbsp;</td>
-              <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-              <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-              <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-              <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-             </tr>
-          </tfoot>  
-        </table>					
+          <table class="table table-hover stripe" id="PatientsTable">
+            <thead>
+          	  <tr class="fonsi15 bgtra fonbla">
+          			<td class="wid50">&nbsp;</td>
+          			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+          			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+          			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+          			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+          		</tr>
+            </thead>
+            <tfoot>
+              <tr class="fonsi15 bgtra fonbla">
+                <td class="wid50">&nbsp;</td>
+                <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+                <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+                <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+                <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+               </tr>
+            </tfoot>  
+          </table>					
 
-		  </div>
-    </fieldset>
-  </div> 
-</div>
+  		  </div>
+      </fieldset>
+    </div> 
+  </div>
 
 @endsection
 
