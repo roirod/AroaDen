@@ -17,15 +17,15 @@ img.center {
 
 
 .widCol1 { 
-  width: 150px !important; 
-  max-width: 150px !important; 
-  min-width: 150px !important; 
+  width: 100px !important; 
+  max-width: 100px !important; 
+  min-width: 100px !important; 
 }
 
 .widCol2 { 
-  width: 1090px !important; 
-  max-width: 1090px !important; 
-  min-width: 1090px !important; 
+  width: 1160px !important; 
+  max-width: 1160px !important; 
+  min-width: 1160px !important; 
 }
 
 .minHeight { min-height: 700px !important; }
@@ -129,9 +129,9 @@ table { table-layout:fixed !important; }
 .textcent { text-align: center !important; }
 
 .container {
-  width: 1230px !important;
-  max-width: 1280px !important;
-  min-width: 1230px !important;
+  width: 1250px !important;
+  max-width: 1250px !important;
+  min-width: 1250px !important;
   min-height: 550px !important;
   overflow: visible !important;
 }

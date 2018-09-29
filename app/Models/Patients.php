@@ -143,9 +143,10 @@ class Patients extends Model
             FROM treatments tre
             INNER JOIN patients pa
             ON tre.idpat=pa.idpat 
-            WHERE pa.deleted_at IS NULL 
+            WHERE pa.deleted_at IS NULL
             GROUP BY tre.idpat 
-            HAVING tre.idpat=tre.idpat  
+            HAVING 
+                tre.idpat=tre.idpat  AND rest > 0
             ORDER BY rest DESC
             " . $sLimit . "
         ";
@@ -158,11 +159,15 @@ class Patients extends Model
         $query = "
             SELECT count(*) AS total
             FROM (
-                SELECT DISTINCT pa.idpat
+                SELECT 
+                    pa.idpat, SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
                 FROM treatments tre
                 INNER JOIN patients pa
                 ON tre.idpat=pa.idpat 
                 WHERE pa.deleted_at IS NULL
+                GROUP BY tre.idpat 
+                HAVING 
+                    tre.idpat=tre.idpat  AND rest > 0
             ) AS table1
         ;";
 

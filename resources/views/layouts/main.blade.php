@@ -32,10 +32,10 @@
 <div class="jumbotron container bgwi pad10">
   <div class="row">  
 
-    <div class="col-sm-1 widCol1 fonsi14">
+    <div class="col-sm-1 widCol1 textcent fonsi14">
       <div class="affix">
 
-        <h3 class="pad10 login_text textcent bgtra textshadow">
+        <h5 class="pad10 login_text bgtra textshadow">
           <i class="fa fa-child"></i>
           <br>
           {!! $app_name !!}
@@ -43,30 +43,30 @@
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 
             <li>
-              <a href="{!! url("/$company_route")!!}"><i class="fa fa-home"></i> {!! @trans("aroaden.company") !!}</a>
+              <a href="{!! url("/$company_route")!!}" title="{!! @trans("aroaden.company") !!}"><i class="fa fa-home fa-2x"></i></a>
             </li>  
             <li>
-              <a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar"> </i> {!! @trans("aroaden.appointments") !!}</a>
-            </li> 
-            <li>
-              <a href="{!! url("/$patients_route")!!}"><i class="fa fa-users"></i> {!! @trans("aroaden.patients") !!}</a>
+              <a href="{!! url("/$appointments_route")!!}" title="{!! @trans("aroaden.appointments") !!}"><i class="fa fa-calendar fa-2x"></i></a>
             </li>
             <li>
-              <a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md"></i> {!! @trans("aroaden.staff") !!}</a>
-            </li> 
-            <li>
-              <a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks"> </i> {!! @trans("aroaden.services") !!}</a>
+              <a href="{!! url("/$patients_route")!!}" title="{!! @trans("aroaden.patients") !!}"><i class="fa fa-users fa-2x"></i></a>
             </li>
             <li>
-              <a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart"></i> {!! @trans("aroaden.accounting") !!}</a>
-            </li> 
+              <a href="{!! url("/$staff_route")!!}" title="{!! @trans("aroaden.staff") !!}"><i class="fa fa-user-md fa-2x"></i></a>
+            </li>
+            <li>
+              <a href="{!! url("/$services_route")!!}" title="{!! @trans("aroaden.services") !!}"><i class="fa fa-tasks fa-2x"></i></a>
+            </li>
+            <li>
+              <a href="{!! url("/$accounting_route")!!}" title="{!! @trans("aroaden.accounting") !!}"><i class="fa fa-pie-chart fa-2x"></i></a>
+            </li>
           </ul>
         </nav>
 
       </div>  
     </div>
     
-    <div class="col-sm-10 minHeight widCol2">
+    <div class="col-sm-11 minHeight widCol2">
       <div class="row">
         <div class="col-sm-10 fonsi15 pad4">
             &nbsp; &nbsp; {!! @trans("aroaden.user") !!} &nbsp;

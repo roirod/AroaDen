@@ -31,62 +31,65 @@
  <div class="col-sm-12">
    <div class="panel panel-default">
     <table class="table">
-     <tr class="fonsi15 success">
-     	  <td class="wid110">Fecha</td>
-		  <td class="wid180">Tratamiento</td>
-		  <td class="wid95 textcent">Cantidad</td>
-		  <td class="wid95 textcent">Precio</td>
-		  <td class="wid180"></td>
-     </tr>
+	     <tr class="fonsi15 success">
+	     	  <td class="wid110">Fecha</td>
+			  <td class="wid180">Tratamiento</td>
+			  <td class="wid95 textcent">Cantidad</td>
+			  <td class="wid95 textcent">Precio</td>
+			  <td class="wid290"></td>
+	     </tr>
     </table>
    	<div class="box260">
 	   	<table class="table table-striped">      	  	
 
 		    @foreach($budgets as $bud)
 
-		    	<?php $created_at = $bud->created_at; ?>
+		    	@if( (isset($created_at) && $created_at != $bud->created_at) || !isset($created_at) )
 
-		    	@if( isset($created_at2) && $created_at != $created_at2 )
-		    		<tr class="info">
-			     	  <td class="wid110"></td>
-					  <td class="wid180"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid180 textcent"></td>
-		    		</tr> 
 		    		<tr class="danger">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
 					  <td class="wid95 textcent"></td>
 					  <td class="wid95 textcent"></td>
-					  <td class="wid180 textcent"></td>
+					  <td class="wid290 textcent"></td>
 	   				</tr>
 		    		<tr class="info">
 			     	  <td class="wid110"></td>
 					  <td class="wid180"></td>
 					  <td class="wid95 textcent"></td>
 					  <td class="wid95 textcent"></td>
-					  <td class="wid180 textcent"></td>
+					  <td class="wid290 textcent"></td>
 		    		</tr>
+
+					<tr>
+			 		  <td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
+					  <td class="wid180"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid95 textcent"></td>
+					  <td class="wid290 textcent"></td>
+					</tr>
+
 	   			@endif
 
-				<?php $created_at2 = $bud->created_at; ?>
-
 				<tr>
-		 			<td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
+		 			<td class="wid110"></td>
 		 			<td class="wid180">{!! $bud->name !!}</td>
 		 			<td class="wid95 textcent">{!! $bud->units !!}</td>
 		 			<td class="wid95 textcent">{!! $bud->price !!} €</td>
-		 			<td class="wid180"></td>
+		 			<td class="wid290"></td>
 				</tr>
+
+		    	<?php $created_at = $bud->created_at; ?>
+			
 				
 		    @endforeach
 	    
 	 	</table>
-
- </div> </div> </div> </div>		
+	</div>
+</div> </div> </div>		
 			
-<hr> <br>
+<hr> 
+<br>
 
 <div class="row">
   <div class="col-sm-12"> 

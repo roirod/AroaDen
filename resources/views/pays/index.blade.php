@@ -111,38 +111,53 @@
             "bSearchable": false,
             "sClass": "wid50",
             "mRender": function (data, type, full) {
-              var resultado = '<a href="'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
-              return resultado;
+              var result = '<a href="'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
+              return result;
             }
           },
           {
             "aTargets": [1],
-            "mData": null,
             "bSortable": false,
             "bSearchable": false,
             "sClass": "wid290",
+            "mData": null,            
             "mRender": function (data, type, full) {
-              var resultado = '<a href="'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
-              return resultado;
+              var result = '<a href="'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              return result;
             }
           },
           {
             "aTargets": [2],
             "bSortable": false,
             "bSearchable": false,
-            "sClass": "wid110 textcent"
+            "sClass": "wid110 textcent",
+            "mData": null,            
+            "mRender": function (data, type, full) {
+              var result = full[2] + ' €';
+              return result;
+            }
           },
           {
             "aTargets": [3],
             "bSortable": false,
             "bSearchable": false,
-            "sClass": "wid110 textcent"
+            "sClass": "wid110 textcent",
+            "mData": null,            
+            "mRender": function (data, type, full) {
+              var result = full[3] + ' €';
+              return result;
+            }
           },
           {
             "aTargets": [4],
             "bSortable": false,
             "bSearchable": false,
-            "sClass": "wid110 textcent"
+            "sClass": "wid110 textcent",
+            "mData": null,            
+            "mRender": function (data, type, full) {
+              var result = full[4] + ' €';
+              return result;
+            }
           }
         ],
       };
