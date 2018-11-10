@@ -27,7 +27,7 @@
           <table class="table table-hover stripe" id="PatientsTable">
             <thead>
           	  <tr class="fonsi15 bgtra fonbla">
-          			<td class="wid50">&nbsp;</td>
+                <td class="wid290"></td>
           			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
           			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
           			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
@@ -36,7 +36,7 @@
             </thead>
             <tfoot>
               <tr class="fonsi15 bgtra fonbla">
-                <td class="wid50">&nbsp;</td>
+                <td class="wid290"></td>
                 <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
                 <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
                 <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
@@ -119,13 +119,9 @@
         "aoColumnDefs": [
           {
             "aTargets": [0],
-            "mData": null,
             "bSortable": false,
             "bSearchable": false,
-            "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! $patients_route !!}/'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
-              return resultado;
-            }
+            "bVisible": false
           },
           {
             "aTargets": [1],

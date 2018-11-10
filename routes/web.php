@@ -82,11 +82,15 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 	Route::get($route["staff"].'/search', 'StaffController@search');
 	Route::get($route["staff"].'/{id}/file', 'StaffController@file');
+
 	Route::get($route["staff"].'/{id}/filesList', 'StaffController@filesList');
 	Route::post($route["staff"].'/uploadFiles/{id}', 'StaffController@uploadFiles');
 	Route::get($route["staff"].'/{id}/{file}/download', 'StaffController@download');	
 	Route::post($route["staff"].'/uploadProfilePhoto/{id}', 'StaffController@uploadProfilePhoto');
+	Route::post($route["staff"].'/uploadFiles/{id}', 'StaffController@uploadFiles');
 	Route::resource($route["staff"], 'StaffController');
+
+	Route::resource($route["staff_positions"], 'StaffPositionsController', ['except' => ['show', 'delete']]);
 
 	Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');
 	Route::get($route["services"].'/create', 'ServicesController@create');	

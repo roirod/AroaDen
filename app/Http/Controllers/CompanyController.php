@@ -67,17 +67,16 @@ class CompanyController extends BaseController
         $this->view_data['request'] = $request;
         $this->view_data['obj'] = $obj;
         $this->view_data['main_loop'] = $this->config['settings_fields'];
+        $this->view_name = $view_name;
 
         if ($view_name == 'edit') {
 
             $this->view_data['form_route'] = 'saveData';
-            $this->view_name = $view_name;
             $this->setPageTitle(Lang::get('aroaden.company_edit_data'));
 
         } else {
 
             $this->view_data['form_route'] = 'editData';
-            $this->view_name = $view_name;
             $this->setPageTitle(Lang::get('aroaden.company_data'));
 
         }
@@ -96,7 +95,7 @@ class CompanyController extends BaseController
 
         foreach ($empre as $arr => $value) {
             foreach ($request->input() as $request_key => $request_value) {
-                $request_value = ucfirst( strtolower($request_value) );
+                $request_value = ucfirst($request_value);
                 $request_value = $this->sanitizeData($request_value);
 
                 if ($value["key"] == $request_key)
@@ -106,7 +105,8 @@ class CompanyController extends BaseController
 
         $settings = Settings::getArray();
 
-        Redis::set('settings', json_encode($settings));       
+        if (env('REDIS_SERVER_IS_ON')) 
+            Redis::set('settings', json_encode($settings));               
 
         return $this->ajaxIndex($request);
     }

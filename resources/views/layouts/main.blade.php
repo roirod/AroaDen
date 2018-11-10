@@ -42,23 +42,23 @@
         </h3>
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 
-            <li>
-              <a href="{!! url("/$company_route")!!}" title="{!! @trans("aroaden.company") !!}"><i class="fa fa-home fa-2x"></i></a>
+            <li title="{!! @trans("aroaden.company") !!}">
+              <a href="{!! url("/$company_route")!!}"><i class="fa fa-home fa-2x"></i></a>
             </li>  
-            <li>
-              <a href="{!! url("/$appointments_route")!!}" title="{!! @trans("aroaden.appointments") !!}"><i class="fa fa-calendar fa-2x"></i></a>
+            <li title="{!! @trans("aroaden.appointments") !!}">
+              <a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar fa-2x"></i></a>
             </li>
-            <li>
-              <a href="{!! url("/$patients_route")!!}" title="{!! @trans("aroaden.patients") !!}"><i class="fa fa-users fa-2x"></i></a>
+            <li title="{!! @trans("aroaden.patients") !!}">
+              <a href="{!! url("/$patients_route")!!}"><i class="fa fa-users fa-2x"></i></a>
             </li>
-            <li>
-              <a href="{!! url("/$staff_route")!!}" title="{!! @trans("aroaden.staff") !!}"><i class="fa fa-user-md fa-2x"></i></a>
+            <li title="{!! @trans("aroaden.staff") !!}">
+              <a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md fa-2x"></i></a>
             </li>
-            <li>
-              <a href="{!! url("/$services_route")!!}" title="{!! @trans("aroaden.services") !!}"><i class="fa fa-tasks fa-2x"></i></a>
+            <li title="{!! @trans("aroaden.services") !!}">
+              <a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks fa-2x"></i></a>
             </li>
-            <li>
-              <a href="{!! url("/$accounting_route")!!}" title="{!! @trans("aroaden.accounting") !!}"><i class="fa fa-pie-chart fa-2x"></i></a>
+            <li title="{!! @trans("aroaden.accounting") !!}">
+              <a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart fa-2x"></i></a>
             </li>
           </ul>
         </nav>
@@ -86,8 +86,8 @@
           <ul class="dropdown-menu" role="menu">
              <form action="{!! url("/logout") !!}" method="post">
               {!! csrf_field() !!}
-              <li>
-                 <input type="submit" class="btn btn-danger btn-md" value="{!! @trans("aroaden.logout") !!}">
+              <li class="text-right">
+                 <input type="submit" class="btn btn-danger btn-lg" value="{!! @trans("aroaden.logout") !!}">
               </li>
             </form>
           </ul>

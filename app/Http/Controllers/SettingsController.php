@@ -21,10 +21,7 @@ class SettingsController extends BaseController
 
     public function index(Request $request)
     {  	 	  
-        $username = Auth::user()->username;
-
-        $this->view_data['request'] = $request;
-        $this->view_data['username'] = $username;
+        $this->view_data['username'] = Auth::user()->username;
 
         $this->setPageTitle(Lang::get('aroaden.settings'));
 

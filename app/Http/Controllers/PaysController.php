@@ -26,8 +26,6 @@ class PaysController extends BaseController
     {
         $this->setPageTitle(Lang::get('aroaden.payments'));
 
-        $this->view_data['request'] = $request;
-
         return parent::index($request);
     }
 

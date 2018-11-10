@@ -71,8 +71,6 @@ class PatientsController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {  	
-        $this->view_data['request'] = $request;
-
         $this->setPageTitle(Lang::get('aroaden.patients'));
 
         return parent::index($request);
@@ -140,7 +138,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->echoJsonOuptut($output);  
     }
 
-    public function show(Request $request, $id = false)
+    public function show(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
@@ -169,7 +167,6 @@ class PatientsController extends BaseController implements BaseInterface
 
         $this->setPageTitle($patient->surname.', '.$patient->name);
 
-        $this->view_data['request'] = $request;
         $this->view_data['object'] = $patient;
         $this->view_data['appointments'] = $appointments;
         $this->view_data['treatments'] = $treatments;
@@ -180,17 +177,16 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
-        return parent::show($request);
+        return parent::show($request, $id);
     }
 
     public function create(Request $request, $id = false)
     {
         $this->setPageTitle(Lang::get('aroaden.create_patient'));
 
-        $this->view_data['request'] = $request;
         $this->view_data['form_fields'] = $this->form_fields;
 
-        return parent::create($request, $id);  
+        return parent::create($request);
     }
 
     public function store(Request $request)
@@ -277,7 +273,6 @@ class PatientsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;        
         $this->view_data['object'] = $object;

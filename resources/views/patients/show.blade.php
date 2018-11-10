@@ -158,11 +158,12 @@
 	 <div class="panel panel-default">
 	  <table class="table"> 
 		  <tr class="fonsi15 success">
-			  <td class="wid140">{!! @trans("aroaden.service") !!}</td>
-			  <td class="wid70 textcent">{!! @trans("aroaden.price") !!}</td>
-			  <td class="wid70 textcent">{!! @trans("aroaden.units") !!}</td>
-			  <td class="wid70 textcent">{!! @trans("aroaden.total") !!}</td>
-			  <td class="wid70 textcent">{!! @trans("aroaden.paid") !!}</td>
+			  <td class="wid180">{!! @trans("aroaden.service") !!}</td>
+			  <td class="wid50 textcent">{!! @trans("aroaden.tax") !!}</td>			  
+			  <td class="wid50 textcent">{!! @trans("aroaden.price") !!}</td>
+			  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
+			  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
+			  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
 			  <td class="wid70">{!! @trans("aroaden.date") !!}</td>
 			  <td class="wid50 textcent"></td>
 			  <td class="wid50 textcent"></td> 
@@ -174,11 +175,12 @@
 
 	    @foreach($treatments["treatments"] as $treat)
 	    	<tr>
-	    		<td class="wid140">{!! $treat->service_name !!}</td> 
-				<td class="wid70 textcent">{!! numformat($treat->price) !!} €</td>
-				<td class="wid70 textcent">{!! $treat->units !!}</td>
-				<td class="wid70 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
-				<td class="wid70 textcent">{!! numformat($treat->paid) !!} €</td>
+	    		<td class="wid180">{!! $treat->service_name !!}</td> 
+				<td class="wid50 textcent">{!! $treat->tax !!} %</td>
+				<td class="wid50 textcent">{!! numformat($treat->price) !!} €</td>
+				<td class="wid50 textcent">{!! $treat->units !!}</td>
+				<td class="wid50 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
+				<td class="wid50 textcent">{!! numformat($treat->paid) !!} €</td>
 				<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 				<td class="wid50 textcent">
@@ -189,7 +191,6 @@
 
 				<td class="wid50 textcent"> 	
 					<div class="btn-group">
-
 					 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" method="POST">	
 					  		{!! csrf_field() !!}
 
@@ -203,9 +204,7 @@
 									@include('includes.delete_button')
 								</li>
 							</ul>			
-				 			
 				 		</form>
-
 					</div> 
 				</td>
 

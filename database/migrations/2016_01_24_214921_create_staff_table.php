@@ -12,7 +12,6 @@ class CreateStaffTable extends Migration
             $table->increments('idsta');
             $table->string('surname', 111);
             $table->string('name', 111);
-            $table->string('position', 66)->nullable()->default(' ');        
             $table->string('address', 111)->nullable()->default(' ');
             $table->string('city', 111)->nullable()->default(' ');
             $table->string('dni', 18);
@@ -24,7 +23,7 @@ class CreateStaffTable extends Migration
             $table->softDeletes();
             $table->index('surname');
             $table->index('name');
-            $table->unique('dni');  
+            $table->unique('dni');
         });
     }
 

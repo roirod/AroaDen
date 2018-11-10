@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Invoices extends Model
 {
 	protected $table = 'invoices';
-    protected $fillable = ['idpac','idser','price','units','invoice_number','code','tax'];
-    protected $primaryKey = 'idfac';
-
-    public function patients()
-    {
-        return $this->belongsTo('App\Models\Patients');
-    }
+    protected $fillable = ['number','type','day','exp_date','irpf','no_tax_msg','notes'];
+    protected $primaryKey = 'idinv';
 }

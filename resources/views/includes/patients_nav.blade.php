@@ -6,9 +6,7 @@
 		<li><a href="{{ url("$patients_route/$idnav/file") }}"> {{ Lang::get('aroaden.files') }} </a></li>
 		<li><a href="{{ url("$patients_route/$idnav/odontogram") }}"> {{ Lang::get('aroaden.odontogram') }} </a></li>
 		<li><a href="{{ url("$budgets_route/$idnav") }}"> {{ Lang::get('aroaden.budgets') }} </a></li>
-
-		<!-- <li><a href="{{ url("$invoices_route/$idnav") }}"> {{ Lang::get('aroaden.invoices') }} </a></li> -->
-
+		<li><a href="{{ url("$invoices_route/$idnav") }}"> {{ Lang::get('aroaden.invoices') }} </a></li>
      </ul>
   </div>
 </div>

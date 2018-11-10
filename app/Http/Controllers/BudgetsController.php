@@ -43,7 +43,6 @@ class BudgetsController extends BaseController
         $uniqid = uniqid();
         $created_at = date('Y-m-d H:i:s');
 
-        $this->view_data['request'] = $request;
         $this->view_data['created_at'] = $created_at;
         $this->view_data['uniqid'] = $uniqid;        
         $this->view_data['new_url'] = $this->_new_url;
@@ -110,7 +109,6 @@ class BudgetsController extends BaseController
         $budgets = $this->model::AllById($idpat);
         $budgets_group = $this->model::AllGroupByCode($idpat);
 
-        $this->view_data['request'] = $request;
         $this->view_data['budgets'] = $budgets;
         $this->view_data['budgets_group'] = $budgets_group;
         $this->view_data['idpat'] = $idpat;

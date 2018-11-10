@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
 use Lang;
-use DB;
 
 class UsersController extends BaseController
 {
@@ -26,12 +25,9 @@ class UsersController extends BaseController
       
     public function index(Request $request)
     {
-        $main_loop = $this->model::AllOrderByUsername();
-
         $this->setPageTitle(Lang::get('aroaden.users'));
 
-        $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['main_loop'] = $this->model::AllOrderByUsername();
 
         return parent::index($request);
     }    
@@ -80,11 +76,9 @@ class UsersController extends BaseController
     
     public function userEdit(Request $request)
     {
-        $main_loop = $this->model::AllOrderByUsername();
-
         $this->form_route = 'userUpdate';
         $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['main_loop'] = $this->model::AllOrderByUsername();
 
         $this->setPageTitle(Lang::get('aroaden.users'));
 
@@ -94,12 +88,10 @@ class UsersController extends BaseController
     }
 
     public function userDeleteViev(Request $request)
-    {
-        $main_loop = $this->model::AllOrderByUsername();
-        
+    {      
         $this->form_route = 'userDelete';
         $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['main_loop'] = $this->model::AllOrderByUsername();
 
         $this->setPageTitle(Lang::get('aroaden.users'));
 

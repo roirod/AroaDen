@@ -36,7 +36,7 @@ class InvoicesController extends BaseController
         $this->model = $invoices;
 
         $fields = [      
-            'issue_date' => true,
+            'date2' => true,
             'no_tax_msg' => true,
         ];
 
@@ -102,24 +102,21 @@ class InvoicesController extends BaseController
     public function create(Request $request, $id = false)
     {    
 
-        $tratampacien = Treatments::PaidServicesById($id);
 
 
 
-echo "<pre>";
-echo "<br>";
-echo "------------ tratampacien ------------------";
-echo "<br>";
-var_dump($tratampacien);
-echo "<br>";
-echo "</pre>";
 
-exit();
+
+        $treatments = Treatments::PaidByPatientId($id);
+
+
+
 
 
 
 
         $this->view_data['request'] = $request;
+        $this->view_data['treatments'] = $treatments;
         $this->view_data['form_fields'] = $this->form_fields;        
         $this->view_data['idpat'] = $id;
         $this->view_data['idnav'] = $id;

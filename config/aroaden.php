@@ -11,6 +11,7 @@ return [
         'appointments' => 'appointments',
         'patients' => 'patients',
         'staff' => 'staff',
+        'staff_positions' => 'staff_positions',        
         'services' => 'services',
         'accounting' => 'accounting',
         'users' => 'users',
@@ -49,6 +50,7 @@ return [
     'settings_fields' => [
         [ 
            'name'  => "company_name",
+           'settting_type'  => "company_data",
            'type'  => "text",
            'maxlength'  => "111",
            'col'  => "col-sm-4",
@@ -59,6 +61,7 @@ return [
         ],
         [ 
            'name'  => "company_nif",
+           'settting_type'  => "company_data",           
            'type'  => "text",
            'maxlength'  => "22",
            'col'  => "col-sm-3",
@@ -69,6 +72,7 @@ return [
         ],
         [ 
            'name'  => "company_email",
+           'settting_type'  => "company_data",           
            'type'  => "email",
            'maxlength'  => "",
            'col'  => "col-sm-3",
@@ -79,6 +83,7 @@ return [
         ],
         [ 
            'name'  => "company_address",
+           'settting_type'  => "company_data",           
            'type'  => "text",
            'maxlength'  => "111",
            'col'  => "col-sm-4",
@@ -89,6 +94,7 @@ return [
         ],
         [ 
            'name'  => "company_city",
+           'settting_type'  => "company_data",           
            'type'  => "text",
            'maxlength'  => "111",
            'col'  => "col-sm-4",
@@ -100,6 +106,7 @@ return [
 
         [ 
            'name'  => "company_tel1",
+           'settting_type'  => "company_data",           
            'type'  => "text",
            'maxlength'  => "11",
            'col'  => "col-sm-3",
@@ -110,6 +117,7 @@ return [
         ],
         [ 
            'name'  => "company_tel2",
+           'settting_type'  => "company_data",           
            'type'  => "text",
            'maxlength'  => "11",
            'col'  => "col-sm-3",
@@ -120,6 +128,7 @@ return [
         ],
         [ 
            'name'  => "company_tel3",
+           'settting_type'  => "company_data",           
            'type'  => "text",
            'maxlength'  => "11",
            'col'  => "col-sm-3",
@@ -130,6 +139,7 @@ return [
         ],
         [ 
            'name'  => "company_notes",
+           'settting_type'  => "company_data",           
            'type'  => "textarea",
            'maxlength'  => "",
            'col'  => "col-sm-12",
@@ -140,6 +150,7 @@ return [
         ],
         [ 
            'name'  => "invoice_text",
+           'settting_type'  => "company_data",
            'type'  => "textarea",
            'maxlength'  => "",
            'col'  => "col-sm-12",
@@ -150,6 +161,7 @@ return [
         ],
         [ 
            'name'  => "budget_text",
+           'settting_type'  => "company_data",           
            'type'  => "textarea",
            'maxlength'  => "",
            'col'  => "col-sm-12",

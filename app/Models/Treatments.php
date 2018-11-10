@@ -66,11 +66,11 @@ class Treatments extends Model
     public static function PaidByPatientId($id)
     {
         $collection = DB::table('treatments')
-                    ->join('services','treatments.idser','=','services.idser')
-                    ->select('treatments.*','services.name as service_name', DB::raw('treatments.units*treatments.price AS total'))
-                    ->where('idpat', $id)
-                    ->orderBy('day','DESC')
-                    ->get();
+                        ->join('services','treatments.idser','=','services.idser')
+                        ->select('treatments.*','services.name as service_name', DB::raw('treatments.units*treatments.price AS total'))
+                        ->where('idpat', $id)
+                        ->orderBy('day','DESC')
+                        ->get();
 
         $array_data = [];
 

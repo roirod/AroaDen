@@ -188,7 +188,7 @@ class BaseController extends Controller
         $file_max_size = (int)$this->config['files']['file_max_size'];
         $this->file_max_size = 1024 * 1024 * $file_max_size;
 
-        $this->checkIfSettingExists();
+        $this->createDefaultCompanyData();
 
         $this->form_fields = [
             'surname' => false,
@@ -225,6 +225,7 @@ class BaseController extends Controller
     public function index(Request $request)
     {
         $this->view_name = 'index';
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
@@ -239,6 +240,7 @@ class BaseController extends Controller
     public function create(Request $request, $id = false)
     {
         $this->view_name = 'create';
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
@@ -250,9 +252,10 @@ class BaseController extends Controller
      *  @param int $id
      *  @return string       
      */
-    public function show(Request $request, $id = false)
+    public function show(Request $request, $id)
     {
         $this->view_name = 'show';
+        $this->view_data['request'] = $request;
         
         return $this->loadView();
     }
@@ -267,6 +270,7 @@ class BaseController extends Controller
     public function edit(Request $request, $id)
     {
         $this->view_name = 'edit';
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
@@ -281,7 +285,7 @@ class BaseController extends Controller
     public function list(Request $request)
     {
         $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
-        $this->misc_array['search_in'] = $this->sanitizeData($request->input('search_in'));
+        $this->misc_array['search_in'] = $this->sanitizeData($request->input('search_in'));  
 
         $data = [];
 
@@ -318,7 +322,7 @@ class BaseController extends Controller
      *  
      *  @return object
      */
-    private function checkIfSettingExists()
+    private function createDefaultCompanyData()
     {
         $settings_fields = $this->config['settings_fields'];
 
@@ -328,17 +332,20 @@ class BaseController extends Controller
             if ($exits == null) {
                 DB::table('settings')->insert([
                     'key' => $field['name'],
-                    'value' => ''
+                    'value' => '',
+                    'type' => $field['settting_type']
                 ]);                
             }
         }
 
-        $exists = Redis::exists('settings');
+        if (env('REDIS_SERVER_IS_ON'))  {
+            $exists = Redis::exists('settings');
 
-        if (!$exists) {
-            $settings = Settings::getArray();
+            if (!$exists) {
+                $settings = Settings::getArray();
 
-            Redis::set('settings', json_encode($settings));
+                Redis::set('settings', json_encode($settings));
+            }
         }
 
         return redirect()->back();
@@ -363,6 +370,7 @@ class BaseController extends Controller
         View::share('company_route', $this->config['routes']['company']);
         View::share('appointments_route', $this->config['routes']['appointments']);
         View::share('staff_route', $this->config['routes']['staff']);
+        View::share('staff_positions_route', $this->config['routes']['staff_positions']);
         View::share('services_route', $this->config['routes']['services']);
         View::share('accounting_route', $this->config['routes']['accounting']);
         View::share('treatments_route', $this->config['routes']['treatments']);        

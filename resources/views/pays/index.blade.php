@@ -106,14 +106,10 @@
         "aoColumnDefs": [
           {
             "aTargets": [0],
-            "mData": null,
             "bSortable": false,
             "bSearchable": false,
-            "sClass": "wid50",
-            "mRender": function (data, type, full) {
-              var result = '<a href="'+ full[0] +'" target="_blank" class="btn btn-default btn-sm" role="button"><i class="fa fa-hand-pointer-o"></i></a>';
-              return result;
-            }
+            "bVisible": false,    
+            "sClass": "wid50"
           },
           {
             "aTargets": [1],

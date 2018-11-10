@@ -6,15 +6,15 @@ use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use App\Http\Controllers\Traits\DirFilesTrait;
 use Illuminate\Http\Request;
+use App\Models\StaffPositions;
 use App\Models\Treatments;
 use App\Models\StaffWorks;
+use App\Models\Settings;
 use App\Models\Staff;
 use Carbon\Carbon;
 use Validator;
 use Exception;
-use Storage;
 use Lang;
-use DB;
 
 class StaffController extends BaseController implements BaseInterface
 {
@@ -53,12 +53,8 @@ class StaffController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {   
-        $main_loop = $this->model::AllOrderBySurname($this->num_paginate);
-        $count = $this->model::CountAll();
-
-        $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['count'] = $count;
+        $this->view_data['main_loop'] = $this->model::AllOrderBySurname($this->num_paginate);
+        $this->view_data['count'] = $this->model::CountAll();
 
         $this->setPageTitle(Lang::get('aroaden.staff'));
 
@@ -70,7 +66,7 @@ class StaffController extends BaseController implements BaseInterface
         return parent::list($request);        
     }
 
-    public function show(Request $request, $id = false)
+    public function show(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
@@ -86,12 +82,9 @@ class StaffController extends BaseController implements BaseInterface
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
             return redirect($this->main_route);
         }
-
-        $treatments = StaffWorks::AllByStaffId($id);
-            
-        $this->view_data['request'] = $request;
+           
         $this->view_data['object'] = $staff;
-        $this->view_data['treatments'] = $treatments;
+        $this->view_data['treatments'] = StaffWorks::AllByStaffId($id);
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $staff->idsta;
         $this->view_data['profile_photo'] = $profile_photo;
@@ -99,15 +92,14 @@ class StaffController extends BaseController implements BaseInterface
 
         $this->setPageTitle($staff->surname.', '.$staff->name);
 
-        return parent::show($request);   
+        return parent::show($request, $id);   
     }
 
     public function create(Request $request, $id = false)
     {     
-        $this->view_data['request'] = $request;
         $this->view_data['form_fields'] = $this->form_fields;
 
-        return parent::create($request, $id);  
+        return parent::create($request);
     }
 
     public function store(Request $request)
@@ -183,7 +175,6 @@ class StaffController extends BaseController implements BaseInterface
          
         $object = $this->model::FirstById($id); 
 
-        $this->view_data['request'] = $request;
         $this->view_data['object'] = $object;
         $this->view_data['form_fields'] = $this->form_fields;        
         $this->view_data['idnav'] = $id;       

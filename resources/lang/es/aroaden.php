@@ -32,13 +32,18 @@ return [
   'file_max_size_error'   => 'supera tamaño máximo permitido',
   'no_files_for_upload'   => 'No has seleccinado ningún archivo',
   'no_file'   => 'No existe el archivo',
-
-
+  'add'   => 'Añadir',
+  'remove' => 'Borrar',
   'male'   => 'hombre',
   'female'   => 'mujer',
   'permissions'   => 'Permisos',
   'basic'   => 'básico',
   'normal'   => 'normal',
+  'view'   => 'Ver',
+  'staff_positions'   => 'Cargos de personal',
+
+  'add_to_invoice'   => 'Añadir a factura',
+  'remove_from_invoice'   => 'Quitar de factura',
 
   'tele1'   => 'Telefóno1',
   'tele2'   => 'Telefóno2',
@@ -85,8 +90,6 @@ return [
   'remove_text' => 'Borrar texto',
   'searched_text' => 'Texto buscado:',
   'search_service' => 'Buscar servicio',
-  'remove' => 'Borrar',
-
 
   'staff11' => 'Personal 1',
   'staff22' => 'Personal 2',
@@ -114,6 +117,7 @@ return [
   'add_treatments' => 'Añadir tratamientos al paciente',    
   'professionals' => 'Profesionales',
   'position' => 'Cargo',
+  'positions' => 'Cargos',  
   'create_service' => 'Crear servicio',
   'edit_service' => 'Editar servicio',    
   'accounting' => 'Contable',
@@ -175,4 +179,4 @@ return [
   'invoice_text' => 'Texto de facturas',    
   'budget_text' => 'Texto de presupuestos',
 
-  ];
+];

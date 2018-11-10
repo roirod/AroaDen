@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Faker\Factory as Faker;
 
-class perSeeder extends Seeder
+class StaffSeeder extends Seeder
 {
     public function run()
     {

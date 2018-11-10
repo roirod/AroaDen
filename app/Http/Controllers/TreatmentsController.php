@@ -40,16 +40,12 @@ class TreatmentsController extends BaseController
     public function create(Request $request, $id = false)
     {  
         $this->redirectIfIdIsNull($id, $this->other_route);
-
-        $services = Services::AllOrderByName();
-        $staff = Staff::AllOrderBySurnameNoPagination();
         $object = Patients::FirstById($id);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;
-        $this->view_data['services'] = $services;
-        $this->view_data['staff'] = $staff;        
+        $this->view_data['services'] = Services::AllOrderByName();
+        $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;
@@ -137,16 +133,13 @@ class TreatmentsController extends BaseController
         $id = $this->sanitizeData($id);
     
         $object = Treatments::FirstById($id);
-        $staff_works = StaffWorks::AllById($id)->toArray();        
-        $staff = Staff::AllOrderBySurnameNoPagination();
         $paciente = Patients::FirstById($object->idpat);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;        
         $this->view_data['object'] = $object;
-        $this->view_data['staff_works'] = $staff_works;
-        $this->view_data['staff'] = $staff;        
+        $this->view_data['staff_works'] = StaffWorks::AllById($id)->toArray();
+        $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
         $this->view_data['name'] = $paciente->name;
         $this->view_data['surname'] = $paciente->surname;
         $this->view_data['form_fields'] = $this->form_fields;        

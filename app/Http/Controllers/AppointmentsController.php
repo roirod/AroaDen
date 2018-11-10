@@ -43,7 +43,6 @@ class AppointmentsController extends BaseController implements BaseInterface
         $main_loop = $this->model::AllTodayOrderByDay();
         $count = $this->model::CountAllToday();
 
-        $this->view_data['request'] = $request;
         $this->view_data['main_loop'] = $main_loop;
         $this->view_data['count'] = $count;
         $this->view_data['form_route'] = $this->form_route;
@@ -190,7 +189,6 @@ class AppointmentsController extends BaseController implements BaseInterface
         $object = $this->model2::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;
         $this->view_data['name'] = $object->name;
@@ -245,7 +243,6 @@ class AppointmentsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
 
         $this->autofocus = 'hour';
-        $this->view_data['request'] = $request;
         $this->view_data['object'] = $object;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;
