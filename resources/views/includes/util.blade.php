@@ -16,21 +16,15 @@ var routes = {
 var defaulId = 'ajax_content';
 var defaulTableId = 'item_list';
 var lastRoute = '';
+var currentContent = '';
+var currentId = '';
 
-$( document ).ajaxError(function(event, jqxhr, settings, thrownError) {
+$(document).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
-     console.log('------------ thrownError ------------------');
-     console.dir(thrownError);
-     console.log('------------ thrownError ------------------');
-
   if (thrownError == "Forbidden") {
-    var obj = {     
-      url: lastRoute
-    };
-
-    util.processAjaxReturnsHtml(obj);
+    util.showContentOnPage(currentId, currentContent);
 
     return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
   }
@@ -48,23 +42,29 @@ var util = {
     var method = (obj.method == undefined) ? "GET" : obj.method;
     var popup = (obj.popup == undefined) ? false : obj.popup;
 
+    currentContent = $('#'+id).clone();
+    currentId = id;
+
     _this.showLoadingGif(id);
 
     var ajax_data = {
       method : method,
       url  : obj.url,
       dataType: "html",
-      data : data
+      data : data,
+      statusCode: {
+        200: function(response) {
+          _this.showContentOnPage(id, response);
+
+          if (popup)
+            _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
+
+          _this.getSettings();
+        }
+      }
     };
 
-    $.ajax(ajax_data).done(function(response) {
-      _this.showContentOnPage(id, response);
-
-      if (popup)
-        _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
-
-      _this.getSettings();
-    });
+    $.ajax(ajax_data);
   },
 
   processAjaxReturnsJson: function(obj) {
@@ -84,9 +84,6 @@ var util = {
       ajax_data.cache = false;      
     }
 
-     console.log('------------ ajax_data ------------------');
-     console.dir(ajax_data);
-
     return $.ajax(ajax_data);
   },
 
@@ -102,7 +99,8 @@ var util = {
       swal({
         text: msg,
         type: 'error',
-        allowOutsideClick: true,
+        showConfirmButton: false,
+        allowOutsideClick: true
       });
     }
   },
@@ -118,6 +116,8 @@ var util = {
   },
 
   showContentOnPage: function(id, content, error) {
+    var _this = this;
+
     var id = (id == false) ? defaulId : id;
     var error = (error == undefined) ? false : error;
 
@@ -125,7 +125,15 @@ var util = {
       content = '<p class="text-danger">' + content + '</p>';
 
     $('#'+id).empty();
-    $('#'+id).html(content).fadeIn('slow');
+    $('#'+id).hide().html(content).fadeIn(400);
+  },
+
+  showLoadingGif: function(id) {
+    var id = (id == undefined) ? defaulId : id;
+    var loading = '<img class="center" src="/assets/img/loading.gif"/>';
+
+    $('#'+id).empty();
+    $('#'+id).html(loading);
   },
 
   getSettings: function() {
@@ -140,14 +148,6 @@ var util = {
     _this.processAjaxReturnsJson(ajax_data).done(function(response) {
       document.title = response.page_title;
     });
-  },
-
-  showLoadingGif: function(id) {
-    var id = (id == undefined) ? defaulId : id;
-    var loading = '<img class="center" src="/assets/img/loading.gif"/>';
-
-    $('#'+id).empty();
-    $('#'+id).html(loading);
   },
 
   showSearchText: function() {

@@ -18,12 +18,13 @@
   <div class="panel panel-default">
     <table class="table">
        <tr class="fonsi15 success">
-        <td class="wid290">{{ @trans('aroaden.service') }}</td>
+        <td class="wid230">{{ @trans('aroaden.service') }}</td>
         <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
         <td class="wid50"></td>
         <td class="wid50"></td>
-        <td class="wid290"></td>
+        <td class="wid230"></td>
+        <td class="wid230"></td>        
        </tr>
     </table>
 
@@ -33,7 +34,7 @@
         @foreach ($main_loop as $obj)
 
          <tr>
-            <td class="wid290">{{ $obj->name }}</td>
+            <td class="wid230">{{ $obj->name }}</td>
             <td class="wid95 textcent">{{ $obj->tax }} %</td>             
             <td class="wid110 textcent">{{ $obj->price }} €</td>
 
@@ -61,7 +62,8 @@
               </div>  
              </td>
 
-            <td class="wid290"></td>
+            <td class="wid230"></td>
+            <td class="wid230"></td>            
          </tr>
           
         @endforeach

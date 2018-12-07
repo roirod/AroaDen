@@ -102,8 +102,6 @@ class StaffPositionsController extends BaseController
         $this->view_data['object'] = $this->model::find($id);
         $this->view_data['form_fields'] = $this->form_fields;
 
-        $this->setPageTitle(Lang::get('aroaden.edit_service'));
-
         return parent::edit($request, $id);  
     }
 
@@ -118,37 +116,23 @@ class StaffPositionsController extends BaseController
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
+        $name = $this->sanitizeData($request->input('name'));
+        $this->view_name = 'edit';
 
-        $name = ucfirst(strtolower( $request->input('name') ) );
-        $name = $this->sanitizeData($name);
-        $price = $this->sanitizeData($request->input('price'));
-        $tax = $this->sanitizeData($request->input('tax'));
+        $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
 
-        $data = [];
-
-        try {
-
-            $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
-
-            if ( isset($exists->name) )
-                throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
-
-            $object = $this->model::find($id);
-            $object->name = $name;
-            $object->price = $price;
-            $object->tax = $tax;            
-            $object->save();
-
-            $data['content'] = Lang::get('aroaden.success_message');
-
-        } catch (Exception $e) {
-
-            $data['error'] = true; 
-            $data['content'] = $e->getMessage();
-
+        if ( isset($exists->name) ) {
+            $msg = Lang::get('aroaden.name_in_use', ['name' => $name]);
+            $request->session()->flash($this->error_message_name, $msg);
+            return redirect("$this->main_route/$id/$this->view_name");
         }
 
-        $this->echoJsonOuptut($data);
+        $object = $this->model::find($id);
+        $object->name = $name;    
+        $object->save();
+
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+        return redirect("$this->main_route");
     }
 
 }

@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\BaseModelInterface;
 
-class Patients extends Model
+class Patients extends Model implements BaseModelInterface
 {
     use SoftDeletes;
     
@@ -47,15 +48,6 @@ class Patients extends Model
                         ->orderBy('surname', 'ASC')
                         ->orderBy('name', 'ASC')
                         ->paginate($num_paginate);
-    }
-
-    public static function CountAll()
-    {
-        $result = DB::table('patients')
-                    ->whereNull('deleted_at')
-                    ->get();
-
-        return (int)count($result);
     }
 
     public function scopeFirstById($query, $id)
@@ -172,6 +164,15 @@ class Patients extends Model
         ;";
 
         return DB::select($query);
+    }
+
+    public static function CountAll()
+    {
+        $result = DB::table('patients')
+                    ->whereNull('deleted_at')
+                    ->get();
+
+        return (int)count($result);
     }
 
 }

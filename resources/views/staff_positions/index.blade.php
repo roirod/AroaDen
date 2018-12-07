@@ -2,6 +2,11 @@
 
 @section('content')
 
+	@include('includes.staff_nav')
+
+	@include('includes.messages')
+	@include('includes.errors')
+
 	<div class="row"> 
 	  <div class="col-sm-12"> 
 	    <div class="input-group"> 
@@ -23,8 +28,8 @@
 		  <div class="panel panel-default">
 		    <table class="table">
 		       <tr class="fonsi15 success">
-		        <td class="wid290">{{ @trans('aroaden.positions') }}</td>      
-		        <td class="wid50"></td>
+		        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
+		        <td class="wid110">{{ @trans('aroaden.edit') }}</td>      
 		        <td class="wid290"></td>
 		        <td class="wid290"></td>		        
 		       </tr>
@@ -36,9 +41,9 @@
 		        @foreach ($main_loop as $obj)
 
 		         <tr>
-		            <td class="wid290">{{ $obj->name }}</td>
+		            <td class="wid180">{{ $obj->name }}</td>
 
-		            <td class="wid50">
+		            <td class="wid110">
 		              <a class="btn btn-xs btn-success editService" type="button" href="/{{ "$main_route/$obj->idstpo/edit" }}">
 		                <i class="fa fa-edit"></i>
 		              </a>

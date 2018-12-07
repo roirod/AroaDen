@@ -27,7 +27,7 @@
 
 <body> 
 
-<br>
+<div class="mar4"></div>
 
 <div class="jumbotron container bgwi pad10">
   <div class="row">  
@@ -68,9 +68,11 @@
     
     <div class="col-sm-11 minHeight widCol2">
       <div class="row">
-        <div class="col-sm-10 fonsi15 pad4">
-            &nbsp; &nbsp; {!! @trans("aroaden.user") !!} &nbsp;
-            <span class="label label-primary fonsi15"> {!! Auth::user()->username !!} </span>
+        <div class="col-sm-10 pad4">
+          &nbsp; &nbsp;
+          <span class="label label-primary fonsi13"> 
+            <i class="fa fa-user fa-1x"></i> {!! Auth::user()->username !!} 
+          </span>
         </div>
  	
         <div class="col-sm-2 text-right">
@@ -87,7 +89,7 @@
              <form action="{!! url("/logout") !!}" method="post">
               {!! csrf_field() !!}
               <li class="text-right">
-                 <input type="submit" class="btn btn-danger btn-lg" value="{!! @trans("aroaden.logout") !!}">
+                 <input type="submit" class="btn btn-default btn-lg" value="{!! @trans("aroaden.logout") !!}">
               </li>
             </form>
           </ul>

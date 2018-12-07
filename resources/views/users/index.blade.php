@@ -59,11 +59,11 @@
 	  	<form role="form" class="form" id="form" action="/{!! $main_route !!}" method="POST">
 			{!! csrf_field() !!}
 			 
-			@include('form_fields.create.user')
+			@include('form_fields.fields.user')
 
-			@include('form_fields.create.password')
+			@include('form_fields.fields.password')
 
-			@include('form_fields.create.scopes')
+			@include('form_fields.fields.scopes')
 
 			@include('includes.submit_button')
 

@@ -95,7 +95,6 @@ class CompanyController extends BaseController
 
         foreach ($empre as $arr => $value) {
             foreach ($request->input() as $request_key => $request_value) {
-                $request_value = ucfirst($request_value);
                 $request_value = $this->sanitizeData($request_value);
 
                 if ($value["key"] == $request_key)

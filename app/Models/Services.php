@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\BaseModelInterface;
 
-class Services extends Model
+class Services extends Model implements BaseModelInterface
 {
 	use SoftDeletes;
 

@@ -7,44 +7,38 @@
 
 <meta name="_token" content="{!! csrf_token() !!}"/>
 
-<div class="row">
-  <div class="col-sm-12">
+<div class="row pad4">
+  <div class="col-sm-3">
+    <p> &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}</p>
     <form>
-  		<div class="input-group">
-  		 	<div class="input-group-btn pad10"> 
-          <p> &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}</p>
-        </div>
-  		  <div class="col-sm-3"> 
-  		      <select name="select_val" class="form-control search_class">
-  		        <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
-  		        <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
-  		        <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
-              <option value="minus1week_appointments">{{ @trans('aroaden.minus1week_appointments') }}</option>
-              <option value="minus1month_appointments">{{ @trans('aroaden.minus1month_appointments') }}</option>
-  		      </select> 
-  		  </div>
-</div>  </form>  </div>  </div>
+      <select name="select_val" class="form-control search_class">
+        <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
+        <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
+        <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
+        <option value="minus1week_appointments">{{ @trans('aroaden.minus1week_appointments') }}</option>
+        <option value="minus1month_appointments">{{ @trans('aroaden.minus1month_appointments') }}</option>
+      </select> 
+    </form>  
+  </div>
 
-<div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-8">
     <form>
       <input type="hidden" name="select_val" value="date_range">
-
-      <div class="input-group pad4"> 
-        <span class="input-group-btn pad10"> <p>{{ @trans('aroaden.date_from') }}</p> </span>
-        <div class="col-sm-4"> 
+      <div class="input-group"> 
+        <span class="input-group-btn pad4"> <p>{{ @trans('aroaden.date_from') }}</p> </span>
+        <div class="col-sm-8"> 
           <input name="date_from" type="date" class="search_class" autofocus required>
         </div>
-        <div class="col-sm-1">
-          <span class="input-group-btn pad10">  <p>{{ @trans('aroaden.date_to') }}</p> </span> 
-        </div>
-        <div class="col-sm-4 input-group">
+      </div>
+      <div class="input-group"> 
+        <span class="input-group-btn pad4"> <p>{{ @trans('aroaden.date_to') }}</p> </span>
+        <div class="col-sm-8"> 
           <input name="date_to" type="date" class="search_class" required>
         </div>
-      </div>
-    
+      </div>    
     </form>
-</div> </div>
+  </div> 
+</div>
 
 
 <div class="row">
@@ -65,11 +59,11 @@
     <div class="panel panel-default"> 
       <table class="table">
          <tr class="fonsi15 success">
-             <td class="wid50"></td>
              <td class="wid290">{{ @trans('aroaden.patient') }}</td>
-             <td class="wid110">{{ @trans('aroaden.hour') }}</td>
-             <td class="wid110">{{ @trans('aroaden.day') }}</td>
-             <td class="wid230">{{ @trans('aroaden.notes') }}</td>
+             <td class="wid95">{{ @trans('aroaden.hour') }}</td>
+             <td class="wid95">{{ @trans('aroaden.day') }}</td>
+             <td class="wid290">{{ @trans('aroaden.notes') }}</td>
+             <td class="wid290"></td>             
          </tr>
        </table>
  
@@ -79,21 +73,16 @@
  
           @foreach ($main_loop as $obj)
             <tr>
-                <td class="wid50">
-                  <a href="{{ url("/$patients_route/$obj->idpat") }}" target="_blank" class="btn btn-default btn-sm" role="button">
-                    <i class="fa fa-hand-pointer-o"></i>
-                  </a> 
-                </td>
-
                 <td class="wid290"> 
                   <a href="{{ url("/$patients_route/$obj->idpat") }}" class="pad4" target="_blank">
                       {{ $obj->surname }}, {{ $obj->name }} 
                   </a>
                 </td>
 
-                <td class="wid110">{{ substr( $obj->hour, 0, -3 ) }}</td>
-                <td class="wid110">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
-                <td class="wid230">{{ $obj->notes }}</td>
+                <td class="wid95">{{ substr( $obj->hour, 0, -3 ) }}</td>
+                <td class="wid95">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
+                <td class="wid290">{{ $obj->notes }}</td>
+                <td class="wid290"></td>
             </tr>
           @endforeach
 
@@ -175,11 +164,11 @@
               html += '<div class="panel panel-default">';
               html += '   <table class="table">';
               html += '     <tr class="fonsi15 success">';
-              html += '       <td class="wid50"> &nbsp; </td>';
               html += '       <td class="wid290">{{ @trans('aroaden.patient') }}</td>';
-              html += '       <td class="wid110">{{ @trans('aroaden.hour') }}</td>';
-              html += '       <td class="wid110">{{ @trans('aroaden.day') }}</td>';
-              html += '       <td class="wid230">{{ @trans('aroaden.notes') }}</td>';
+              html += '       <td class="wid95">{{ @trans('aroaden.hour') }}</td>';
+              html += '       <td class="wid95">{{ @trans('aroaden.day') }}</td>';
+              html += '       <td class="wid290">{{ @trans('aroaden.notes') }}</td>';
+              html += '       <td class="wid290"></td>';
               html += '     </tr>';
               html += '   </table>';
               html += '  <div class="box400">';
@@ -187,19 +176,15 @@
 
               $.each(response.main_loop, function(index, object){
                 html += '  <tr>';
-                html += '    <td class="wid50">';
-                html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" target="_blank" class="btn btn-default btn-sm" role="button">';
-                html += '        <i class="fa fa-hand-pointer-o"></i>';
-                html += '      </a>';
-                html += '    </td>';
                 html += '    <td class="wid290">';
                 html += '      <a href="/{{ $patients_route }}/'+object.idpat+'" class="pad4" target="_blank">';
                 html +=           object.surname + ', ' + object.name;
                 html += '      </a>';
                 html += '    </td>';
-                html += '    <td class="wid110">' + object.hour.slice(0, -3); + '</td>';
-                html += '    <td class="wid110">' + object.day.split("-").reverse().join("-") + '</td>';
-                html += '    <td class="wid230">' + object.notes + '</td>';
+                html += '    <td class="wid95">' + object.hour.slice(0, -3); + '</td>';
+                html += '    <td class="wid95">' + object.day.split("-").reverse().join("-") + '</td>';
+                html += '    <td class="wid290">' + object.notes + '</td>';
+                html += '    <td class="wid290"></td>';
                 html += '  </tr>';
               });
 

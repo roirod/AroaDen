@@ -34,15 +34,15 @@
 
         <hr>
 
-        @include('form_fields.edit.openform')
+        @include('form_fields.fields.openform')
 
             <input type="hidden" name="price" value="{{ $object->price }}">
 
-            @include('form_fields.edit_alternative')
+            @include('form_fields.common_alternative')
 
-        @include('form_fields.edit.closeform')
+        @include('form_fields.fields.closeform')
 
-    @include('form_fields.edit.closediv')
+    @include('form_fields.fields.closediv')
 
 @endsection
 

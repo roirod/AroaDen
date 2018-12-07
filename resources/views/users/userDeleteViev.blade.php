@@ -34,8 +34,16 @@
  				</div>
  			</div>
 
-			@include('includes.delete_button')
- 			
+		   	<div class="pad10">
+				<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-times"></i> {!! @trans("aroaden.delete") !!} <span class="caret"></span>  
+				</button>
+				<ul class="dropdown-menu" role="menu"> 
+					<li>
+						@include('includes.delete_button')
+					</li>
+				</ul>
+ 			</div>						
  		</form>
  	</div>
  </div>

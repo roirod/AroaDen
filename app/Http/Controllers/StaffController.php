@@ -6,6 +6,7 @@ use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use App\Http\Controllers\Traits\DirFilesTrait;
 use Illuminate\Http\Request;
+use App\Models\StaffPositionsEntries;
 use App\Models\StaffPositions;
 use App\Models\Treatments;
 use App\Models\StaffWorks;
@@ -15,6 +16,7 @@ use Carbon\Carbon;
 use Validator;
 use Exception;
 use Lang;
+use DB;
 
 class StaffController extends BaseController implements BaseInterface
 {
@@ -82,9 +84,14 @@ class StaffController extends BaseController implements BaseInterface
             $request->session()->flash($this->error_message_name, 'Has borrado a este profesional.');    
             return redirect($this->main_route);
         }
-           
+
+        $staffPositionsEntries = StaffPositionsEntries::AllByStaffIdWithName($id);
+        $staffPositionsEntries = array_column($staffPositionsEntries, 'name');
+        $staffPositionsEntries = implode($staffPositionsEntries, ', ');
+
         $this->view_data['object'] = $staff;
         $this->view_data['treatments'] = StaffWorks::AllByStaffId($id);
+        $this->view_data['staffPositionsEntries'] = $staffPositionsEntries;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $staff->idsta;
         $this->view_data['profile_photo'] = $profile_photo;
@@ -96,7 +103,10 @@ class StaffController extends BaseController implements BaseInterface
     }
 
     public function create(Request $request, $id = false)
-    {     
+    {
+        $this->CheckIfStaffPositionsExists();
+
+        $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
         $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::create($request);
@@ -104,7 +114,22 @@ class StaffController extends BaseController implements BaseInterface
 
     public function store(Request $request)
     {
+        $name = $this->sanitizeData($request->input('name'));
+        $surname = $this->sanitizeData($request->input('surname'));
         $dni = $this->sanitizeData($request->input('dni'));
+        $tel1 = $this->sanitizeData($request->input('tel1'));
+        $tel2 = $this->sanitizeData($request->input('tel2'));
+        $address = $this->sanitizeData($request->input('address'));
+        $city = $this->sanitizeData($request->input('city'));
+        $birth = $this->sanitizeData($request->input('birth'));
+        $notes = $this->sanitizeData($request->input('notes'));
+        $positions = $request->input('positions');
+
+        if (is_null($positions)) {
+            $messa = 'No has seleccionado ningún cargo.';
+            $request->session()->flash($this->error_message_name, $messa);
+            return redirect("/$this->main_route/create")->withInput();
+        }
 
         $exists = $this->model::FirstByDniDeleted($dni);
    
@@ -120,7 +145,6 @@ class StaffController extends BaseController implements BaseInterface
            'dni' => 'unique:staff|max:12',
            'tel1' => 'max:11',
            'tel2' => 'max:11',
-           'position' => 'max:66',
            'address' => 'max:111',
            'city' => 'max:111',
            'birth' => 'date',
@@ -133,52 +157,62 @@ class StaffController extends BaseController implements BaseInterface
                          ->withInput();
         } else {
 
-            $name = ucfirst($request->input('name'));
-            $surname = ucwords($request->input('surname'));
-            $address = ucfirst($request->input('address'));
-            $city = ucfirst($request->input('city'));
-            $notes = ucfirst($request->input('notes'));
-            
-            $name = $this->sanitizeData($name);
-            $surname = $this->sanitizeData($surname);
-            $position = $this->sanitizeData($request->input('position'));
-            $dni = $this->sanitizeData($request->input('dni'));
-            $tel1 = $this->sanitizeData($request->input('tel1'));
-            $tel2 = $this->sanitizeData($request->input('tel2'));
-            $address = $this->sanitizeData($address);
-            $city = $this->sanitizeData($city);
-            $birth = $this->sanitizeData($request->input('birth'));
-            $notes = $this->sanitizeData($notes);
-                        
-            $this->model::create([
-              'name' => $name,
-              'surname' => $surname,
-              'dni' => $dni,
-              'tel1' => $tel1,
-              'tel2' => $tel2,
-              'position' => $position,
-              'address' => $address,
-              'city' => $city,
-              'birth' => $birth,
-              'notes' => $notes
-            ]);
-          
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-            return redirect("/$this->main_route/create");
-        }      
+            try {
+
+                DB::beginTransaction();
+
+                $idsta = $this->model::insertGetId([
+                    'name' => $name,
+                    'surname' => $surname,
+                    'dni' => $dni,
+                    'tel1' => $tel1,
+                    'tel2' => $tel2,
+                    'address' => $address,
+                    'city' => $city,
+                    'birth' => $birth,
+                    'notes' => $notes,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+
+                foreach ($positions as $idstpo) {
+                    StaffPositionsEntries::create([
+                      'idsta' => (int)$idsta,
+                      'idstpo' => (int)$idstpo
+                    ]);
+                }
+
+                DB::commit();
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $request->session()->flash($this->error_message_name, $e->getMessage());  
+                return redirect("/$this->main_route");
+
+            }
+
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
+            return redirect("/$this->main_route");
+        } 
     }
   
     public function edit(Request $request, $id)
     {
+        $this->CheckIfStaffPositionsExists();
+
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-         
-        $object = $this->model::FirstById($id); 
+
+        $object = $this->model::FirstById($id);
 
         $this->view_data['object'] = $object;
-        $this->view_data['form_fields'] = $this->form_fields;        
         $this->view_data['idnav'] = $id;       
         $this->view_data['id'] = $id;
+        $this->view_data['form_fields'] = $this->form_fields;
+        $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
+        $this->view_data['staffPositionsEntries'] = StaffPositionsEntries::AllByStaffId($id);
+        $this->view_data['is_create_view'] = false;
 
         $this->setPageTitle($object->surname.', '.$object->name);
 
@@ -189,16 +223,23 @@ class StaffController extends BaseController implements BaseInterface
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
+        $route = "/$this->main_route/$id/edit";
+
+        $positions = $request->input('positions');
+
+        if (is_null($positions)) {
+            $messa = 'No has seleccionado ningún cargo.';
+            $request->session()->flash($this->error_message_name, $messa);
+            return redirect($route)->withInput();
+        }
 
         $input_dni = $this->sanitizeData($request->input('dni'));
-
-        $person = $this->model::FirstById($id);
         $exists = $this->model::CheckIfExistsOnUpdate($id, $input_dni);
 
         if ( isset($exists->dni) ) {
             $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
             $request->session()->flash($this->error_message_name, $msg);
-            return redirect("$this->main_route/$id/edit")->withInput();
+            return redirect($route)->withInput();
         }
               
         $validator = Validator::make($request->all(),[
@@ -207,7 +248,6 @@ class StaffController extends BaseController implements BaseInterface
             'dni' => 'required|max:12',
             'tel1' => 'max:11',
             'tel2' => 'max:11',
-            'position' => 'max:66',
             'notes' => '',
             'address' => 'max:111',
             'city' => 'max:111',
@@ -215,49 +255,77 @@ class StaffController extends BaseController implements BaseInterface
         ]);
             
         if ($validator->fails()) {
-             return redirect("/$this->main_route/$id/edit")
+             return redirect($route)
                          ->withErrors($validator)
                          ->withInput();
-        } else {        
+        } else {
 
-            $birth = $request->input('birth');
-                      
-            if (!$this->validateDate($birth)) {
-               $request->session()->flash($this->error_message_name, 'Fecha/s incorrecta');
-               return redirect("/$this->main_route/$id/edit");
+            try {
+
+                DB::beginTransaction();
+
+                $birth = $request->input('birth');
+                          
+                if (!$this->validateDate($birth)) {
+                   $request->session()->flash($this->error_message_name, 'Fecha/s incorrecta');
+                   return redirect($route);
+                }
+                         
+                $staff = $this->model::FirstById($id);
+               
+                $staff->name = $this->sanitizeData($request->input('name'));
+                $staff->surname = $this->sanitizeData($request->input('surname'));
+                $staff->dni = $this->sanitizeData($request->input('dni'));
+                $staff->tel1 = $this->sanitizeData($request->input('tel1'));
+                $staff->tel2 = $this->sanitizeData($request->input('tel2'));
+                $staff->address = $this->sanitizeData($request->input('address'));
+                $staff->city = $this->sanitizeData($request->input('city'));
+                $staff->birth = $this->sanitizeData($request->input('birth'));
+                $staff->notes = $this->sanitizeData($request->input('notes'));
+                $staff->updated_at = date('Y-m-d H:i:s');
+
+                $staff->save();
+
+                StaffPositionsEntries::where('idsta', $id)->delete();
+
+                foreach ($positions as $idstpo) {
+                    StaffPositionsEntries::create([
+                      'idsta' => (int)$id,
+                      'idstpo' => (int)$idstpo
+                    ]);
+                }
+
+                DB::commit();
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $request->session()->flash($this->error_message_name, $e->getMessage());  
+                return redirect($route);
+
             }
-          
-            $id = $this->sanitizeData($id);
-            
-            $staff = $this->model::FirstById($id);
-           
-            $name = ucfirst($request->input('name'));
-            $surname = ucwords($request->input('surname'));
-            $address = ucfirst($request->input('address'));
-            $city = ucfirst($request->input('city'));
-            $notes = ucfirst($request->input('notes'));
 
-            $staff->name = $this->sanitizeData($name);
-            $staff->surname = $this->sanitizeData($surname);
-            $staff->dni = $this->sanitizeData($request->input('dni'));
-            $staff->tel1 = $this->sanitizeData($request->input('tel1'));
-            $staff->tel2 = $this->sanitizeData($request->input('tel2'));
-            $staff->position = $this->sanitizeData($request->input('position'));
-            $staff->notes = $this->sanitizeData($notes);
-            $staff->address = $this->sanitizeData($address);
-            $staff->city = $this->sanitizeData($city);
-            $staff->birth = $this->sanitizeData($request->input('birth'));
-            
-            $staff->save();
-
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
             return redirect("/$this->main_route/$id");
-        }   
+        }
     }
 
     public function file(Request $request, $id)
     {
         return $this->loadFileView($request, $id);
+    }
+
+    private function CheckIfStaffPositionsExists()
+    {
+        $count = StaffPositions::CountAll();
+
+        if ($count === 0) {
+            $request->session()->flash($this->error_message_name, 'No hay cargos de personal, debes crear alguno.');    
+            return redirect();
+        }
+
+        return redirect()->back();
     }
 
 }

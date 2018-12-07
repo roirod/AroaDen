@@ -7,9 +7,9 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText("Editar Paciente") !!}
+	{!! addText(@trans('aroaden.edit_patient')) !!}
 
-	@include('form_fields.edit')
+	@include('form_fields.common')
 
 @endsection
 	 

@@ -26,8 +26,8 @@
 				</select>
 			</div>
 
-		@include('form_fields.create.closeform')
-	@include('form_fields.create.closediv')
+		@include('form_fields.fields.closeform')
+	@include('form_fields.fields.closediv')
 
 	<div id="loading"></div>
 
@@ -38,16 +38,16 @@
 
 	    <p class="pad4" id="name_price"></p>
 
-	    @include('form_fields.create.openform')
+	    @include('form_fields.fields.openform')
 
 	        <input type="hidden" name="idpat" value="{{ $id }}">
 	        <input type="hidden" name="idser" value="">
 	        <input type="hidden" name="price" value="">
 
-	        @include('form_fields.create_alternative')
+	        @include('form_fields.common_alternative')
 
-		@include('form_fields.create.closeform')
-	@include('form_fields.create.closediv')
+		@include('form_fields.fields.closeform')
+	@include('form_fields.fields.closediv')
 
 @endsection
 

@@ -2,12 +2,14 @@
 
 @section('content')
 
+	@include('includes.patients_nav')
+
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText("Añadir Paciente") !!}
+	{!! addText(@trans('aroaden.create_patient')) !!}
 
-	@include('form_fields.create')
+	@include('form_fields.common')
     
 @endsection
 

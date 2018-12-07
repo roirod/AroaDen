@@ -66,13 +66,13 @@
 
       var PatientsTable = {
         'oLanguage': {
-          'sProcessing': 'Cargando...',
-          'sLengthMenu': 'Mostrar _MENU_',
+          'sProcessing': 'Procesando...',
+          'sLengthMenu': 'Selecciona _MENU_',
           'sZeroRecords': 'Pacientes no encontrados',
-          'sInfo': 'Mostrando desde _START_ hasta _END_ de _TOTAL_ pacientes',
+          'sInfo': 'De _START_ hasta _END_ de _TOTAL_ pacientes',
           'sInfoEmpty': 'No hay pacientes',
           'sInfoFiltered': '(filtrados de _MAX_ total de pacientes)',
-          'sSearch': 'Búsqueda:',
+          'sSearch': 'Buscar:',
           "oPaginate": {
             "sFirst":    "❮❮",
             "sLast":     "❯❯",

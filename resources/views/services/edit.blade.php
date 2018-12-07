@@ -1,14 +1,15 @@
+@include('includes.services_nav')
 
-{!! addText("Editar servicio") !!}
+{!! addText(@trans('aroaden.edit_service')) !!}
 
 <form id="form" class="editServiceForm form" action="{{ url("/$services_route/$id") }}" method="POST">
 	{!! csrf_field() !!}
 
 	<input type="hidden" name="_method" value="PUT">
 
-    @include('form_fields.edit_alternative')
+  @include('form_fields.common_alternative')
 
-@include('form_fields.edit.closeform')
+@include('form_fields.fields.closeform')
 
 <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>

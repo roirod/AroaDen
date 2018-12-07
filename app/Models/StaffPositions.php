@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\BaseModelInterface;
 
-class StaffPositions extends Model
+class StaffPositions extends Model implements BaseModelInterface
 {
 	protected $table = 'staff_positions';
     protected $fillable = ['name'];
@@ -28,8 +29,6 @@ class StaffPositions extends Model
         return $query->where('name', $name)
                         ->first();
     }
-
-
 
     public static function CheckIfExistsOnUpdate($id, $name)
     {

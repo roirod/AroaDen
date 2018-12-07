@@ -46,6 +46,9 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::post($route["staff"].'/{id}', 'StaffController@update');
 		Route::delete($route["staff"].'/{idfiles}/deleteFile', 'StaffController@deleteFile');
 
+		Route::get($route["staff_positions"].'/{id}/edit', 'StaffPositionsController@edit');
+		Route::post($route["staff_positions"].'/{id}', 'StaffPositionsController@update');
+
 		Route::get($route["services"].'/{id}/edit', 'ServicesController@edit');
 		Route::post($route["services"].'/{id}', 'ServicesController@update');
 

@@ -15,7 +15,6 @@ img.center {
     margin-top: 50px;
 }
 
-
 .widCol1 { 
   width: 100px !important; 
   max-width: 100px !important; 
@@ -67,6 +66,8 @@ img.center {
 .box230 { height: 230px; overflow: auto; border: 1px solid grey; }
 .box200 { height: 200px; overflow: auto; border: 1px solid grey; }
 
+.wid450 { width: 450px !important; }
+.wid350 { width: 350px !important; }
 .wid290 { width: 290px !important; }
 .wid230 { width: 230px !important; }
 .wid180 { width: 180px !important; }
@@ -215,8 +216,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .fonbla { color: white; }
 .fuengrisoscu { color: rgb(20, 20, 20); }
 
-.bgblack { background-color: black; }
-.bgwi { background-color: white; }
+.bgblack { background-color: black !important; }
+.bgwi { background-color: white !important; }
 
 .textshadow { 
   text-shadow:  2px 2px 0px #000;

@@ -86,8 +86,6 @@ class TreatmentsController extends BaseController
         $tax = $service->tax;
         $staff = $request->input('staff');
 
-        $data = [];
-
         try {
 
             DB::beginTransaction();

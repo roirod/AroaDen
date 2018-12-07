@@ -4187,7 +4187,9 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 
 .nav>li>a:focus,.nav>li>a:hover{
 	text-decoration: none;
-  	border-bottom: 2px solid red !important;
+  	border-bottom: 2px solid #06fbbe !important;
+	background-color: black !important;
+	color: #e7e7e7 !important;
 }
 
 .nav>li.disabled>a{
@@ -4392,7 +4394,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 	position:relative;
 	min-height:50px;
 	margin-bottom:20px;
-	border:1px solid transparent
+	border:2px solid transparent
 }
 
 @media (min-width:768px){
@@ -4776,7 +4778,7 @@ padding-bottom: 11px;
 
 .navbar-default{
 	background-color:#f8f8f8;
-	border-color:#e7e7e7
+	border-color:#333
 }
 
 .navbar-default .navbar-brand{

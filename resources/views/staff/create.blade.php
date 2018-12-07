@@ -2,12 +2,14 @@
 
 @section('content')
 
+	@include('includes.staff_nav')
+
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText("Añadir Personal") !!}
+	{!! addText(@trans('aroaden.add_staff')) !!}
 
-	@include('form_fields.create')
+	@include('form_fields.common')
     
 @endsection
 

@@ -7,9 +7,9 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText("Editar Personal") !!}
+	{!! addText(@trans('aroaden.edit_staff')) !!}
 
-	@include('form_fields.edit')
+	@include('form_fields.common')
 
 @endsection
 

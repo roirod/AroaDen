@@ -5,15 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use App\Models\BaseModelInterface;
 
-class Staff extends Model
+class Staff extends Model implements BaseModelInterface
 {
 	use SoftDeletes;
 	
 	protected $table = 'staff';
 	protected $dates = ['deleted_at'];
-    protected $fillable = ['name','surname','position','dni','tel1','tel2','address','city','birth','notes'];
+    protected $fillable = ['name','surname','dni','tel1','tel2','address','city','birth','notes'];
     protected $primaryKey = 'idsta';
+
+    public function staffPositionsEntries()
+    {
+        return $this->hasMany('App\Models\StaffPositionsEntries', 'idsta', 'idsta');
+    }
 
     public function scopeAllOrderBySurname($query, $num_paginate)
     {
@@ -99,7 +105,7 @@ class Staff extends Model
 
     public function scopeFindStringOnField($query, $search_in, $string)
     {
-        return $query->select('idsta', 'surname', 'name', 'dni', 'position', 'tel1')
+        return $query->select('idsta', 'surname', 'name', 'dni', 'tel1')
                         ->whereNull('deleted_at')
                         ->where($search_in, 'LIKE', '%'.$string.'%')
                         ->orderBy('surname', 'ASC')

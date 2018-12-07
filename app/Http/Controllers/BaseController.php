@@ -76,6 +76,11 @@ class BaseController extends Controller
     protected $view_name = '';
 
     /**
+     * @var bool $is_create_view
+     */
+    protected $is_create_view = true;
+
+    /**
      * @var array $form_fields  input fields showed in form
      */
     protected $form_fields = [];
@@ -168,7 +173,7 @@ class BaseController extends Controller
     /**
      * @var int $date_max_days
      */
-    protected $date_max_days = 60;
+    protected $date_max_days = 90;
 
     /**
      * @var array $misc_array  miscelaneus array
@@ -270,6 +275,7 @@ class BaseController extends Controller
     public function edit(Request $request, $id)
     {
         $this->view_name = 'edit';
+        $this->is_create_view = false;
         $this->view_data['request'] = $request;
 
         return $this->loadView();
@@ -284,8 +290,11 @@ class BaseController extends Controller
      */
     public function list(Request $request)
     {
-        $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
-        $this->misc_array['search_in'] = $this->sanitizeData($request->input('search_in'));  
+        $string = $request->input('string');
+        $search_in = $request->input('search_in');
+
+        $this->misc_array['string'] = $this->sanitizeData($string);
+        $this->misc_array['search_in'] = $this->sanitizeData($search_in);
 
         $data = [];
 
@@ -360,9 +369,11 @@ class BaseController extends Controller
         View::share('app_name_text', self::APP_NAME_TEXT);
         View::share('page_title', $this->page_title);
         View::share('autofocus', $this->autofocus);
+        View::share('is_create_view', $this->is_create_view);
+
         View::share('main_route', $this->main_route);
         View::share('other_route', $this->other_route);
-        View::share('form_route', $this->form_route);
+        View::share('form_route', $this->form_route);        
 
         View::share('patients_route', $this->config['routes']['patients']);
         View::share('invoices_route', $this->config['routes']['invoices']);

@@ -9,18 +9,18 @@
 
 	{!! addText("Añadir Cita") !!}
 
-	@include('form_fields.create.opendiv')
+	@include('form_fields.fields.opendiv')
 
 		<p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
 
-		@include('form_fields.create.openform')
+		@include('form_fields.fields.openform')
 
 			<input type="hidden" name="idpat" value="{{ $id }}">
 
-			@include('form_fields.create_alternative')
+			@include('form_fields.common_alternative')
 
-		@include('form_fields.create.closeform')
-	@include('form_fields.create.closediv')
+		@include('form_fields.fields.closeform')
+	@include('form_fields.fields.closediv')
 
 @endsection
 

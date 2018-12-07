@@ -1,12 +1,13 @@
+@include('includes.services_nav')
 
-{{ addText("Añadir servicio") }}
+{!! addText(@trans('aroaden.create_service')) !!}
 
 <form id="form" class="createServiceForm form" action="{!! $services_route !!}" method="post">
 	{!! csrf_field() !!}
 
-    @include('form_fields.create_alternative')
+  @include('form_fields.common_alternative')
 
-@include('form_fields.edit.closeform')
+@include('form_fields.fields.closeform')
 
 <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
