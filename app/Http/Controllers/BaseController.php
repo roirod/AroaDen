@@ -436,4 +436,34 @@ class BaseController extends Controller
         return $data;
     }
 
+    /**
+     *  destroy
+     * 
+     *  @param object $request     
+     *  @param int $id
+     *  @return string       
+     */
+    public function destroy(Request $request, $id)
+    {
+        $id = $this->sanitizeData($id);
+        $error = false;
+        $msg = Lang::get('aroaden.success_message');
+
+        try {
+
+            $this->model::destroy($id);         
+
+        } catch (Exception $e) {
+
+            $error = true;
+            $msg = $e->getMessage();
+
+        }
+
+        $data['error'] = $error;
+        $data['msg'] = $msg;
+
+        $this->echoJsonOuptut($data);
+    }
+
 }

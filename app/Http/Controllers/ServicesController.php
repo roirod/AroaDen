@@ -246,45 +246,11 @@ class ServicesController extends BaseController implements BaseInterface
     }
 
      /**
-     *  get query result, using ajax
-     *  @return json
+     *  destroy
      */
     public function destroy(Request $request, $id)
     {
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $id = $this->sanitizeData($id);
-        $error = false;
-        $msg = Lang::get('aroaden.success_message');
-
-        try {
-
-            $this->model::destroy($id);         
-
-        } catch (Exception $e) {
-
-            $error = true;
-            $msg = $e->getMessage();
-
-        }
-
-        if ($request->ajax()) {
-            $data['error'] = $error;
-            $data['msg'] = $msg;
-
-            $this->echoJsonOuptut($data);
-        }
-
-        if ($error) {
-
-            $request->session()->flash($this->error_message_name, $msg);
-
-        } else  {
-
-            $request->session()->flash($this->success_message_name, $msg);
-
-        }
-
-        return redirect($this->main_route);
+        return parent::destroy($request, $id);  
     }
 
 }

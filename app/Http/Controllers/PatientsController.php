@@ -220,30 +220,24 @@ class PatientsController extends BaseController implements BaseInterface
 	        return redirect("$this->main_route/$this->view_name")
 	                     ->withErrors($validator)
 	                     ->withInput();
-	    } else {
-             
-            $name = ucfirst($request->input('name'));
-            $surname = ucwords($request->input('surname'));
-            $address = ucfirst($request->input('address'));
-            $city = ucfirst($request->input('city'));
-            $notes = ucfirst($request->input('notes'));          
+	    } else {   
 
             try {
 
                 DB::beginTransaction();
 
                 $insertedId = $this->model::insertGetId([
-                  'name' => $this->sanitizeData($name),
-                  'surname' => $this->sanitizeData($surname),
+                  'name' => $this->sanitizeData($request->input('name')),
+                  'surname' => $this->sanitizeData($request->input('surname')),
                   'dni' => $this->sanitizeData($request->input('dni')),
                   'tel1' => $this->sanitizeData($request->input('tel1')),
                   'tel2' => $this->sanitizeData($request->input('tel2')),
                   'tel3' => $this->sanitizeData($request->input('tel3')),
                   'sex' => $this->sanitizeData($request->input('sex')),
-                  'address' => $this->sanitizeData($address),
-                  'city' => $this->sanitizeData($city),
+                  'address' => $this->sanitizeData($request->input('address')),
+                  'city' => $this->sanitizeData($request->input('city')),
                   'birth' => $this->sanitizeData($request->input('birth')),
-                  'notes' => $this->sanitizeData($notes),
+                  'notes' => $this->sanitizeData($request->input('notes')),
                   'created_at' => date('Y-m-d H:i:s'),
                 ]);
 
@@ -318,23 +312,16 @@ class PatientsController extends BaseController implements BaseInterface
 	                     ->withInput();
 	    } else {		
 					  		
-            $name = ucfirst($request->input('name'));
-            $surname = ucwords($request->input('surname'));
-            $address = ucfirst($request->input('address'));
-            $city = ucfirst($request->input('city'));
-            $notes = ucfirst($request->input('notes'));
-
-            $patient->name = $this->sanitizeData($name);
-            $patient->surname = $this->sanitizeData($surname);
+            $patient->name = $this->sanitizeData($request->input('name'));
+            $patient->surname = $this->sanitizeData($request->input('surname'));
             $patient->dni = $this->sanitizeData($request->input('dni'));
             $patient->tel1 = $this->sanitizeData($request->input('tel1'));
             $patient->tel2 = $this->sanitizeData($request->input('tel2'));
             $patient->tel3 = $this->sanitizeData($request->input('tel3'));
             $patient->sex = $this->sanitizeData($request->input('sex'));
-            $patient->address = $this->sanitizeData($address);
-            $patient->city = $this->sanitizeData($city);
-            $patient->birth = $this->sanitizeData($request->input('birth'));
-            $patient->notes = $this->sanitizeData($notes);
+            $patient->address = $this->sanitizeData($request->input('address'));
+            $patient->city = $this->sanitizeData($request->input('city'));
+            $patient->notes = $this->sanitizeData($request->input('notes'));
             $patient->updated_at = date('Y-m-d H:i:s');
 			$patient->save();
 
@@ -403,18 +390,12 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_name = 'record';
 
         $record = Record::find($id);
-                
-        $medical_record = ucfirst($request->input('medical_record'));
-        $diseases = ucfirst($request->input('diseases'));
-        $medicines = ucfirst($request->input('medicines'));
-        $allergies = ucfirst($request->input('allergies'));
-        $notes = ucfirst($request->input('notes'));
-        
-        $record->medical_record = $this->sanitizeData($medical_record);   
-        $record->diseases = $this->sanitizeData($diseases);   
-        $record->medicines = $this->sanitizeData($medicines);   
-        $record->allergies = $this->sanitizeData($allergies);   
-        $record->notes = $this->sanitizeData($notes);   
+
+        $record->medical_record = $this->sanitizeData($request->input('medical_record'));   
+        $record->diseases = $this->sanitizeData($request->input('diseases'));   
+        $record->medicines = $this->sanitizeData($request->input('medicines'));   
+        $record->allergies = $this->sanitizeData($request->input('allergies'));   
+        $record->notes = $this->sanitizeData($request->input('notes'));   
         
         $record->save();
 
