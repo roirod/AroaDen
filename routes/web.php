@@ -44,7 +44,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 		Route::get($route["staff"].'/{id}/edit', 'StaffController@edit');
 		Route::post($route["staff"].'/{id}', 'StaffController@update');
-		Route::delete($route["staff"].'/{idfiles}/deleteFile', 'StaffController@deleteFile');
+		Route::delete($route["staff"].'/deleteFile/{idfiles}', 'StaffController@deleteFile');
 
 		Route::get($route["staff_positions"].'/{id}/edit', 'StaffPositionsController@edit');
 		Route::post($route["staff_positions"].'/{id}', 'StaffPositionsController@update');
@@ -83,9 +83,8 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	Route::get($route["patients"].'/{id}/downloadOdontogram', 'PatientsController@downloadOdontogram');
 	Route::resource($route["patients"], 'PatientsController');
 
-	Route::get($route["staff"].'/search', 'StaffController@search');
+	Route::get($route["staff"].'/list', 'StaffController@list');
 	Route::get($route["staff"].'/{id}/file', 'StaffController@file');
-
 	Route::get($route["staff"].'/{id}/filesList', 'StaffController@filesList');
 	Route::post($route["staff"].'/uploadFiles/{id}', 'StaffController@uploadFiles');
 	Route::get($route["staff"].'/{id}/{file}/download', 'StaffController@download');	

@@ -139,9 +139,7 @@
 				    }).done(function(response) {
 
 				    	$('input[name="units"]').val(1);
-				    	$('input[name="day"]').val("");
 				    	$('input[name="paid"]').val("");
-
 				    	$('input[name="idser"]').attr('value', response.idser);
 				    	$('input[name="price"]').attr('value', response.price);		    	
 				    	$('input[name="paid"]').val(response.price);
@@ -150,8 +148,10 @@
 						var name_price = response.name + '(' + response.price + ' €)';
 						$("#name_price").text(name_price);
 
-	     				$('#loading').delay(600).empty();
-						$("#ajax_content").delay(300).fadeIn(300).show(0);
+						$('input[name="day"]').attr('value', util.getTodayDate());
+
+	     				$('#loading').empty();
+						$("#ajax_content").hide().fadeIn(300).show(0);
          
 				    }).fail(function() {
 

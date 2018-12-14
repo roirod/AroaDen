@@ -60,8 +60,8 @@
       <table class="table">
          <tr class="fonsi15 success">
              <td class="wid290">{{ @trans('aroaden.patient') }}</td>
-             <td class="wid95">{{ @trans('aroaden.hour') }}</td>
              <td class="wid95">{{ @trans('aroaden.day') }}</td>
+             <td class="wid95">{{ @trans('aroaden.hour') }}</td>             
              <td class="wid290">{{ @trans('aroaden.notes') }}</td>
              <td class="wid290"></td>             
          </tr>
@@ -78,9 +78,8 @@
                       {{ $obj->surname }}, {{ $obj->name }} 
                   </a>
                 </td>
-
-                <td class="wid95">{{ substr( $obj->hour, 0, -3 ) }}</td>
                 <td class="wid95">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
+                <td class="wid95">{{ substr( $obj->hour, 0, -3 ) }}</td>
                 <td class="wid290">{{ $obj->notes }}</td>
                 <td class="wid290"></td>
             </tr>
@@ -165,8 +164,8 @@
               html += '   <table class="table">';
               html += '     <tr class="fonsi15 success">';
               html += '       <td class="wid290">{{ @trans('aroaden.patient') }}</td>';
-              html += '       <td class="wid95">{{ @trans('aroaden.hour') }}</td>';
               html += '       <td class="wid95">{{ @trans('aroaden.day') }}</td>';
+              html += '       <td class="wid95">{{ @trans('aroaden.hour') }}</td>';
               html += '       <td class="wid290">{{ @trans('aroaden.notes') }}</td>';
               html += '       <td class="wid290"></td>';
               html += '     </tr>';
@@ -181,8 +180,8 @@
                 html +=           object.surname + ', ' + object.name;
                 html += '      </a>';
                 html += '    </td>';
-                html += '    <td class="wid95">' + object.hour.slice(0, -3); + '</td>';
                 html += '    <td class="wid95">' + object.day.split("-").reverse().join("-") + '</td>';
+                html += '    <td class="wid95">' + object.hour.slice(0, -3); + '</td>';
                 html += '    <td class="wid290">' + object.notes + '</td>';
                 html += '    <td class="wid290"></td>';
                 html += '  </tr>';

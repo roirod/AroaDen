@@ -8,7 +8,20 @@
 				@if ($is_create_view)
 
 				    @foreach($staff as $sta)
-						<option value="{{ $sta->idsta }}">{{ $sta->surname }}, {{ $sta->name }}({{ $sta->position }})</option>
+
+				        <?php
+				        	if ($sta->positions == '') {
+
+				        		$positions = '';
+
+				        	} else {
+
+				        		$positions = '('.$sta->positions.')';
+
+				        	}
+				        ?>
+
+						<option value="{{ $sta->idsta }}">{{ $sta->surname }}, {{ $sta->name }} {{ $positions }}</option>
 				    @endforeach    
 
 				@else
@@ -19,16 +32,28 @@
 
 				    @foreach($staff as $sta)
 
+				        <?php
+				        	if ($sta->positions == '') {
+
+				        		$positions = '';
+
+				        	} else {
+
+				        		$positions = '('.$sta->positions.')';
+
+				        	}
+				        ?>
+
 				    	@if(in_array($sta->idsta, $idsta_array))
 
 							<option value="{{ $sta->idsta }}" selected>
-								{{ $sta->surname }}, {{ $sta->name }}({{ $sta->position }})
+								{{ $sta->surname }}, {{ $sta->name }} {{ $positions }}
 							</option>
 
 				    	@else
 
 							<option value="{{ $sta->idsta }}">
-								{{ $sta->surname }}, {{ $sta->name }}({{ $sta->position }})
+								{{ $sta->surname }}, {{ $sta->name }} {{ $positions }}
 							</option>
 
 				    	@endif

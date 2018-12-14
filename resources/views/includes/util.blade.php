@@ -18,13 +18,14 @@ var defaulTableId = 'item_list';
 var lastRoute = '';
 var currentContent = '';
 var currentId = '';
+var mainUrl = '';
 
 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
   if (thrownError == "Forbidden") {
-    util.showContentOnPage(currentId, currentContent);
+    util.loadMainUrlContent();
 
     return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
   }
@@ -65,6 +66,16 @@ var util = {
     };
 
     $.ajax(ajax_data);
+  },
+
+  loadMainUrlContent: function(id) {
+    var _this = this;
+
+    var obj = {
+      url  : mainUrl
+    };
+
+    _this.processAjaxReturnsHtml(obj);
   },
 
   processAjaxReturnsJson: function(obj) {
@@ -125,7 +136,7 @@ var util = {
       content = '<p class="text-danger">' + content + '</p>';
 
     $('#'+id).empty();
-    $('#'+id).hide().html(content).fadeIn(400);
+    $('#'+id).hide().html(content).fadeIn(700);
   },
 
   showLoadingGif: function(id) {
@@ -183,6 +194,8 @@ var util = {
   },
 
   confirmDeleteAlert: function($this) {
+    var _this = this;
+
     swal({
       title: '{{ Lang::get('aroaden.are_you_sure') }}',
       type: 'warning',
@@ -196,8 +209,33 @@ var util = {
       cancelButtonClass: 'cancel-class',
     }).then(
       function(isConfirm) {
-        if (isConfirm) 
-          $this.closest('form').submit();
+        if (isConfirm) {
+          mainUrl = window.location.href + '/ajaxIndex';
+
+          var form = $this.closest('form');
+          var attributes = form[0].attributes;
+          var url = attributes[1].value;
+          var method = attributes[0].value;
+          var data = form.serialize();
+
+          var ajax_data = {
+            method : method,
+            url  : url,
+            dataType: "json",
+            data : data,
+            statusCode: {
+              200: function(response) {
+                _this.showPopup(response.msg);
+
+                _this.loadMainUrlContent();
+
+                _this.getSettings();
+              }
+            }
+          };
+
+          $.ajax(ajax_data);
+        }
       }
     );
   },

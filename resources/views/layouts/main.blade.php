@@ -8,6 +8,7 @@
     <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/font-awe/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
+
     <link href="{!! asset('assets/img/favicon.ico') !!}" rel="shortcut icon">
     <link rel="stylesheet" type="text/css" href="{!! asset('assets/css/sweetalert2.min.css') !!}">
     
@@ -35,7 +36,7 @@
     <div class="col-sm-1 widCol1 textcent fonsi14">
       <div class="affix">
 
-        <h5 class="pad10 login_text bgtra textshadow">
+        <h5 class="pad10 login_text bgblack textshadow borderradius">
           <i class="fa fa-child"></i>
           <br>
           {!! $app_name !!}
@@ -43,22 +44,22 @@
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 
             <li title="{!! @trans("aroaden.company") !!}">
-              <a href="{!! url("/$company_route")!!}"><i class="fa fa-home fa-2x"></i></a>
+              <a href="{!! url("/$company_route")!!}"><i class="fa fa-building-o fa-menusize"></i></a>
             </li>  
             <li title="{!! @trans("aroaden.appointments") !!}">
-              <a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar fa-2x"></i></a>
+              <a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar fa-menusize"></i></a>
             </li>
             <li title="{!! @trans("aroaden.patients") !!}">
-              <a href="{!! url("/$patients_route")!!}"><i class="fa fa-users fa-2x"></i></a>
+              <a href="{!! url("/$patients_route")!!}"><i class="fa fa-users fa-menusize"></i></a>
             </li>
             <li title="{!! @trans("aroaden.staff") !!}">
-              <a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md fa-2x"></i></a>
+              <a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md fa-menusize"></i></a>
             </li>
             <li title="{!! @trans("aroaden.services") !!}">
-              <a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks fa-2x"></i></a>
+              <a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks fa-menusize"></i></a>
             </li>
             <li title="{!! @trans("aroaden.accounting") !!}">
-              <a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart fa-2x"></i></a>
+              <a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
             </li>
           </ul>
         </nav>

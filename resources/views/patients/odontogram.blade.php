@@ -11,7 +11,7 @@
   <div class="col-sm-12">
 
     <div class="col-sm-12 pad10">
-        @include('form_fields.show.name')
+      @include('form_fields.show.name')
     </div>
 
   	 <div class="input-group pad4"> 

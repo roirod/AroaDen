@@ -29,12 +29,27 @@ class Staff extends Model implements BaseModelInterface
                         ->paginate($num_paginate);
     }
 
-    public function scopeAllOrderBySurnameNoPagination($query)
+    public function scopeAllOrderBySurnameNoPagination()
     {
-        return $query->whereNull('deleted_at')
-                        ->orderBy('surname', 'ASC')
-                        ->orderBy('name', 'ASC')
-                        ->get();
+        $query = "
+            SELECT
+                sta.idsta, sta.surname, sta.name,
+                (
+                    SELECT GROUP_CONCAT(stapo.name)
+                    FROM staff_positions_entries entr
+                    INNER JOIN staff_positions stapo
+                    ON stapo.idstpo = entr.idstpo
+                    WHERE entr.idsta = sta.idsta             
+                ) AS positions
+            FROM 
+                staff sta
+            WHERE 
+                deleted_at IS NULL
+            ORDER BY 
+                sta.surname ASC, sta.name ASC
+        ;";
+
+        return DB::select($query);
     }
 
     public static function CountAll()
@@ -103,24 +118,68 @@ class Staff extends Model implements BaseModelInterface
         return $exists;
     }
 
-    public function scopeFindStringOnField($query, $search_in, $string)
+    public static function FindStringOnField($sLimit, $sWhere, $sOrder)
     {
-        return $query->select('idsta', 'surname', 'name', 'dni', 'tel1')
-                        ->whereNull('deleted_at')
-                        ->where($search_in, 'LIKE', '%'.$string.'%')
-                        ->orderBy('surname', 'ASC')
-                        ->orderBy('name', 'ASC')
-                        ->get();
+        $where = '';
+
+        if ($sWhere != '')
+          $where = "
+            AND (
+                sta.surname LIKE '%". $sWhere ."%' OR sta.name LIKE '%". $sWhere ."%' OR
+                sta.dni LIKE '%". $sWhere ."%' OR sta.tel1 LIKE '%". $sWhere ."%'
+            ) 
+          ";
+
+        if ($sOrder != '') {
+          $order = "ORDER BY " . $sOrder;
+        } else {
+          $order = 'ORDER BY sta.surname ASC, sta.name ASC';
+        }
+
+        $query = "
+            SELECT
+                sta.idsta, CONCAT(sta.surname, ', ', sta.name) AS surname_name, sta.dni, sta.tel1,
+                (
+                    SELECT GROUP_CONCAT(stapo.name)
+                    FROM staff_positions_entries entr
+                    INNER JOIN staff_positions stapo
+                    ON stapo.idstpo = entr.idstpo
+                    WHERE entr.idsta = sta.idsta             
+                ) AS positions
+            FROM 
+                staff sta
+            WHERE 
+                deleted_at IS NULL 
+                " . $where . " 
+            " . $order . " 
+            " . $sLimit . "
+        ;";
+
+        return DB::select($query);
     }
 
-    public static function CountFindStringOnField($search_in, $string)
+    public static function CountFindStringOnField($sWhere = '')
     {
-        $result = DB::table('staff')
-                        ->whereNull('deleted_at')
-                        ->where($search_in, 'LIKE', '%'.$string.'%')
-                        ->get();
+        $where = '';
+                
+        if ($sWhere != '')
+          $where = "
+            AND (
+                sta.surname LIKE '%". $sWhere ."%' OR sta.name LIKE '%". $sWhere ."%' OR
+                sta.dni LIKE '%". $sWhere ."%' OR sta.tel1 LIKE '%". $sWhere ."%'
+            ) 
+          ";
 
-        return count($result);
+        $query = "
+            SELECT count(*) AS total
+            FROM 
+                staff sta
+            WHERE 
+                deleted_at IS NULL 
+                " . $where . " 
+        ;";
+
+        return DB::select($query);
     }
 
 }

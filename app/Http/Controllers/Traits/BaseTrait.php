@@ -25,6 +25,19 @@ trait BaseTrait {
     }
 
     /**
+     *  sanitize Data / convert to html entities
+     * 
+     *  @param string|int $data
+     *  @return string       
+     */
+    protected function htmlDecode($data)
+    {   
+        $data = htmlentities($data, ENT_QUOTES, "UTF-8");
+
+        return $data;
+    }
+
+    /**
      *  redirect If Id Is Null
      * 
      *  @param int $int

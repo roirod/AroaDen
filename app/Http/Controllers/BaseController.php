@@ -291,10 +291,7 @@ class BaseController extends Controller
     public function list(Request $request)
     {
         $string = $request->input('string');
-        $search_in = $request->input('search_in');
-
         $this->misc_array['string'] = $this->sanitizeData($string);
-        $this->misc_array['search_in'] = $this->sanitizeData($search_in);
 
         $data = [];
 
@@ -426,10 +423,9 @@ class BaseController extends Controller
     private function getQueryResult()
     {
         $string = $this->misc_array['string'];
-        $search_in = $this->misc_array['search_in'];
 
-        $main_loop = $this->model::FindStringOnField($search_in, $string);
-        $count = $this->model::CountFindStringOnField($search_in, $string);
+        $main_loop = $this->model::FindStringOnField($string);
+        $count = $this->model::CountFindStringOnField($string);
 
         if ((int)$count === 0)
             throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));

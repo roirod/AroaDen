@@ -55,17 +55,71 @@ class StaffController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {   
-        $this->view_data['main_loop'] = $this->model::AllOrderBySurname($this->num_paginate);
-        $this->view_data['count'] = $this->model::CountAll();
-
         $this->setPageTitle(Lang::get('aroaden.staff'));
 
         return parent::index($request);
     }
   
-    public function search(Request $request)
+    public function list(Request $request)
     {   
-        return parent::list($request);        
+        $aColumns = [ 
+            0 =>'idsta', 
+            1 =>'surname_name',
+            2 => 'dni',
+            3 => 'tel1',
+            4 => 'positions',
+        ];
+
+        $iDisplayLength = $request->input('iDisplayLength');
+        $iDisplayStart = $request->input('iDisplayStart');
+
+        $sLimit = "";
+        if ( isset( $iDisplayStart ) && $iDisplayLength != '-1' )
+            $sLimit = "LIMIT ".$iDisplayStart.",". $iDisplayLength;
+
+        $iSortCol_0 = (int) $request->input('iSortCol_0');
+
+        if ( isset( $iSortCol_0 ) ) {
+            $sOrder = " ";
+            $bSortable = $request->input("bSortable_$iSortCol_0");
+            $sSortDir_0 = $request->input('sSortDir_0');
+
+            if ( $bSortable == "true" )
+              $sOrder = $aColumns[ $iSortCol_0 ] ." ". $sSortDir_0;
+
+            if ( $sOrder == " " )
+              $sOrder = "";
+        }
+
+        $sWhere = "";
+        $sSearch = $request->input('sSearch');
+
+        if ($sSearch != "")
+            $sWhere = $this->sanitizeData($sSearch);
+
+        $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
+        $countTotal = $this->model::CountAll();
+        $countFiltered = $this->model::CountFindStringOnField($sWhere);
+        $countFiltered = (int)$countFiltered[0]->total;
+
+        $resultArray = [];
+
+        foreach ($data as $key => $value) {
+            $resultArray[$key][] = $value->idsta;
+            $resultArray[$key][] = $value->surname_name;
+            $resultArray[$key][] = $value->dni;
+            $resultArray[$key][] = $value->tel1;
+            $resultArray[$key][] = $value->positions;
+        }
+
+        $output = [
+            "sEcho" => intval($request->input('sEcho')),
+            "iTotalRecords" => $countTotal,
+            "iTotalDisplayRecords" => $countFiltered,
+            "aaData" => array_values($resultArray)
+        ];
+
+        $this->echoJsonOuptut($output);  
     }
 
     public function show(Request $request, $id)

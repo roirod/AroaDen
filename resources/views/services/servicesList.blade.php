@@ -18,13 +18,12 @@
   <div class="panel panel-default">
     <table class="table">
        <tr class="fonsi15 success">
-        <td class="wid230">{{ @trans('aroaden.service') }}</td>
+        <td class="wid200">{{ @trans('aroaden.service') }}</td>
         <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
-        <td class="wid50"></td>
-        <td class="wid50"></td>
-        <td class="wid230"></td>
-        <td class="wid230"></td>        
+        <td class="wid95 textcent">{{ Lang::get('aroaden.edit') }}</td>
+        <td class="wid95 textcent">{{ Lang::get('aroaden.delete') }}</td>
+        <td class="wid450"></td>    
        </tr>
     </table>
 
@@ -34,17 +33,17 @@
         @foreach ($main_loop as $obj)
 
          <tr>
-            <td class="wid230">{{ $obj->name }}</td>
+            <td class="wid200">{{ $obj->name }}</td>
             <td class="wid95 textcent">{{ $obj->tax }} %</td>             
             <td class="wid110 textcent">{{ $obj->price }} €</td>
 
-            <td class="wid50">
+            <td class="wid95 textcent">
               <a class="btn btn-xs btn-success editService" type="button" href="/{{ "$services_route/$obj->idser/edit" }}">
                 <i class="fa fa-edit"></i>
               </a>
             </td>
             
-            <td class="wid50"> 
+            <td class="wid95 textcent">
               <div class="btn-group"> 
                 <form class="form" action="{!! url("/$services_route/$obj->idser") !!}" method="POST">    
                   {!! csrf_field() !!}
@@ -62,8 +61,7 @@
               </div>  
              </td>
 
-            <td class="wid230"></td>
-            <td class="wid230"></td>            
+            <td class="wid450"></td>       
          </tr>
           
         @endforeach

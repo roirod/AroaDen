@@ -2,8 +2,6 @@
 
 @section('content')
 
-  	@include('includes.staff_nav')
-
 	@include('includes.messages')
 	@include('includes.errors')
 
@@ -22,170 +20,123 @@
 	          </a>
 	        </div>  
 	</div> </div> </div> </div>
-
-	
-	@include('form_fields.show.search_in')
-
-		
-	<div class="row">
-		<div class="col-sm-12" id="item_list">
-
-		@if ($count == 0)
-
-		    <p>
-		      <span class="text-danger">{{ @trans('aroaden.no_staff_on_db') }}</span>
-		    </p>
-
-		@else
-
-		    <p>
-		      <span class="label label-success"> {!! $count !!} {{ Lang::get('aroaden.professionals') }} </span>
-		    </p>
-
-			<div class="panel panel-default">
-			  <table class="table">
-			 	<tr class="fonsi15 success">
-					<td class="wid350">{{ Lang::get('aroaden.name') }}</td>
-					<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-					<td class="wid110 textcent">{{ Lang::get('aroaden.tele1') }}</td>
-					<td class="wid350"></td>
-				</tr>
-			  </table>
-		 	 <div class="box400">
-		 	  <table class="table table-hover">
-			
-				@foreach ($main_loop as $obj)	
-					<tr> 
-						<td class="wid350">
-							<a href="{{ url("/$main_route/$obj->idsta") }}" class="pad4" target="_blank">
-								{{ $obj->surname }}, {{ $obj->name }}
-							</a>
-						</td>
-
-						<td class="wid110">{{ $obj->dni }}</td>
-						<td class="wid110 textcent">{{ $obj->tel1 }}</td>
-						<td class="wid350"></td>
-					</tr>		
-				@endforeach
-			
-				<table class="table table-hover">
-					<tr>
-				 		<div class="textcent">
-					 		<hr>
-					 		{{ $main_loop->links() }}
-						</div>
-					</tr> 
-				</table>
-			
-			</table>
-
-		  </div> </div>
-
-		@endif
-
-	 </div> </div>
+  	
+  <div class="row">
+  	<div class="col-sm-12">
+      <fieldset>
+    	<div class="panel panel-default">
+          <table class="table table-hover stripe" id="staffTable">
+            <thead>
+          	  <tr class="fonsi15 bgtra fonbla">
+                <td class="wid110"></td>          	  
+      			<td class="wid350">{{ Lang::get('aroaden.name') }}</td>
+      			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+      			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+      			<td class="wid350">{{ Lang::get('aroaden.positions') }}</td>
+          		</tr>
+            </thead>
+            <tfoot>
+              <tr class="fonsi15 bgtra fonbla">
+                <td class="wid110"></td>
+                <td class="wid350">{{ Lang::get('aroaden.name') }}</td>
+                <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+                <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+                <td class="wid350">{{ Lang::get('aroaden.positions') }}</td>
+               </tr>
+            </tfoot>  
+          </table>
+	    </div>
+      </fieldset>
+    </div> 
+  </div>
 
 @endsection
 
 @section('footer_script')
 
+  <link href="{!! asset('assets/css/datatables.min.css') !!}" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="{!! asset('assets/js/datatables.min.js') !!}"></script>
+
 	<script>
 		
 		$(document).ready(function() {
+      setTimeout(function(){
+        $("#staffTable").dataTable(staffTable);
+      }, 180);
 
-			$.ajaxSetup({
-			   	headers: { 
-			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-			   	}
-			}); 
-
-	      $(".string_class").on('keyup change', function(event) {
-	        var string_val = $('#string').val().trim();
-	        var string_val_length = string_val.length;
-
-	        if (string_val != '' && string_val_length > 1) {
-	          if (event.which <= 90 && event.which >= 48 || event.which == 8 || event.which == 46 || event.which == 173) {
-	            Module.run();
-	          }
-	        }
-
-	        event.preventDefault();
-	        event.stopPropagation();
-	      });
-
-	      var Module = (function( window, undefined ){
-	        function runApp() {
-	          util.showLoadingGif('item_list');
-
-	          var data = $("form").serialize();
-
-	          var obj = {
-	            data  : data,       
-	            url  : '/{!! $main_route !!}/search',
-	            method  : 'GET'
-	          };
-
-	          util.processAjaxReturnsJson(obj).done(function(response) {
-				var html = '';
-
-		        if (response.error) {
-
-			    		html = '<p class="text-danger">' + response.msg + '</p>';
-
-			    	} else {
-
-			    		html = '<p id="searched"> <span class="label label-success">' + response.msg + ' {{ Lang::get('aroaden.professionals') }}</span></p>';
-
-			    		html += '<div class="panel panel-default">';
-			    		html += '   <table class="table">';
-			    		html += '     <tr class="fonsi15 success">';
-			    		html += '       <td class="wid350">{{ Lang::get('aroaden.name') }}</td>';
-			    		html += '       <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>';
-			    		html += '       <td class="wid110 textcent">{{ Lang::get('aroaden.tele1') }}</td>';
-			    		html += '       <td class="wid350"></td>';
-			    		html += '     </tr>';
-			    		html += '   </table>';
-			    		html += '  <div class="box400">';
-			    		html += '    <table class="table table-hover">';
-
- 						$.each(response.main_loop, function(index, object){	
-				    		html += '  <tr>';
-				    		html += '    <td class="wid350">';
-				    		html += '      <a href="/{!! $main_route !!}/'+object.idsta+'" class="pad4" target="_blank">';
-				    		html += 		  object.surname + ', ' + object.name;
-				    		html += '      </a>';
-				    		html += '    </td>';
-				    		html += '    <td class="wid110">' + object.dni + '</td>';
-				    		html += '    <td class="wid110 textcent">' + object.tel1 + '</td>';
-				    		html += '       <td class="wid350"></td>';
-				    		html += '  </tr>';
-						});
-
-				    	html += '    </table>';
-			    		html += '  </div> </div>';
-			    		html += ' </div> </div>';				    		
-			    	}
-
-			    	$('#item_list').empty();				                 
-			        $('#item_list').hide().html(html).fadeIn('slow');
-			        $('#searched').prepend(' <span class="label label-primary"> {{ Lang::get('aroaden.searched_text') }} ' + $('#string').val().trim() + '</span>');
-
-			    }).fail(function() {
-
-			    	$('#item_list').empty();
-			    	$('#item_list').hide().html('<h3>{{ Lang::get('aroaden.error_message') }}</h3>').fadeIn('slow');
-			    	
-			    });
-		    }
-
-	        return {
-	          run: function() {
-	            runApp();
-	          }
-	        }
-
-	    })(window);
-
+      var staffTable = {
+        'oLanguage': {
+          'sProcessing': 'Procesando...',
+          'sLengthMenu': 'Selecciona _MENU_',
+          'sZeroRecords': '{{ @trans('aroaden.no_query_results') }}',
+          'sInfo': 'De _START_ hasta _END_ de _TOTAL_ profesionales',
+          'sInfoEmpty': '{{ @trans('aroaden.empty_db') }}',
+          'sInfoFiltered': '(filtrados de _MAX_ total de profesionales)',
+          'sSearch': 'Buscar:',
+          "oPaginate": {
+            "sFirst":    "❮❮",
+            "sLast":     "❯❯",
+            "sNext":     "❯",
+            "sPrevious": "❮"
+          },
+        },
+        "sDom": 
+          "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
+          "<'row'<'col-sm-12'r>>" +
+          "<'row'<'col-sm-7'i><'col-sm-5'p>>" +
+          "<'row'<'col-sm-12't>>" +
+          "<br>" +
+          "<'row'<'col-sm-7'i><'col-sm-5'p>>",
+        "iDisplayStart": 0,
+        "iDisplayLength": 25,
+        "bAutoWidth": false,
+        'bPaginate': true,
+        'bLengthChange': true,
+        "sPaginationType": "full_numbers",
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "{!! $staff_route !!}/list",
+        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+          oSettings.jqXHR = $.ajax({
+            "dataType": 'json',
+            "method": "GET",
+            'headers': {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            "url": sSource,
+            "data": aoData,
+            "success": fnCallback,
+            "error": function (e) {
+              console.dir(e);
+              console.log(e.message);
+            }
+          });
+        },
+        "aLengthMenu": [
+          [25, 50, 100, 500, 1000, 10000, -1],
+          [25, 50, 100, 500, 1000, 10000, "Todos"],
+        ],
+        "aoColumnDefs": [
+          {
+            "aTargets": [0],
+            "bSortable": false,
+            "bSearchable": false,
+            "bVisible": false
+          },
+          {
+            "aTargets": [1],
+            "mRender": function (data, type, full) {
+              var resultado = '<a href="{!! $staff_route !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              return resultado;
+            }
+          },
+          {
+            "aTargets": [4],
+            "bSortable": false,
+            "bSearchable": false
+          }
+        ],
+      };
   	});
 
 	</script>

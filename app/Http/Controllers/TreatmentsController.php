@@ -63,7 +63,7 @@ class TreatmentsController extends BaseController
 
         $data = [];
         $data['idser'] = $id;
-        $data['name'] = $service->name;        
+        $data['name'] = html_entity_decode($service->name);        
         $data['price'] = $service->price;
         $data['tax'] = $service->tax;   
         

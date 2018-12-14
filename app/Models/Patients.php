@@ -83,9 +83,11 @@ class Patients extends Model implements BaseModelInterface
 
         if ($sWhere != '')
           $where = "
-            AND (surname LIKE '%". $sWhere ."%' 
-            OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
-            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%') 
+            AND (
+                surname LIKE '%". $sWhere ."%' 
+                OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+                OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
+            ) 
           ";
 
         if ($sOrder != '') {
@@ -97,7 +99,8 @@ class Patients extends Model implements BaseModelInterface
         $query = "
             SELECT idpat, CONCAT(surname, ', ', name) AS surname_name, dni, tel1, city
             FROM patients
-            WHERE deleted_at IS NULL " . $where . " 
+            WHERE deleted_at IS NULL 
+            " . $where . " 
             " . $order . " 
             " . $sLimit . "
         ;";
@@ -119,7 +122,8 @@ class Patients extends Model implements BaseModelInterface
         $query = "
             SELECT count(*) AS total
             FROM patients
-            WHERE deleted_at IS NULL " . $where . "
+            WHERE deleted_at IS NULL 
+            " . $where . "
         ;";
 
         return DB::select($query);
