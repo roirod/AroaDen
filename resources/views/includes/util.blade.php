@@ -18,7 +18,8 @@ var defaulTableId = 'item_list';
 var lastRoute = '';
 var currentContent = '';
 var currentId = '';
-var mainUrl = '';
+var mainUrl = '/' + "{{ $main_route }}";
+var mainUrlAjax = '/' + "{{ $main_route }}" + '/ajaxIndex';
 
 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
@@ -68,14 +69,10 @@ var util = {
     $.ajax(ajax_data);
   },
 
-  loadMainUrlContent: function(id) {
-    var _this = this;
+  loadMainUrlContent: function(url) {
+    var urlToLoad = (url != undefined) ? url : mainUrl;
 
-    var obj = {
-      url  : mainUrl
-    };
-
-    _this.processAjaxReturnsHtml(obj);
+    window.location.href = urlToLoad;
   },
 
   processAjaxReturnsJson: function(obj) {
@@ -152,8 +149,7 @@ var util = {
 
     var ajax_data = {
       method : "GET",
-      url  : "settings/jsonSettings",
-      dataType: "json"
+      url  : "/settings/jsonSettings"
     };
 
     _this.processAjaxReturnsJson(ajax_data).done(function(response) {
@@ -210,8 +206,6 @@ var util = {
     }).then(
       function(isConfirm) {
         if (isConfirm) {
-          mainUrl = window.location.href + '/ajaxIndex';
-
           var form = $this.closest('form');
           var attributes = form[0].attributes;
           var url = attributes[1].value;
@@ -221,20 +215,23 @@ var util = {
           var ajax_data = {
             method : method,
             url  : url,
-            dataType: "json",
-            data : data,
-            statusCode: {
-              200: function(response) {
-                _this.showPopup(response.msg);
-
-                _this.loadMainUrlContent();
-
-                _this.getSettings();
-              }
-            }
+            data : data
           };
 
-          $.ajax(ajax_data);
+          _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+
+
+
+
+     console.log('------------ url ------------------');
+     console.dir(response.url);
+
+
+
+            _this.showPopup(response.msg);           
+            _this.loadMainUrlContent(response.url);
+            _this.getSettings();
+          });
         }
       }
     );

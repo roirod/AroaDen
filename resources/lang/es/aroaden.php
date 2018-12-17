@@ -54,6 +54,7 @@ return [
   'success_message'   => 'Hecho!!!',
   'error_message'   => 'Error!!!',
   'no_query_results'   => 'No hay resultados para la búsqueda',
+  'no_results'   => 'No hay registros',
   'press_crtl_to_select'   => '*Pulsa control para seleccionar varios.',
   'address' => 'Direcci&#xF3;n',
   'birth' => 'F. nacimiento',

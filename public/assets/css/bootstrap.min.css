@@ -27,7 +27,7 @@ audio:not([controls]){
 }
 
 a{
-	background-color:#716e6e;
+	background-color:#333232;
 }
 
 a:active,a:hover{
@@ -1365,7 +1365,7 @@ button,input,select,textarea{
 }
 
 a{
-	color: #E0E0E0;
+	color: #FFF;
 	text-decoration:none
 }
 

@@ -2,7 +2,7 @@
 @if ($count == 0)
 
   <p>
-    <span class="text-danger">{{ @trans('aroaden.no_services_on_db') }}</span>
+    <span class="text-danger">{{ @trans('aroaden.no_results') }}</span>
   </p>
 
 @else

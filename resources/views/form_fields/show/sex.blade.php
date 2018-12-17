@@ -1,5 +1,5 @@
 	<div class="col-sm-3 pad4">
-		<i class="fa fa-circle-o"></i> {{ @trans('aroaden.sex') }}: 
+		<i class="fa fa-circle-o fa-min"></i> {{ @trans('aroaden.sex') }}: 
 
 		@if( $object->sex == 'male' )
 
