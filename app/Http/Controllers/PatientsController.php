@@ -75,7 +75,22 @@ class PatientsController extends BaseController implements BaseInterface
 
         return parent::index($request);
     }
-  
+
+    /**
+     *  get index page
+     * 
+     *  @return view       
+     */
+    public function ajaxIndex(Request $request)
+    {
+        $this->view_name = 'ajaxIndex';
+        $this->view_data['request'] = $request;
+
+        $this->setPageTitle(Lang::get('aroaden.patients'));
+
+        return $this->loadView();
+    }
+
     public function list(Request $request)
     {   
         $aColumns = [ 

@@ -53,13 +53,33 @@ class StaffController extends BaseController implements BaseInterface
         $this->form_fields = array_replace($this->form_fields, $fields);
     }
 
+    /**
+     *  get the index page
+     *      
+     *  @return view
+     */
     public function index(Request $request)
-    {   
+    {
         $this->setPageTitle(Lang::get('aroaden.staff'));
 
         return parent::index($request);
     }
-  
+
+    /**
+     *  get index page
+     * 
+     *  @return view       
+     */
+    public function ajaxIndex(Request $request)
+    {
+        $this->view_name = 'ajaxIndex';
+        $this->view_data['request'] = $request;
+
+        $this->setPageTitle(Lang::get('aroaden.staff'));
+
+        return $this->loadView();
+    }
+ 
     public function list(Request $request)
     {   
         $aColumns = [ 

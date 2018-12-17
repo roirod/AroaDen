@@ -66,6 +66,16 @@ class BaseController extends Controller
     protected $other_route = '';
 
     /**
+     * @var string $redirect_to  redirect_to
+     */
+    protected $redirect_to = NULL;
+
+    /**
+     * @var bool $delete_item  delete_item
+     */
+    protected $delete_item = false;
+
+    /**
      * @var string $views_folder  views_folder name
      */
     protected $views_folder = '';
@@ -164,6 +174,11 @@ class BaseController extends Controller
      * @var object $model3  model
      */
     protected $model3;    
+
+    /**
+     * @var object $main_object  main_object
+     */
+    protected $main_object;
 
     /**
      * @var bool $has_odontogram  si tiene odontograma o no
@@ -440,8 +455,7 @@ class BaseController extends Controller
      *  destroy
      * 
      *  @param object $request     
-     *  @param int $id
-     *  @return string       
+     *  @param int $id 
      */
     public function destroy(Request $request, $id)
     {
@@ -451,7 +465,15 @@ class BaseController extends Controller
 
         try {
 
-            $this->model::destroy($id);         
+            if ($this->delete_item) {
+
+                $this->main_object->delete();          
+
+            } else  {
+
+                $this->model::destroy($id);                 
+
+            }                
 
         } catch (Exception $e) {
 
@@ -462,6 +484,7 @@ class BaseController extends Controller
 
         $data['error'] = $error;
         $data['msg'] = $msg;
+        $data['url'] = $this->redirect_to;
 
         $this->echoJsonOuptut($data);
     }

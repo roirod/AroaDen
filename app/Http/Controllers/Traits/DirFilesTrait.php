@@ -260,18 +260,6 @@ trait DirFilesTrait {
         return response()->download($filedown);
     }
 
-    public function destroy(Request $request, $id)
-    {               
-        $this->redirectIfIdIsNull($id, $this->main_route); 
-        $id = $this->sanitizeData($id);
-        
-        $this->model::destroy($id);
-      
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
-        return redirect($this->main_route);
-    }
-
     public function deleteFile(Request $request, $idfiles)
     {
         try {
@@ -313,5 +301,13 @@ trait DirFilesTrait {
 
         return redirect("$this->main_route/$id/file");
     }  
+
+    /**
+     *  destroy
+     */
+    public function destroy(Request $request, $id)
+    {
+        return parent::destroy($request, $id);  
+    }
 
 }

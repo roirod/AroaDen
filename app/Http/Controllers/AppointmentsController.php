@@ -305,15 +305,13 @@ class AppointmentsController extends BaseController implements BaseInterface
     }
 
     public function destroy(Request $request, $id)
-    {       
-        $id = $this->sanitizeData($id);
-        $this->redirectIfIdIsNull($id, $this->other_route);
-       
+    {
         $object = $this->model::find($id);
-        $object->delete();
+        $this->main_object = $object;
+        $this->delete_item = true;        
+        $this->redirect_to = "/$this->other_route/$object->idpat";
 
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        return redirect("$this->other_route/$object->idpat");
+        return parent::destroy($request, $id);        
     }
 
 }

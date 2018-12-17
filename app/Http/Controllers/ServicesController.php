@@ -71,13 +71,9 @@ class ServicesController extends BaseController implements BaseInterface
      */
     private function commonProcess($request)
     {
-        $main_loop = $this->model::AllOrderByName($this->num_paginate);
-        $count = $this->model::CountAll();       
-
-        $this->view_data['main_loop'] = $main_loop;
         $this->view_data['request'] = $request;
-        $this->view_data['count'] = $count;
-        $this->view_data['form_fields'] = $this->form_fields;
+        $this->view_data['main_loop'] = $this->model::AllOrderByName();
+        $this->view_data['count'] = $this->model::CountAll();
 
         $this->setPageTitle(Lang::get('aroaden.services'));
 
@@ -245,7 +241,7 @@ class ServicesController extends BaseController implements BaseInterface
         $this->echoJsonOuptut($data);
     }
 
-     /**
+    /**
      *  destroy
      */
     public function destroy(Request $request, $id)
