@@ -2,16 +2,13 @@
 
 @section('content')
 
-  @include('includes.company_nav')
+	@include('includes.company_nav')
 
-  <div id="ajax_content">
+	<div id="ajax_content">
 
-    @include('includes.messages')
-    @include('includes.errors')
+		@include('company.ajaxIndex')
 
-    @include('company.indexInclude')
-
-  </div>
+	</div>
 
 	<script type="text/javascript">    
 		$(document).ready(function() {

@@ -16,7 +16,6 @@
   	<div class="col-sm-12">
       <fieldset>
     	  <div class="panel panel-default">
-
           <table class="table table-hover stripe" id="PatientsTable">
             <thead>
           	  <tr class="fonsi15 bgtra fonbla">
@@ -36,15 +35,13 @@
                 <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
                </tr>
             </tfoot>  
-          </table>					
-
+          </table>
   		  </div>
       </fieldset>
     </div> 
   </div>
 
   <script type="text/javascript">
-    
     $(document).ready(function() {
       setTimeout(function(){
         $("#PatientsTable").dataTable(PatientsTable);
@@ -119,5 +116,4 @@
         ],
       };
     });
-
   </script>

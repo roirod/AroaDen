@@ -31,7 +31,7 @@
 
            		<input type="hidden" name="_method" value="PUT">
 
-           		<button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+           		<button type="button" class="btn btn-danger btn-sm dropdown-toggle onReset" data-toggle="dropdown">
            			Borrar Imagen <span class="caret"></span>
            		</button> 
            			<ul class="dropdown-menu" role="menu">
@@ -74,23 +74,48 @@
         event.preventDefault();
 
         var formData = new FormData(this);
-
         $('input[type="file"]').val('');
-    
-        var obj = {
-          data: formData,          
-          url: '{!! "/$main_route/uploadOdontogram/$id" !!}',
-          uploadFiles: true
-        };       
 
-        util.processAjaxReturnsJson(obj).done(function(response) {
-          if (response.error)
-            return util.showPopup(response.msg, false);
+        util.checkPermissions('patients.uploadOdontogram').done(function(response) {
+          if (response.permission) {
 
-          $("#upodog_img img").remove();
-          $("#upodog_img").append('<img src="' + response.odontogram + '" class="wPa" />').fadeIn(4000);
+            var obj = {
+              data: formData,          
+              url: '{!! "/$main_route/uploadOdontogram/$id" !!}',
+              uploadFiles: true
+            };       
+
+            util.processAjaxReturnsJson(obj).done(function(response) {
+              if (response.error)
+                return util.showPopup(response.msg, false);
+
+              $("#upodog_img img").remove();
+              $("#upodog_img").append('<img src="' + response.odontogram + '" class="wPa" />').fadeIn(4000);
+            });
+
+          } else {
+
+            return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+
+          }
         });
       });
+
+      $('button.onReset').on('click', function(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        var _this = $(this);
+
+        return onReset(_this);
+      });
+
+      function onReset(_this) {
+        util.checkPermissions('patients.resetOdontogram').done(function(response) {
+          if (!response.permission)
+            return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+        });
+      } 
     });
   </script>
 

@@ -191,8 +191,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;
-        $this->view_data['name'] = $object->name;
-        $this->view_data['surname'] = $object->surname;
+        $this->view_data['object'] = $object;
         $this->view_data['form_fields'] = $this->form_fields;
 
         return parent::create($request, $id);  

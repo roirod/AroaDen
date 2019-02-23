@@ -91,9 +91,9 @@ class CompanyController extends BaseController
      */
     public function saveData(Request $request)
     {
-        $empre = $this->model::select('key', 'value')->get()->toArray();
+        $company_data = $this->model::select('key', 'value')->get()->toArray();
 
-        foreach ($empre as $arr => $value) {
+        foreach ($company_data as $arr => $value) {
             foreach ($request->input() as $request_key => $request_value) {
                 $request_value = $this->sanitizeData($request_value);
 

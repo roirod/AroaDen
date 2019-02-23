@@ -50,7 +50,7 @@
   	    </button> 
   	    <ul class="dropdown-menu" role="menu">
           <li>
-            <a href="{!! url("$main_route/$id").'/'.$idfiles.'/download' !!}"> 
+            <a class="fonbla" href="{!! url("$main_route/$id").'/'.$idfiles.'/download' !!}"> 
               <i class="fa fa-download" aria-hidden="true"></i> {{ @trans('aroaden.download') }}
             </a>
           </li>
@@ -64,7 +64,7 @@
               <input type="hidden" name="_method" value="DELETE">
               <input type="hidden" name="id" value="{!! $id !!}" />          
 
-      	      <button type="submit" class="btn btn-sm btn-danger mar10"> 
+      	      <button type="submit" class="btn btn-sm btn-danger mar10 onDelete"> 
                 <i class="fa fa-trash" aria-hidden="true"></i> {{ @trans('aroaden.delete') }}
               </button>
             </form> 
@@ -73,3 +73,23 @@
     	</div>
      	
     @endforeach
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('button.onDelete').on('click', function(evt) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          var _this = $(this);
+
+          return onDelete(_this);
+        });
+
+        function onDelete(_this) {
+          util.checkPermissions('{{ $main_route }}.deleteFile').done(function(response) {
+            if (!response.permission)
+              return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+          });
+        }       
+      });
+    </script>

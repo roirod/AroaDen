@@ -53,7 +53,8 @@ class LoginController extends Controller
                     User::insert([
                         'username' => $user["username"],
                         'password' => bcrypt($user["password"]),
-                        'type' => $user["type"]
+                        'type' => $user["type"],
+                        'full_name' => $user["full_name"]
                     ]);                
                     
                 }

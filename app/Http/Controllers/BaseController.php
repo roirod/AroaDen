@@ -232,7 +232,11 @@ class BaseController extends Controller
             'no_tax_msg' => false,
             'staff' => false,            
             'notes' => false,
-            'save' => false,
+            'user' => false,            
+            'password' => false,
+            'full_name' => false,
+            'scopes' => false,
+            'save' => false
         ];
     }
 

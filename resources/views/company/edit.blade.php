@@ -3,7 +3,7 @@
 <div class="row">
  <div class="col-sm-12">
   
-  	<form class="form" id="form" action="{!! url("/$company_route/$form_route") !!}" method="post">
+  	<form id="save_form">
 		{!! csrf_field() !!}
 
 		@foreach ($main_loop as $item)
@@ -44,24 +44,20 @@
 
 </div> </div>
 
-<script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
-<script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
-<script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
-
 <script type="text/javascript">    
-$(document).ready(function() {
-  $("form#form").on('submit', function(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
+	$(document).ready(function() {
+	  $("#save_form").on('submit', function(evt) {
+	    evt.preventDefault();
+	    evt.stopPropagation();
 
-    var obj = {  
-      url  : $(this).attr('action'),
-      data : $(this).serialize(),
-      method  : 'POST',
-      popup: true          
-    };
+	    var obj = {  
+	      url  : '{!! url("/$company_route/$form_route") !!}',
+	      data : $(this).serialize(),
+	      method  : 'POST',
+	      popup: true          
+	    };
 
-    return util.processAjaxReturnsHtml(obj);
-  }); 
-});
+	    return util.processAjaxReturnsHtml(obj);
+	  }); 
+	});
 </script>

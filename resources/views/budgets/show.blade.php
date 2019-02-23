@@ -128,7 +128,7 @@
 					</div>	
 
 					<div class="col-sm-2">
-						<button class="btn btn-default" type="submit">
+						<button class="btn btn-default onEdit" type="submit">
 							&nbsp; <i class="fa fa-arrow-circle-right"></i> &nbsp; 
 						</button>
 					</div>	
@@ -139,5 +139,25 @@
   		@endif
 
 </div> </div>
- 
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('button.onEdit').on('click', function(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+
+      var _this = $(this);
+
+      return onEdit(_this);
+    });
+
+    function onEdit(_this) {
+      util.checkPermissions('budgets.edit').done(function(response) {
+        if (!response.permission)
+          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+      });
+    }       
+  });
+</script>
+
 @endsection

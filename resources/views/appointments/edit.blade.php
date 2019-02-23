@@ -9,10 +9,11 @@
 
     {{ addText("Editar Cita") }}
 
+    <div class="col-sm-12 pad10">
+        @include('form_fields.show.name')
+    </div>
+
     @include('form_fields.fields.opendiv')
-
-        <p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
-
         @include('form_fields.fields.openform')
 
             @include('form_fields.common_alternative')

@@ -23,11 +23,9 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 		Route::delete($route["services"].'/{id}', 'ServicesController@destroy');
 
-		Route::get($route["users"].'/userEdit', 'UsersController@userEdit');
-		Route::get($route["users"].'/userDeleteViev', 'UsersController@userDeleteViev');
-		Route::post($route["users"].'/userUpdate', 'UsersController@userUpdate');
+		Route::get($route["users"].'/deleteView', 'UsersController@deleteView');
 		Route::post($route["users"].'/userDelete', 'UsersController@userDelete');
-		Route::resource($route["users"], 'UsersController', ['except' => ['create', 'update', 'edit', 'destroy']]);
+		Route::resource($route["users"], 'UsersController', ['except' => ['create', 'show', 'destroy']]);
 
 	 	Route::get($route["settings"], 'SettingsController@index');
 	});
@@ -63,6 +61,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	});
 
 	Route::get($route["settings"].'/jsonSettings', 'SettingsController@jsonSettings');
+	Route::get($route["settings"].'/checkPermissions', 'SettingsController@checkPermissions');
 
 	Route::get($route["company"].'/ajaxIndex', 'CompanyController@ajaxIndex');
 	Route::get($route["company"], 'CompanyController@index');

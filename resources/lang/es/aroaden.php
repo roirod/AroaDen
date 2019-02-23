@@ -9,11 +9,15 @@ return [
   'no'   => 'No',
   'user'   => 'Usuario',
   'users'   => 'Usuarios',
+  'del_user'   => 'Eliminar usuario',
+
+
   'new_pass'   => 'Contraseña nueva',
   'change_pass'   => 'Cambiar contraseña',
   'password'   => 'Contraseña',
   'logout'   => 'Cerrar',
   'name'   => 'Nombre',
+  'full_name'   => 'Nombre completo',
   'surname'   => 'Apellidos',
   'surnames'   => 'Apellido/s',
   'price'   => 'Precio(con iva)',

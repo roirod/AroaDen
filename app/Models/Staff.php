@@ -35,7 +35,7 @@ class Staff extends Model implements BaseModelInterface
             SELECT
                 sta.idsta, sta.surname, sta.name,
                 (
-                    SELECT GROUP_CONCAT(stapo.name)
+                    SELECT GROUP_CONCAT(stapo.name SEPARATOR ', ')
                     FROM staff_positions_entries entr
                     INNER JOIN staff_positions stapo
                     ON stapo.idstpo = entr.idstpo
@@ -48,7 +48,7 @@ class Staff extends Model implements BaseModelInterface
             ORDER BY 
                 sta.surname ASC, sta.name ASC
         ;";
-
+        
         return DB::select($query);
     }
 
@@ -140,7 +140,7 @@ class Staff extends Model implements BaseModelInterface
             SELECT
                 sta.idsta, CONCAT(sta.surname, ', ', sta.name) AS surname_name, sta.dni, sta.tel1,
                 (
-                    SELECT GROUP_CONCAT(stapo.name)
+                    SELECT GROUP_CONCAT(stapo.name  SEPARATOR ', ')
                     FROM staff_positions_entries entr
                     INNER JOIN staff_positions stapo
                     ON stapo.idstpo = entr.idstpo

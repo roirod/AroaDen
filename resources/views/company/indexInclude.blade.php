@@ -56,11 +56,22 @@
       evt.preventDefault();
       evt.stopPropagation();
 
-      var obj = {      
-        url  : $(this).attr('href')
-      };
+      var url_href = $(this).attr('href');
 
-      return util.processAjaxReturnsHtml(obj);
+      util.checkPermissions('company.edit').done(function(response) {
+        if (response.permission) {
+          var obj = {      
+            url  : url_href
+          };
+
+          return util.processAjaxReturnsHtml(obj);
+
+        } else {
+
+          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+
+        }
+      });
     });
   });
 </script>

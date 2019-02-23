@@ -1,7 +1,17 @@
-	 <div class="input-group"> 
-	 	<span class="input-group-btn pad4"> <p> &nbsp; {{ @trans('aroaden.user') }}</p> </span>
-	 	<div class="col-sm-7">
-	 		<input type="text" name="username" class="form-control" placeholder="{{ @trans('aroaden.user') }}" autofocus required>
-	 </div> </div>
+	@if ($is_create_view)
 
-	<br>
+		<div class="form-group col-sm-11">  
+			<label class="control-label text-left mar10">{{ @trans('aroaden.user') }}</label>
+			<input type="text" class="form-control" name="username" value="{{ old('username') }}" maxlength="77" required>
+		</div>
+
+	@elseif (isset($object) && $object->username != 'admin')
+
+		<div class="form-group col-sm-11">  
+			<label class="control-label text-left mar10">{{ @trans('aroaden.user') }}</label>
+			<input type="text" class="form-control" name="username" value="{!! $object->username !!}" maxlength="77" required>
+		</div>
+
+	@endif
+
+

@@ -11,7 +11,7 @@ class User extends Authenticatable
     use Notifiable;
     
 	protected $table = 'users';
-    protected $fillable = ['username','password','type'];
+    protected $fillable = ['username','password','type', 'full_name'];
     protected $hidden = ['password'];
     protected $primaryKey = 'uid';
 
@@ -28,6 +28,18 @@ class User extends Authenticatable
                         ->exists();
     }
 
+    public static function CheckIfExistsOnUpdate($id, $username)
+    {
+        $exists = DB::table('users')
+                        ->where('uid', '!=', $id)
+                        ->where('username', $username)
+                        ->first();
+
+        if ( isset($exists) )
+            return true;
+
+        return false;
+    }
 
     public function getRememberToken()
     {
@@ -35,9 +47,7 @@ class User extends Authenticatable
     }
 
     public function setRememberToken($value)
-    {
-    // not supported
-    }
+    {}
 
     public function getRememberTokenName()
     {

@@ -227,7 +227,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .pad80 { padding: 80px; }
 .pad110 { padding: 110px; }
 
-.fonbla { color: white; }
+.fonbla { color: white !important; }
 .fuengrisoscu { color: rgb(20, 20, 20); }
 
 .bgblack { background-color: black !important; }

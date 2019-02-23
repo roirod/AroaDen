@@ -83,6 +83,19 @@ class PatientsController extends BaseController implements BaseInterface
      */
     public function ajaxIndex(Request $request)
     {
+
+echo "<pre>";
+echo "<br>";
+echo "------------ ajaxIndex ------------------";
+echo "<br>";
+var_dump($request);
+echo "<br>";
+echo "------------  ------------------";
+echo "<br>";
+echo "</pre>";
+
+exit();
+        
         $this->view_name = 'ajaxIndex';
         $this->view_data['request'] = $request;
 

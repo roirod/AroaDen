@@ -44,7 +44,7 @@
 		            <td class="wid180">{{ $obj->name }}</td>
 
 		            <td class="wid110">
-		              <a class="btn btn-xs btn-success editService" type="button" href="/{{ "$main_route/$obj->idstpo/edit" }}">
+		              <a class="btn btn-xs btn-success onEdit" type="button" href="/{{ "$main_route/$obj->idstpo/edit" }}">
 		                <i class="fa fa-edit"></i>
 		              </a>
 		            </td>
@@ -60,5 +60,25 @@
 		  </div>
 	  </div>
 	</div>
+
+	<script type="text/javascript">
+	  $(document).ready(function() {
+	    $('a.onEdit').on('click', function(evt) {
+	      evt.preventDefault();
+	      evt.stopPropagation();
+
+	      var _this = $(this);
+
+	      return onEdit(_this);
+	    });
+
+	    function onEdit(_this) {
+	      util.checkPermissions('staff_positions.edit').done(function(response) {
+	        if (!response.permission)
+	          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+	      });
+	    }	    
+	  });
+	</script>
 
 @endsection

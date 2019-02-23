@@ -1,8 +1,7 @@
-	 <div class="input-group"> 
-	 	<span class="input-group-btn pad4"> <p> &nbsp; {{ @trans('aroaden.password') }}</p> </span>
-	 	<div class="col-sm-7">
-	 		<input type="text" name="password" class="form-control" placeholder="{{ @trans('aroaden.password') }}" required>
-	 	</div>
-	 </div>
+<div class="form-group col-sm-11">  
+	<label class="control-label text-left mar10">{{ @trans('aroaden.password') }}</label>
+	<input type="text" name="password" class="form-control" required>
+</div>
 
-	<br>
+
+

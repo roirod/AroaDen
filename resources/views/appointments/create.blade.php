@@ -9,10 +9,11 @@
 
 	{!! addText("Añadir Cita") !!}
 
+    <div class="col-sm-12 pad10">
+        @include('form_fields.show.name')
+    </div>
+
 	@include('form_fields.fields.opendiv')
-
-		<p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
-
 		@include('form_fields.fields.openform')
 
 			<input type="hidden" name="idpat" value="{{ $id }}">

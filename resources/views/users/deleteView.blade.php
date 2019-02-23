@@ -10,23 +10,23 @@
  <div class="row"> 
   	<div class="col-sm-12 mar10">
   	
-   	<p class="pad10">
-   		Eliminar Usuario:
-   	</p>
+	   	<p class="pad10">
+	   		{!! Lang::get('aroaden.del_user') !!}:
+	   	</p>
 
-	 	<form role="form" class="form" id="form" role="form" action="{!! url("/$main_route/$form_route") !!}" method="POST">
+	 	<form class="form" id="form" action="{!! url("/$main_route/$form_route") !!}" method="POST">
 	  		{!! csrf_field() !!}
 
 			<div class="input-group"> 
-				<span class="input-group-btn pad4"> <p> &nbsp; Usuario:</p> </span>
-	 			<div class="col-sm-3">
+				<span class="input-group-btn pad4"> <p> &nbsp; {!! Lang::get('aroaden.user') !!}:</p> </span>
+	 			<div class="col-sm-6">
 	 				<select name="uid" class="form-control">
  
 						@foreach($main_loop as $user)
 
 							@continue($user->username == 'admin')
 			   
-			  				<option value="{!! $user->uid !!}">{!! $user->username !!}</option> 
+			  				<option value="{!! $user->uid !!}">{!! $user->username !!}({!! $user->full_name !!})</option> 
 			
 						@endforeach
  
