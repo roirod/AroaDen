@@ -146,7 +146,7 @@ class StaffController extends BaseController implements BaseInterface
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-          
+
         $this->createDir($id);
 
         $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
@@ -159,6 +159,8 @@ class StaffController extends BaseController implements BaseInterface
             return redirect($this->main_route);
         }
 
+        $this->setPageTitle($staff->surname.', '.$staff->name);
+
         $staffPositionsEntries = StaffPositionsEntries::AllByStaffIdWithName($id);
         $staffPositionsEntries = array_column($staffPositionsEntries, 'name');
         $staffPositionsEntries = implode($staffPositionsEntries, ', ');
@@ -167,11 +169,9 @@ class StaffController extends BaseController implements BaseInterface
         $this->view_data['treatments'] = StaffWorks::AllByStaffId($id);
         $this->view_data['staffPositionsEntries'] = $staffPositionsEntries;
         $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $staff->idsta;
+        $this->view_data['idnav'] = $id;  
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
-
-        $this->setPageTitle($staff->surname.', '.$staff->name);
 
         return parent::show($request, $id);   
     }

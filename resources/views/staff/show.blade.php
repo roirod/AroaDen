@@ -12,27 +12,29 @@
 		<div class="row"> 
 		  <div class="col-sm-12"> 
 				<div class="input-group"> 
-					<span class="input-group-btn pad10">  <p> Personal </p> </span>
+					<span class="input-group-btn pad10">  
+            <p> Personal </p>
+          </span>
 					<div class="btn-toolbar pad4" role="toolbar"> 
 						<div class="btn-group">
-							<a href="{{ url("/$main_route/$id/edit") }}" role="button" class="btn btn-sm btn-success onEdit">
+							<a href="{{ url("/$main_route/$id/edit") }}" data-checkpermissions="staff.edit" role="button" class="btn btn-sm btn-success onEdit">
 								<i class="fa fa-edit"></i> Editar
 							</a>
 						</div>	
 					<div class="btn-group">
-					 	<form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
+					 	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="staff.delete">	
 					  		{!! csrf_field() !!}
 
 							<input type="hidden" name="_method" value="DELETE">
 
-							<button type="button" class="btn btn-sm btn-danger dropdown-toggle onDelete" data-toggle="dropdown">
-							<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
+							<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  
+							</button>
 							<ul class="dropdown-menu" role="menu"> 
 								<li>
 									@include('includes.delete_button')
 								</li>
-							</ul>			
-				 			
+							</ul>
 				 		</form>
 
 		</div> </div> </div> </div> </div>
@@ -116,45 +118,25 @@
 			</div>
 
 		 </div> </div> </div>
+   
+  @endsection
 
-		 <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
+  @section('footer_script')
 
-		<script type="text/javascript">
-		  $(document).ready(function() {
-		    $('a.onEdit').on('click', function(evt) {
-		      evt.preventDefault();
-		      evt.stopPropagation();
+    <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
 
-		      var _this = $(this);
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('a.onEdit').on('click', function(evt) {
+          evt.preventDefault();
+          evt.stopPropagation();
 
-		      return onEdit(_this);
-		    });
-
-		    function onEdit(_this) {
-		      util.checkPermissions('staff.edit').done(function(response) {
-		        if (!response.permission)
-		          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-		      });
-		    }
-
-		    $('button.onDelete').on('click', function(evt) {
-		      evt.preventDefault();
-		      evt.stopPropagation();
-
-		      var _this = $(this);
-
-		      return onDelete(_this);
-		    });
-
-		    function onDelete(_this) {
-		      util.checkPermissions('staff.delete').done(function(response) {
-		        if (!response.permission)
-		          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-		      });
-		    }		    
-		  });
-		</script>
-
-	@endsection
+          var _this = $(this);
+          return util.onEditResource(_this);
+        });
+      });
+    </script>
+    
+  @endsection
 
 </div>

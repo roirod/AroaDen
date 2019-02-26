@@ -226,6 +226,26 @@ var util = {
     return total;
   },
 
+  onEditResource: function($this) {
+    var _this = this;
+
+    var attributes = $this[0].attributes;
+    var url = attributes['href'].value;
+    var checkpermissions = attributes['data-checkpermissions'].value;
+
+    _this.checkPermissions(checkpermissions).done(function(response) {
+      if (response.permission) {
+
+        window.location.href = url;
+
+      } else {
+
+        return _this.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+
+      }
+    });
+  },
+
   confirmDeleteAlert: function($this) {
     var _this = this;
 
@@ -233,10 +253,9 @@ var util = {
     var data = form.serialize();
     var attributes = form[0].attributes;
     var url = attributes['action'].value;
-    var method = attributes['method'].value;
     var checkpermissions = attributes['data-checkpermissions'].value;
 
-    util.checkPermissions(checkpermissions).done(function(response) {
+    _this.checkPermissions(checkpermissions).done(function(response) {
       if (response.permission) {
         swal({
           title: '{{ Lang::get('aroaden.are_you_sure') }}',
@@ -253,15 +272,14 @@ var util = {
           function(isConfirm) {
             if (isConfirm) {
               var ajax_data = {
-                method : method,
                 url  : url,
                 data : data
               };
 
               _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+                window.location.href = mainUrl;
+                
                 _this.showPopup(response.msg);
-
-                return _this.loadMainUrlContent(response.url);
               });
             }
           }

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$(".del_btn").click(function(event) {
+	$("button.del_btn").click(function(event) {
 	  event.stopPropagation();
 	  event.preventDefault();
 

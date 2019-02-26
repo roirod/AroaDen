@@ -488,7 +488,6 @@ class BaseController extends Controller
 
         $data['error'] = $error;
         $data['msg'] = $msg;
-        $data['url'] = $this->redirect_to;
 
         $this->echoJsonOuptut($data);
     }

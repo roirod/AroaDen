@@ -19,7 +19,7 @@
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
 	      		<a href="{!! url("/$main_route/$idpat/create") !!}" role="button" class="btn btn-sm btn-primary">
-	          		<i class="fa fa-plus"></i> Nuevo
+	          	<i class="fa fa-plus"></i> Nuevo
 	       		</a>
        		</div>
        	</div>
@@ -31,13 +31,14 @@
  <div class="col-sm-12">
    <div class="panel panel-default">
     <table class="table">
-	     <tr class="fonsi15 success">
-	     	  <td class="wid110">Fecha</td>
-			  <td class="wid180">Tratamiento</td>
-			  <td class="wid95 textcent">Cantidad</td>
-			  <td class="wid95 textcent">Precio</td>
-			  <td class="wid290"></td>
-	     </tr>
+	    <tr class="fonsi15 success">
+     	  <td class="wid110">Fecha</td>
+  		  <td class="wid180">Tratamiento</td>
+  		  <td class="wid95 textcent">Cantidad</td>
+  		  <td class="wid95 textcent">Precio</td>
+  		  <td class="wid180"></td>
+        <td class="wid180"></td>
+	    </tr>
     </table>
    	<div class="box260">
 	   	<table class="table table-striped">      	  	
@@ -48,26 +49,29 @@
 
 		    		<tr class="danger">
 			     	  <td class="wid110"></td>
-					  <td class="wid180"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid290 textcent"></td>
+  					  <td class="wid180"></td>
+  					  <td class="wid95 textcent"></td>
+  					  <td class="wid95 textcent"></td>
+  					  <td class="wid180"></td>
+              <td class="wid180"></td>
 	   				</tr>
 		    		<tr class="info">
 			     	  <td class="wid110"></td>
-					  <td class="wid180"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid290 textcent"></td>
+  					  <td class="wid180"></td>
+  					  <td class="wid95 textcent"></td>
+  					  <td class="wid95 textcent"></td>
+  					  <td class="wid180"></td>
+              <td class="wid180"></td>
 		    		</tr>
 
-					<tr>
-			 		  <td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
-					  <td class="wid180"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid95 textcent"></td>
-					  <td class="wid290 textcent"></td>
-					</tr>
+  					<tr>
+  			 		  <td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
+  					  <td class="wid180"></td>
+  					  <td class="wid95 textcent"></td>
+  					  <td class="wid95 textcent"></td>
+  					  <td class="wid180"></td>
+              <td class="wid180"></td>
+  					</tr>
 
 	   			@endif
 
@@ -76,13 +80,13 @@
 		 			<td class="wid180">{!! $bud->name !!}</td>
 		 			<td class="wid95 textcent">{!! $bud->units !!}</td>
 		 			<td class="wid95 textcent">{!! $bud->price !!} €</td>
-		 			<td class="wid290"></td>
+		 			<td class="wid180"></td>
+          <td class="wid180"></td>
 				</tr>
 
-		    	<?php $created_at = $bud->created_at; ?>
-			
+		    <?php $created_at = $bud->created_at; ?>
 				
-		    @endforeach
+		  @endforeach
 	    
 	 	</table>
 	</div>
@@ -94,8 +98,9 @@
 <div class="row">
   <div class="col-sm-12"> 
   		<div class="input-group">
-   		<span class="input-group-btn pad10"> 
-   		<p> Editar presupuesto: </p> </span>
+	   		<span class="input-group-btn pad10"> 
+	   			<p> Editar presupuesto: </p>
+	   		</span>
 </div> </div> </div>
 
 
@@ -153,8 +158,15 @@
 
     function onEdit(_this) {
       util.checkPermissions('budgets.edit').done(function(response) {
-        if (!response.permission)
+        if (response.permission) {
+
+          _this.closest('form').submit();
+
+        } else {
+
           return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+          
+        }
       });
     }       
   });

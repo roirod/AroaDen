@@ -33,7 +33,7 @@ trait BaseTrait {
      */
     protected function redirectIfIdIsNull($id, $route)
     {   
-        if ( is_null($id) )
+        if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
             return redirect($route);
     }
 
