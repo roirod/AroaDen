@@ -49,7 +49,7 @@
 
 @section('footer_script')
 
-    <script>
+    <script type="text/javascript">
         
         $(document).ready(function() {
             var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.multiply_units_price') }}"><i class="fa fa-lg fa-close"></i></a>';
@@ -83,9 +83,13 @@
 
 @section('js')
     @parent   
-      <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
 @endsection

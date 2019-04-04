@@ -92,7 +92,7 @@ return [
   'record' => 'Ficha',
   'files' => 'Archivos',
   'odontogram' => 'Odontograma',
-  'date_format_fail'   => 'Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14/04/2017',
+  'date_format_fail'   => 'Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14-04-2017',
   'date_from_is_older'   => 'La fecha :date_to es anterior a :date_from',
   'date_time_fail'   => 'Fecha o hora incorrecta',
   'appointments_range'   => 'Citas entre :date_from y :date_to',

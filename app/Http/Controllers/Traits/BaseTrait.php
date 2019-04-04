@@ -74,12 +74,36 @@ trait BaseTrait {
     }
 
     /**
+     *  convert date Y m d To D m Y
+     * 
+     *  @param string $date
+     *  @return string       
+     */
+    protected function convertDmYToYmd($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
+
+    /**
      *  validate Date
      * 
      *  @param string $date
      *  @return bool
      */
-    protected function validateDate($date)
+    protected function validateDateDDMMYYYY($date)
+    {   
+        list($d, $m, $y) = array_pad(explode('-', $date, 3), 3, 0);
+
+        return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
+    }
+
+    /**
+     *  validate Date
+     * 
+     *  @param string $date
+     *  @return bool
+     */
+    protected function validateDateYYYYMMDD($date)
     {   
         list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
 

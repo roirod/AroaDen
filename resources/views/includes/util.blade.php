@@ -201,7 +201,7 @@ var util = {
     }
   },
 
-  getTodayDate: function() {
+  getTodayDateDDMMYYYY: function() {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() +1;
@@ -213,7 +213,7 @@ var util = {
     if(mm < 10)
       mm = '0' + mm
 
-    today = yyyy + '-' + mm + '-' + dd;
+    today = dd + '-' + mm + '-' + yyyy;
 
     return today;
   },

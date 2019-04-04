@@ -72,17 +72,18 @@ class TreatmentsController extends BaseController
 
     public function store(Request $request)
     {
-        $idpat = $this->sanitizeData( $request->input('idpat') );
-        $idser = $this->sanitizeData( $request->input('idser') );
+        $idpat = $this->sanitizeData($request->input('idpat'));
+        $idser = $this->sanitizeData($request->input('idser'));
         $this->redirectIfIdIsNull($idpat, $this->other_route);
         $this->redirectIfIdIsNull($idser, $this->other_route);
 
         $service = Services::FirstById($idser);     
 
         $price = $service->price;
-        $units = $this->sanitizeData( $request->input('units') );
-        $paid = $this->sanitizeData( $request->input('paid') );
-        $day = $this->sanitizeData( $request->input('day') );
+        $units = $this->sanitizeData($request->input('units'));
+        $paid = $this->sanitizeData($request->input('paid'));
+        $day = $this->sanitizeData($request->input('day'));
+        $day = $this->convertDmYToYmd($day);
         $tax = $service->tax;
         $staff = $request->input('staff');
 
@@ -171,6 +172,7 @@ class TreatmentsController extends BaseController
             $price = $this->sanitizeData($request->input('price'));
             $paid = $this->sanitizeData($request->input('paid'));
             $day = $this->sanitizeData($request->input('day'));
+            $day = $this->convertDmYToYmd($day);
             $staff = $request->input('staff');
 
             try {

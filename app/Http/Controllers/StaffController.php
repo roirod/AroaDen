@@ -195,7 +195,8 @@ class StaffController extends BaseController implements BaseInterface
         $tel2 = $this->sanitizeData($request->input('tel2'));
         $address = $this->sanitizeData($request->input('address'));
         $city = $this->sanitizeData($request->input('city'));
-        $birth = $this->sanitizeData($request->input('birth'));
+        $birth = $this->convertDmYToYmd($request->input('birth'));
+        $birth = $this->sanitizeData($birth);
         $notes = $this->sanitizeData($request->input('notes'));
         $positions = $request->input('positions');
 
@@ -338,12 +339,8 @@ class StaffController extends BaseController implements BaseInterface
 
                 DB::beginTransaction();
 
-                $birth = $request->input('birth');
-                          
-                if (!$this->validateDate($birth)) {
-                   $request->session()->flash($this->error_message_name, 'Fecha/s incorrecta');
-                   return redirect($route);
-                }
+                $birth = $this->convertDmYToYmd($request->input('birth'));
+                $birth = $this->sanitizeData($birth);
                          
                 $staff = $this->model::FirstById($id);
                
@@ -354,7 +351,7 @@ class StaffController extends BaseController implements BaseInterface
                 $staff->tel2 = $this->sanitizeData($request->input('tel2'));
                 $staff->address = $this->sanitizeData($request->input('address'));
                 $staff->city = $this->sanitizeData($request->input('city'));
-                $staff->birth = $this->sanitizeData($request->input('birth'));
+                $staff->birth = $birth;
                 $staff->notes = $this->sanitizeData($request->input('notes'));
                 $staff->updated_at = date('Y-m-d H:i:s');
 

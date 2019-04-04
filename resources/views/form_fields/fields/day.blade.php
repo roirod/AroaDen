@@ -1,12 +1,19 @@
-<div class="form-group col-sm-3">
+<div class="form-group col-sm-2">
   <label class="control-label text-left mar10">{{ @trans('aroaden.day') }}</label>
-	@if ($is_create_view)
+  <div class='input-group date' id='datepicker1'>
 
-		<input type="date" name="day" class="form-control" required>
+	@if ($is_create_view)
+        
+    <input type='text' name="day" class="form-control" required/>
 
 	@else
 
-		<input type="date" name="day" value="{!! $object->day !!}" class="form-control" required>
+		<input type="text" name="day" value="{!! convertYmdToDmY($object->day) !!}" class="form-control" required>
 
 	@endif
+
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+  </div>
 </div>

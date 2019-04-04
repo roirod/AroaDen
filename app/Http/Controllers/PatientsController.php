@@ -239,6 +239,9 @@ class PatientsController extends BaseController implements BaseInterface
 
             try {
 
+                $birth = $this->convertDmYToYmd($request->input('birth'));
+                $birth = $this->sanitizeData($birth);
+
                 DB::beginTransaction();
 
                 $insertedId = $this->model::insertGetId([
@@ -251,7 +254,7 @@ class PatientsController extends BaseController implements BaseInterface
                   'sex' => $this->sanitizeData($request->input('sex')),
                   'address' => $this->sanitizeData($request->input('address')),
                   'city' => $this->sanitizeData($request->input('city')),
-                  'birth' => $this->sanitizeData($request->input('birth')),
+                  'birth' => $birth,
                   'notes' => $this->sanitizeData($request->input('notes')),
                   'created_at' => date('Y-m-d H:i:s'),
                 ]);
@@ -326,9 +329,13 @@ class PatientsController extends BaseController implements BaseInterface
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {		
-					  		
+
+            $birth = $this->convertDmYToYmd($request->input('birth'));
+            $birth = $this->sanitizeData($birth);
+
             $patient->name = $this->sanitizeData($request->input('name'));
             $patient->surname = $this->sanitizeData($request->input('surname'));
+            $patient->birth = $birth;
             $patient->dni = $this->sanitizeData($request->input('dni'));
             $patient->tel1 = $this->sanitizeData($request->input('tel1'));
             $patient->tel2 = $this->sanitizeData($request->input('tel2'));

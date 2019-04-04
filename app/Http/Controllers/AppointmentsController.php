@@ -39,7 +39,7 @@ class AppointmentsController extends BaseController implements BaseInterface
     }
     
     public function index(Request $request)
-    {	
+    {   
         $main_loop = $this->model::AllTodayOrderByDay();
         $count = $this->model::CountAllToday();
 
@@ -65,7 +65,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
         $count = $this->model::CountAll();
 
-        if ((int)$count === 0) {
+        if ($count === 0) {
 
             $data['error'] = true;    
             $data['msg'] = Lang::get('aroaden.no_appointments_on_db');
@@ -77,7 +77,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
             if ($select_val == 'date_range') {
 
-                if (!$this->validateDate($date_from) || !$this->validateDate($date_to)) {
+                if (!$this->validateDateDDMMYYYY($date_from) || !$this->validateDateDDMMYYYY($date_to)) {
 
                     $data['error'] = true; 
                     $data['msg'] = Lang::get('aroaden.date_format_fail');
@@ -85,10 +85,11 @@ class AppointmentsController extends BaseController implements BaseInterface
 
                 } 
 
+                $date_from = $this->convertDmYToYmd($date_from);
+                $date_to = $this->convertDmYToYmd($date_to);
+
                 if ($date_from > $date_to) {
 
-                    $date_from = $this->convertYmdToDmY($date_from);
-                    $date_to = $this->convertYmdToDmY($date_to);
                     $data['error'] = true;
                     $data['msg'] = Lang::get('aroaden.date_from_is_older', ['date_to' => $date_to, 'date_from' => $date_from]);
                     $this->echoJsonOuptut($data);
@@ -115,7 +116,7 @@ class AppointmentsController extends BaseController implements BaseInterface
             $data = $this->getItemsByDate($select_val);
             $this->echoJsonOuptut($data);
 
-        } catch (NoAppointmentsFoundException $e) {
+        } catch (Exception $e) {
 
             $data['error'] = true;    
             $data['msg'] = $e->getMessage();
@@ -183,7 +184,7 @@ class AppointmentsController extends BaseController implements BaseInterface
     }
 
     public function create(Request $request, $id = false)
-    {  	  
+    {     
         $this->redirectIfIdIsNull($id, $this->other_route);
 
         $object = $this->model2::FirstById($id);
@@ -199,39 +200,50 @@ class AppointmentsController extends BaseController implements BaseInterface
 
     public function store(Request $request)
     {
-    	$idpat = $request->input('idpat');
-        $this->redirectIfIdIsNull($idpat, $this->other_route);  	
-    	
-    	$hour = trim ( $request->input('hour') );
-    	$day = trim ( $request->input('day') );
+        $idpat = $request->input('idpat');
+        $this->redirectIfIdIsNull($idpat, $this->other_route);      
+        
+        $hour = trim($request->input('hour'));
+        $day = trim($request->input('day'));
         $notes = $this->sanitizeData($request->input('notes'));
 
-        if ( !$this->validateDate($day) || !$this->validateTime($hour) ) {
-		  	$request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail'));	
-			return redirect("/$this->main_route/$idpat/create");
-		}
-	    	  
+        if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
+            $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
+            return redirect("/$this->main_route/$idpat/create");
+        }
+
         $validator = Validator::make($request->all(), [
-	        'hour' => 'required',
-	        'day' => 'required',
-	        'notes' => ''
-	    ]);
+            'hour' => 'required',
+            'day' => 'required',
+            'notes' => ''
+        ]);
             
         if ($validator->fails()) {
-	        return redirect("/$this->main_route/$idpat/create")
-	                     ->withErrors($validator)
-	                     ->withInput();
-	    } else {
-	        	
-		    $this->model::create([
-		        'idpat' => $idpat,
-		        'hour' => $hour,
-		        'day' => $day,
-		        'notes' => $notes
-		    ]);
-		      
-		    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-	        return redirect("/$this->main_route/$idpat/create");
+            return redirect("/$this->main_route/$idpat/create")
+                         ->withErrors($validator)
+                         ->withInput();
+        } else {
+
+            $day = $this->convertDmYToYmd($day);
+
+            try {
+                
+                $this->model::create([
+                    'idpat' => $idpat,
+                    'hour' => $hour,
+                    'day' => $day,
+                    'notes' => $notes
+                ]);
+
+            } catch (Exception $e) {
+
+                $request->session()->flash($this->error_message_name, $e->getMessage());
+                return redirect("/$this->main_route/$idpat/create");
+
+            }
+
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+            return redirect("/$this->main_route/$idpat/create");
         }     
     }
 
@@ -258,49 +270,50 @@ class AppointmentsController extends BaseController implements BaseInterface
     public function update(Request $request, $id)
     {
         $id = $this->sanitizeData($id);
-
         $exists = $this->model::CheckIfIdExists($id);
+        $route = "/$this->main_route/$id/edit";
 
         if (!$exists) {
             $request->session()->flash($this->error_message_name, 'Error');  
-            return redirect("/$this->main_route/$id/edit");
+            return redirect($route);
         }
 
         $this->redirectIfIdIsNull($id, $this->other_route);
-       	  
+          
         $validator = Validator::make($request->all(), [
             'hour' => 'required',
             'day' => 'required',
             'notes' => ''
-	    ]);
+        ]);
             
         if ($validator->fails()) {
-	        return redirect("/$this->main_route/$id/edit")
-	                     ->withErrors($validator)
-	                     ->withInput();
-	    } else {
+            return redirect($route)
+                         ->withErrors($validator)
+                         ->withInput();
+        } else { 
+            
+            $hour = trim($request->input('hour'));
+            $day = trim($request->input('day'));
+            $notes = $this->sanitizeData($request->input('notes'));
 
-	    	$hour = trim($request->input('hour'));
-	    	$day = trim($request->input('day'));
-
-            if ( !$this->validateTime($hour) || !$this->validateDate($day) ) {
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail'));  
-                return redirect("/$this->main_route/$id/$idapp/edit");
+            if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
+                $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
+                return redirect($route);
             }
-				
-			$object = $this->model::find($id);
+                
+            $object = $this->model::find($id);
 
-	    	$notes = ucfirst(strtolower($request->input('notes')));
+            $day = $this->convertDmYToYmd($day);
 
             $object->hour = $this->sanitizeData($hour);
             $object->day = $this->sanitizeData($day);
             $object->notes = $this->sanitizeData($notes);
-			
-			$object->save();
+            
+            $object->save();
 
-			$request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-			return redirect("$this->other_route/$object->idpat");
-		}   
+            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+            return redirect("$this->other_route/$object->idpat");
+        }   
     }
 
     public function destroy(Request $request, $id)

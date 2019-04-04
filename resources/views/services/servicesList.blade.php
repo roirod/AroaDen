@@ -22,7 +22,6 @@
         <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
         <td class="wid95 textcent">{{ Lang::get('aroaden.edit') }}</td>
-        <td class="wid95 textcent">{{ Lang::get('aroaden.delete') }}</td>
         <td class="wid450"></td>    
        </tr>
     </table>
@@ -42,24 +41,6 @@
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            
-            <td class="wid95 textcent">
-              <div class="btn-group"> 
-                <form class="form" action="{!! url("/$services_route/$obj->idser") !!}" method="POST" data-checkPermissions="services.delete">    
-                  {!! csrf_field() !!}
-
-                  <input type="hidden" name="_method" value="DELETE">
-
-                  <button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-times"></i> <span class="caret"></span>  </button>
-                  <ul class="dropdown-menu" role="menu"> 
-                    <li>
-                      @include('includes.delete_button')
-                    </li>
-                  </ul>     
-                </form>
-              </div>  
-             </td>
 
             <td class="wid450"></td>       
          </tr>
@@ -71,8 +52,6 @@
   </div>
 
 @endif
-
-<script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
 
 <script type="text/javascript">
   $(document).ready(function() {

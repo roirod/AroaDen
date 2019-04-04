@@ -42,4 +42,9 @@ function lenum($num) {
 	return $num;
 };
 
+function convertYmdToDmY($date)
+{   
+    return date('d-m-Y', strtotime($date));
+}
+
 ?>

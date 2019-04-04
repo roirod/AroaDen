@@ -5,13 +5,14 @@
 @include('includes.messages')
 @include('includes.errors')
 
-<meta name="_token" content="{!! csrf_token() !!}"/>
-
 <div class="row pad4">
   <div class="col-sm-3">
-    <p> &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}</p>
+    <p> 
+      &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}
+    </p>
     <form>
-      <select name="select_val" class="form-control search_class">
+      {!! csrf_field() !!}
+      <select name="select_val" class="form-control select_val">
         <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
         <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
         <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
@@ -21,25 +22,31 @@
     </form>  
   </div>
 
-  <div class="col-sm-8">
-    <form>
-      <input type="hidden" name="select_val" value="date_range">
-      <div class="input-group"> 
-        <span class="input-group-btn pad4"> <p>{{ @trans('aroaden.date_from') }}</p> </span>
-        <div class="col-sm-8"> 
-          <input name="date_from" type="date" class="search_class" autofocus required>
-        </div>
-      </div>
-      <div class="input-group"> 
-        <span class="input-group-btn pad4"> <p>{{ @trans('aroaden.date_to') }}</p> </span>
-        <div class="col-sm-8"> 
-          <input name="date_to" type="date" class="search_class" required>
-        </div>
-      </div>    
-    </form>
-  </div> 
-</div>
+  <form>
+    {!! csrf_field() !!}
+    <input type="hidden" name="select_val" value="date_range">
 
+    <div class="col-sm-3">
+      <div class="input-group date pad4" id="datepicker1">
+        <p class="input-group-btn pad4"> {{ @trans('aroaden.date_from') }} </p>
+        <input name="date_from" type="text" autofocus required>
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+      <div class="input-group date pad4" id="datepicker2">
+        <p class="input-group-btn pad4"> {{ @trans('aroaden.date_to') }} </p>
+        <input name="date_to" type="text" required>
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+      <div class="pad10">
+        <input type="button" class="btn btn-sm btn-primary searchButton" value="{{ Lang::get('aroaden.search') }}">
+      </div>
+    </div>
+  </form>
+</div>
 
 <div class="row">
   <div class="col-sm-12" id="item_list">
@@ -68,7 +75,6 @@
        </table>
  
       <div class="box400">
-
         <table class="table table-hover">
  
           @foreach ($main_loop as $obj)
@@ -92,52 +98,49 @@
 
 </div> </div>
 
-
-@endsection
-	 
-@section('js')
-    @parent
-
-	  <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
 @endsection
 
 @section('footer_script')
+  <script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
+  <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker2.js') }}"></script>
 
-  <script>
-    
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-      }
-    });
-
+  <script type="text/javascript">
     $(document).ready(function() {
-      $(".search_class").on('change', function(evt) {
-        var $this = $(this);
+      $(".select_val").change(function() {
+        var _this = $(this);
 
-        Module.run($this);
+        return Module.findAppointments(_this);
+      });
 
-        evt.preventDefault();
-        evt.stopPropagation();
+      $(".searchButton").click(function() {
+        var _this = $(this);
+
+        return Module.findAppointments(_this);
       });
 
       var Module = (function( window, undefined ){
-        function runApp($this) {
-          var form = $this.parents('form');
+        function runApp(_this) {
+          var form = _this.closest("form");
           var data = form.serialize();
 
           var select_val = form[0].elements.select_val.value.trim();
-          var _token = $('meta[name="_token"]').attr('content');
 
           if (select_val == 'date_range') {
+
             var date_from = form[0].elements.date_from.value.trim();
             var date_to = form[0].elements.date_to.value.trim();
 
             if (date_from != '' && date_to != '')
               return sendAjaxRequest(data);
+
           } else {
+
             return sendAjaxRequest(data);
+
           }
         }
 
@@ -204,13 +207,12 @@
         }
              
         return {
-          run: function($this) {
-            runApp($this);
+          findAppointments: function(_this) {
+            runApp(_this);
           }
         }
 
       })(window);
-
     });
 
   </script>

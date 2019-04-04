@@ -28,13 +28,11 @@ class Appointments extends Model
 
     public static function CountAll()
     {
-        $result = DB::table('appointments')
+        $count = DB::table('appointments')
             ->join('patients','appointments.idpat','=','patients.idpat')
             ->select('appointments.*','patients.surname','patients.name')
             ->whereNull('patients.deleted_at')
             ->count();
-
-        $count = count($result);
 
         return (int)$count;
     }
