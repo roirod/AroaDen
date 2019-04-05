@@ -83,6 +83,10 @@ return [
           'edit'  => true,
           'delete'  => true
         ],
+        'treatments'  => [
+          'edit'  => true,
+          'delete'  => true
+        ],
         'budgets'  => [
           'edit'  => true,
           'delete'  => true
@@ -123,6 +127,10 @@ return [
         ],
         'appointments'  => [
           'create'  => true,
+          'edit'  => true,
+          'delete'  => false
+        ],
+        'treatments'  => [
           'edit'  => true,
           'delete'  => false
         ],

@@ -114,13 +114,13 @@
 		 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
 		 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
 		 			<td class="wid50">	
-						<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+						<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" data-checkpermissions="appointments.edit" class="btn btn-sm btn-success onEdit" role="button" title="{!! @trans("aroaden.edit") !!}">
 							<i class="fa fa-edit"></i>
 						</a>
 					</td>
 					<td class="wid50"> 	
 						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" method="POST">
+						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" method="POST">
 						  		{!! csrf_field() !!}
 
 								<input type="hidden" name="_method" value="DELETE">
@@ -190,14 +190,14 @@
 					<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 					<td class="wid50 textcent">
-						<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+						<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" data-checkpermissions="treatments.edit" class="btn btn-sm btn-success onEdit" role="button" title="{!! @trans("aroaden.edit") !!}">
 							<i class="fa fa-edit"></i>
 						</a>
 					</td>
 
 					<td class="wid50 textcent"> 	
 						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" method="POST">	
+						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" method="POST">	
 						  		{!! csrf_field() !!}
 
 								<input type="hidden" name="_method" value="DELETE">
@@ -277,9 +277,9 @@
 
 		<script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
 
-    <script type="text/javascript">
+    	<script type="text/javascript">
 		  $(document).ready(function(){
-			  $('[data-toggle="tooltip"]').tooltip();
+			$('[data-toggle="tooltip"]').tooltip();
 
 		    $('a.onEdit').on('click', function(evt) {
 		      evt.preventDefault();
