@@ -13,8 +13,8 @@
 		  <div class="col-sm-12"> 
   			<div class="input-group"> 
     			<span class="input-group-btn pad10">
-            <p> {!! @trans("aroaden.patient") !!} </p>
-          </span>
+	            <p> {!! @trans("aroaden.patient") !!} </p>
+	          </span>
     			<div class="btn-toolbar pad4" role="toolbar">
              <div class="btn-group">
                 <a href="{!! url("/$main_route/$id/edit") !!}" data-checkpermissions="patients.edit" role="button" class="btn btn-sm btn-success onEdit">

@@ -56,6 +56,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
 		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		
+		Route::get($route["budgets"].'/{uniqid}/edit', 'BudgetsController@edit');	
 		Route::post($route["budgets"].'/delCode', 'BudgetsController@delCode');
 		Route::post($route["budgets"].'/delId', 'BudgetsController@delId');
 	});

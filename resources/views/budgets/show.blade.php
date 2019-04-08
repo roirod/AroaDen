@@ -73,6 +73,19 @@
               <td class="wid180"></td>
   					</tr>
 
+            <tr>
+              <td class="wid110">
+                <a href="{!! url("/$budgets_route/$bud->uniqid/edit") !!}" data-checkpermissions="patients.edit" role="button" class="btn btn-sm btn-success">
+                   <i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
+                </a>
+              </td>
+              <td class="wid180"></td>
+              <td class="wid95 textcent"></td>
+              <td class="wid95 textcent"></td>
+              <td class="wid180"></td>
+              <td class="wid180"></td>
+            </tr>
+
 	   			@endif
 
 				<tr>
@@ -91,85 +104,5 @@
 	 	</table>
 	</div>
 </div> </div> </div>		
-			
-<hr> 
-<br>
-
-<div class="row">
-  <div class="col-sm-12"> 
-  		<div class="input-group">
-	   		<span class="input-group-btn pad10"> 
-	   			<p> Editar presupuesto: </p>
-	   		</span>
-</div> </div> </div>
-
-
-<div class="row">
-  	<div class="col-sm-12">
-
-  		@if (count($budgets_group) == 0)
-
-  			<p class="pad10"> No hay presupuestos a editar </p>
-
-  		@else
-
-			<form id="form" class="form" action="{!! url("/$main_route/editBudget") !!}" method="post">
-				{!! csrf_field() !!}
-
-				<input type="hidden" name="idpat" value="{!!$idpat!!}">	
-
-				<div class="input-group">
-
-					<div class="col-sm-9">
-						<select name="uniqid" class="form-control">
-
-							@foreach ($budgets_group as $bud_group)
-
-								<option value="{!! $bud_group->uniqid !!}">{!! DatTime($bud_group->created_at) !!}</option>
-										
-							@endforeach
-
-						</select>
-					</div>	
-
-					<div class="col-sm-2">
-						<button class="btn btn-default onEdit" type="submit">
-							&nbsp; <i class="fa fa-arrow-circle-right"></i> &nbsp; 
-						</button>
-					</div>	
-
-				</div>
-			</form>
-
-  		@endif
-
-</div> </div>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('button.onEdit').on('click', function(evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-
-      var _this = $(this);
-
-      return onEdit(_this);
-    });
-
-    function onEdit(_this) {
-      util.checkPermissions('budgets.edit').done(function(response) {
-        if (response.permission) {
-
-          _this.closest('form').submit();
-
-        } else {
-
-          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-          
-        }
-      });
-    }       
-  });
-</script>
 
 @endsection

@@ -118,16 +118,17 @@ class BudgetsController extends BaseController
         return parent::show($request, $id);
     }
 
-    public function editBudget(Request $request)
+    public function edit(Request $request, $uniqid)
     {
-        $idpat = $this->sanitizeData($request->input('idpat'));
-        $uniqid = $this->sanitizeData($request->input('uniqid'));     
+        $uniqid = $this->sanitizeData($uniqid);     
+
+        $budgets = $this->model::AllByCode($uniqid);
+        $arr_budgets = $budgets->toArray();
+        $idpat = $arr_budgets[0]->idpat;
+        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
 
         $patient = $this->model2::FirstById($idpat);
         $this->setPageTitle($patient->surname.', '.$patient->name);
-
-        $budgets = $this->model::AllByIdOrderByName($idpat, $uniqid);
-        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
 
         $this->view_data['request'] = $request;
         $this->view_data['budgets'] = $budgets;

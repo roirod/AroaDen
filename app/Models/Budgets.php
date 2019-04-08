@@ -30,7 +30,7 @@ class Budgets extends Model
     {
         return DB::table('budgets')
                 ->join('services', 'budgets.idser','=','services.idser')
-                ->select('budgets.*','services.name')
+                ->select('idpat','budgets.*','services.name')
                 ->where('uniqid', $uniqid)
                 ->orderBy('services.name' , 'ASC')
                 ->get();
