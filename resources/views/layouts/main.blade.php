@@ -77,7 +77,7 @@
         </div>
  	
         <div class="col-sm-2 text-right">
-          <a class="btn btn-default btn-sm" role="button" href="{!! url("/$settings_route") !!}" title="Ajustes">
+          <a class="btn btn-default btn-sm" role="button" href="{!! url("/$settings_route") !!}" title="{!! @trans("aroaden.settings") !!}">
             <i class="fa fa-cogs"></i>
           </a>
           <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="{!! @trans("aroaden.manuals") !!}">
