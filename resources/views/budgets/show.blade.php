@@ -40,7 +40,7 @@
         <td class="wid180"></td>
 	    </tr>
     </table>
-   	<div class="box260">
+   	<div class="box300">
 	   	<table class="table table-striped">      	  	
 
 		    @foreach($budgets as $bud)

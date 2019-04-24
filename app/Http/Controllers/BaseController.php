@@ -209,6 +209,7 @@ class BaseController extends Controller
         $this->file_max_size = 1024 * 1024 * $file_max_size;
 
         $this->createDefaultCompanyData();
+        $this->createSymlinks();
 
         $this->form_fields = [
             'surname' => false,
@@ -374,6 +375,23 @@ class BaseController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    /**
+     *  create Symlinks
+     *  
+     *  @return object
+     */
+    private function createSymlinks()
+    {
+        $app_Symlink = public_path('app');
+        $public_Symlink = storage_path('app/public');
+
+        if(!is_link($app_Symlink))
+            symlink(storage_path('app'), $app_Symlink);
+
+        if(!is_link($public_Symlink))
+            symlink(public_path(), $public_Symlink);
     }
 
     /**

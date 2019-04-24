@@ -28,7 +28,6 @@
          <div class="btn-group">
          	<form class="form" action="{!! url("/$main_route/resetOdontogram/$id") !!}" method="post">
               {!! csrf_field() !!}
-
            		<input type="hidden" name="_method" value="PUT">
 
            		<button type="button" class="btn btn-danger btn-sm dropdown-toggle onReset" data-toggle="dropdown">
@@ -60,7 +59,6 @@
               <button type="submit" class="btn btn-info btn-sm">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
             </div>
         </div>
-        
       </form>
 
       </div>
@@ -100,22 +98,6 @@
           }
         });
       });
-
-      $('button.onReset').on('click', function(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-
-        var _this = $(this);
-
-        return onReset(_this);
-      });
-
-      function onReset(_this) {
-        util.checkPermissions('patients.resetOdontogram').done(function(response) {
-          if (!response.permission)
-            return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-        });
-      } 
     });
   </script>
 

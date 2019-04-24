@@ -19,7 +19,7 @@
 	<span class="input-group-btn pad10">  <p>{!! @trans('aroaden.record') !!}</p> </span>
 	<div class="btn-toolbar pad4" role="toolbar">
 	 <div class="btn-group">
-	    <a href="{!! url("/$main_route/$id/$form_route") !!}" role="button" class="btn btn-sm btn-success onEdit">
+	    <a href="{!! url("/$main_route/$id/$form_route") !!}" role="button" class="btn btn-sm btn-success">
 	       <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
 	    </a>
 	 </div>	
@@ -71,26 +71,6 @@
     </div> 	 
 
  </div>
-</div> 
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('a.onEdit').on('click', function(evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-
-      var _this = $(this);
-
-      return onEdit(_this);
-    });
-
-    function onEdit(_this) {
-      util.checkPermissions('patients.editRecord').done(function(response) {
-        if (!response.permission)
-          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-      });
-    }	    
-  });
-</script>
+</div>
 
 @endsection

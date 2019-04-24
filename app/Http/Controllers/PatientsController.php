@@ -503,7 +503,7 @@ class PatientsController extends BaseController implements BaseInterface
 
         $dir = "$this->files_dir/$id/$this->odontogram_dir";
         $odontogram = $this->getFirstJpgOnDir($dir);
-        $odontogram = storage_path($odontogram);
+        $odontogram = public_path($odontogram);
 
         return response()->download($odontogram);
     }    
