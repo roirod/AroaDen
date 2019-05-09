@@ -40,16 +40,12 @@ class TreatmentsController extends BaseController
     public function create(Request $request, $id = false)
     {  
         $this->redirectIfIdIsNull($id, $this->other_route);
-
-        $services = Services::AllOrderByName();
-        $staff = Staff::AllOrderBySurnameNoPagination();
         $object = Patients::FirstById($id);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;
-        $this->view_data['services'] = $services;
-        $this->view_data['staff'] = $staff;        
+        $this->view_data['services'] = Services::AllOrderByName();
+        $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
         $this->view_data['name'] = $object->name;
         $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;
@@ -67,7 +63,7 @@ class TreatmentsController extends BaseController
 
         $data = [];
         $data['idser'] = $id;
-        $data['name'] = $service->name;        
+        $data['name'] = html_entity_decode($service->name);        
         $data['price'] = $service->price;
         $data['tax'] = $service->tax;   
         
@@ -76,21 +72,20 @@ class TreatmentsController extends BaseController
 
     public function store(Request $request)
     {
-        $idpat = $this->sanitizeData( $request->input('idpat') );
-        $idser = $this->sanitizeData( $request->input('idser') );
+        $idpat = $this->sanitizeData($request->input('idpat'));
+        $idser = $this->sanitizeData($request->input('idser'));
         $this->redirectIfIdIsNull($idpat, $this->other_route);
         $this->redirectIfIdIsNull($idser, $this->other_route);
 
         $service = Services::FirstById($idser);     
 
         $price = $service->price;
-        $units = $this->sanitizeData( $request->input('units') );
-        $paid = $this->sanitizeData( $request->input('paid') );
-        $day = $this->sanitizeData( $request->input('day') );
+        $units = $this->sanitizeData($request->input('units'));
+        $paid = $this->sanitizeData($request->input('paid'));
+        $day = $this->sanitizeData($request->input('day'));
+        $day = $this->convertDmYToYmd($day);
         $tax = $service->tax;
         $staff = $request->input('staff');
-
-        $data = [];
 
         try {
 
@@ -137,16 +132,13 @@ class TreatmentsController extends BaseController
         $id = $this->sanitizeData($id);
     
         $object = Treatments::FirstById($id);
-        $staff_works = StaffWorks::AllById($id)->toArray();        
-        $staff = Staff::AllOrderBySurnameNoPagination();
         $paciente = Patients::FirstById($object->idpat);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;        
         $this->view_data['object'] = $object;
-        $this->view_data['staff_works'] = $staff_works;
-        $this->view_data['staff'] = $staff;        
+        $this->view_data['staff_works'] = StaffWorks::AllById($id)->toArray();
+        $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
         $this->view_data['name'] = $paciente->name;
         $this->view_data['surname'] = $paciente->surname;
         $this->view_data['form_fields'] = $this->form_fields;        
@@ -180,6 +172,7 @@ class TreatmentsController extends BaseController
             $price = $this->sanitizeData($request->input('price'));
             $paid = $this->sanitizeData($request->input('paid'));
             $day = $this->sanitizeData($request->input('day'));
+            $day = $this->convertDmYToYmd($day);
             $staff = $request->input('staff');
 
             try {

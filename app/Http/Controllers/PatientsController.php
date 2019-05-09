@@ -24,14 +24,14 @@ class PatientsController extends BaseController implements BaseInterface
     use DirFilesTrait;
 
     /**
-     * @var string $odog_dir  odog_dir
+     * @var string $odontogram_dir  odontogram_dir
      */
-    private $odog_dir = '.odogdir';
+    private $odontogram_dir = '.odontogram_dir';
 
     /**
-     * @var string $odogram  odogram
+     * @var string $odontogram  odontogram
      */
-    private $odogram = 'odogram.jpg';
+    private $odontogram = 'odontogram';
 
     /**
      * 
@@ -48,7 +48,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->form_route = 'list';
         $this->own_dir = 'patients_dir';
         $this->files_dir = "app/".$this->own_dir;
-        $this->has_odogram = true;
+        $this->has_odontogram = true;
         $this->table_name = 'patients';
 
         $fields = [
@@ -71,16 +71,26 @@ class PatientsController extends BaseController implements BaseInterface
 
     public function index(Request $request)
     {  	
-        $main_loop = $this->model::AllOrderBySurname($this->num_paginate);
-        $count = $this->model::CountAll();
-
-        $this->view_data['request'] = $request;
-
         $this->setPageTitle(Lang::get('aroaden.patients'));
 
         return parent::index($request);
     }
-  
+
+    /**
+     *  get index page
+     * 
+     *  @return view       
+     */
+    public function ajaxIndex(Request $request)
+    {       
+        $this->view_name = 'ajaxIndex';
+        $this->view_data['request'] = $request;
+
+        $this->setPageTitle(Lang::get('aroaden.patients'));
+
+        return $this->loadView();
+    }
+
     public function list(Request $request)
     {   
         $aColumns = [ 
@@ -90,7 +100,7 @@ class PatientsController extends BaseController implements BaseInterface
             3 => 'tel1',
             4 => 'city',
         ];
-  
+
         $iDisplayLength = $request->input('iDisplayLength');
         $iDisplayStart = $request->input('iDisplayStart');
 
@@ -143,7 +153,7 @@ class PatientsController extends BaseController implements BaseInterface
         $this->echoJsonOuptut($output);  
     }
 
-    public function show(Request $request, $id = false)
+    public function show(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
@@ -161,7 +171,8 @@ class PatientsController extends BaseController implements BaseInterface
         $treatments = Treatments::AllByPatientId($id);
         $treatments_sum = Treatments::SumByPatientId($id);
 	  	$birth = trim($patient->birth);
-        $profile_photo = url("/$this->files_dir/$id/$this->profile_photo_name");
+        $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
+        $profile_photo = url($this->getFirstJpgOnDir($profile_photo_dir));
         $age = 0;
 
 	  	if (isset($birth)) {
@@ -171,7 +182,6 @@ class PatientsController extends BaseController implements BaseInterface
 
         $this->setPageTitle($patient->surname.', '.$patient->name);
 
-        $this->view_data['request'] = $request;
         $this->view_data['object'] = $patient;
         $this->view_data['appointments'] = $appointments;
         $this->view_data['treatments'] = $treatments;
@@ -182,23 +192,21 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['profile_photo'] = $profile_photo;
         $this->view_data['profile_photo_name'] = $this->profile_photo_name;
 
-        return parent::show($request);
+        return parent::show($request, $id);
     }
 
     public function create(Request $request, $id = false)
     {
         $this->setPageTitle(Lang::get('aroaden.create_patient'));
 
-        $this->view_data['request'] = $request;
         $this->view_data['form_fields'] = $this->form_fields;
 
-        return parent::create($request, $id);  
+        return parent::create($request);
     }
 
     public function store(Request $request)
-    {        
+    {
         $dni = $this->sanitizeData($request->input('dni'));
-
         $this->view_name = 'create';
 
         $exists = $this->model::FirstByDniDeleted($dni);
@@ -227,30 +235,27 @@ class PatientsController extends BaseController implements BaseInterface
 	        return redirect("$this->main_route/$this->view_name")
 	                     ->withErrors($validator)
 	                     ->withInput();
-	    } else {
-             
-            $name = ucfirst($request->input('name'));
-            $surname = ucwords($request->input('surname'));
-            $address = ucfirst($request->input('address'));
-            $city = ucfirst($request->input('city'));
-            $notes = ucfirst($request->input('notes'));          
+	    } else {   
 
             try {
+
+                $birth = $this->convertDmYToYmd($request->input('birth'));
+                $birth = $this->sanitizeData($birth);
 
                 DB::beginTransaction();
 
                 $insertedId = $this->model::insertGetId([
-                  'name' => $this->sanitizeData($name),
-                  'surname' => $this->sanitizeData($surname),
+                  'name' => $this->sanitizeData($request->input('name')),
+                  'surname' => $this->sanitizeData($request->input('surname')),
                   'dni' => $this->sanitizeData($request->input('dni')),
                   'tel1' => $this->sanitizeData($request->input('tel1')),
                   'tel2' => $this->sanitizeData($request->input('tel2')),
                   'tel3' => $this->sanitizeData($request->input('tel3')),
                   'sex' => $this->sanitizeData($request->input('sex')),
-                  'address' => $this->sanitizeData($address),
-                  'city' => $this->sanitizeData($city),
-                  'birth' => $this->sanitizeData($request->input('birth')),
-                  'notes' => $this->sanitizeData($notes),
+                  'address' => $this->sanitizeData($request->input('address')),
+                  'city' => $this->sanitizeData($request->input('city')),
+                  'birth' => $birth,
+                  'notes' => $this->sanitizeData($request->input('notes')),
                   'created_at' => date('Y-m-d H:i:s'),
                 ]);
 
@@ -262,7 +267,7 @@ class PatientsController extends BaseController implements BaseInterface
 
                 DB::rollBack();
 
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message') ); 
+                $request->session()->flash($this->error_message_name, $e->getMessage()); 
                 return redirect("$this->main_route/$this->view_name");
 
             }
@@ -280,7 +285,6 @@ class PatientsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;        
         $this->view_data['object'] = $object;
@@ -325,24 +329,21 @@ class PatientsController extends BaseController implements BaseInterface
 	                     ->withErrors($validator)
 	                     ->withInput();
 	    } else {		
-					  		
-            $name = ucfirst($request->input('name'));
-            $surname = ucwords($request->input('surname'));
-            $address = ucfirst($request->input('address'));
-            $city = ucfirst($request->input('city'));
-            $notes = ucfirst($request->input('notes'));
 
-            $patient->name = $this->sanitizeData($name);
-            $patient->surname = $this->sanitizeData($surname);
+            $birth = $this->convertDmYToYmd($request->input('birth'));
+            $birth = $this->sanitizeData($birth);
+
+            $patient->name = $this->sanitizeData($request->input('name'));
+            $patient->surname = $this->sanitizeData($request->input('surname'));
+            $patient->birth = $birth;
             $patient->dni = $this->sanitizeData($request->input('dni'));
             $patient->tel1 = $this->sanitizeData($request->input('tel1'));
             $patient->tel2 = $this->sanitizeData($request->input('tel2'));
             $patient->tel3 = $this->sanitizeData($request->input('tel3'));
             $patient->sex = $this->sanitizeData($request->input('sex'));
-            $patient->address = $this->sanitizeData($address);
-            $patient->city = $this->sanitizeData($city);
-            $patient->birth = $this->sanitizeData($request->input('birth'));
-            $patient->notes = $this->sanitizeData($notes);
+            $patient->address = $this->sanitizeData($request->input('address'));
+            $patient->city = $this->sanitizeData($request->input('city'));
+            $patient->notes = $this->sanitizeData($request->input('notes'));
             $patient->updated_at = date('Y-m-d H:i:s');
 			$patient->save();
 
@@ -355,7 +356,8 @@ class PatientsController extends BaseController implements BaseInterface
     {  
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-
+        $this->view_name = 'record';
+        
         $record = Record::find($id);
 
         if (is_null($record)) {
@@ -369,19 +371,18 @@ class PatientsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->form_route = 'recordEdit';
+        $this->form_route = 'editRecord';
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
-
-        $this->view_name = 'record';
+        $this->view_data['object'] = $object;
 
         return $this->loadView();
     } 
 
-    public function recordEdit(Request $request, $id)
+    public function editRecord(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
@@ -390,19 +391,20 @@ class PatientsController extends BaseController implements BaseInterface
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name);
 
-        $this->form_route = 'recordSave';
+        $this->form_route = 'saveRecord';
 
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
         $this->view_data['record'] = $record;
+        $this->view_data['object'] = $object;
 
-        $this->view_name = 'recordEdit';
+        $this->view_name = 'editRecord';
 
         return $this->loadView();
     }
 
-    public function recordSave(Request $request, $id)
+    public function saveRecord(Request $request, $id)
     {   
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);     
@@ -410,18 +412,12 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_name = 'record';
 
         $record = Record::find($id);
-                
-        $medical_record = ucfirst($request->input('medical_record'));
-        $diseases = ucfirst($request->input('diseases'));
-        $medicines = ucfirst($request->input('medicines'));
-        $allergies = ucfirst($request->input('allergies'));
-        $notes = ucfirst($request->input('notes'));
-        
-        $record->medical_record = $this->sanitizeData($medical_record);   
-        $record->diseases = $this->sanitizeData($diseases);   
-        $record->medicines = $this->sanitizeData($medicines);   
-        $record->allergies = $this->sanitizeData($allergies);   
-        $record->notes = $this->sanitizeData($notes);   
+
+        $record->medical_record = $this->sanitizeData($request->input('medical_record'));   
+        $record->diseases = $this->sanitizeData($request->input('diseases'));   
+        $record->medicines = $this->sanitizeData($request->input('medicines'));   
+        $record->allergies = $this->sanitizeData($request->input('allergies'));   
+        $record->notes = $this->sanitizeData($request->input('notes'));   
         
         $record->save();
 
@@ -434,12 +430,13 @@ class PatientsController extends BaseController implements BaseInterface
         return $this->loadFileView($request, $id);
     }
    
-    public function odogram(Request $request, $id)
+    public function odontogram(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
     	$id = $this->sanitizeData($id);
 
-        $odogram = "/$this->files_dir/$id/$this->odog_dir/$this->odogram";
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $odontogram = url($this->getFirstJpgOnDir($dir));
 
         $object = $this->model::FirstById($id);
         $this->setPageTitle($object->surname.', '.$object->name); 
@@ -447,79 +444,93 @@ class PatientsController extends BaseController implements BaseInterface
         $this->view_data['request'] = $request;
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $id;
-        $this->view_data['odogram'] = $odogram;
-
-        $this->view_name = 'odogram';
-        $this->view_response = true;
+        $this->view_data['odontogram'] = $odontogram;
+        $this->view_data['object'] = $object;
+        
+        $this->view_name = 'odontogram';
         
         return $this->loadView();
     }
 
-    public function upodog(Request $request)
+    public function uploadOdontogram(Request $request, $id)
     {   
-        if ($request->file('upodog')->isValid()) {
-            $id = $request->input('id');
-            $upodog = $request->file('upodog');
+        $file = $request->file('file');
+        $id = $this->sanitizeData($id);
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $fsDir = storage_path($dir);
+        $output = [];
 
-            $this->redirectIfIdIsNull($id, $this->main_route);
-            $id = $this->sanitizeData($id);
+        try {
+             
+            $this->checkIfFileIsValid($file);
 
-            $this->view_name = 'odogram';
+            $extension = $file->getClientOriginalExtension();
 
-            $extension = $request->file('upodog')->getClientOriginalExtension();
+            if ($extension == $this->default_img_type) {
 
-            if ( $extension != 'jpg' ) {
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_jpg_img'));
-                return redirect("$this->main_route/$id/$this->view_name");
-            } 
+                $this->deleteAllFilesOnDir($dir);
 
-            $odogram = storage_path("$this->files_dir/$id")."/$this->odog_dir/";
+                $file_name = $this->odontogram.'_'.uniqid().'.'.$this->default_img_type;
 
-            $upodog->move($odogram, $this->odogram);
+                $this->misc_array['file'] = $file;
+                $this->misc_array['save_path'] = $fsDir;
+                $this->misc_array['fsFilename'] = $file_name;
 
-            return redirect("$this->main_route/$id/$this->view_name");
+                $this->saveFileOnDisk();
 
-        } else {
+            } else {
 
-            $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));
-            return redirect("$this->main_route/$id/$this->view_name");
-        }    
+                throw new Exception(Lang::get('aroaden.no_jpg_img'));
+
+            }
+
+            $output['odontogram'] = url($this->getFirstJpgOnDir($dir));
+
+        } catch (Exception $e) {
+         
+            $output['error'] = true;
+            $output['msg'] = $e->getMessage();
+
+        } 
+
+        $this->echoJsonOuptut($output);
     }   
 
-    public function downodog(Request $request, $id)
+    public function downloadOdontogram(Request $request, $id)
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
 
-        $odogram = storage_path("$this->files_dir/$id")."/$this->odog_dir/$this->odogram";
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $odontogram = $this->getFirstJpgOnDir($dir);
+        $odontogram = public_path($odontogram);
 
-        return response()->download($odogram);
+        return response()->download($odontogram);
     }    
     
-    public function resodog(Request $request)
+    public function resetOdontogram(Request $request, $id)
     {  
-    	$id = $request->input('id');
-        $resodog = $request->input('resodog');
-
-        $this->redirectIfIdIsNull($id, $this->main_route); 	
     	$id = $this->sanitizeData($id);
- 		 
-        $this->view_name = 'odogram';
+        $dir = "$this->files_dir/$id/$this->odontogram_dir";
+        $this->view_name = 'odontogram';
 
-		if ($resodog == 1) {
+        try {
+             
+            $this->deleteAllFilesOnDir($dir);
 
-            $odogram = "/$this->own_dir/$id/$this->odog_dir/$this->odogram";
-            $img = "/img/$this->odogram"; 
+            $dir = "/$this->own_dir/$id";
+            $odontogram = "/$dir/$this->odontogram_dir/$this->odontogram".'_'.uniqid().'.'.$this->default_img_type;
+            $default_odontogram = "$this->img_folder/$this->odontogram".'.'.$this->default_img_type;
 
-            Storage::delete($odogram);           
-	    	Storage::copy($img, $odogram);
-	    	  
-	    	return redirect("/$this->main_route/$id/$this->view_name");
+            Storage::copy($default_odontogram, $odontogram);
+              
+            return redirect("/$this->main_route/$id/$this->view_name");
 
-		} else {
+        } catch (Exception $e) {
 
-		 	$request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));
-		 	return redirect("/$this->main_route/$id/$this->view_name");
+            $request->session()->flash($this->error_message_name, $e->getMessage());
+            return redirect("/$this->main_route/$id/$this->view_name");
+
 		}	
     }
 
@@ -542,15 +553,4 @@ class PatientsController extends BaseController implements BaseInterface
         return $this->loadView();
     }    
 
-    public function destroy(Request $request, $id)
-    {             	
-        $this->redirectIfIdIsNull($id, $this->main_route); 
-        $id = $this->sanitizeData($id);
-        
-        $this->model::destroy($id);
-      
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
-        return redirect($this->main_route);
-    }
 }

@@ -41,6 +41,21 @@ class BaseController extends Controller
     protected $view_data = [];
 
     /**
+     * @var array $view_data  data that is sent to view
+     */
+    protected $default_img_type = 'jpg';
+
+    /**
+     * @var array $view_data  data that is sent to view
+     */
+    protected $img_extensions = [
+        'jpg',
+        'jpeg',        
+        'png',
+        'gif'
+    ];
+
+    /**
      * @var string $main_route  main_route
      */
     protected $main_route = '';
@@ -49,6 +64,16 @@ class BaseController extends Controller
      * @var string $other_route  other_route
      */
     protected $other_route = '';
+
+    /**
+     * @var string $redirect_to  redirect_to
+     */
+    protected $redirect_to = NULL;
+
+    /**
+     * @var bool $delete_item  delete_item
+     */
+    protected $delete_item = false;
 
     /**
      * @var string $views_folder  views_folder name
@@ -61,9 +86,9 @@ class BaseController extends Controller
     protected $view_name = '';
 
     /**
-     * @var bool $view_name  view response
+     * @var bool $is_create_view
      */
-    protected $view_response = false;
+    protected $is_create_view = true;
 
     /**
      * @var array $form_fields  input fields showed in form
@@ -98,7 +123,12 @@ class BaseController extends Controller
     /**
      * @var string $error_message_name  error_message_name
      */
-    protected $profile_photo_name = '.profile_photo.jpg';
+    protected $profile_photo_name = 'profile_photo';
+
+    /**
+     * @var string $profile_photo_dir  profile_photo_dir
+     */
+    protected $profile_photo_dir = '.profile_photo_dir';
 
     /**
      * @var string $files_dir  files_dir
@@ -146,14 +176,19 @@ class BaseController extends Controller
     protected $model3;    
 
     /**
-     * @var bool $has_odogram  si tiene odontograma o no
+     * @var object $main_object  main_object
      */
-    protected $has_odogram = false;   
+    protected $main_object;
 
     /**
-     * @var int $has_odogram  si tiene odontograma o no
+     * @var bool $has_odontogram  si tiene odontograma o no
      */
-    protected $date_max_days = 60;
+    protected $has_odontogram = false;   
+
+    /**
+     * @var int $date_max_days
+     */
+    protected $date_max_days = 90;
 
     /**
      * @var array $misc_array  miscelaneus array
@@ -173,7 +208,8 @@ class BaseController extends Controller
         $file_max_size = (int)$this->config['files']['file_max_size'];
         $this->file_max_size = 1024 * 1024 * $file_max_size;
 
-        $this->checkIfSettingExists();
+        $this->createDefaultCompanyData();
+        $this->createSymlinks();
 
         $this->form_fields = [
             'surname' => false,
@@ -197,7 +233,11 @@ class BaseController extends Controller
             'no_tax_msg' => false,
             'staff' => false,            
             'notes' => false,
-            'save' => false,
+            'user' => false,            
+            'password' => false,
+            'full_name' => false,
+            'scopes' => false,
+            'save' => false
         ];
     }
 
@@ -210,6 +250,7 @@ class BaseController extends Controller
     public function index(Request $request)
     {
         $this->view_name = 'index';
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
@@ -224,6 +265,7 @@ class BaseController extends Controller
     public function create(Request $request, $id = false)
     {
         $this->view_name = 'create';
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
@@ -235,10 +277,10 @@ class BaseController extends Controller
      *  @param int $id
      *  @return string       
      */
-    public function show(Request $request, $id = false)
+    public function show(Request $request, $id)
     {
         $this->view_name = 'show';
-        $this->view_response = true;
+        $this->view_data['request'] = $request;
         
         return $this->loadView();
     }
@@ -253,6 +295,8 @@ class BaseController extends Controller
     public function edit(Request $request, $id)
     {
         $this->view_name = 'edit';
+        $this->is_create_view = false;
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
@@ -266,8 +310,8 @@ class BaseController extends Controller
      */
     public function list(Request $request)
     {
-        $this->misc_array['string'] = $this->sanitizeData($request->input('string'));
-        $this->misc_array['search_in'] = $this->sanitizeData($request->input('search_in'));
+        $string = $request->input('string');
+        $this->misc_array['string'] = $this->sanitizeData($string);
 
         $data = [];
 
@@ -296,14 +340,6 @@ class BaseController extends Controller
 
         $view = $this->views_folder.".".$this->view_name;
 
-        if ($this->view_response) {
-            return response()->view($view, $this->view_data)
-               ->header('Expires', 'Sun, 01 Jan 2004 00:00:00 GMT')
-               ->header('Cache-Control', 'no-store, no-cache, must-revalidate')
-               ->header('Cache-Control', ' post-check=0, pre-check=0', FALSE)
-               ->header('Pragma', 'no-cache');
-        }
-
         return view($view, $this->view_data);
     }
 
@@ -312,7 +348,7 @@ class BaseController extends Controller
      *  
      *  @return object
      */
-    private function checkIfSettingExists()
+    private function createDefaultCompanyData()
     {
         $settings_fields = $this->config['settings_fields'];
 
@@ -322,20 +358,40 @@ class BaseController extends Controller
             if ($exits == null) {
                 DB::table('settings')->insert([
                     'key' => $field['name'],
-                    'value' => ''
+                    'value' => '',
+                    'type' => $field['settting_type']
                 ]);                
             }
         }
 
-        $exists = Redis::exists('settings');
+        if (env('REDIS_SERVER_IS_ON'))  {
+            $exists = Redis::exists('settings');
 
-        if (!$exists) {
-            $settings = Settings::getArray();
+            if (!$exists) {
+                $settings = Settings::getArray();
 
-            Redis::set('settings', json_encode($settings));
+                Redis::set('settings', json_encode($settings));
+            }
         }
 
         return redirect()->back();
+    }
+
+    /**
+     *  create Symlinks
+     *  
+     *  @return object
+     */
+    private function createSymlinks()
+    {
+        $app_Symlink = public_path('app');
+        $public_Symlink = storage_path('app/public');
+
+        if(!is_link($app_Symlink))
+            symlink(storage_path('app'), $app_Symlink);
+
+        if(!is_link($public_Symlink))
+            symlink(public_path(), $public_Symlink);
     }
 
     /**
@@ -347,9 +403,11 @@ class BaseController extends Controller
         View::share('app_name_text', self::APP_NAME_TEXT);
         View::share('page_title', $this->page_title);
         View::share('autofocus', $this->autofocus);
+        View::share('is_create_view', $this->is_create_view);
+
         View::share('main_route', $this->main_route);
         View::share('other_route', $this->other_route);
-        View::share('form_route', $this->form_route);
+        View::share('form_route', $this->form_route);        
 
         View::share('patients_route', $this->config['routes']['patients']);
         View::share('invoices_route', $this->config['routes']['invoices']);
@@ -357,6 +415,7 @@ class BaseController extends Controller
         View::share('company_route', $this->config['routes']['company']);
         View::share('appointments_route', $this->config['routes']['appointments']);
         View::share('staff_route', $this->config['routes']['staff']);
+        View::share('staff_positions_route', $this->config['routes']['staff_positions']);
         View::share('services_route', $this->config['routes']['services']);
         View::share('accounting_route', $this->config['routes']['accounting']);
         View::share('treatments_route', $this->config['routes']['treatments']);        
@@ -401,10 +460,9 @@ class BaseController extends Controller
     private function getQueryResult()
     {
         $string = $this->misc_array['string'];
-        $search_in = $this->misc_array['search_in'];
 
-        $main_loop = $this->model::FindStringOnField($search_in, $string);
-        $count = $this->model::CountFindStringOnField($search_in, $string);
+        $main_loop = $this->model::FindStringOnField($string);
+        $count = $this->model::CountFindStringOnField($string);
 
         if ((int)$count === 0)
             throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));
@@ -413,6 +471,43 @@ class BaseController extends Controller
         $data['main_loop'] = $main_loop;      
         $data['msg'] = $count;
         return $data;
+    }
+
+    /**
+     *  destroy
+     * 
+     *  @param object $request     
+     *  @param int $id 
+     */
+    public function destroy(Request $request, $id)
+    {
+        $id = $this->sanitizeData($id);
+        $error = false;
+        $msg = Lang::get('aroaden.success_message');
+
+        try {
+
+            if ($this->delete_item) {
+
+                $this->main_object->delete();          
+
+            } else  {
+
+                $this->model::destroy($id);                 
+
+            }                
+
+        } catch (Exception $e) {
+
+            $error = true;
+            $msg = $e->getMessage();
+
+        }
+
+        $data['error'] = $error;
+        $data['msg'] = $msg;
+
+        $this->echoJsonOuptut($data);
     }
 
 }

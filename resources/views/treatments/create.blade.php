@@ -26,8 +26,8 @@
 				</select>
 			</div>
 
-		@include('form_fields.create.closeform')
-	@include('form_fields.create.closediv')
+		@include('form_fields.fields.closeform')
+	@include('form_fields.fields.closediv')
 
 	<div id="loading"></div>
 
@@ -38,16 +38,16 @@
 
 	    <p class="pad4" id="name_price"></p>
 
-	    @include('form_fields.create.openform')
+	    @include('form_fields.fields.openform')
 
 	        <input type="hidden" name="idpat" value="{{ $id }}">
 	        <input type="hidden" name="idser" value="">
 	        <input type="hidden" name="price" value="">
 
-	        @include('form_fields.create_alternative')
+	        @include('form_fields.common_alternative')
 
-		@include('form_fields.create.closeform')
-	@include('form_fields.create.closediv')
+		@include('form_fields.fields.closeform')
+	@include('form_fields.fields.closediv')
 
 @endsection
 
@@ -139,9 +139,7 @@
 				    }).done(function(response) {
 
 				    	$('input[name="units"]').val(1);
-				    	$('input[name="day"]').val("");
 				    	$('input[name="paid"]').val("");
-
 				    	$('input[name="idser"]').attr('value', response.idser);
 				    	$('input[name="price"]').attr('value', response.price);		    	
 				    	$('input[name="paid"]').val(response.price);
@@ -150,8 +148,10 @@
 						var name_price = response.name + '(' + response.price + ' €)';
 						$("#name_price").text(name_price);
 
-	     				$('#loading').delay(600).empty();
-						$("#ajax_content").delay(300).fadeIn(300).show(0);
+						//$('input[name="day"]').attr('value', util.getTodayDate());
+
+	     				$('#loading').empty();
+						$("#ajax_content").hide().fadeIn(300).show(0);
          
 				    }).fail(function() {
 
@@ -176,9 +176,13 @@
 
 @section('js')
     @parent   
-	  <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/minified/polyfiller.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/webshims.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+
+	<script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
+	<link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
 @endsection

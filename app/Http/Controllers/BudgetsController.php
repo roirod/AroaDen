@@ -43,7 +43,6 @@ class BudgetsController extends BaseController
         $uniqid = uniqid();
         $created_at = date('Y-m-d H:i:s');
 
-        $this->view_data['request'] = $request;
         $this->view_data['created_at'] = $created_at;
         $this->view_data['uniqid'] = $uniqid;        
         $this->view_data['new_url'] = $this->_new_url;
@@ -53,6 +52,7 @@ class BudgetsController extends BaseController
         $this->view_data['idnav'] = $idpat;        
         $this->view_data['name'] = $patient->name;
         $this->view_data['surname'] = $patient->surname;
+        $this->view_data['object'] = $patient;
 
         $this->setPageTitle($patient->surname.', '.$patient->name);
 
@@ -109,25 +109,26 @@ class BudgetsController extends BaseController
         $budgets = $this->model::AllById($idpat);
         $budgets_group = $this->model::AllGroupByCode($idpat);
 
-        $this->view_data['request'] = $request;
         $this->view_data['budgets'] = $budgets;
         $this->view_data['budgets_group'] = $budgets_group;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;        
+        $this->view_data['object'] = $patient;
 
         return parent::show($request, $id);
     }
 
-    public function editBudget(Request $request)
+    public function edit(Request $request, $uniqid)
     {
-        $idpat = $this->sanitizeData($request->input('idpat'));
-        $uniqid = $this->sanitizeData($request->input('uniqid'));     
+        $uniqid = $this->sanitizeData($uniqid);     
+
+        $budgets = $this->model::AllByCode($uniqid);
+        $arr_budgets = $budgets->toArray();
+        $idpat = $arr_budgets[0]->idpat;
+        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
 
         $patient = $this->model2::FirstById($idpat);
         $this->setPageTitle($patient->surname.', '.$patient->name);
-
-        $budgets = $this->model::AllByIdOrderByName($idpat, $uniqid);
-        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
 
         $this->view_data['request'] = $request;
         $this->view_data['budgets'] = $budgets;
@@ -136,7 +137,8 @@ class BudgetsController extends BaseController
         $this->view_data['uniqid'] = $uniqid;
         $this->view_data['idpat'] = $idpat;
         $this->view_data['idnav'] = $idpat;     
-
+        $this->view_data['object'] = $patient;
+        
         $this->view_name = 'edit';
 
         return $this->loadView();

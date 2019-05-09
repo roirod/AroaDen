@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Traits;
 
 use Illuminate\Http\Request;
+use App\Models\Settings;
 use Exception;
 use Redis;
 use Lang;
@@ -17,7 +18,8 @@ trait BaseTrait {
      */
     protected function sanitizeData($data)
     {   
-        $data = htmlentities(trim($data), ENT_QUOTES, "UTF-8");
+        $data = trim($data);
+        $data = htmlentities($data, ENT_QUOTES, "UTF-8");
 
         return $data;
     }
@@ -31,7 +33,7 @@ trait BaseTrait {
      */
     protected function redirectIfIdIsNull($id, $route)
     {   
-        if ( is_null($id) )
+        if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
             return redirect($route);
     }
 
@@ -72,12 +74,36 @@ trait BaseTrait {
     }
 
     /**
+     *  convert date Y m d To D m Y
+     * 
+     *  @param string $date
+     *  @return string       
+     */
+    protected function convertDmYToYmd($date)
+    {
+        return date('Y-m-d', strtotime($date));
+    }
+
+    /**
      *  validate Date
      * 
      *  @param string $date
      *  @return bool
      */
-    protected function validateDate($date)
+    protected function validateDateDDMMYYYY($date)
+    {   
+        list($d, $m, $y) = array_pad(explode('-', $date, 3), 3, 0);
+
+        return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
+    }
+
+    /**
+     *  validate Date
+     * 
+     *  @param string $date
+     *  @return bool
+     */
+    protected function validateDateYYYYMMDD($date)
     {   
         list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
 
@@ -99,24 +125,27 @@ trait BaseTrait {
     }
 
     /**
-     *  get Settings from redis
+     *  get Settings, company info, etc.
      *
      *  @return object   
      */
     protected function getSettings()
-    {   
-        return json_decode(Redis::get('settings'));
+    {
+        if (env('REDIS_SERVER_IS_ON')) 
+            return json_decode(Redis::get('settings'));
+
+        return Settings::getObject();
     }
 
     /**
-     *  sanitize Data / convert to html entities
+     *  check If Paid Is Higher
      * 
      *  @param int $units
      *  @param int $price
      *  @param int $paid
      *  @return bool       
      */
-    public function checkIfPaidIsHigher($units, $price, $paid)
+    protected function checkIfPaidIsHigher($units, $price, $paid)
     {   
         $total = (int)$units * (int)$price;
 

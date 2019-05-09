@@ -15,8 +15,13 @@
 
 <div class="row">
   <div class="col-sm-12"> 
- 	 <div class="input-group">
-   	<span class="input-group-btn pad10"> <p> Finalizar </p> </span>
+
+	<div class="col-sm-12 pad10">
+	    @include('form_fields.show.name')
+	</div>
+
+ 	<div class="input-group">
+   		<span class="input-group-btn pad10"> <p> Finalizar </p> </span>
   		<div class="btn-toolbar pad4" role="toolbar"> 
     		<div class="btn-group">
 	      		<a href="{!! url("/$main_route/$idpat") !!}" role="button" class="btn btn-sm btn-primary">
@@ -35,9 +40,9 @@
     	<table class="table">
 		     <tr class="fonsi15 success">
 				  <td class="wid140">Tratamiento</td>
-				  <td class="wid95 textcent">Precio</td>
 				  <td class="wid50 textcent">Cantidad</td>
 				  <td class="wid50"></td>
+				  <td class="wid95 textcent">Precio</td>
 				  <td class="wid230"></td>
 		     </tr>
     	</table>
@@ -57,7 +62,6 @@
 							<input type="hidden" name="created_at" value="{!! $created_at !!}">						 	
 
 							  <td class="wid140">{!! $service->name !!}</td>
-							  <td class="wid95 textcent">{!! $service->price !!} €</td>
 							  <td class="wid50 textcent">
 							  	 	<div class="form-group">
 							  			<input type="number" min="1" step="1" value="1" class="form-control" name="units" required>
@@ -68,6 +72,8 @@
 								  		<i class="fa fa-plus"></i>
 								  	</button>
 							  </td>
+							  <td class="wid95 textcent">{!! $service->price !!} €</td>
+
 							  <td class="wid230"></td>
 						</form>  
 					</tr>	
@@ -88,11 +94,11 @@
 
     	<table class="table">
 		     <tr class="fonsi15 success">
-				  <td class="wid140">Tratamiento</td>
-				  <td class="wid95 textcent">Precio</td>
-				  <td class="wid95 textcent">Cantidad</td>
-				  <td class="wid50"></td>
-				  <td class="wid230"></td>
+				<td class="wid140">Tratamiento</td>
+				<td class="wid95 textcent">Cantidad</td>
+				<td class="wid95 textcent">Precio</td>				  
+				<td class="wid50"></td>
+				<td class="wid230"></td>
 		     </tr>
     	</table>
 

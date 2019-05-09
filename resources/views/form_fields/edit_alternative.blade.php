@@ -11,12 +11,6 @@
 
 			@endif
 
-			@if ($form_fields['position'])
-
-				@include('form_fields.edit.position')
-
-			@endif
-
 			@if ($form_fields['dni'])
 
 				@include('form_fields.edit.dni')
@@ -62,6 +56,12 @@
 			@if ($form_fields['birth'])
 
 				@include('form_fields.edit.birth')
+
+			@endif
+
+			@if ($form_fields['position'])
+
+				@include('form_fields.edit.position')
 
 			@endif
 

@@ -9,26 +9,30 @@
 
     {{ addText("Editar Cita") }}
 
-    @include('form_fields.edit.opendiv')
+    <div class="col-sm-12 pad10">
+        @include('form_fields.show.name')
+    </div>
 
-        <p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
+    @include('form_fields.fields.opendiv')
+        @include('form_fields.fields.openform')
 
-        @include('form_fields.edit.openform')
+            @include('form_fields.common_alternative')
 
-            @include('form_fields.edit_alternative')
+        @include('form_fields.fields.closeform')
 
-        @include('form_fields.edit.closeform')
-
-    @include('form_fields.edit.closediv')
+    @include('form_fields.fields.closediv')
 
 @endsection
 
-@section('js')
-    @parent
+@section('footer_script')
+    <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
+    <script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
+    <script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
 
-	  <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/minified/polyfiller.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/webshims.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/timepicker1.js') }}"></script>
 @endsection

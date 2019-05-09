@@ -2,20 +2,25 @@
 
 @section('content')
 
+	@include('includes.patients_nav')
+
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText("Añadir Paciente") !!}
+	{!! addText(@trans('aroaden.create_patient')) !!}
 
-	@include('form_fields.create')
+	@include('form_fields.common')
     
 @endsection
 
-@section('js')
-    @parent   
-	  <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/minified/polyfiller.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/webshims.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
+@section('footer_script')
+	<script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+
+	<script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
+	<link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
 @endsection

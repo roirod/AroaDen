@@ -1,20 +1,14 @@
-
-@include('includes.messages')
-@include('includes.errors')
-
-
 {!! addText(@trans('aroaden.company_edit_data')) !!}
 
 <div class="row">
  <div class="col-sm-12">
   
-  	<form class="form" id="form" action="{!! url("/$main_route/$form_route") !!}" method="post">
+  	<form id="save_form">
 		{!! csrf_field() !!}
 
 		@foreach ($main_loop as $item)
 
 			<?php
-
 				$aroaden_item_name = "aroaden.".$item['name'];
 				$item_name = $item['name'];
 				$item_type = $item['type'];
@@ -50,4 +44,20 @@
 
 </div> </div>
 
-@include('company.jsInclude')
+<script type="text/javascript">    
+	$(document).ready(function() {
+	  $("#save_form").on('submit', function(evt) {
+	    evt.preventDefault();
+	    evt.stopPropagation();
+
+	    var obj = {  
+	      url  : '{!! url("/$company_route/$form_route") !!}',
+	      data : $(this).serialize(),
+	      method  : 'POST',
+	      popup: true          
+	    };
+
+	    return util.processAjaxReturnsHtml(obj);
+	  }); 
+	});
+</script>

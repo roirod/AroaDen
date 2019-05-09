@@ -1,116 +1,142 @@
 @extends('layouts.main')
 
-@section('content')
+<div id="ajax_content">
 
-@include('includes.staff_nav')
+	@section('content')
 
-@include('includes.messages')
-@include('includes.errors')
+		@include('includes.staff_nav')
 
-<div class="row"> 
-  <div class="col-sm-12"> 
-		<div class="input-group"> 
-			<span class="input-group-btn pad10">  <p> Personal </p> </span>
-			<div class="btn-toolbar pad4" role="toolbar"> 
-				<div class="btn-group">
-					<a href="{{ url("/$main_route/$id/edit") }}" role="button" class="btn btn-sm btn-success">
-						<i class="fa fa-edit"></i> Editar
-					</a>
-				</div>	
-			<div class="btn-group">
-			 	<form class="form" id="form" action="{!! url("/$main_route/$id") !!}" method="POST">	
-			  		{!! csrf_field() !!}
+		@include('includes.messages')
+		@include('includes.errors')
 
-					<input type="hidden" name="_method" value="DELETE">
+		<div class="row"> 
+		  <div class="col-sm-12"> 
+				<div class="input-group"> 
+					<span class="input-group-btn pad10">  
+            <p> Personal </p>
+          </span>
+					<div class="btn-toolbar pad4" role="toolbar"> 
+						<div class="btn-group">
+							<a href="{{ url("/$main_route/$id/edit") }}" data-checkpermissions="staff.edit" role="button" class="btn btn-sm btn-success onEdit">
+								<i class="fa fa-edit"></i> Editar
+							</a>
+						</div>	
+					<div class="btn-group">
+					 	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="staff.delete">	
+					  		{!! csrf_field() !!}
 
-					<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-					<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  </button>
-					<ul class="dropdown-menu" role="menu"> 
-						<li>
-							@include('includes.delete_button')
-						</li>
-					</ul>			
-		 			
-		 		</form>
+							<input type="hidden" name="_method" value="DELETE">
 
-</div> </div> </div> </div> </div>
+							<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  
+							</button>
+							<ul class="dropdown-menu" role="menu"> 
+								<li>
+									@include('includes.delete_button')
+								</li>
+							</ul>
+				 		</form>
+
+		</div> </div> </div> </div> </div>
 
 
-@include('form_fields.show.upload_photo')
+		@include('form_fields.show.upload_photo')
 
 
-<hr>
+		<hr>
 
-<div class="row mar10"> 
-  <div class="col-sm-12"> 
-    <div class="row fonsi15">
+		<div class="row mar10"> 
+		  <div class="col-sm-12"> 
+		    <div class="row fonsi15">
 
-		@include('form_fields.show.profile_photo')
+		    	<div id="profile_photo">
+		    	    @include('form_fields.show.profile_photo')
+		    	</div>
 
-		<div class="col-sm-10">
+				<div class="col-sm-10">
 
-			@include('form_fields.show.name')
+					@include('form_fields.show.name')
 
-			@include('form_fields.show.position')
+					@include('form_fields.show.position')
 
-			@include('form_fields.show.city')
+					@include('form_fields.show.city')
 
-			@include('form_fields.show.address')
+					@include('form_fields.show.address')
 
-			@include('form_fields.show.dni')
+					@include('form_fields.show.dni')
 
-			@include('form_fields.show.tel1')
+					@include('form_fields.show.tel1')
 
-			@include('form_fields.show.tel2')
+					@include('form_fields.show.tel2')
 
-			@include('form_fields.show.birth')
+					@include('form_fields.show.birth')
 
-		</div>
+				</div>
 
-		@include('form_fields.show.notes')
+				@include('form_fields.show.notes')
 
- </div> </div> </div>
+		 </div> </div> </div>
 
-<hr>
-<br>
+		<hr>
+		<br>
 
-<div class="row">
-  <div class="col-sm-12"> 
- 	<p> Trabajos realizados: </p> 
-</div> </div>
+		<div class="row">
+		  <div class="col-sm-12"> 
+		 	<p> Trabajos realizados: </p> 
+		</div> </div>
 
-<div class="row">
- <div class="col-sm-12">
-  <div class="panel panel-default">
-   <table class="table">
-   	 <tr class="fonsi15 success">
-	   	 	<td class="wid180">Paciente</td>
-	   	 	<td class="wid180">Tratamiento</td>
-	   	 	<td class="wid95 textcent">Cantidad</td>
-	   	 	<td class="wid95">Fecha</td>
-	   	 	<td class="wid95"> </td>
-   	 </tr>
-   </table>
-   <div class="box500">
-     <table class="table table-striped">
+		<div class="row">
+		 <div class="col-sm-12">
+		  <div class="panel panel-default">
+		   <table class="table fonsi14">
+		   	 <tr class="success">
+			   	 	<td class="wid180">Paciente</td>
+			   	 	<td class="wid180">Tratamiento</td>
+			   	 	<td class="wid95 textcent">Cantidad</td>
+			   	 	<td class="wid95">Fecha</td>
+			   	 	<td class="wid180"> </td>
+		   	 </tr>
+		   </table>
+		   <div class="box500">
+		     <table class="table table-striped fonsi13">
 
-		@foreach ($treatments as $treat)
-			<tr>
-				<td class="wid180">
-					<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
-						{{ $treat->surname }}, {{ $treat->name }}
-					</a>
-				</td>
-			   	<td class="wid180">{{ $treat->service_name }}</td>
-			   	<td class="wid95 textcent">{{ $treat->units }}</td>
-			   	<td class="wid95">{{ date('d-m-Y',strtotime ($treat->day)) }}</td>
-			   	<td class="wid95"></td>
-	   		</tr>						
-		@endforeach
+				@foreach ($treatments as $treat)
+					<tr>
+						<td class="wid180">
+							<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
+								{{ $treat->surname }}, {{ $treat->name }}
+							</a>
+						</td>
+					   	<td class="wid180">{{ $treat->service_name }}</td>
+					   	<td class="wid95 textcent">{{ $treat->units }}</td>
+					   	<td class="wid95">{{ date('d-m-Y',strtotime ($treat->day)) }}</td>
+					   	<td class="wid180"></td>
+			   		</tr>						
+				@endforeach
 
-	 </table>
-	</div>
+			 </table>
+			</div>
 
- </div> </div> </div>
- 
-@endsection
+		 </div> </div> </div>
+   
+  @endsection
+
+  @section('footer_script')
+
+    <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('a.onEdit').on('click', function(evt) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          var _this = $(this);
+          return util.onEditResource(_this);
+        });
+      });
+    </script>
+    
+  @endsection
+
+</div>

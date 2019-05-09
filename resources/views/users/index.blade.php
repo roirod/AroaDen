@@ -10,29 +10,35 @@
 
 <div class="row">
 
-	<div class="col-sm-4 mar10">
-	  <p class="pad10"> Usuarios creados: </p>
+	<div class="col-sm-7">
+	  <p class="pad10"> {!! Lang::get('aroaden.users') !!}: </p>
 
 	  <div class="panel panel-default">
 			<table class="table">
-			  	 <tr class="fonsi15">
-					<td class="wid110">Usuario</td>
-					<td class="wid110">Permisos</td>			
+			  	 <tr class="fonsi14">
+					<td class="wid140">{!! Lang::get('aroaden.user') !!}</td>
+					<td class="wid50 textcent">{!! Lang::get('aroaden.edit') !!}</td>
+					<td class="wid95">{!! Lang::get('aroaden.permissions') !!}</td>
+					<td class="wid280">{!! Lang::get('aroaden.full_name') !!}</td>
 				 </tr>
 			</table>
 	 	<div class="box300">
 
 		 	 <table class="table table-striped table-bordered table-hover">
 				
-				@foreach ($main_loop as $user)
-
-					@continue($user->username == 'admin')
-						
+				@foreach ($main_loop as $obj)
+					
 					<tr> 
-						<td class="wid110">{!! $user->username !!}</td>
-						<td class="wid110">
+						<td class="wid140">{!! $obj->username !!}</td>
 
-							@if($user->type == 'basic')
+			            <td class="wid50 textcent">
+			              <a class="btn btn-xs btn-success" type="button" href="/{{ "$main_route/$obj->uid/edit" }}">
+			                <i class="fa fa-edit"></i>
+			              </a>
+			            </td>
+
+						<td class="wid95">
+							@if($obj->type == 'basic')
 
 								{{ @trans('aroaden.basic') }}
 
@@ -41,33 +47,25 @@
 								{{ @trans('aroaden.normal') }}
 
 							@endif
-
-						</td>			
-
+						</td>
+						<td class="wid280">{!! $obj->full_name !!}</td>
 					</tr>
 								
 				@endforeach
 						
 			</table>
 
-</div> </div> </div>
+	</div> </div> </div>
 
 
-	<div class="col-sm-6 mar10"> 
+	<div class="col-sm-5"> 
 	  	<p class="pad10"> Crear Usuario: </p>
 	  	
-	  	<form role="form" class="form" id="form" action="/{!! $main_route !!}" method="POST">
-			{!! csrf_field() !!}
-			 
-			@include('form_fields.create.user')
+		@include('includes.messages')
+		@include('includes.errors')
 
-			@include('form_fields.create.password')
+		@include('form_fields.common')
 
-			@include('form_fields.create.scopes')
-
-			@include('includes.submit_button')
-
-		</form>
 	</div>
  
 </div>

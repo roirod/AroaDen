@@ -26,62 +26,40 @@ class PaysController extends BaseController
     {
         $this->setPageTitle(Lang::get('aroaden.payments'));
 
-        return $this->commonProcess($request, 'index');
+        return parent::index($request);
     }
 
-    /**
-     *  get index page, show the company data
-     * 
-     *  @return view       
-     */
-    public function ajaxIndex(Request $request)
-    {
-        return $this->commonProcess($request, 'ajaxIndex');
-    }
-
-    /**
-     *  get index page, show the company data
-     * 
-     *  @return view       
-     */
     public function list(Request $request)
-    {
-        return $this->commonProcess($request, 'list');
-    }
+    {   
+        $iDisplayLength = $request->input('iDisplayLength');
+        $iDisplayStart = $request->input('iDisplayStart');
 
-    private function commonProcess($request, $view_name)
-    {
-        $this->view_data['request'] = $request;
+        $sLimit = "";
+        if (isset($iDisplayStart ) && $iDisplayLength != '-1')
+            $sLimit = "LIMIT ".$iDisplayStart.",". $iDisplayLength;
 
-        if ($view_name == 'index' || $view_name == 'ajaxIndex') {
+        $data = $this->model::GetTotalPayments($sLimit);
+        $countTotal = $this->model::countTotalPatientsPayments();
+        $countTotal = (int) $countTotal[0]->total;
 
-            $entries_number = 100;
-            $main_loop = $this->model::GetTotalPayments($entries_number);
+        $resultArray = [];
 
-        } elseif ($view_name == 'list') {
-
-            $entries_number = $this->sanitizeData($request->input('entries_number'));
-
-            if ($entries_number == 'todos') {
-
-                $main_loop = $this->model::GetTotalPayments($entries_number, true);
-                $entries_number = 'Todos los ';
-
-            } else {
-
-                $main_loop = $this->model::GetTotalPayments($entries_number);
-                $entries_number = $this->formatNumber($entries_number);
-
-            }
-
+        foreach ($data as $key => $value) {
+            $resultArray[$key][] = "$this->other_route/$value->idpat";
+            $resultArray[$key][] = $value->surname_name;
+            $resultArray[$key][] = $this->formatNumber($value->total);
+            $resultArray[$key][] = $this->formatNumber($value->paid);
+            $resultArray[$key][] = $this->formatNumber($value->rest);
         }
 
-        $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['entries_number'] = $entries_number;
+        $output = [
+            "sEcho" => intval($request->input('sEcho')),
+            "iTotalRecords" => $countTotal,
+            "iTotalDisplayRecords" => $countTotal,
+            "aaData" => array_values($resultArray)
+        ];
 
-        $this->view_name = $view_name;   
-
-        return $this->loadView();
+        $this->echoJsonOuptut($output);  
     }
 
 }

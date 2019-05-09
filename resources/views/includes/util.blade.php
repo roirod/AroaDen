@@ -1,8 +1,4 @@
-<script>
-
-var defaulId = 'ajax_content';
-var defaulTableId = 'item_list';
-var lastRoute = '';
+<script type="text/javascript">
 
 var routes = {
   patients_route: "{{ $patients_route }}",
@@ -17,30 +13,25 @@ var routes = {
   settings_route: "{{ $settings_route }}"
 };
 
-$( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+var defaulId = 'ajax_content';
+var defaulTableId = 'item_list';
+var lastRoute = '';
+var currentContent = '';
+var currentId = '';
+var mainUrl = '/' + "{{ $main_route }}";
+var mainUrlAjax = mainUrl + '/ajaxIndex';
+
+$(document).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
   if (thrownError == "Forbidden") {
-    var obj = {     
-      url: lastRoute
-    };
+    //util.loadMainUrlContent();
 
-    util.processAjaxReturnsHtml(obj);
-
-    util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
-    return false;
+    return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
   }
 
-  return util.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
-});
-
-$(".del_btn").click(function(event) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    var $this = $(this);
-    util.confirmAlert($this);
+  return util.showPopup("{{ Lang::get('aroaden.error_message') }} - ajax Error", false, 2500);
 });
 
 var util = {
@@ -50,43 +41,85 @@ var util = {
 
     var id = (obj.id == undefined) ? defaulId : obj.id;
     var data = (obj.data == undefined) ? false : obj.data;
-    var type = (obj.type == undefined) ? "GET" : obj.type;
+    var method = (obj.method == undefined) ? "GET" : obj.method;
     var popup = (obj.popup == undefined) ? false : obj.popup;
 
-    _this.showLoadingGif();
+    currentContent = $('#'+id).clone();
+    currentId = id;
+
+    //_this.showLoadingGif(id);
 
     var ajax_data = {
-      type : type,
+      method : method,
       url  : obj.url,
       dataType: "html",
-      data : data
-    };
+      data : data,
+      statusCode: {
+        200: function(response) {
+          _this.showContentOnPage(id, response);
 
-    $.ajax(ajax_data).done(function(response) {
-      _this.showContentOnPage(false, response);
+          if (popup)
+            _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
 
-      if (popup)
-        _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
-
-      _this.getSettings();
-    });
-  },
-
-  processAjaxReturnsJson: function(obj) {
-    var data = (obj.data == undefined) ? false : obj.data;
-    var type = (obj.type == undefined) ? "POST" : obj.type;
-
-    var ajax_data = {
-      type : type,
-      url  : obj.url,
-      dataType: "json",
-      data : data
+          _this.getSettings();
+        }
+      }
     };
 
     return $.ajax(ajax_data);
   },
 
-  showPopup: function(msg, success = true, time = 1200) {
+  processAjaxReturnsJson: function(obj) {
+    var data = (obj.data == undefined) ? false : obj.data;
+    var method = (obj.method == undefined) ? "POST" : obj.method;
+
+    var ajax_data = {
+      method : method,
+      url  : obj.url,
+      dataType: "json",
+      data : data
+    };
+
+    if (obj.uploadFiles) {
+      ajax_data.processData = false;
+      ajax_data.contentType = false;
+      ajax_data.cache = false;      
+    }
+
+    return $.ajax(ajax_data);
+  },
+
+  loadMainUrlContent: function(url) {
+    var _this = this;
+
+    var urlToLoad = (url != undefined) ? url : mainUrlAjax;
+
+    var obj = {
+      url  : urlToLoad,
+    };
+
+
+
+     console.log('------------ obj ------------------');
+     console.dir(obj);
+
+
+
+    window.history.replaceState('Object', 'Title', mainUrl);
+
+    _this.processAjaxReturnsHtml(obj);
+  },
+
+  restoreMainContent: function() {
+    var _this = this;
+
+    return _this.showContentOnPage(defaulId, currentContent);
+  },
+
+  showPopup: function(msg, success, time) {
+    var time = (time == undefined) ? 1200 : time;
+    var success = (success == undefined) ? true : success;
+
     if (success) {
       swal({
         title: msg,
@@ -98,7 +131,9 @@ var util = {
       swal({
         text: msg,
         type: 'error',
+        showConfirmButton: false,
         allowOutsideClick: true,
+        timer: time
       });
     }
   },
@@ -110,10 +145,12 @@ var util = {
     var compileTemplate = Handlebars.compile(templateHandlebars);
     var compiledHtml = compileTemplate(data);
 
-    _this.showContentOnPage(id, compiledHtml);
+    return _this.showContentOnPage(id, compiledHtml);
   },
 
   showContentOnPage: function(id, content, error) {
+    var _this = this;
+
     var id = (id == false) ? defaulId : id;
     var error = (error == undefined) ? false : error;
 
@@ -121,21 +158,7 @@ var util = {
       content = '<p class="text-danger">' + content + '</p>';
 
     $('#'+id).empty();
-    $('#'+id).html(content).fadeIn('slow');
-  },
-
-  getSettings: function() {
-    var _this = this;
-
-    var ajax_data = {
-      type : "GET",
-      url  : "settings/jsonSettings",
-      dataType: "json"
-    };
-
-    _this.processAjaxReturnsJson(ajax_data).done(function(response) {
-      document.title = response.page_title;
-    });
+    $('#'+id).html(content);
   },
 
   showLoadingGif: function(id) {
@@ -146,12 +169,39 @@ var util = {
     $('#'+id).html(loading);
   },
 
-  showSearchText: function() {
-    var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
-    $('#searched').prepend(searched);
+  getSettings: function() {
+    var _this = this;
+
+    var ajax_data = {
+      method : "GET",
+      url  : "/settings/jsonSettings"
+    };
+
+    _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+      document.title = response.page_title;
+    });
   },
 
-  getTodayDate: function() {
+  checkPermissions: function(action) {
+    var _this = this;
+
+    var ajax_data = {
+      data : { action: action },
+      method : "GET",
+      url  : "/" + routes.settings_route + "/checkPermissions"
+    };
+
+    return _this.processAjaxReturnsJson(ajax_data);
+  },
+
+  showSearchText: function() {
+    if (document.getElementById('searched')) {
+      var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
+      $('#searched').prepend(searched);
+    }
+  },
+
+  getTodayDateDDMMYYYY: function() {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() +1;
@@ -163,7 +213,7 @@ var util = {
     if(mm < 10)
       mm = '0' + mm
 
-    today = yyyy + '-' + mm + '-' + dd;
+    today = dd + '-' + mm + '-' + yyyy;
 
     return today;
   },
@@ -176,23 +226,71 @@ var util = {
     return total;
   },
 
-  confirmAlert: function($this) {
-    swal({
-      title: '{{ Lang::get('aroaden.are_you_sure') }}',
-      type: 'warning',
-      showCancelButton: true,
-      allowOutsideClick: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: '{{ Lang::get('aroaden.yes') }}',
-      cancelButtonText: '{{ Lang::get('aroaden.no') }}',
-      confirmButtonClass: 'confirm-class',
-      cancelButtonClass: 'cancel-class',
-    }).then(
-      function(isConfirm) {
-        if (isConfirm) $this.closest('form').submit();
+  onEditResource: function($this) {
+    var _this = this;
+
+    var attributes = $this[0].attributes;
+    var url = attributes['href'].value;
+    var checkpermissions = attributes['data-checkpermissions'].value;
+
+    _this.checkPermissions(checkpermissions).done(function(response) {
+      if (response.permission) {
+
+        window.location.href = url;
+
+      } else {
+
+        return _this.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+
       }
-    );
+    });
+  },
+
+  confirmDeleteAlert: function($this) {
+    var _this = this;
+
+    var form = $this.closest('form');
+    var data = form.serialize();
+    var attributes = form[0].attributes;
+    var url = attributes['action'].value;
+    var checkpermissions = attributes['data-checkpermissions'].value;
+
+    _this.checkPermissions(checkpermissions).done(function(response) {
+      if (response.permission) {
+        swal({
+          title: '{{ Lang::get('aroaden.are_you_sure') }}',
+          type: 'warning',
+          showCancelButton: true,
+          allowOutsideClick: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: '{{ Lang::get('aroaden.yes') }}',
+          cancelButtonText: '{{ Lang::get('aroaden.no') }}',
+          confirmButtonClass: 'confirm-class',
+          cancelButtonClass: 'cancel-class',
+        }).then(
+          function(isConfirm) {
+            if (isConfirm) {
+              var ajax_data = {
+                url  : url,
+                data : data
+              };
+
+              _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+                window.location.href = mainUrl;
+                
+                _this.showPopup(response.msg);
+              });
+            }
+          }
+        );
+
+      } else {
+
+        return _this.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+
+      }
+    });
   },
 
 }

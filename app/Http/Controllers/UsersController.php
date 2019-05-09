@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
 use Lang;
-use DB;
 
 class UsersController extends BaseController
 {
@@ -19,30 +18,40 @@ class UsersController extends BaseController
         $this->main_route = $this->config['routes']['users'];
         $this->other_route = $this->config['routes']['settings'];      
         $this->views_folder = $this->config['routes']['users'];
-        $this->view_data['user_edit'] = 'userEdit';
-        $this->view_data['user_delete'] = 'userDeleteViev';
+        $this->view_data['deleteViewRoute'] = 'deleteView';
         $this->model = $users;
+
+        $fields = [
+            'user' => true,
+            'password' => true,
+            'full_name' => true,
+            'scopes' => true,
+            'save' => true
+        ];
+
+        $this->form_fields = array_replace($this->form_fields, $fields);
     }
       
     public function index(Request $request)
     {
-        $main_loop = $this->model::AllOrderByUsername();
-
         $this->setPageTitle(Lang::get('aroaden.users'));
 
-        $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['form_fields'] = $this->form_fields;
+        $this->view_data['main_loop'] = $this->model::AllOrderByUsername();
 
         return parent::index($request);
     }    
 
     public function store(Request $request)
     {    	  	  
-    	$password = trim( $request->input('password') );
-    	$username = $this->sanitizeData($request->input('username'));
+        $password = trim($request->input('password'));
+        $username = trim($request->input('username'));
+        $username = $this->sanitizeData($username);
         $type = $this->sanitizeData($request->input('type'));
+        $full_name = trim($request->input('full_name'));
+        $full_name = $this->sanitizeData($full_name);
 
-        if ( $username == 'admin' ) {
+        if ($username == 'admin') {
             $request->session()->flash($this->error_message_name, 'Nombre de usuario no permitido, use cualquier otro.');   
             return redirect($this->main_route);
         }   
@@ -57,7 +66,8 @@ class UsersController extends BaseController
         $validator = Validator::make($request->all(),[
             'username' => 'required|unique:users|max:44',
             'password' => 'required|max:44',
-            'type' => 'required|max:44'
+            'type' => 'required|max:44',
+            'full_name' => 'required|max:77'
         ]);
             
         if ($validator->fails()) {
@@ -69,7 +79,8 @@ class UsersController extends BaseController
 	        $this->model::create([
 	          'username' => $username,
 	          'password' => bcrypt($password),
-              'type' => $type
+              'type' => $type,
+              'full_name' => $full_name
             ]);
 	      
             $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );	
@@ -78,62 +89,104 @@ class UsersController extends BaseController
         }      
     }
     
-    public function userEdit(Request $request)
+    public function edit(Request $request, $id)
     {
-        $main_loop = $this->model::AllOrderByUsername();
-
-        $this->form_route = 'userUpdate';
-        $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
 
         $this->setPageTitle(Lang::get('aroaden.users'));
 
-        $this->view_name = 'userEdit';
+        $this->view_name = 'edit';
+        $this->autofocus = 'name';
+        $this->view_data['id'] = $id;
+        $this->view_data['object'] = $this->model::find($id);
+        $this->view_data['form_fields'] = $this->form_fields;
+        $this->view_data['is_create_view'] = false;
+        $this->view_data['request'] = $request;
 
         return $this->loadView();
     }
 
-    public function userDeleteViev(Request $request)
+    public function deleteView(Request $request)
     {
-        $main_loop = $this->model::AllOrderByUsername();
-        
+        $this->view_name = 'deleteView';
         $this->form_route = 'userDelete';
         $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $main_loop;
+        $this->view_data['main_loop'] = $this->model::AllOrderByUsername();
 
         $this->setPageTitle(Lang::get('aroaden.users'));
-
-        $this->view_name = 'userDeleteViev';
 
         return $this->loadView();
     }
 
-    public function userUpdate(Request $request)
+    public function update(Request $request, $id)
     {
-        $uid = $this->sanitizeData($request->input('uid'));
-        $password = trim( $request->input('password') );
+        $this->redirectIfIdIsNull($id, $this->main_route);
+        $id = $this->sanitizeData($id);
+        $password = trim($request->input('password'));
+        $username = trim($request->input('username'));
+        $username = $this->sanitizeData($username);
+        $full_name = trim($request->input('full_name'));
+        $full_name = $this->sanitizeData($full_name);
+        $type = $this->sanitizeData($request->input('type'));
+        $route = "$this->main_route/$id/edit";
 
-        $this->redirectIfIdIsNull($uid, $this->main_route);
+        $user = $this->model::find($id);
 
-        $validator = Validator::make($request->all(),[
-            'uid' => 'required',
-            'password' => 'required|max:44'
-        ]);
-            
-        if ($validator->fails()) {
-             return redirect($this->main_route.'/userEdit')
-                         ->withErrors($validator)
-                         ->withInput();
-        } else {
-              
-            $user = $this->model::find($uid);
+        if ($user->username == 'admin') {
+
+            if ($password == '') {
+                $request->session()->flash($this->error_message_name, 'La contraseña es obligatoria.');   
+                return redirect($route);
+            }
+
             $user->password = bcrypt($password);
-            $user->save();
-              
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-                        
-            return redirect($this->main_route);
-        }  
+
+        } else {
+
+            if ($username == '') {
+                $request->session()->flash($this->error_message_name, 'El Usuario es obligatorio.');   
+                return redirect($route);
+            }
+
+            $CheckIfExistsOnUpdate = $this->model::CheckIfExistsOnUpdate($id, $username);
+
+            if ($CheckIfExistsOnUpdate) {
+                $request->session()->flash($this->error_message_name,  "Nombre de usuario: $username - en uso, use cualquier otro.");   
+                return redirect($route);
+            }
+
+            if ($username != $user->username)
+                $user->username = $username;
+
+            if ($password == '') {
+                $request->session()->flash($this->error_message_name, 'La contraseña es obligatoria.');   
+                return redirect($route);
+            }
+
+            $user->password = bcrypt($password);
+
+            if ($full_name == '') {
+                $request->session()->flash($this->error_message_name, 'El Nombre completo es obligatorio.');   
+                return redirect($route);
+            }
+            
+            $user->full_name = $full_name;
+
+            if ($type == '') {
+                $request->session()->flash($this->error_message_name, 'El campo Permisos es obligatorio.');   
+                return redirect($route);
+            }
+
+            if ($type != $user->type)
+                $user->type = $type;
+        }
+
+        $user->save();
+            
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+                    
+        return redirect($this->main_route);
     }
 
     public function userDelete(Request $request)
@@ -142,10 +195,15 @@ class UsersController extends BaseController
         $this->redirectIfIdIsNull($uid, $this->main_route);
         
         $user = $this->model::find($uid);
+
+        if ($user->username == 'admin') {
+            $request->session()->flash($this->error_message_name, 'No se puede eliminar el usuario admin.');   
+            return redirect($this->main_route.'/deleteView');
+        }
+
         $user->delete();
 
         $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        
         return redirect($this->main_route);
     }
 

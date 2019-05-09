@@ -15,17 +15,29 @@ img.center {
     margin-top: 50px;
 }
 
+.fa-menusize {
+    font-size: 2.1rem !important;
+}
+
+.fa-min {
+    font-size: 1.1rem !important;
+}
+
+.borderradius { 
+  border-radius: 4px !important;
+}
+
 
 .widCol1 { 
-  width: 150px !important; 
-  max-width: 150px !important; 
-  min-width: 150px !important; 
+  width: 100px !important; 
+  max-width: 100px !important; 
+  min-width: 100px !important; 
 }
 
 .widCol2 { 
-  width: 1090px !important; 
-  max-width: 1090px !important; 
-  min-width: 1090px !important; 
+  width: 1160px !important; 
+  max-width: 1160px !important; 
+  min-width: 1160px !important; 
 }
 
 .minHeight { min-height: 700px !important; }
@@ -67,8 +79,11 @@ img.center {
 .box230 { height: 230px; overflow: auto; border: 1px solid grey; }
 .box200 { height: 200px; overflow: auto; border: 1px solid grey; }
 
+.wid450 { width: 450px !important; }
+.wid350 { width: 350px !important; }
 .wid290 { width: 290px !important; }
 .wid230 { width: 230px !important; }
+.wid200 { width: 200px !important; }
 .wid180 { width: 180px !important; }
 .wid140 { width: 140px !important; }
 .wid110 { width: 110px !important; }
@@ -85,17 +100,25 @@ img.center {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 110px !important;
-  width: 110px !important;
+  max-width: 130px !important;
+  width: 130px !important;
 }
 
+.filena { 
+  text-align: center;
+  padding: 1px; 
+  margin: 7px; 
+}
+
+.visfile { border: 1px yellow solid; min-height: 600px; }
+
 .img_container {
-  max-width: 36px !important;
-  min-width: 36px !important;  
-  width: 36px !important;
-  max-height: 36px !important;
-  min-height: 36px !important;  
-  height: 36px !important;
+  max-width: 39px !important;
+  min-width: 39px !important;  
+  width: 39px !important;
+  max-height: 39px !important;
+  min-height: 39px !important;  
+  height: 39px !important;
   margin: auto;
   width: 50%;
 }
@@ -121,9 +144,9 @@ table { table-layout:fixed !important; }
 .textcent { text-align: center !important; }
 
 .container {
-  width: 1230px !important;
-  max-width: 1280px !important;
-  min-width: 1230px !important;
+  width: 1250px !important;
+  max-width: 1250px !important;
+  min-width: 1250px !important;
   min-height: 550px !important;
   overflow: visible !important;
 }
@@ -204,18 +227,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .pad80 { padding: 80px; }
 .pad110 { padding: 110px; }
 
-.fonbla { color: white; }
+.fonbla { color: white !important; }
 .fuengrisoscu { color: rgb(20, 20, 20); }
 
-.bgblack { background-color: black; }
-.bgwi { background-color: white; }
+.bgblack { background-color: black !important; }
+.bgwi { background-color: white !important; }
 
 .textshadow { 
   text-shadow:  2px 2px 0px #000;
 }
-
-.filena { padding: 1px; margin: 7px; }
-.visfile { border: 1px yellow solid; min-height: 600px; }
 
 .rowcentered {
     text-align:center;
