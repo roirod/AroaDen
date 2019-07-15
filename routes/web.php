@@ -10,6 +10,8 @@ Route::group(['middleware' => ['web']], function () use ($route) {
     Route::post('/login', 'Auth\LoginController@login');
     Route::post('/logout', 'Auth\LoginController@logout');
 
+	Route::get($route["settings"].'/checkSessionExpired', 'Auth\LoginController@checkSessionExpired');
+
 	Route::get('/home', 'AppointmentsController@index');
 	Route::get('/index', 'AppointmentsController@index');	
 
@@ -57,7 +59,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		
 		Route::get($route["budgets"].'/{uniqid}/edit', 'BudgetsController@edit');	
-		Route::post($route["budgets"].'/delCode', 'BudgetsController@delCode');
+		Route::post($route["budgets"].'/delBudget', 'BudgetsController@delBudget');
 	});
 
 	Route::get($route["settings"].'/jsonSettings', 'SettingsController@jsonSettings');
@@ -107,7 +109,6 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 	Route::get($route["pays"], 'PaysController@index');
 
 	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');
-	Route::post($route["budgets"].'/delId', 'BudgetsController@delId');
 	Route::post($route["budgets"].'/mode', 'BudgetsController@mode');
 	Route::resource($route["budgets"], 'BudgetsController', ['except' => 
 		['index', 'edit', 'update', 'destroy']]);

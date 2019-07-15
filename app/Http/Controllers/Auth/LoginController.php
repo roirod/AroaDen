@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Traits\BaseTrait;
 use App\Models\User;
 use Config;
 
@@ -21,7 +22,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers,BaseTrait;
 
     protected $redirectTo = '/home';
     protected $redirectAfterLogout = '/login';
@@ -63,6 +64,17 @@ class LoginController extends Controller
 
             return redirect("/login");
         }
+    }
+
+    public function checkSessionExpired()
+    {
+        $data = [];
+        $data['checkSessionExpired'] = false;
+
+        if (empty(Auth::user()))
+            $data['checkSessionExpired'] = true;
+
+        $this->echoJsonOuptut($data);
     }
 
     public function logout()

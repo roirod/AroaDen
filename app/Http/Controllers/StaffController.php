@@ -232,9 +232,9 @@ class StaffController extends BaseController implements BaseInterface
                          ->withInput();
         } else {
 
-            try {
+            DB::beginTransaction();
 
-                DB::beginTransaction();
+            try {
 
                 $idsta = $this->model::insertGetId([
                     'name' => $name,
@@ -335,9 +335,9 @@ class StaffController extends BaseController implements BaseInterface
                          ->withInput();
         } else {
 
-            try {
+            DB::beginTransaction();
 
-                DB::beginTransaction();
+            try {
 
                 $birth = $this->convertDmYToYmd($request->input('birth'));
                 $birth = $this->sanitizeData($birth);

@@ -87,9 +87,9 @@ class TreatmentsController extends BaseController
         $tax = $service->tax;
         $staff = $request->input('staff');
 
-        try {
+        DB::beginTransaction();
 
-            DB::beginTransaction();
+        try {
 
             $idtre = Treatments::insertGetId([
                 'idpat' => $idpat,
@@ -175,9 +175,9 @@ class TreatmentsController extends BaseController
             $day = $this->convertDmYToYmd($day);
             $staff = $request->input('staff');
 
-            try {
+            DB::beginTransaction();
 
-                DB::beginTransaction();
+            try {
 
                 $treatment = Treatments::find($id);
 
@@ -221,10 +221,10 @@ class TreatmentsController extends BaseController
     {               
         $id = $this->sanitizeData($id);
         $this->redirectIfIdIsNull($id, $this->other_route);
+
+        DB::beginTransaction();
                 
         try {
-
-            DB::beginTransaction();
 
             $treatment = Treatments::find($id);
             $treatment->delete();

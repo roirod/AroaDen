@@ -235,14 +235,14 @@ class PatientsController extends BaseController implements BaseInterface
 	        return redirect("$this->main_route/$this->view_name")
 	                     ->withErrors($validator)
 	                     ->withInput();
-	    } else {   
+	    } else {
+
+            DB::beginTransaction();
 
             try {
 
                 $birth = $this->convertDmYToYmd($request->input('birth'));
                 $birth = $this->sanitizeData($birth);
-
-                DB::beginTransaction();
 
                 $insertedId = $this->model::insertGetId([
                   'name' => $this->sanitizeData($request->input('name')),
