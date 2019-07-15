@@ -22,7 +22,7 @@ class BudgetsController extends BaseController
 
         $this->main_route = $this->config['routes']['budgets'];
         $this->other_route = $this->config['routes']['patients'];      
-        $this->views_folder = $this->config['routes']['budgets'];
+        $this->views_folder = 'budgets';
         $this->model = $budgets;
         $this->model2 = $patients;
         $this->model3 = $services;
@@ -84,10 +84,8 @@ class BudgetsController extends BaseController
 
         } catch (\Exception $e) {
 
-            $data['msg'] = $e->getMessage();
+            $data['msg'] = Lang::get('aroaden.db_query_error');
             $data['error'] = true;
-
-            return $this->echoJsonOuptut($data); 
 
         }
 
@@ -248,6 +246,8 @@ class BudgetsController extends BaseController
 
         }
         
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
+
         return redirect("/$this->main_route/$idpat");
     }
 
