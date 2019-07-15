@@ -28,7 +28,7 @@
 
 
 <div class="row">
- <div class="col-sm-12">
+ <div class="col-sm-8">
    <div class="panel panel-default">
     <table class="table">
 	    <tr class="fonsi15 success">
@@ -36,8 +36,7 @@
   		  <td class="wid180">Tratamiento</td>
   		  <td class="wid95 textcent">Cantidad</td>
   		  <td class="wid95 textcent">Precio</td>
-  		  <td class="wid180"></td>
-        <td class="wid180"></td>
+  		  <td class="wid95"></td>
 	    </tr>
     </table>
    	<div class="box300">
@@ -52,16 +51,14 @@
   					  <td class="wid180"></td>
   					  <td class="wid95 textcent"></td>
   					  <td class="wid95 textcent"></td>
-  					  <td class="wid180"></td>
-              <td class="wid180"></td>
+  					  <td class="wid95"></td>
 	   				</tr>
 		    		<tr class="info">
 			     	  <td class="wid110"></td>
   					  <td class="wid180"></td>
   					  <td class="wid95 textcent"></td>
   					  <td class="wid95 textcent"></td>
-  					  <td class="wid180"></td>
-              <td class="wid180"></td>
+  					  <td class="wid95"></td>
 		    		</tr>
 
   					<tr>
@@ -69,8 +66,7 @@
   					  <td class="wid180"></td>
   					  <td class="wid95 textcent"></td>
   					  <td class="wid95 textcent"></td>
-  					  <td class="wid180"></td>
-              <td class="wid180"></td>
+  					  <td class="wid95"></td>
   					</tr>
 
             <tr>
@@ -82,8 +78,7 @@
               <td class="wid180"></td>
               <td class="wid95 textcent"></td>
               <td class="wid95 textcent"></td>
-              <td class="wid180"></td>
-              <td class="wid180"></td>
+              <td class="wid95"></td>
             </tr>
 
 	   			@endif
@@ -93,8 +88,7 @@
 		 			<td class="wid180">{!! $bud->name !!}</td>
 		 			<td class="wid95 textcent">{!! $bud->units !!}</td>
 		 			<td class="wid95 textcent">{!! $bud->price !!} €</td>
-		 			<td class="wid180"></td>
-          <td class="wid180"></td>
+		 			<td class="wid95"></td>
 				</tr>
 
 		    <?php $created_at = $bud->created_at; ?>

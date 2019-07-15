@@ -103,6 +103,8 @@ return [
   'name_in_use' => 'Nombre - :name - ya en uso, use cualquier otro',
   'dni_in_use' => 'Repetido. El dni: :dni, pertenece a: :surname, :name',
 
+  'session_expired' => 'La sessión ha caducado.',
+
   'company' => 'Empresa',
   'company_data' => 'Datos Empresa',
   'company_edit_data' => 'Editar datos Empresa',
@@ -184,6 +186,7 @@ return [
 
   'treatments' => 'Tratamientos',
   'add_treatments' => 'Añadir tratamientos al paciente',    
+  'no_add_treatments' => 'No has añadido ningún Tratamiento.',
 
   'budgets' => 'Presupuestos',
 ];

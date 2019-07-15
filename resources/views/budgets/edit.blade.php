@@ -2,15 +2,12 @@
 
 @section('content')
 
-@include('includes.patients_nav')
+  @include('includes.patients_nav')
 
-@include('includes.messages')
-@include('includes.errors')
+  @include('includes.messages')
+  @include('includes.errors')
 
-
-<div id="del_url" value="{!! $del_url !!}"> </div>
-
-<meta name="_token" content="{!! csrf_token() !!}"/>
+  @include('budgets.commonJs')
 
 	<div class="row">
 
@@ -18,18 +15,19 @@
 		    @include('form_fields.show.name')
 		</div>
 
-	  	<div class="col-sm-3"> 
+	  <div class="col-sm-3"> 
 
-		 	<form class="form" action="{!! url("/$main_route/delCode") !!}" method="POST">	
+		 	<form class="form" action="{!! url("/$main_route/delBudget") !!}" method="POST">	
 		 		{!! csrf_field() !!}
 
 				<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
 				<input type="hidden" name="idpat" value="{!! $idpat !!}">	
 
 				<div class="input-group"> 
-					<span class="input-group-btn pad10">  <p> Eliminar todo </p> </span>
+					<span class="input-group-btn pad10">  
+						<p> Eliminar todo </p> 
+					</span>
 					<div class="btn-toolbar pad4" role="toolbar">
-
 						<div class="btn-group">
 							<button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-times"></i> Eliminar 
@@ -46,36 +44,25 @@
 
 	 	</div> 
 
-		<div class="col-sm-4"> 
-		 	 <div class="input-group">
-		   		<span class="input-group-btn pad10"> <p> Finalizar </p> </span>
-		  		<div class="btn-toolbar pad4" role="toolbar"> 
-		    		<div class="btn-group">
-			      		<a href="{!! url("/$main_route/$idpat") !!}" role="button" class="btn btn-sm btn-primary">
-			          		Finalizar
-			       		</a>
-		       		</div>
-		       	</div>
-		     </div>
+		<div class="col-sm-4">
+	 	  @include('budgets.saveButton')
 		</div> 
 
 	</div>
 
 
 	<div class="row">
-	 	<div class="col-sm-12">
-	   	<div class="panel panel-default">
-
-	    	<table class="table">
-			     <tr class="fonsi15 success">
-					  <td class="wid140">Tratamiento</td>
-					  <td class="wid95 textcent"> Cantidad </td>
-					  <td class="wid95 textcent"> Precio </td>
-					  <td class="wid50"></td>
-					  <td class="wid230"></td>
-					  <td class="wid230"></td>				  
-			     </tr>
-	    	</table>
+    <div class="col-sm-7">
+      <div class="panel panel-default">
+        <table class="table">
+          <tr class="fonsi14 success">
+            <td class="wid140">Tratamiento</td>
+            <td class="wid95 textcent">Cantidad</td>
+            <td class="wid70 textcent">Precio</td>          
+            <td class="wid50"></td>
+            <td class="wid95"></td>
+          </tr>
+        </table>
 
 	   		<div class="box230">
 		   		<table class="table table-striped">
@@ -84,124 +71,120 @@
 
 				   		@foreach ($budgets as $bud)
 
-							<tr>
-							 	<form id="del_budgets_form">
-									<input type="hidden" name="idbud" value="{!! $bud->idbud !!}">
-									<input type="hidden" name="uniqid" value="{!! $uniqid !!}">
+  							<tr class="fonsi13" id="budgetId_{!! $bud->idser !!}">
+  							  <td class="wid140">{!! $bud->name !!}</td>
+  							  <td class="wid95 textcent">{!! $bud->units !!} </td>
+  							  <td class="wid95 textcent">{!! numformat($bud->price) !!} €</td>
+  							  <td class="wid50">
+  							    <div class="btn-group"> 
+  							    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+  							    	  <i class="fa fa-times"></i> 
+  							    	  <span class="caret"></span>
+  							    	</button>
+  							    	<ul class="dropdown-menu" role="menu">
+  							  			<li>
+  							  				<button type="button" class="delBudgetLine"> <i class="fa fa-times"></i> Borrar</button>
+  							  			</li>
+  							  		</ul>  
+  							  	</div>	
+  							   </td>
+  							  <td class="wid95"></td>
+  							</tr>
 
-									  <td class="wid140">{!! $bud->name !!}</td>
-									  <td class="wid95 textcent">{!! $bud->units !!} </td>
-									  <td class="wid95 textcent">{!! numformat($bud->price) !!} €</td>
-									  <td class="wid50">
-									    <div class="btn-group"> 
-									    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-									    	  <i class="fa fa-times"></i> 
-									    	  <span class="caret"></span>
-									    	</button>
-									    	<ul class="dropdown-menu" role="menu">
-									  			<li>
-									  				<button type="submit">
-									  					<i class="fa fa-times"></i> Borrar
-									  				</button>
-									  			</li>
-									  		</ul>  
-									  	</div>	
-									   </td>
-									  <td class="wid230"></td>
-									  <td class="wid230"></td>
-								</form>  
-							</tr>	
+                <script type="text/javascript">
+                  if (typeof budgetArr == 'undefined')
+                    var budgetArr = [];
 
-						  	@endforeach
+                  var obj = {
+                    'idpat' : '{!! $bud->idpat !!}',
+                    'uniqid' : '{!! $bud->uniqid !!}',
+                    'idser' : '{!! $bud->idser !!}',
+                    'units' : '{!! $bud->units !!}',
+                    'price' : '{!! $bud->price !!}',
+                    'tax' : '{!! $bud->tax !!}',
+                    'created_at' : '{!! $bud->created_at !!}'
+                  };
+
+                  budgetArr.push(obj);
+                </script>
+
+						  @endforeach
+
+              <script type="text/javascript">
+
+                onUpdate = true;
+                budgetArray = budgetArr.slice(0);
+
+              </script>
 
 						</tbody>
-	  	  
 					</table> 
 
-	</div> </div> </div> </div>
+        </div>
+      </div> 
+    </div> 
+  </div>
 
+	<div class="row">
+		<form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">	
+		 	{!! csrf_field() !!}
 
-
-
-	<form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">	
-	 	{!! csrf_field() !!}
-
-		<div class="col-sm-12">
-			<div class="form-group"> 
-			    <label class="control-label text-left mar10">Texto:</label>
-			    <textarea class="form-control" name="text" rows="4">{!! $budgetstext->text !!}</textarea> 
+			<div class="col-sm-7">
+				<div class="form-group"> 
+				    <label class="control-label text-left mar10">Texto:</label>
+				    <textarea class="form-control" name="text" rows="4">{!! $budgetstext->text !!}</textarea> 
+				</div>
 			</div>
-		</div>
 
-		<div class="col-sm-12 text-right">
-			<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-			<input type="hidden" name="idpat" value="{!! $idpat !!}">
+			<div class="col-sm-7 text-right">
+				<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
+				<input type="hidden" name="idpat" value="{!! $idpat !!}">
 
-			<button type="submit" formtarget="_blank" name="mode" value="print" class="btn btn-default btn-md">Imprimir</button>
-			<button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-primary btn-md">Ver</button>
-			<button type="submit" name="mode" value="save_text" class="btn btn-success btn-md save_text">Guardar texto</button>
-		</div>
-	</form>
+				<button type="submit" formtarget="_blank" name="mode" value="print" class="btn btn-default btn-md">Imprimir</button>
+				<button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-success btn-md">Ver</button>
+				<button type="submit" name="mode" class="btn btn-primary btn-md save_text">Guardar texto</button>
+			</div>
+		</form>
+	</div>
 
 @endsection
 	 
 @section('footer_script')
 
-	<script>
-		
+  <script type="text/javascript">
 		$(document).ready(function() {
-			$.ajaxSetup({
-			   	headers: { 
-			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-			   	}
-			}); 
-
 			$('.save_text').click(function (evt) {
-		        evt.preventDefault();
-		        evt.stopPropagation();
+        evt.preventDefault();
+        evt.stopPropagation();
 
 				Module.saveText();
 			});
 
 			var Module = (function( window, undefined ){
 				function saveText() {
-				    var data = $("form.mode").serialize();
-				    data += '&mode=save_text';
+			    var data = $("form.mode").serialize();
+			    data += '&mode=save_text';
 
-				    $.ajax({
+          var ajax_data = {
+            url  : '/{{ $main_route }}/mode',
+            data : data
+          };
 
-				        type : 'POST',
-				        url  : '/{{ $main_route }}/mode',
-				        dataType: "json",
-				        data : data,
-
-				    }).done(function(response) {
-
-						util.showPopup(response.msg);
-	          
-				    }).fail(function() {
-
-						util.showPopup('{{ Lang::get('aroaden.error_message') }}', false);
-
-				    });
+          util.processAjaxReturnsJson(ajax_data).done(function(response) {
+            return util.showPopup(response.msg);
+          });
 				}
 
-		        return {
-		          saveText: function() {
-		            saveText();
-		          }
-		        }
+        return {
+          saveText: function() {
+            saveText();
+          }
+        }
 
-		    })(window);
+	    })(window);
+  	});
 
-    	});
-
-  	</script>
+  </script>
 
 @endsection
 
-@section('js')
-    @parent
-
-	  	<script type="text/javascript" src="{!! asset('assets/js/del_budgets.js') !!}"></script>
-@endsection

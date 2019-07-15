@@ -21,17 +21,61 @@ var currentId = '';
 var mainUrl = '/' + "{{ $main_route }}";
 var mainUrlAjax = mainUrl + '/ajaxIndex';
 
+
+$(document).ajaxStart(function() {
+
+
+
+
+/*
+  try {
+
+    util.checkSessionExpired().done(function(response) {
+
+        console.log('---------------- response  checkSessionExpired  ----------------------------');
+        console.dir(response);
+        console.log('--------------------------------------------');
+
+      if (response.checkSessionExpired)
+        throw new Error("{{ Lang::get('aroaden.session_expired') }}");
+    });
+
+  } catch(err) {
+
+        console.log('---------------- err  checkSessionExpired  ----------------------------');
+        console.dir(err);
+        console.log('--------------------------------------------');
+
+     util.showPopup(err.message, false, 2500);
+     window.location.href = '/login';
+
+  }
+
+*/
+});
+
+
 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
   event.preventDefault();
   event.stopPropagation();
 
-  if (thrownError == "Forbidden") {
-    //util.loadMainUrlContent();
+        console.log('----------------  settings  ----------------------------');
+        console.dir(settings);
+        console.log('--------------------------------------------');
 
+        console.log('----------------  jqxhr  ----------------------------');
+        console.dir(jqxhr);
+        console.log('--------------------------------------------');
+
+        console.log('----------------  event  ----------------------------');
+        console.dir(event);
+        console.log('--------------------------------------------');
+
+  if (thrownError == "Forbidden") {
     return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
   }
 
-  return util.showPopup("{{ Lang::get('aroaden.error_message') }} - ajax Error", false, 2500);
+  return util.showPopup("ajax Error", false, 2500);
 });
 
 var util = {
@@ -46,8 +90,6 @@ var util = {
 
     currentContent = $('#'+id).clone();
     currentId = id;
-
-    //_this.showLoadingGif(id);
 
     var ajax_data = {
       method : method,
@@ -97,13 +139,6 @@ var util = {
     var obj = {
       url  : urlToLoad,
     };
-
-
-
-     console.log('------------ obj ------------------');
-     console.dir(obj);
-
-
 
     window.history.replaceState('Object', 'Title', mainUrl);
 
@@ -189,6 +224,17 @@ var util = {
       data : { action: action },
       method : "GET",
       url  : "/" + routes.settings_route + "/checkPermissions"
+    };
+
+    return _this.processAjaxReturnsJson(ajax_data);
+  },
+
+  checkSessionExpired: function() {
+    var _this = this;
+
+    var ajax_data = {
+      method : "GET",
+      url  : "/" + routes.settings_route + "/checkSessionExpired"
     };
 
     return _this.processAjaxReturnsJson(ajax_data);
