@@ -15,6 +15,12 @@ img.center {
     margin-top: 50px;
 }
 
+.tooltip {
+  position: fixed;
+  z-index: 9999999999;
+  font-size: 15px;
+}
+
 .fa-menusize {
     font-size: 2.1rem !important;
 }

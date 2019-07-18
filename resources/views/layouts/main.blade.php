@@ -43,22 +43,22 @@
         </h3>
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 
-            <li title="{!! @trans("aroaden.company") !!}">
+            <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
               <a href="{!! url("/$company_route")!!}"><i class="fa fa-building-o fa-menusize"></i></a>
             </li>  
-            <li title="{!! @trans("aroaden.appointments") !!}">
+            <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.appointments") !!}</b>">
               <a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar fa-menusize"></i></a>
             </li>
-            <li title="{!! @trans("aroaden.patients") !!}">
+            <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.patients") !!}</b>">
               <a href="{!! url("/$patients_route")!!}"><i class="fa fa-users fa-menusize"></i></a>
             </li>
-            <li title="{!! @trans("aroaden.staff") !!}">
+            <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.staff") !!}</b>">
               <a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md fa-menusize"></i></a>
             </li>
-            <li title="{!! @trans("aroaden.services") !!}">
+            <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.services") !!}</b>">
               <a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks fa-menusize"></i></a>
             </li>
-            <li title="{!! @trans("aroaden.accounting") !!}">
+            <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.accounting") !!}</b>">
               <a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
             </li>
           </ul>
@@ -67,6 +67,16 @@
       </div>  
     </div>
     
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('[data-toggle="menuTooltip"]').tooltip({ 
+          container: 'body',
+          placement: 'right',
+          html: 'true'
+        });
+      });
+    </script>
+
     <div class="col-sm-11 minHeight widCol2">
       <div class="row">
         <div class="col-sm-10 pad4">
