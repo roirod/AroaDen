@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Traits\BaseTrait;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\User;
 use Config;
 
@@ -26,7 +27,7 @@ class LoginController extends Controller
 
     protected $redirectTo = '/home';
     protected $redirectAfterLogout = '/login';
-    protected $loginPath = 'login';
+    protected $loginPath = '/login';
 
     /**
      * Create a new controller instance.
@@ -81,7 +82,7 @@ class LoginController extends Controller
     {
         Auth::logout();
 
-        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : 'login');
+        return redirect($this->loginPath);
     }
 
     public function username()

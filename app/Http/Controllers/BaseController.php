@@ -481,21 +481,12 @@ class BaseController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $id = $this->sanitizeData($id);
         $error = false;
         $msg = Lang::get('aroaden.success_message');
 
         try {
 
-            if ($this->delete_item) {
-
-                $this->main_object->delete();          
-
-            } else  {
-
-                $this->model::destroy($id);                 
-
-            }                
+            $this->model::destroy($id);           
 
         } catch (Exception $e) {
 
@@ -506,6 +497,7 @@ class BaseController extends Controller
 
         $data['error'] = $error;
         $data['msg'] = $msg;
+        $data['redirect_to'] = $this->redirect_to;
 
         $this->echoJsonOuptut($data);
     }

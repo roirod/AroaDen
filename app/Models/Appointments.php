@@ -85,7 +85,7 @@ class Appointments extends Model
                     ->get();
     }
 
-    public function scopeFirstById($query, $id)
+    public static function FirstById($id)
     {
         return DB::table('appointments')
             ->join('patients','appointments.idpat','=','patients.idpat')

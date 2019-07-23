@@ -323,8 +323,16 @@ var util = {
               };
 
               _this.processAjaxReturnsJson(ajax_data).done(function(response) {
-                window.location.href = mainUrl;
-                
+                if (response.error) {
+
+
+
+                } else {
+
+                  setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
+
+                }
+
                 _this.showPopup(response.msg);
               });
             }

@@ -318,9 +318,9 @@ class AppointmentsController extends BaseController implements BaseInterface
 
     public function destroy(Request $request, $id)
     {
+        $id = $this->sanitizeData($id);
         $object = $this->model::find($id);
-        $this->main_object = $object;
-        $this->delete_item = true;        
+
         $this->redirect_to = "/$this->other_route/$object->idpat";
 
         return parent::destroy($request, $id);        

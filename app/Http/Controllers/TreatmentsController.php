@@ -15,7 +15,8 @@ use DB;
 
 class TreatmentsController extends BaseController
 {
-    public function __construct()
+
+    public function __construct(Treatments $treatments)
     {
         parent::__construct();
 
@@ -23,7 +24,8 @@ class TreatmentsController extends BaseController
 
         $this->main_route = $this->config['routes']['treatments'];
         $this->other_route = $this->config['routes']['patients'];             
-        $this->views_folder = $this->config['routes']['treatments'];        
+        $this->views_folder = $this->config['routes']['treatments'];
+        $this->model = $treatments;
         $this->form_route = 'select';   
 
         $fields = [
@@ -220,29 +222,34 @@ class TreatmentsController extends BaseController
     public function destroy(Request $request, $id)
     {               
         $id = $this->sanitizeData($id);
-        $this->redirectIfIdIsNull($id, $this->other_route);
+        $object = $this->model::find($id);
+        $error = false;
+        $msg = Lang::get('aroaden.success_message');
+
+        $this->redirect_to = "/$this->other_route/$object->idpat";
 
         DB::beginTransaction();
-                
+
         try {
 
-            $treatment = Treatments::find($id);
-            $treatment->delete();
-
+            $this->model::destroy($id);           
             StaffWorks::where('idtre', $id)->delete();
 
             DB::commit();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             DB::rollBack();
 
-            $request->session()->flash($this->error_message_name, $e->getMessage());  
-            return redirect("$this->other_route/$treatment->idpat");
+            $error = true;
+            $msg = $e->getMessage();
 
         }
 
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-        return redirect("$this->other_route/$treatment->idpat");
+        $data['error'] = $error;
+        $data['msg'] = $msg;
+        $data['redirect_to'] = $this->redirect_to;
+
+        $this->echoJsonOuptut($data);
     }
 }
