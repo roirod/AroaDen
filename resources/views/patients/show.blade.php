@@ -243,31 +243,10 @@
 		  <div class="col-sm-12"> 
 
 			{!! addText(@trans("aroaden.payments")) !!}
-		 
-			@foreach( $treatments_sum as $sum )
 
-			 	<div class="row mar10">
-			 	    <div class="col-sm-4">
-			 	      <table class="table table-bordered fonsi15">
-			 	     	<tr class="text-info pad10">
-				 	     	 <td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.treatments_sum") !!}</td>
-				 	     	 <td class="wid95 textder"> {!!numformat($sum->total_sum)!!} €</td>
-			 	     	</tr> 
-			 		    <tr class="text-info pad10">
-			 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.paid") !!}</td>
-			 		    	<td class="wid95 textder"> {!!numformat($sum->total_paid)!!} € </td>
-			 		    </tr>
-			 		    <tr class="text-danger pad10">
-			 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.rest") !!}</td>
-			 		    	<td class="wid95 textder"> {!!numformat($sum->rest)!!} € </td>
-			 		    </tr>
-			 		  </table>
-
-			 		</div>
-			 	</div>
-
-			@endforeach	 
-		 
+			<div id="paymentsTable">
+				@include('patients.paymentsTable')
+			</div>
 		  </div>
 		</div>
 	 
