@@ -8,7 +8,7 @@
   @include('includes.errors')
 
   <div class="row">
-  	<div class="col-sm-12">
+  	<div class="col-sm-9">
       <fieldset>
     	  <div class="panel panel-default">
 
