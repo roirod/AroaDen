@@ -83,7 +83,10 @@ class AppointmentsController extends BaseController implements BaseInterface
                     $data['msg'] = Lang::get('aroaden.date_format_fail');
                     $this->echoJsonOuptut($data);
 
-                } 
+                }
+
+                $date_from_DmY = $date_from;
+                $date_to_DmY = $date_to;
 
                 $date_from = $this->convertDmYToYmd($date_from);
                 $date_to = $this->convertDmYToYmd($date_to);
@@ -91,7 +94,7 @@ class AppointmentsController extends BaseController implements BaseInterface
                 if ($date_from > $date_to) {
 
                     $data['error'] = true;
-                    $data['msg'] = Lang::get('aroaden.date_from_is_older', ['date_to' => $date_to, 'date_from' => $date_from]);
+                    $data['msg'] = Lang::get('aroaden.date_from_is_older', ['date_to' => $date_to_DmY, 'date_from' => $date_from_DmY]);
                     $this->echoJsonOuptut($data);
 
                 } 

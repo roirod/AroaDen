@@ -19,7 +19,7 @@
     		        <td class="wid290">Paciente</td>
     		        <td class="wid110 textcent">Total</td>
     		        <td class="wid110 textcent">Pagado</td> 
-    		        <td class="wid110 textcent">Resto</td>
+                <td class="wid110 textcent text-danger danger">Resto</td>
           		</tr>
             </thead>
             <tfoot>
@@ -28,7 +28,7 @@
     		        <td class="wid290">Paciente</td>
     		        <td class="wid110 textcent">Total</td>
     		        <td class="wid110 textcent">Pagado</td> 
-    		        <td class="wid110 textcent">Resto</td>
+    		        <td class="wid110 textcent text-danger danger">Resto</td>
                </tr>
             </tfoot>  
           </table>					
@@ -55,7 +55,7 @@
         'oLanguage': {
           'sProcessing': 'Procesando...',
           'sLengthMenu': 'Selecciona _MENU_',
-          'sZeroRecords': 'Pacientes no encontrados',
+          'sZeroRecords': 'No hay registros.',
           'sInfo': 'De _START_ hasta _END_ de _TOTAL_ pacientes',
           'sInfoEmpty': 'No hay pacientes',
           'sInfoFiltered': '(filtrados de _MAX_ total de pacientes)',
@@ -87,9 +87,6 @@
           oSettings.jqXHR = $.ajax({
             "dataType": 'json',
             "method": "GET",
-            'headers': {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
             "url": sSource,
             "data": aoData,
             "success": fnCallback,

@@ -20,38 +20,36 @@ var currentContent = '';
 var currentId = '';
 var mainUrl = '/' + "{{ $main_route }}";
 var mainUrlAjax = mainUrl + '/ajaxIndex';
-
+var redirectRoute = false;
+var error = false;
 
 $(document).ajaxStart(function() {
 
+  /*
+    try {
 
+      util.checkSessionExpired().done(function(response) {
 
+          console.log('---------------- response  checkSessionExpired  ----------------------------');
+          console.dir(response);
+          console.log('--------------------------------------------');
 
-/*
-  try {
+        if (response.checkSessionExpired)
+          throw new Error("{{ Lang::get('aroaden.session_expired') }}");
+      });
 
-    util.checkSessionExpired().done(function(response) {
+    } catch(err) {
 
-        console.log('---------------- response  checkSessionExpired  ----------------------------');
-        console.dir(response);
-        console.log('--------------------------------------------');
+          console.log('---------------- err  checkSessionExpired  ----------------------------');
+          console.dir(err);
+          console.log('--------------------------------------------');
 
-      if (response.checkSessionExpired)
-        throw new Error("{{ Lang::get('aroaden.session_expired') }}");
-    });
+       util.showPopup(err.message, false, 2500);
+       window.location.href = '/login';
 
-  } catch(err) {
+    }
 
-        console.log('---------------- err  checkSessionExpired  ----------------------------');
-        console.dir(err);
-        console.log('--------------------------------------------');
-
-     util.showPopup(err.message, false, 2500);
-     window.location.href = '/login';
-
-  }
-
-*/
+  */
 });
 
 
@@ -300,6 +298,16 @@ var util = {
     var attributes = form[0].attributes;
     var url = attributes['action'].value;
     var checkpermissions = attributes['data-checkpermissions'].value;
+    var redirect = attributes['data-redirect'].value;
+
+    var closest_tr = $this.closest('tr');
+
+console.log('----------------  redirect  ----------------------------');
+console.dir(redirect);
+console.log('--------------------------------------------');
+
+
+
 
     _this.checkPermissions(checkpermissions).done(function(response) {
       if (response.permission) {
@@ -323,6 +331,16 @@ var util = {
               };
 
               _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+
+
+                if (response.error)
+                  return _this.showPopup(response.msg, false, 2500);
+
+                if (redirect)
+                  return setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
+
+
+
                 if (response.error) {
 
 

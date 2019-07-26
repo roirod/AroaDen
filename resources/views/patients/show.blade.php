@@ -22,8 +22,8 @@
                 </a>
              </div>	
              <div class="btn-group">
-             	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="patients.delete">	
-              	{!! csrf_field() !!}
+             	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="patients.delete" data-redirect="true">	
+              		{!! csrf_field() !!}
             		<input type="hidden" name="_method" value="DELETE">
 
             		<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -120,7 +120,7 @@
 					</td>
 					<td class="wid50"> 	
 						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" method="POST">
+						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" data-redirect="false" method="POST">
 						  		{!! csrf_field() !!}
 
 								<input type="hidden" name="_method" value="DELETE">
@@ -197,7 +197,7 @@
 
 					<td class="wid50 textcent"> 	
 						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" method="POST">	
+						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" data-redirect="false" method="POST">	
 						  		{!! csrf_field() !!}
 
 								<input type="hidden" name="_method" value="DELETE">

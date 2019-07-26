@@ -22,7 +22,6 @@
         <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
         <td class="wid95 textcent">{{ Lang::get('aroaden.edit') }}</td>
-        <td class="wid450"></td>    
        </tr>
     </table>
 
@@ -37,12 +36,10 @@
             <td class="wid110 textcent">{{ $obj->price }} €</td>
 
             <td class="wid95 textcent">
-              <a class="btn btn-xs btn-success editService" type="button" href="/{{ "$services_route/$obj->idser/edit" }}">
+              <a class="btn btn-sm btn-success editService" type="button" href="/{{ "$services_route/$obj->idser/edit" }}">
                 <i class="fa fa-edit"></i>
               </a>
-            </td>
-
-            <td class="wid450"></td>       
+            </td>   
          </tr>
           
         @endforeach
