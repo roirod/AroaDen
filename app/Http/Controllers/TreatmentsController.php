@@ -11,6 +11,7 @@ use App\Models\Staff;
 use Validator;
 use Exception;
 use Lang;
+use View;
 use DB;
 
 class TreatmentsController extends BaseController
@@ -219,6 +220,13 @@ class TreatmentsController extends BaseController
         }     
     }
 
+    public function renderPaymentsTable($idpat)
+    {
+        $this->view_data['treatments_sum'] = $this->model::SumByPatientId($idpat);
+
+        return (string)View::make('patients.paymentsTable', $this->view_data);
+    }
+
     public function destroy(Request $request, $id)
     {               
         $id = $this->sanitizeData($id);
@@ -249,6 +257,7 @@ class TreatmentsController extends BaseController
         $data['error'] = $error;
         $data['msg'] = $msg;
         $data['redirect_to'] = $this->redirect_to;
+        $data['htmlContent'] = $this->renderPaymentsTable($object->idpat);
 
         $this->echoJsonOuptut($data);
     }

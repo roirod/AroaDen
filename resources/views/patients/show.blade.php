@@ -22,7 +22,7 @@
                 </a>
              </div>	
              <div class="btn-group">
-             	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="patients.delete" data-redirect="true">	
+             	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="patients.delete" data-removeTr="false" data-htmlContent="false">	
               		{!! csrf_field() !!}
             		<input type="hidden" name="_method" value="DELETE">
 
@@ -120,7 +120,7 @@
 					</td>
 					<td class="wid50"> 	
 						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" data-redirect="false" method="POST">
+						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" data-removeTr="true" data-htmlContent="false" method="POST">
 						  		{!! csrf_field() !!}
 
 								<input type="hidden" name="_method" value="DELETE">
@@ -179,6 +179,10 @@
 		   <div class="box260">
 		   <table class="table table-striped fonsi13">
 
+		   	<script type="text/javascript">
+		   		defaulId = 'paymentsTable';
+		   	</script>
+
 		    @foreach($treatments["treatments"] as $treat)
 		    	<tr>
 		    		<td class="wid180">{!! $treat->service_name !!}</td> 
@@ -197,7 +201,7 @@
 
 					<td class="wid50 textcent"> 	
 						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" data-redirect="false" method="POST">	
+						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" data-removeTr="true" data-htmlContent="true" method="POST">	
 						  		{!! csrf_field() !!}
 
 								<input type="hidden" name="_method" value="DELETE">

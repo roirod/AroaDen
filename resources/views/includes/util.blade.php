@@ -190,8 +190,12 @@ var util = {
     if (error)
       content = '<p class="text-danger">' + content + '</p>';
 
-    $('#'+id).empty();
-    $('#'+id).html(content);
+    _this.showLoadingGif(id);
+
+    window.setTimeout(function () {
+      $('#'+id).empty();
+      $('#'+id).html(content);
+    }, 800);  
   },
 
   showLoadingGif: function(id) {
@@ -298,16 +302,10 @@ var util = {
     var attributes = form[0].attributes;
     var url = attributes['action'].value;
     var checkpermissions = attributes['data-checkpermissions'].value;
-    var redirect = attributes['data-redirect'].value;
+    var removeTr = attributes['data-removeTr'].value;
+    var htmlContent = attributes['data-htmlContent'].value;
 
-    var closest_tr = $this.closest('tr');
-
-console.log('----------------  redirect  ----------------------------');
-console.dir(redirect);
-console.log('--------------------------------------------');
-
-
-
+    var tr_content = $this.closest('tr');
 
     _this.checkPermissions(checkpermissions).done(function(response) {
       if (response.permission) {
@@ -331,27 +329,20 @@ console.log('--------------------------------------------');
               };
 
               _this.processAjaxReturnsJson(ajax_data).done(function(response) {
-
-
                 if (response.error)
                   return _this.showPopup(response.msg, false, 2500);
 
-                if (redirect)
-                  return setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
-
-
-
-                if (response.error) {
-
-
-
-                } else {
-
-                  setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
-
+                if (htmlContent == 'true') {
+                  _this.showContentOnPage(defaulId, response.htmlContent);
                 }
 
-                _this.showPopup(response.msg);
+                if (removeTr == 'true') {
+                  tr_content.remove();      
+                } else {
+                  setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
+                }
+
+                return _this.showPopup(response.msg);
               });
             }
           }

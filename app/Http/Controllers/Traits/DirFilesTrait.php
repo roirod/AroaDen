@@ -307,6 +307,8 @@ trait DirFilesTrait {
      */
     public function destroy(Request $request, $id)
     {
+        $this->redirect_to = $this->main_route;
+
         return parent::destroy($request, $id);  
     }
 
