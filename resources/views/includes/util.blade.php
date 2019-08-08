@@ -195,7 +195,7 @@ var util = {
     window.setTimeout(function () {
       $('#'+id).empty();
       $('#'+id).html(content);
-    }, 800);  
+    }, 400);  
   },
 
   showLoadingGif: function(id) {

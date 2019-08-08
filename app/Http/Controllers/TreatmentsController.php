@@ -256,7 +256,7 @@ class TreatmentsController extends BaseController
 
         $data['error'] = $error;
         $data['msg'] = $msg;
-        $data['redirect_to'] = $this->redirect_to;
+        $data['redirect_to'] = url($this->redirect_to);
         $data['htmlContent'] = $this->renderPaymentsTable($object->idpat);
 
         $this->echoJsonOuptut($data);
