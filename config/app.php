@@ -10,7 +10,7 @@ return [
 
     'timezone' => env('APP_TIMEZONE'),
 
-    'locale' => 'es',
+    'locale' => env('APP_LOCALE'),
 
     'fallback_locale' => 'en',
 

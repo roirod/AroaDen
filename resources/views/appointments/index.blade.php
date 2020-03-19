@@ -6,47 +6,61 @@
 @include('includes.errors')
 
 <div class="row pad4">
+
   <div class="col-sm-3">
-    <p> 
-      &nbsp;<i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}
-    </p>
-    <form>
-      {!! csrf_field() !!}
-      <select name="select_val" class="form-control select_val">
-        <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
-        <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
-        <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
-        <option value="minus1week_appointments">{{ @trans('aroaden.minus1week_appointments') }}</option>
-        <option value="minus1month_appointments">{{ @trans('aroaden.minus1month_appointments') }}</option>
-      </select> 
-    </form>  
+    <fieldset>
+      <legend>
+        <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}
+      </legend>
+      <form>
+        {!! csrf_field() !!}
+        <select name="select_val" class="form-control select_val">
+          <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
+          <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
+          <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
+          <option value="minus1week_appointments">{{ @trans('aroaden.minus1week_appointments') }}</option>
+          <option value="minus1month_appointments">{{ @trans('aroaden.minus1month_appointments') }}</option>
+        </select> 
+      </form> 
+    </fieldset>
   </div>
 
-  <form>
-    {!! csrf_field() !!}
-    <input type="hidden" name="select_val" value="date_range">
+  <div class="col-sm-5">
+    <fieldset>
+      <legend>
+        <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select_date_range') }}
+      </legend>
 
-    <div class="col-sm-3">
-      <div class="input-group date pad4" id="datepicker1">
-        <p class="input-group-btn pad4"> {{ @trans('aroaden.date_from') }} </p>
-        <input name="date_from" type="text" autofocus required>
-        <span class="input-group-addon">
-          <span class="glyphicon glyphicon-calendar"></span>
-        </span>
+      <div class="col-sm-5">
+        <form>
+          {!! csrf_field() !!}
+          <input type="hidden" name="select_val" value="date_range">
+          <div class="input-group date pad4" id="datepicker1">
+            <p class="input-group-btn pad4"> {{ @trans('aroaden.date_from') }} </p>
+            <input name="date_from" type="text" autofocus required>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+          <div class="input-group date pad4" id="datepicker2">
+            <p class="input-group-btn pad4"> {{ @trans('aroaden.date_to') }} </p>
+            <input name="date_to" type="text" required>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+          <div class="pad10">
+            <input type="button" class="btn btn-sm btn-primary searchButton" value="{{ Lang::get('aroaden.search') }}">
+          </div>
+        </form>
       </div>
-      <div class="input-group date pad4" id="datepicker2">
-        <p class="input-group-btn pad4"> {{ @trans('aroaden.date_to') }} </p>
-        <input name="date_to" type="text" required>
-        <span class="input-group-addon">
-          <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>
-      <div class="pad10">
-        <input type="button" class="btn btn-sm btn-primary searchButton" value="{{ Lang::get('aroaden.search') }}">
-      </div>
-    </div>
-  </form>
+
+    </fieldset>
+  </div>
+
 </div>
+
+<hr>
 
 <div class="row">
   <div class="col-sm-12" id="item_list">
@@ -54,13 +68,13 @@
   @if ($count == 0)
 
     <p>
-      <span class="text-danger">{{ @trans('aroaden.no_appointments_today') }} {{ @trans('aroaden.today') }}</span>
+      <span class="text-danger fonsi15">{{ @trans('aroaden.no_appointments_today') }} {{ @trans('aroaden.today') }}</span>
     </p>
 
   @else
 
     <p>
-      <span class="label label-success">{{ @trans('aroaden.today_appointments') }}</span>
+      <span class="label label-success fonsi15">{{ @trans('aroaden.today_appointments') }}</span>
     </p>
 
     <div class="panel panel-default"> 
@@ -157,11 +171,11 @@
 
             if (response.error) {
 
-              html = '<p class="text-danger">' + response.msg + '</p>';
+              html = '<p class="text-danger fonsi15">' + response.msg + '</p>';
 
             } else {
 
-              html = '<p><span class="label label-success">' + response.msg + '</span></p>';
+              html = '<p><span class="label label-success fonsi15">' + response.msg + '</span></p>';
 
               html += '<div class="panel panel-default">';
               html += '   <table class="table">';

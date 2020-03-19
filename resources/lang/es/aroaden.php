@@ -64,6 +64,8 @@ return [
   'birth' => 'F. nacimiento',
   'today'   => 'hoy',
   'select'   => 'Selecciona',
+  'select_date_range'   => 'Selecciona rango de fechas',
+
   'hour' => 'Hora',
   'day' => 'Día',
   'date'   => 'Fecha',

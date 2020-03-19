@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Traits\BaseTrait;
 use Illuminate\Http\Request;
 use App\Models\Settings;
@@ -200,8 +199,8 @@ class BaseController extends Controller
      */
     public function __construct()
     {
-        setlocale( LC_ALL, env('APP_LC_ALL') );
-        date_default_timezone_set( env('APP_TIMEZONE') );
+        //setlocale(LC_ALL, env('APP_LOCALE'));
+        //date_default_timezone_set(env('APP_TIMEZONE'));
 
         $this->config = Config::get('aroaden');
 
@@ -454,7 +453,7 @@ class BaseController extends Controller
     /**
      *  get Query Result
      *  
-     *  @throws NoQueryResultException
+     *  @throws Exception
      *  @return array data
      */
     private function getQueryResult()
@@ -465,11 +464,12 @@ class BaseController extends Controller
         $count = $this->model::CountFindStringOnField($string);
 
         if ((int)$count === 0)
-            throw new NoQueryResultException(Lang::get('aroaden.no_query_results'));
+            throw new Exception(Lang::get('aroaden.no_query_results'));
 
         $data = [];
         $data['main_loop'] = $main_loop;      
         $data['msg'] = $count;
+
         return $data;
     }
 

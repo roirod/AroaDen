@@ -10,15 +10,15 @@
 		@include('includes.errors')
 
 		<div class="row"> 
-		  <div class="col-sm-12"> 
+		    <div class="col-sm-12"> 
 				<div class="input-group"> 
 					<span class="input-group-btn pad10">  
-            <p> Personal </p>
-          </span>
+						<p> {!! @trans("aroaden.staff") !!} </p>
+					</span>
 					<div class="btn-toolbar pad4" role="toolbar"> 
 						<div class="btn-group">
 							<a href="{{ url("/$main_route/$id/edit") }}" data-checkpermissions="staff.edit" role="button" class="btn btn-sm btn-success onEdit">
-								<i class="fa fa-edit"></i> Editar
+								<i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
 							</a>
 						</div>	
 					<div class="btn-group">
@@ -28,7 +28,7 @@
 							<input type="hidden" name="_method" value="DELETE">
 
 							<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  
+								<i class="fa fa-times"></i> {!! @trans("aroaden.delete") !!} <span class="caret"></span>  
 							</button>
 							<ul class="dropdown-menu" role="menu"> 
 								<li>
@@ -81,19 +81,20 @@
 		<br>
 
 		<div class="row">
-		  <div class="col-sm-12"> 
-		 	<p> Trabajos realizados: </p> 
-		</div> </div>
+		  	<div class="col-sm-12"> 
+		 		<p> Trabajos realizados: </p> 
+			</div> 
+		</div>
 
 		<div class="row">
 		 <div class="col-sm-12">
 		  <div class="panel panel-default">
 		   <table class="table fonsi14">
 		   	 <tr class="success">
-			   	 	<td class="wid180">Paciente</td>
-			   	 	<td class="wid180">Tratamiento</td>
-			   	 	<td class="wid95 textcent">Cantidad</td>
-			   	 	<td class="wid95">Fecha</td>
+			   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
+			   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+			   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
+			   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
 			   	 	<td class="wid180"> </td>
 		   	 </tr>
 		   </table>
@@ -109,7 +110,7 @@
 						</td>
 					   	<td class="wid180">{{ $treat->service_name }}</td>
 					   	<td class="wid95 textcent">{{ $treat->units }}</td>
-					   	<td class="wid95">{{ date('d-m-Y',strtotime ($treat->day)) }}</td>
+					   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
 					   	<td class="wid180"></td>
 			   		</tr>						
 				@endforeach

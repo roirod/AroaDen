@@ -40,7 +40,8 @@
           <i class="fa fa-child"></i>
           <br>
           {!! $app_name !!}
-        </h3>
+        </h5>
+        
         <nav class="navbar navbar-default" role="navigation">   
           <ul class="nav nav-pills nav-stacked bgtra"> 
             <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
