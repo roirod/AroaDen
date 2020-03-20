@@ -4,12 +4,14 @@
   @section('head')
 
     <meta charset="UTF-8"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>{{ $page_title }}</title>
+
+    <link href="{!! asset('assets/img/favicon.ico') !!}" rel="shortcut icon">
     <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/font-awe/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
-
-    <link href="{!! asset('assets/img/favicon.ico') !!}" rel="shortcut icon">
     <link rel="stylesheet" type="text/css" href="{!! asset('assets/css/sweetalert2.min.css') !!}">
     
   @show
@@ -21,6 +23,22 @@
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
 
     @include('includes.util')
+
+    <script type="text/javascript">
+      $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      $(document).ready(function(){
+        $('[data-toggle="menuTooltip"]').tooltip({ 
+          container: 'body',
+          placement: 'right',
+          html: 'true'
+        });
+      });
+    </script>
 
   @show
 
@@ -67,16 +85,6 @@
 
       </div>  
     </div>
-    
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $('[data-toggle="menuTooltip"]').tooltip({ 
-          container: 'body',
-          placement: 'right',
-          html: 'true'
-        });
-      });
-    </script>
 
     <div class="col-sm-11 minHeight widCol2">
       <div class="row">

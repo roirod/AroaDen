@@ -17,9 +17,11 @@
       {!! csrf_field() !!}   
       
       <div class="input-group">
-        <span class="input-group-btn pad10"> <p> &nbsp; {{ Lang::get('aroaden.search_service') }}</p> </span>
+        <span class="input-group-btn pad10"> 
+          <p> {{ Lang::get('aroaden.search_service') }}</p> 
+        </span>
         <div class="col-sm-4">
-          <input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
+          <input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus>
         </div>
         <div class="col-sm-3">
           <a href="{{ url("/$services_route") }}" role="button" class="btn btn-md btn-danger">

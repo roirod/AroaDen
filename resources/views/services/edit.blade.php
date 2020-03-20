@@ -1,15 +1,23 @@
 @include('includes.services_nav')
 
-{!! addText(@trans('aroaden.edit_service')) !!}
+<div class="row">
+  <div class="col-sm-10">
+    <fieldset>
+      <legend>
+        {!! @trans('aroaden.edit_service') !!}
+      </legend>
 
-<form id="form" class="editServiceForm form" action="{{ url("/$services_route/$id") }}" method="POST">
-	{!! csrf_field() !!}
+      <form id="form" class="editServiceForm form" action="{{ url("/$services_route/$id") }}" method="POST">
+      	{!! csrf_field() !!}
 
-	<input type="hidden" name="_method" value="PUT">
+      	<input type="hidden" name="_method" value="PUT">
 
-  @include('form_fields.common_alternative')
+        @include('form_fields.common_alternative')
 
-@include('form_fields.fields.closeform')
+      @include('form_fields.fields.closeform')
+    </fieldset>
+  </div>
+</div>    
 
 <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>

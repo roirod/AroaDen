@@ -92,7 +92,7 @@ class PatientsController extends BaseController implements BaseInterface
     }
 
     public function list(Request $request)
-    {   
+    {
         $aColumns = [ 
             0 =>'idpat', 
             1 =>'surname_name',

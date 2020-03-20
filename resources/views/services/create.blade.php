@@ -1,13 +1,21 @@
 @include('includes.services_nav')
 
-{!! addText(@trans('aroaden.create_service')) !!}
+<div class="row">
+  <div class="col-sm-10">
+    <fieldset>
+      <legend>
+        {!! @trans('aroaden.create_service') !!}
+      </legend>
 
-<form id="form" class="createServiceForm form" action="{!! $services_route !!}" method="post">
-	{!! csrf_field() !!}
+      <form id="form" class="createServiceForm form" action="{!! $services_route !!}" method="post">
+      	{!! csrf_field() !!}
 
-  @include('form_fields.common_alternative')
+        @include('form_fields.common_alternative')
 
-@include('form_fields.fields.closeform')
+      @include('form_fields.fields.closeform')
+    </fieldset>
+  </div>
+</div>
 
 <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>

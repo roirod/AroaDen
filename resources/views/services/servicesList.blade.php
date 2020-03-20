@@ -2,18 +2,25 @@
 @if ($count == 0)
 
   <p>
-    <span class="text-danger">{{ @trans('aroaden.no_results') }}</span>
+    <span class="text-danger fonsi15">{{ @trans('aroaden.no_results') }}</span>
   </p>
 
 @else
 
-  <p>
+  <div>
+    @if (isset($searched_text))
+      <p class="label label-primary fonsi15">
+        {{ Lang::get('aroaden.searched_text') }} {!! $searched_text !!}
+      </p>
+      &nbsp;
+    @endif
 
-  @if (isset($searched_text))
-    <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} {!! $searched_text !!}</span>
-  @endif
-    <span class="label label-success"> {!! $count !!} {{ @trans('aroaden.services') }}</span>
-  </p>
+    <p class="label label-success fonsi15">
+      {{ @trans('aroaden.services') }} <span class="badge"> {!! $count !!} </span>
+    </p>
+  </div>
+
+  <br>
 
   <div class="panel panel-default">
     <table class="table">

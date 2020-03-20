@@ -9,32 +9,28 @@
 
   <div class="row">
   	<div class="col-sm-9">
-      <fieldset>
-    	  <div class="panel panel-default">
-
-          <table class="table table-hover stripe" id="PaysTable">
-            <thead>
-          	  <tr class="fonsi15 bgtra fonbla">
-    		        <td class="wid50"></td>
-    		        <td class="wid290">Paciente</td>
-    		        <td class="wid110 textcent">Total</td>
-    		        <td class="wid110 textcent">Pagado</td> 
-                <td class="wid110 textcent text-danger danger">Resto</td>
-          		</tr>
-            </thead>
-            <tfoot>
-              <tr class="fonsi15 bgtra fonbla">
-    		        <td class="wid50"></td>
-    		        <td class="wid290">Paciente</td>
-    		        <td class="wid110 textcent">Total</td>
-    		        <td class="wid110 textcent">Pagado</td> 
-    		        <td class="wid110 textcent text-danger danger">Resto</td>
-               </tr>
-            </tfoot>  
-          </table>					
-
-  		  </div>
-      </fieldset>
+  	  <div class="panel panel-default">
+        <table class="table table-hover stripe" id="PaysTable">
+          <thead>
+        	  <tr class="fonsi15 bgtra fonbla">
+  		        <td class="wid50"></td>
+  		        <td class="wid290">Paciente</td>
+  		        <td class="wid110 textcent">Total</td>
+  		        <td class="wid110 textcent">Pagado</td> 
+              <td class="wid110 textcent text-danger danger">Resto</td>
+        		</tr>
+          </thead>
+          <tfoot>
+            <tr class="fonsi15 bgtra fonbla">
+  		        <td class="wid50"></td>
+  		        <td class="wid290">Paciente</td>
+  		        <td class="wid110 textcent">Total</td>
+  		        <td class="wid110 textcent">Pagado</td> 
+  		        <td class="wid110 textcent text-danger danger">Resto</td>
+            </tr>
+          </tfoot>  
+        </table>					
+		  </div>
     </div> 
   </div>
 
@@ -96,10 +92,7 @@
             }
           });
         },
-        "aLengthMenu": [
-          [25, 50, 100, 500, 1000, 10000, -1],
-          [25, 50, 100, 500, 1000, 10000, "Todos"],
-        ],
+        "aLengthMenu": aLengthMenu,
         "aoColumnDefs": [
           {
             "aTargets": [0],

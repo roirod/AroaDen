@@ -47,10 +47,9 @@ class TreatmentsController extends BaseController
 
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;
+        $this->view_data['object'] = $object;
         $this->view_data['services'] = Services::AllOrderByName();
         $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
-        $this->view_data['name'] = $object->name;
-        $this->view_data['surname'] = $object->surname;
         $this->view_data['form_fields'] = $this->form_fields;
 
         $this->setPageTitle($object->surname.', '.$object->name);
@@ -134,20 +133,19 @@ class TreatmentsController extends BaseController
         $this->redirectIfIdIsNull($id, $this->other_route);
         $id = $this->sanitizeData($id);
     
-        $object = Treatments::FirstById($id);
-        $paciente = Patients::FirstById($object->idpat);
+        $treatment = Treatments::FirstById($id);
+        $object = Patients::FirstById($treatment->idpat);
 
         $this->view_data['id'] = $id;
         $this->view_data['idnav'] = $object->idpat;        
         $this->view_data['object'] = $object;
+        $this->view_data['treatment'] = $treatment;
         $this->view_data['staff_works'] = StaffWorks::AllById($id)->toArray();
         $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
-        $this->view_data['name'] = $paciente->name;
-        $this->view_data['surname'] = $paciente->surname;
         $this->view_data['form_fields'] = $this->form_fields;        
         $this->view_data['autofocus'] = 'units';
         
-        $this->setPageTitle($paciente->surname.', '.$paciente->name);
+        $this->setPageTitle($object->surname.', '.$object->name);
 
         return parent::edit($request, $id);
     }

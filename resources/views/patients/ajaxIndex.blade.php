@@ -14,30 +14,28 @@
   	
   <div class="row">
   	<div class="col-sm-12">
-      <fieldset>
-    	  <div class="panel panel-default">
-          <table class="table table-hover stripe" id="PatientsTable">
-            <thead>
-          	  <tr class="fonsi15 bgtra fonbla">
-                <td class="wid290"></td>
-          			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-          			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-          			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-          			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-          		</tr>
-            </thead>
-            <tfoot>
-              <tr class="fonsi15 bgtra fonbla">
-                <td class="wid290"></td>
-                <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-                <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-                <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-                <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-               </tr>
-            </tfoot>  
-          </table>
-  		  </div>
-      </fieldset>
+  	  <div class="panel panel-default">
+        <table class="table table-hover stripe" id="PatientsTable">
+          <thead>
+        	  <tr class="fonsi15 bgtra fonbla">
+              <td class="wid290"></td>
+        			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+        			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+        		</tr>
+          </thead>
+          <tfoot>
+            <tr class="fonsi15 bgtra fonbla">
+              <td class="wid290"></td>
+              <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+              <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+             </tr>
+          </tfoot>  
+        </table>
+		  </div>
     </div> 
   </div>
 
@@ -78,27 +76,9 @@
         "sPaginationType": "full_numbers",
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": '/' + "{!! $patients_route !!}/list",
-        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-          oSettings.jqXHR = $.ajax({
-            "dataType": 'json',
-            "method": "GET",
-            'headers': {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            "url": sSource,
-            "data": aoData,
-            "success": fnCallback,
-            "error": function (e) {
-              console.dir(e);
-              console.log(e.message);
-            }
-          });
-        },
-        "aLengthMenu": [
-          [25, 50, 100, 500, 1000, 10000, -1],
-          [25, 50, 100, 500, 1000, 10000, "Todos"],
-        ],
+        "sAjaxSource": "{!! $patients_route !!}/list",
+        "sServerMethod": "GET",
+        "aLengthMenu": aLengthMenu,
         "aoColumnDefs": [
           {
             "aTargets": [0],

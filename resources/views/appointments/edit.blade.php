@@ -7,20 +7,28 @@
     @include('includes.messages')
     @include('includes.errors')
 
-    {{ addText("Editar Cita") }}
-
     <div class="col-sm-12 pad10">
         @include('form_fields.show.name')
     </div>
 
-    @include('form_fields.fields.opendiv')
-        @include('form_fields.fields.openform')
+    <div class="row">
+      <div class="col-sm-12">
+        <fieldset>
+          <legend>
+            {!! @trans('aroaden.edit_appointment') !!}
+          </legend>
 
-            @include('form_fields.common_alternative')
+            @include('form_fields.fields.opendiv')
+                @include('form_fields.fields.openform')
 
-        @include('form_fields.fields.closeform')
+                    @include('form_fields.common_alternative')
 
-    @include('form_fields.fields.closediv')
+                @include('form_fields.fields.closeform')
+
+            @include('form_fields.fields.closediv')
+        </fieldset>
+      </div>
+    </div>            
 
 @endsection
 

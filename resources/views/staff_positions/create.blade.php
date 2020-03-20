@@ -7,9 +7,18 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText(@trans('aroaden.create_position')) !!}
+    <div class="row">
+      <div class="col-sm-9">
+        <fieldset>
+          <legend>
+            {!! @trans('aroaden.create_position') !!}
+          </legend>
 
-	@include('form_fields.common')
+            @include('form_fields.common')
+
+        </fieldset>
+      </div>
+    </div>
     
 @endsection
 

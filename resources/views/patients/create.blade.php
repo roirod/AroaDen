@@ -7,9 +7,18 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText(@trans('aroaden.create_patient')) !!}
+	<div class="row">
+	  <div class="col-sm-12">
+	    <fieldset>
+	      <legend>
+	        {!! @trans('aroaden.create_patient') !!}
+	      </legend>
 
-	@include('form_fields.common')
+			@include('form_fields.common')
+
+	    </fieldset>
+	  </div>
+	</div>
     
 @endsection
 

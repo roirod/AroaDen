@@ -7,21 +7,29 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText("Añadir Cita") !!}
+	<div class="col-sm-12 pad10">
+	    @include('form_fields.show.name')
+	</div>
 
-    <div class="col-sm-12 pad10">
-        @include('form_fields.show.name')
-    </div>
+	<div class="row">
+	  <div class="col-sm-12">
+	    <fieldset>
+	      <legend>
+	        {!! @trans('aroaden.create_appointment') !!}
+	      </legend>
 
-	@include('form_fields.fields.opendiv')
-		@include('form_fields.fields.openform')
+			@include('form_fields.fields.opendiv')
+				@include('form_fields.fields.openform')
 
-			<input type="hidden" name="idpat" value="{{ $id }}">
+					<input type="hidden" name="idpat" value="{{ $id }}">
 
-			@include('form_fields.common_alternative')
+					@include('form_fields.common_alternative')
 
-		@include('form_fields.fields.closeform')
-	@include('form_fields.fields.closediv')
+				@include('form_fields.fields.closeform')
+			@include('form_fields.fields.closediv')
+	    </fieldset>
+	  </div>
+	</div>
 
 @endsection
 

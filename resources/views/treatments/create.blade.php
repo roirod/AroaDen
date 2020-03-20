@@ -7,64 +7,66 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText(Lang::get('aroaden.add_treatments')) !!}
+    <div class="col-sm-12 pad10">
+        @include('form_fields.show.name')
+    </div>	
 
-	<div class="row">
-	 <div class="col-sm-12 mar10">
+    <div class="row">
+      <div class="col-sm-12">
+        <fieldset>
+          <legend>
+            {!! @trans('aroaden.add_treatments') !!}
+          </legend>
 
-		<p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
+		    <div class="row">
+		      <div class="col-sm-11">
+					<form id="select_form" class="form">
+						<div class="form-group col-lg-6">
+						    <label class="control-label text-left mar10">{{ Lang::get('aroaden.select_service') }}</label> 
+							<select name="idser_select" id="idser_select" class="form-control" required>
+								<option value="none" selected disabled="">{{ Lang::get('aroaden.select_service') }}</option>
 
-		<form id="select_form" class="form">
-			<div class="form-group col-lg-6">
-			    <label class="control-label text-left mar10">{{ Lang::get('aroaden.select_service') }}</label> 
-				<select name="idser_select" id="idser_select" class="form-control" required>
-					<option value="none" selected disabled="">{{ Lang::get('aroaden.select_service') }}</option>
-
-					@foreach($services as $servi)
-						<option value="{{ $servi->idser }}">{{ $servi->name }}({{ $servi->price }} €)</option>
-					@endforeach
-				</select>
+								@foreach($services as $servi)
+									<option value="{{ $servi->idser }}">{{ $servi->name }}({{ $servi->price }} €)</option>
+								@endforeach
+							</select>
+						</div>
+					@include('form_fields.fields.closeform')
+				</div>
 			</div>
 
-		@include('form_fields.fields.closeform')
-	@include('form_fields.fields.closediv')
+			<div id="loading"></div>
 
-	<div id="loading"></div>
+			<hr>
 
-	<hr>
+			<div class="row">
+				 <div class="col-sm-12 mar10" id="ajax_content">
+				    <p class="pad4" id="name_price"></p>
 
-	<div class="row">
-	 <div class="col-sm-12 mar10" id="ajax_content">
+				    @include('form_fields.fields.openform')
 
-	    <p class="pad4" id="name_price"></p>
+				        <input type="hidden" name="idpat" value="{{ $id }}">
+				        <input type="hidden" name="idser" value="">
+				        <input type="hidden" name="price" value="">
 
-	    @include('form_fields.fields.openform')
+				        @include('form_fields.common_alternative')
 
-	        <input type="hidden" name="idpat" value="{{ $id }}">
-	        <input type="hidden" name="idser" value="">
-	        <input type="hidden" name="price" value="">
+					@include('form_fields.fields.closeform')
+				</div>
+			</div>
 
-	        @include('form_fields.common_alternative')
-
-		@include('form_fields.fields.closeform')
-	@include('form_fields.fields.closediv')
+        </fieldset>
+      </div>
+    </div>
 
 @endsection
 
 
 @section('footer_script')
 
-	<meta name="_token" content="{!! csrf_token() !!}"/>
-
 	<script>
 		
 		$(document).ready(function() {
-			$.ajaxSetup({
-			   	headers: { 
-			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-			   	}
-			}); 
-
 			$('input[name="units"]').on('change', function(evt) {
 				var price = $('input[name="price"]').val();
 				var paid = util.multiply(this.value, price);	

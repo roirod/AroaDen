@@ -20,18 +20,22 @@
 	</div> </div> </div> </div>
 
 	<div class="row">
-	  <div class="col-sm-12">
-		  <p>
-		    <span class="label label-success"> {!! $count !!} {{ @trans('aroaden.positions') }}</span>
-		  </p>
+		<div class="col-sm-12"> 
+			<p class="label label-success fonsi15">
+			  {{ @trans('aroaden.positions') }} <span class="badge"> {!! $count !!} </span>
+			</p>
+	  	</div>
+	</div> 
 
+	<br>
+
+	<div class="row">
+	  <div class="col-sm-6">
 		  <div class="panel panel-default">
 		    <table class="table">
 		       <tr class="fonsi15 success">
 		        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
-		        <td class="wid110">{{ @trans('aroaden.edit') }}</td>      
-		        <td class="wid290"></td>
-		        <td class="wid290"></td>		        
+		        <td class="wid110">{{ @trans('aroaden.edit') }}</td>      	        
 		       </tr>
 		    </table>
 
@@ -44,13 +48,10 @@
 		            <td class="wid180">{{ $obj->name }}</td>
 
 		            <td class="wid110">
-		              <a class="btn btn-xs btn-success onEdit" type="button" href="/{{ "$main_route/$obj->idstpo/edit" }}">
+		              <a class="btn btn-sm btn-success" type="button" href="/{{ "$main_route/$obj->idstpo/edit" }}">
 		                <i class="fa fa-edit"></i>
 		              </a>
 		            </td>
-		            
-		            <td class="wid290"></td>
-		            <td class="wid290"></td>
 		         </tr>
 		          
 		        @endforeach
@@ -60,25 +61,5 @@
 		  </div>
 	  </div>
 	</div>
-
-	<script type="text/javascript">
-	  $(document).ready(function() {
-	    $('a.onEdit').on('click', function(evt) {
-	      evt.preventDefault();
-	      evt.stopPropagation();
-
-	      var _this = $(this);
-
-	      return onEdit(_this);
-	    });
-
-	    function onEdit(_this) {
-	      util.checkPermissions('staff_positions.edit').done(function(response) {
-	        if (!response.permission)
-	          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-	      });
-	    }	    
-	  });
-	</script>
 
 @endsection

@@ -8,7 +8,17 @@
 
 	@else
 
-		<input type="text" name="day" value="{!! convertYmdToDmY($object->day) !!}" class="form-control" required>
+    @php
+      $day = convertYmdToDmY($object->day);
+    @endphp
+
+		<input type="text" name="day" value="" class="form-control" required>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $('input[name="day"]').val('{{ $day }}');
+        });
+    </script>
 
 	@endif
 

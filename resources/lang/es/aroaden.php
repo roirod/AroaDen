@@ -97,7 +97,7 @@ return [
   'date_format_fail'   => 'Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14-04-2017',
   'date_from_is_older'   => 'La fecha :date_to es anterior a :date_from',
   'date_time_fail'   => 'Fecha o hora incorrecta',
-  'appointments_range'   => 'Citas entre :date_from y :date_to',
+  'appointments_range'   => 'Citas entre el :date_from y el :date_to',
   'date_from'   => 'Fecha de',
   'date_to'   => 'Hasta',
   'date_out_range'   => 'La diferencia entre las dos fechas es superior a :date_max_days días, esto puede causar un mal funcionamiento del programa, introduce dos fechas que no superen :date_max_days días de diferencia entre ellas',
@@ -108,8 +108,8 @@ return [
   'session_expired' => 'La sessión ha caducado.',
 
   'company' => 'Empresa',
-  'company_data' => 'Datos Empresa',
-  'company_edit_data' => 'Editar datos Empresa',
+  'company_data' => 'Datos empresa',
+  'company_edit_data' => 'Editar datos empresa',
   'company_name' => 'Nombre',
   'company_city' => 'Poblaci&#xF3;n',
   'company_address' => 'Direcci&#xF3;n',
@@ -126,8 +126,8 @@ return [
   'staff_positions'   => 'Cargos de personal',
   'position' => 'Cargo',
   'positions' => 'Cargos',
-  'create_position' => 'Crear Cargo',
-  'edit_position' => 'Editar Cargo',
+  'create_position' => 'Crear cargo',
+  'edit_position' => 'Editar cargo',
 
 
   'invoices' => 'Facturas',
@@ -142,6 +142,8 @@ return [
 
 
   'appointments' => 'Citas',
+  'create_appointment' => 'Crear cita',
+  'edit_appointment' => 'Editar cita',
   'no_appointments_on_db'   => 'No hay citas en la base de datos',
   'no_appointments_today'   => 'No hay citas para',
   'appointments_of'   => 'Citas de',
@@ -187,8 +189,12 @@ return [
   'allergies' => 'Alergias',
 
   'treatments' => 'Tratamientos',
-  'add_treatments' => 'Añadir tratamientos al paciente',    
-  'no_add_treatments' => 'No has añadido ningún Tratamiento.',
+  'add_treatments' => 'Añadir tratamiento al paciente',
+  'edit_treatments' => 'Editar tratamiento',
+  'no_add_treatments' => 'No has añadido ningún tratamiento.',
 
   'budgets' => 'Presupuestos',
+  'create_budget' => 'Crear presupuesto',
+  'edit_budget' => 'Editar presupuesto',
+
 ];

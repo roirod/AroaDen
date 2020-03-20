@@ -20,35 +20,32 @@
   	
   <div class="row">
   	<div class="col-sm-12">
-      <fieldset>
-      	<div class="panel panel-default">
-            <table class="table table-hover stripe" id="staffTable">
-              <thead>
-            	  <tr class="fonsi15 bgtra fonbla">
-                  <td class="wid110"></td>          	  
-            			<td class="wid350">{{ Lang::get('aroaden.name') }}</td>
-            			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-            			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-            			<td class="wid350">{{ Lang::get('aroaden.positions') }}</td>
-            		</tr>
-              </thead>
-              <tfoot>
-                <tr class="fonsi15 bgtra fonbla">
-                  <td class="wid110"></td>
-                  <td class="wid350">{{ Lang::get('aroaden.name') }}</td>
-                  <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-                  <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-                  <td class="wid350">{{ Lang::get('aroaden.positions') }}</td>
-                 </tr>
-              </tfoot>  
-            </table>
-  	    </div>
-      </fieldset>
+    	<div class="panel panel-default">
+        <table class="table table-hover stripe" id="staffTable">
+          <thead>
+        	  <tr class="fonsi15 bgtra fonbla">
+              <td class="wid110"></td>          	  
+        			<td class="wid350">{{ Lang::get('aroaden.name') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+        			<td class="wid350">{{ Lang::get('aroaden.positions') }}</td>
+        		</tr>
+          </thead>
+          <tfoot>
+            <tr class="fonsi15 bgtra fonbla">
+              <td class="wid110"></td>
+              <td class="wid350">{{ Lang::get('aroaden.name') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+              <td class="wid350">{{ Lang::get('aroaden.positions') }}</td>
+             </tr>
+          </tfoot>  
+        </table>
+	    </div>
     </div> 
   </div>
  
   <script type="text/javascript">
-    
     $(document).ready(function() {
       setTimeout(function(){
         $("#staffTable").dataTable(staffTable);
@@ -90,9 +87,6 @@
           oSettings.jqXHR = $.ajax({
             "dataType": 'json',
             "method": "GET",
-            'headers': {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
             "url": sSource,
             "data": aoData,
             "success": fnCallback,
@@ -102,10 +96,7 @@
             }
           });
         },
-        "aLengthMenu": [
-          [25, 50, 100, 500, 1000, 10000, -1],
-          [25, 50, 100, 500, 1000, 10000, "Todos"],
-        ],
+        "aLengthMenu": aLengthMenu,
         "aoColumnDefs": [
           {
             "aTargets": [0],

@@ -7,50 +7,7 @@
     @include('includes.messages')
     @include('includes.errors')
 
-    {{ addText("Editar Tratamiento") }}
-
-    <div class="row">
-     <div class="col-sm-12 mar10">
-
-        <p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
-        <hr>
-
-        <p class="pad4 fonsi15">
-            {{ $object->name }}:
-            <br>
-            <br>
-            Precio: {{ $object->price }} €.
-            <br>
-            Cantidad: {{ $object->units }}.
-            <br>
-            IVA: {{ $object->tax }} %.
-            <br>
-            Total: {{ numformat($object->units * $object->price) }} €.      
-            <br>
-            Pagado: {{ $object->paid }} €.
-            <br>
-            Fecha: {{ date('d-m-Y', strtotime ($object->day) ) }}.        
-        </p>
-
-        <hr>
-
-        @include('form_fields.fields.openform')
-
-            <input type="hidden" name="price" value="{{ $object->price }}">
-
-            @include('form_fields.common_alternative')
-
-        @include('form_fields.fields.closeform')
-
-    @include('form_fields.fields.closediv')
-
-@endsection
-
-
-@section('footer_script')
-
     <script type="text/javascript">
-        
         $(document).ready(function() {
             var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.multiply_units_price') }}"><i class="fa fa-lg fa-close"></i></a>';
             $('input[name="paid"]').parent().find('label').append(append);
@@ -59,7 +16,7 @@
             $('input[name="paid"]').parent().find('label').append(append);
 
             $('#multiply_units_price').click(function (evt) {
-                var price = {{ $object->price }};
+                var price = {{ $treatment->price }};
                 var units = $('input[name="units"]').val();
                 var paid = util.multiply(units, price);    
 
@@ -76,8 +33,54 @@
                 evt.stopPropagation();              
             });
         });
-
     </script>
+
+    <div class="col-sm-12 pad10">
+        @include('form_fields.show.name')
+    </div>  
+
+    <div class="row">
+      <div class="col-sm-12">
+        <fieldset>
+          <legend>
+            {!! @trans('aroaden.edit_treatments') !!}
+          </legend>
+
+            <p class="pad4 fonsi15">
+                {{ $treatment->name }}
+                <br>
+                Precio: {{ $treatment->price }} €
+                <br>
+                Cantidad: {{ $treatment->units }}
+                <br>
+                IVA: {{ $treatment->tax }} %
+                <br>
+                Total: {{ numformat($treatment->units * $treatment->price) }} €
+                <br>
+                Pagado: {{ $treatment->paid }} €
+                <br>
+                Fecha: {{ date('d-m-Y', strtotime ($treatment->day) ) }}     
+            </p>
+
+            <hr>
+
+            @php
+            {{
+                $object = $treatment;
+            }}
+            @endphp
+
+            @include('form_fields.fields.openform')
+
+                <input type="hidden" name="price" value="{{ $object->price }}">
+
+                @include('form_fields.common_alternative')
+
+            @include('form_fields.fields.closeform')
+
+        </fieldset>
+      </div>
+    </div>
 
 @endsection
 

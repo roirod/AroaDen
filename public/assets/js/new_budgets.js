@@ -1,9 +1,5 @@
 
 $(document).ready(function() {
-	$.ajaxSetup({
-	  headers: { 'X-CSRF-Token' : $('meta[name=_token]').attr('content') }
-	});
-
 	var budgetArray = [];
 
   $(document).on('click','.saveBudget',function(evt){
