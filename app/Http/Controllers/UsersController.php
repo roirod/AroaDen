@@ -45,11 +45,9 @@ class UsersController extends BaseController
     public function store(Request $request)
     {    	  	  
         $password = trim($request->input('password'));
-        $username = trim($request->input('username'));
-        $username = $this->sanitizeData($username);
+        $username = $this->sanitizeData($request->input('username')); 
         $type = $this->sanitizeData($request->input('type'));
-        $full_name = trim($request->input('full_name'));
-        $full_name = $this->sanitizeData($full_name);
+        $full_name = $this->sanitizeData($request->input('full_name'));
 
         if ($username == 'admin') {
             $request->session()->flash($this->error_message_name, 'Nombre de usuario no permitido, use cualquier otro.');   
@@ -123,15 +121,13 @@ class UsersController extends BaseController
     {
         $this->redirectIfIdIsNull($id, $this->main_route);
         $id = $this->sanitizeData($id);
-        $password = trim($request->input('password'));
-        $username = trim($request->input('username'));
-        $username = $this->sanitizeData($username);
-        $full_name = trim($request->input('full_name'));
-        $full_name = $this->sanitizeData($full_name);
-        $type = $this->sanitizeData($request->input('type'));
         $route = "$this->main_route/$id/edit";
-
         $user = $this->model::find($id);
+
+        $password = trim($request->input('password'));
+        $username = $this->sanitizeData($request->input('username'));        
+        $full_name = $this->sanitizeData($request->input('full_name'));        
+        $type = $this->sanitizeData($request->input('type'));
 
         if ($user->username == 'admin') {
 
@@ -159,19 +155,16 @@ class UsersController extends BaseController
             if ($username != $user->username)
                 $user->username = $username;
 
-            if ($password == '') {
-                $request->session()->flash($this->error_message_name, 'La contraseña es obligatoria.');   
-                return redirect($route);
-            }
-
-            $user->password = bcrypt($password);
+            if ($password != '')
+                $user->password = bcrypt($password);            
 
             if ($full_name == '') {
                 $request->session()->flash($this->error_message_name, 'El Nombre completo es obligatorio.');   
                 return redirect($route);
             }
-            
-            $user->full_name = $full_name;
+
+            if ($full_name != $user->full_name)
+                $user->full_name = $full_name;
 
             if ($type == '') {
                 $request->session()->flash($this->error_message_name, 'El campo Permisos es obligatorio.');   
@@ -184,8 +177,7 @@ class UsersController extends BaseController
 
         $user->save();
             
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-                    
+        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
         return redirect($this->main_route);
     }
 
