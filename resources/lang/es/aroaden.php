@@ -9,6 +9,8 @@ return [
   'no'   => 'No',
   'user'   => 'Usuario',
   'users'   => 'Usuarios',
+  'create_user'   => 'Crear usuario',
+  'edit_user'   => 'Editar usuario',
   'del_user'   => 'Eliminar usuario',
 
 

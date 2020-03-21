@@ -7,14 +7,15 @@
 	@include('includes.messages')
 	@include('includes.errors')
 
-	{!! addText(@trans('aroaden.edit')) !!}
+	<div class="col-sm-5">
+        <fieldset>
+	          <legend>
+	            {!! @trans('aroaden.edit_user') !!}
+	          </legend>
 
-	<div class="col-sm-5"> 
-
-		@include('form_fields.common')
-
+				@include('form_fields.common')
+		</fieldset>
 	</div>
-
 
 
  <br> <br> <br> <br> <br> <br> <br> <br>
