@@ -69,6 +69,9 @@
       console.log('---------------- ajaxError thrownError  ----------------------------');
       console.dir(thrownError);
       console.log('--------------------------------------------');
+
+    if (thrownError == "Unauthorized")
+      return util.redirectTo("/login");
           
     if (thrownError == "Forbidden") {
       return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
@@ -78,6 +81,10 @@
   });
 
   var util = {
+
+    redirectTo: function(string) {
+      return window.location.href = string;
+    },
 
     processAjaxReturnsHtml: function(obj) {
       var _this = this;

@@ -9,7 +9,7 @@ use Lang;
 class NormalMiddleware
 {
     public function handle($request, Closure $next)
-    {         
+    {
         $type = Auth::user()->type;
           
         if ($type != 'normal') {

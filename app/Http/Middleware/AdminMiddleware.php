@@ -9,14 +9,13 @@ use Lang;
 class AdminMiddleware
 {
     public function handle($request, Closure $next)
-    {    	  
+    {
     	$username = Auth::user()->username;
-    	  
+
     	if ( $username != 'admin' ) {
             if($request->ajax()) {
                 
-                header('HTTP/1.1 403 Forbidden');
-                exit();
+                return header('HTTP/1.1 403 Forbidden');
 
             } else {
 

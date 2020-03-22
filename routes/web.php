@@ -110,13 +110,11 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 	Route::get($route["budgets"].'/{id}/create', 'BudgetsController@create');
 	Route::post($route["budgets"].'/mode', 'BudgetsController@mode');
-	Route::resource($route["budgets"], 'BudgetsController', ['except' => 
-		['index', 'edit', 'update', 'destroy']]);
+	Route::resource($route["budgets"], 'BudgetsController', ['except' => ['index', 'edit', 'update', 'destroy']]);
 
 	Route::get($route["invoices"].'/{id}/create', 'InvoicesController@create');
 	Route::post($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');
-	Route::resource($route["invoices"], 'InvoicesController', ['except' => 
-		['index', 'update', 'edit', 'destroy']]);
+	Route::resource($route["invoices"], 'InvoicesController', ['except' => ['index', 'update', 'edit', 'destroy']]);
 
 	Route::get($route["treatments"].'/{id}/create','TreatmentsController@create');
 	Route::post($route["treatments"].'/select', 'TreatmentsController@select');  

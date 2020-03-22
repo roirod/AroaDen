@@ -25,9 +25,11 @@ class Kernel extends HttpKernel
             'bindings'
         ],
         'admin' => [
+            \App\Http\Middleware\Authenticate::class,
             \App\Http\Middleware\AdminMiddleware::class
         ],
         'normal' => [
+            \App\Http\Middleware\Authenticate::class,
             \App\Http\Middleware\NormalMiddleware::class
         ]        
     ];

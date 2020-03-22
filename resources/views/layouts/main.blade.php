@@ -51,7 +51,7 @@
 <div class="jumbotron container bgwi pad10">
   <div class="row">  
 
-    <div class="col-sm-1 widCol1 textcent fonsi14">
+    <div class="col-sm-1 widCol1 textcent">
       <div class="affix">
 
         <h5 class="pad10 login_text bgblack textshadow borderradius">
@@ -61,7 +61,7 @@
         </h5>
         
         <nav class="navbar navbar-default" role="navigation">   
-          <ul class="nav nav-pills nav-stacked bgtra"> 
+          <ul class="nav nav-pills nav-stacked"> 
             <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
               <a href="{!! url("/$company_route")!!}"><i class="fa fa-building-o fa-menusize"></i></a>
             </li>  
