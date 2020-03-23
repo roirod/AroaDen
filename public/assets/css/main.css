@@ -1,4 +1,6 @@
-body { background: #333333; }
+body { 
+  background: #333333; 
+}
 
 html,body { height:100%; padding:0; margin:0; }
 
@@ -76,6 +78,14 @@ img.center {
   border: none !important;
 }
 
+.paging_full_numbers a.paginate_button, .paging_full_numbers a.paginate_active {
+  color:#777 !important;
+}
+
+a.paginate_active {
+  color: black !important;
+  background-color: white !important;
+}
 
 .box500 { height: 500px; overflow: auto; border: 1px solid grey; }
 .box400 { height: 400px; overflow: auto; border: 1px solid grey; }
@@ -95,6 +105,7 @@ img.center {
 .wid110 { width: 110px !important; }
 .wid95 { width: 95px !important; }
 .wid70 { width: 70px !important; }
+.wid60 { width: 60px !important; }
 .wid50 { width: 50px !important; }
 
 .max150 { 
@@ -189,10 +200,10 @@ table { table-layout:fixed !important; }
 .marbot { margin-top: 140px; }
 
 .btnbig { 
-font-size: 24px;
-line-height: 1.4;
-border-radius: 6px !important;
-padding: 10px 71px; 
+  font-size: 24px;
+  line-height: 1.4;
+  border-radius: 6px !important;
+  padding: 10px 71px; 
 }
 
 .border2px { border: 2px solid #0cedde; }
@@ -209,7 +220,9 @@ background: linear-gradient(45deg,  rgba(14,14,14,0.32) 0%,rgba(65,66,65,0.32) 4
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', endColorstr='#7d7e7d',GradientType=1 );
 }
 
-.bgtra  { background-color: rgba(0, 0, 0, 0.66); }
+.bgtra  {
+  background-color: rgba(232, 231, 231, 0.66);
+}
 
 .logo  {
  background-color: rgba(0, 0, 0, 0.66); 
@@ -254,3 +267,118 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
     /* inline-block space fix */
     margin-right:-4px;
 }
+
+fieldset{
+  min-width:0;
+  margin:0;
+  padding: 12px !important;
+  border: 1px groove #f4b940 !important;
+  border-radius: 8px 8px 8px 8px;
+  -moz-border-radius: 8px 8px 8px 8px;
+  -webkit-border-radius: 8px 8px 8px 8px;
+  background-color: #f7f7f7;
+}
+
+legend{
+  display:block;
+  width:100%;
+  padding: 5px !important;
+  margin-bottom:20px;
+  font-size:16px;
+  line-height:inherit;
+  color:#333;
+  border:0;
+  border-bottom:1px solid #f4b940
+}
+
+a {
+  color: #333232 !important;
+  text-decoration: none !important;
+  background-color: #e2e2e2 !important;
+}
+
+.nav>li>a{
+  position:relative;
+  display:block;
+  padding:10px 15px;
+  border-bottom: 2px solid white !important;
+}
+
+.nav>li>a:focus,.nav>li>a:hover{
+  text-decoration: none;
+  border-bottom: 2px solid #06fbbe !important;
+  background-color: black !important;
+  color: #e7e7e7 !important;
+}
+
+.navbar {
+  position:relative !important;  
+  min-height:50px !important;  
+  margin-bottom:20px !important;  
+  border-radius: 4px !important;  
+  border:2px solid transparent !important;  
+}
+
+.navbar-default{
+  background-color:#f8f8f8 !important;
+  border-color:#333 !important;
+}
+
+.navbar-default .navbar-brand{
+  color: #FFF;
+}
+
+.navbar-default .navbar-brand:focus,.navbar-default .navbar-brand:hover{
+  color:#5e5e5e !important;
+  background-color:transparent !important;
+}
+
+.navbar-default .navbar-text{
+  color:#777 !important;
+}
+
+.navbar-default .navbar-nav>li>a{
+  color:#FFF;
+  background-color: rgb(0, 0, 0);
+}
+
+.navbar-default .navbar-nav>li>a:focus,.navbar-default .navbar-nav>li>a:hover{
+  color: #FFF;
+  background-color: #525655;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.navbar-default .navbar-nav>.active>a,.navbar-default .navbar-nav>.active>a:focus,.navbar-default .navbar-nav>.active>a:hover{
+  color:#555;
+  background-color:#e7e7e7
+}
+
+.navbar-default .navbar-nav>.disabled>a,.navbar-default .navbar-nav>.disabled>a:focus,.navbar-default .navbar-nav>.disabled>a:hover{
+  color:#ccc;
+  background-color:transparent
+}
+
+.navbar-default .navbar-toggle{
+  border-color:#ddd
+}
+
+.navbar-default .navbar-toggle:focus,.navbar-default .navbar-toggle:hover{
+  background-color:#ddd
+}
+
+.navbar-default .navbar-toggle .icon-bar{
+  background-color:#888
+}
+
+.navbar-default .navbar-collapse,.navbar-default .navbar-form{
+  border-color:#e7e7e7
+}
+
+.navbar-default .navbar-nav>.open>a,.navbar-default .navbar-nav>.open>a:focus,.navbar-default .navbar-nav>.open>a:hover{
+  color:#555;
+  background-color:#e7e7e7
+}
+

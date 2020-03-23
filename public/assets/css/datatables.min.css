@@ -155,7 +155,7 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
 	margin: 2px;
 	cursor: pointer;
 	*cursor: hand;
-	color: #333 !important;
+	color: #333;
 }
 
 .paging_full_numbers a.paginate_button {
@@ -169,7 +169,7 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
 
 .paging_full_numbers a.paginate_active {
 	background-color: #6C6C6C;
-	color: #FFF !important;
+	color: #FFF;
 }
 
 
