@@ -13,9 +13,7 @@
 
 <div class="row"> 
   <div class="col-sm-12">
-    <form class="form" id="searchService">
-      {!! csrf_field() !!}   
-      
+    <form class="form" id="searchService">     
       <div class="input-group">
         <span class="input-group-btn pad10"> 
           <p> {{ Lang::get('aroaden.search_service') }}</p> 

@@ -14,7 +14,6 @@
       </legend>
 
       <form>
-        {!! csrf_field() !!}
         <select name="select_val" class="form-control select_val">
           <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
           <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
@@ -34,7 +33,6 @@
 
       <div class="col-sm-5">
         <form>
-          {!! csrf_field() !!}
           <input type="hidden" name="select_val" value="date_range">
           <div class="input-group date pad4" id="datepicker1">
             <p class="input-group-btn pad4"> {{ @trans('aroaden.date_from') }} </p>
