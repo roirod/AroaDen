@@ -28,8 +28,6 @@ class InvoicesController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['invoices'];
         $this->other_route = $this->config['routes']['patients'];             
         $this->views_folder = $this->config['routes']['invoices'];        

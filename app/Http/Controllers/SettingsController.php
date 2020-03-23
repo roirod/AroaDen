@@ -13,8 +13,6 @@ class SettingsController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['users'];
         $this->views_folder = $this->config['routes']['settings'];
     }	

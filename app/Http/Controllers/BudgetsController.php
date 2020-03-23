@@ -18,8 +18,6 @@ class BudgetsController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['budgets'];
         $this->other_route = $this->config['routes']['patients'];      
         $this->views_folder = 'budgets';

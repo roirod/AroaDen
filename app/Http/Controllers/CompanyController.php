@@ -18,8 +18,6 @@ class CompanyController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['company'];
         $this->views_folder = $this->config['routes']['company'];
         $this->model = $settings;        

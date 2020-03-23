@@ -11,8 +11,6 @@ class AccountingController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['pays'];
     }
 

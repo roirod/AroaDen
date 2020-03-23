@@ -13,8 +13,6 @@ class UsersController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['users'];
         $this->other_route = $this->config['routes']['settings'];      
         $this->views_folder = $this->config['routes']['users'];

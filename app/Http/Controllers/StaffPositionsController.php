@@ -15,8 +15,6 @@ class StaffPositionsController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['staff_positions'];
         $this->other_route = $this->config['routes']['staff'];        
         $this->views_folder = $this->config['routes']['staff_positions'];

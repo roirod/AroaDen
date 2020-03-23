@@ -13,17 +13,11 @@ class NormalMiddleware
         $type = Auth::user()->type;
           
         if ($type != 'normal') {
-            if($request->ajax()) {
+            if($request->ajax())
+                return response('Forbidden', 403);
 
-            	header('HTTP/1.1 403 Forbidden');
-            	exit();
-
-            } else {
-
-                $request->session()->flash('error_message', Lang::get('aroaden.deny_access') );  
-                return redirect()->back(); 
-
-            }
+            $request->session()->flash('error_message', Lang::get('aroaden.deny_access') );  
+            return redirect()->back(); 
     	} 
         
         return $next($request);

@@ -24,12 +24,13 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings'
         ],
+        'auth' => [
+            \App\Http\Middleware\Authenticate::class
+        ],
         'admin' => [
-            \App\Http\Middleware\Authenticate::class,
             \App\Http\Middleware\AdminMiddleware::class
         ],
         'normal' => [
-            \App\Http\Middleware\Authenticate::class,
             \App\Http\Middleware\NormalMiddleware::class
         ]        
     ];

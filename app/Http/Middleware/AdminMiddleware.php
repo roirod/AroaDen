@@ -11,18 +11,14 @@ class AdminMiddleware
     public function handle($request, Closure $next)
     {
     	$username = Auth::user()->username;
+        $uid = Auth::user()->uid;
 
-    	if ( $username != 'admin' ) {
-            if($request->ajax()) {
-                
-                return header('HTTP/1.1 403 Forbidden');
+    	if ($username != 'admin' && $uid == 1) {
+            if($request->ajax())
+                return response('Forbidden', 403);
 
-            } else {
-
-                $request->session()->flash('error_message', Lang::get('aroaden.deny_access') );  
-                return redirect()->back(); 
-
-            }
+            $request->session()->flash('error_message', Lang::get('aroaden.deny_access') );  
+            return redirect()->back(); 
     	}
 
         return $next($request);       

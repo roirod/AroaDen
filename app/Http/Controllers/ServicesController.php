@@ -21,8 +21,6 @@ class ServicesController extends BaseController implements BaseInterface
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['services'];
         $this->views_folder = $this->config['routes']['services'];
         $this->tax_types = $this->config['tax_types'];

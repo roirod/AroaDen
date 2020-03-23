@@ -67,17 +67,6 @@ class LoginController extends Controller
         }
     }
 
-    public function checkSessionExpired()
-    {
-        $data = [];
-        $data['checkSessionExpired'] = false;
-
-        if (empty(Auth::user()))
-            $data['checkSessionExpired'] = true;
-
-        $this->echoJsonOuptut($data);
-    }
-
     public function logout()
     {
         Auth::logout();

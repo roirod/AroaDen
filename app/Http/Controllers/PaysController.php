@@ -12,8 +12,6 @@ class PaysController extends BaseController
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['pays'];
         $this->other_route = $this->config['routes']['patients'];
         $this->view_data['pays_route'] = $this->config['routes']['pays'];

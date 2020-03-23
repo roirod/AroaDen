@@ -26,8 +26,6 @@ class StaffController extends BaseController implements BaseInterface
     {
         parent::__construct();
 
-        $this->middleware('auth');
-
         $this->main_route = $this->config['routes']['staff'];
         $this->other_route = $this->config['routes']['patients'];        
         $this->views_folder = $this->config['routes']['staff'];
