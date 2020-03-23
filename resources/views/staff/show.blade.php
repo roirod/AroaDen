@@ -89,34 +89,45 @@
 		<div class="row">
 		 <div class="col-sm-12">
 		  <div class="panel panel-default">
-		   <table class="table fonsi14">
-		   	 <tr class="success">
-			   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
-			   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
-			   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
-			   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
-			   	 	<td class="wid180"> </td>
-		   	 </tr>
-		   </table>
-		   <div class="box500">
-		     <table class="table table-striped fonsi13">
+				<table class="table table-striped table-bordered table-hover">
+			       <tr class="fonsi15">
+				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
+				   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+				   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
+				   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
+				   	 	<td class="wid180"> </td>
+			   	 	</tr>
+			   </table>
 
-				@foreach ($treatments as $treat)
-					<tr>
-						<td class="wid180">
-							<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
-								{{ $treat->surname }}, {{ $treat->name }}
-							</a>
-						</td>
-					   	<td class="wid180">{{ $treat->service_name }}</td>
-					   	<td class="wid95 textcent">{{ $treat->units }}</td>
-					   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
-					   	<td class="wid180"></td>
-			   		</tr>						
-				@endforeach
+			   <div class="box400">
+				 <table class="table table-striped table-bordered table-hover">
 
-			 </table>
-			</div>
+					@foreach ($treatments as $treat)
+			       		<tr class="fonsi13">
+							<td class="wid180">
+								<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
+									{{ $treat->surname }}, {{ $treat->name }}
+								</a>
+							</td>
+						   	<td class="wid180">{{ $treat->service_name }}</td>
+						   	<td class="wid95 textcent">{{ $treat->units }}</td>
+						   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
+						   	<td class="wid180"></td>
+				   		</tr>						
+					@endforeach
+
+				 </table>
+				</div>
+
+				<table class="table table-striped table-bordered table-hover">
+			       <tr class="fonsi15">
+				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
+				   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+				   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
+				   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
+				   	 	<td class="wid180"> </td>
+			   	 	</tr>
+			   </table>
 
 		 </div> </div> </div>
    

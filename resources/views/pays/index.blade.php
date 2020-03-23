@@ -10,9 +10,9 @@
   <div class="row">
   	<div class="col-sm-9">
   	  <div class="panel panel-default">
-        <table class="table table-hover stripe" id="PaysTable">
+        <table class="table table-striped table-bordered table-hover" id="PaysTable">
           <thead>
-        	  <tr class="fonsi15 bgtra fonbla">
+            <tr class="fonsi15">
   		        <td class="wid50"></td>
   		        <td class="wid290">Paciente</td>
   		        <td class="wid110 textcent">Total</td>
@@ -21,7 +21,7 @@
         		</tr>
           </thead>
           <tfoot>
-            <tr class="fonsi15 bgtra fonbla">
+            <tr class="fonsi15">
   		        <td class="wid50"></td>
   		        <td class="wid290">Paciente</td>
   		        <td class="wid110 textcent">Total</td>

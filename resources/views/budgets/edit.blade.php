@@ -58,8 +58,8 @@
 
           <div class="col-sm-7">
             <div class="panel panel-default">
-              <table class="table">
-                <tr class="fonsi14 success">
+              <table class="table table-striped table-bordered table-hover">
+                <tr class="fonsi15">
                   <td class="wid140">Tratamiento</td>
                   <td class="wid95 textcent">Cantidad</td>
                   <td class="wid70 textcent">Precio</td>          
@@ -69,7 +69,7 @@
               </table>
 
       	   		<div class="box230">
-      		   		<table class="table table-striped">
+                <table class="table table-striped table-bordered table-hover">
 
       		   			<tbody id="budgets_list">   	  	
 

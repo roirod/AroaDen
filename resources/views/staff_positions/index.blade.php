@@ -32,15 +32,15 @@
 	<div class="row">
 	  <div class="col-sm-6">
 		  <div class="panel panel-default">
-		    <table class="table">
-		       <tr class="fonsi15 success">
+			<table class="table table-striped table-bordered table-hover">
+		       <tr class="fonsi15">
 		        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
 		        <td class="wid110">{{ @trans('aroaden.edit') }}</td>      	        
 		       </tr>
 		    </table>
 
 		    <div class="box300">
-		      <table class="table table-striped table-hover">
+			  <table class="table table-striped table-bordered table-hover">
 
 		        @foreach ($main_loop as $obj)
 
@@ -58,6 +58,14 @@
 
 		      </table>
 		    </div>
+
+			<table class="table table-striped table-bordered table-hover">
+		       <tr class="fonsi15">
+		        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
+		        <td class="wid110">{{ @trans('aroaden.edit') }}</td>      	        
+		       </tr>
+		    </table>
+		    
 		  </div>
 	  </div>
 	</div>

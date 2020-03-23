@@ -23,8 +23,8 @@
   <br>
 
   <div class="panel panel-default">
-    <table class="table">
-       <tr class="fonsi15 success">
+    <table class="table table-striped table-bordered table-hover">
+       <tr class="fonsi15">
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
         <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
@@ -33,7 +33,7 @@
     </table>
 
     <div class="box300">
-      <table class="table table-striped table-hover">
+      <table class="table table-striped table-bordered table-hover">
 
         @foreach ($main_loop as $obj)
 
@@ -53,6 +53,16 @@
 
       </table>
     </div>
+
+    <table class="table table-striped table-bordered table-hover">
+       <tr class="fonsi15">
+        <td class="wid200">{{ @trans('aroaden.service') }}</td>
+        <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
+        <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
+        <td class="wid95 textcent">{{ Lang::get('aroaden.edit') }}</td>
+       </tr>
+    </table>
+
   </div>
 
 @endif

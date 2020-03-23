@@ -30,8 +30,8 @@
 <div class="row">
  <div class="col-sm-8">
    <div class="panel panel-default">
-    <table class="table">
-	    <tr class="fonsi15 success">
+    <table class="table table-striped table-bordered table-hover">
+	    <tr class="fonsi15">
      	  <td class="wid110">Fecha</td>
   		  <td class="wid180">Tratamiento</td>
   		  <td class="wid95 textcent">Cantidad</td>
@@ -39,8 +39,9 @@
   		  <td class="wid95"></td>
 	    </tr>
     </table>
+
    	<div class="box300">
-	   	<table class="table table-striped">      	  	
+      <table class="table table-striped table-bordered table-hover">
 
 		    @foreach($budgets as $bud)
 
@@ -97,6 +98,17 @@
 	    
 	 	</table>
 	</div>
+
+  <table class="table table-striped table-bordered table-hover">
+    <tr class="fonsi15">
+      <td class="wid110">Fecha</td>
+      <td class="wid180">Tratamiento</td>
+      <td class="wid95 textcent">Cantidad</td>
+      <td class="wid95 textcent">Precio</td>
+      <td class="wid95"></td>
+    </tr>
+  </table>
+  
 </div> </div> </div>		
 
 @endsection

@@ -12,6 +12,7 @@
       <legend>
         <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}
       </legend>
+
       <form>
         {!! csrf_field() !!}
         <select name="select_val" class="form-control select_val">
@@ -78,19 +79,20 @@
     </p>
 
     <div class="panel panel-default"> 
-      <table class="table">
-         <tr class="fonsi15 success">
-             <td class="wid290">{{ @trans('aroaden.patient') }}</td>
-             <td class="wid95">{{ @trans('aroaden.day') }}</td>
-             <td class="wid95">{{ @trans('aroaden.hour') }}</td>             
-             <td class="wid290">{{ @trans('aroaden.notes') }}</td>
-             <td class="wid290"></td>             
-         </tr>
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+           <tr class="fonsi15">
+               <td class="wid290">{{ @trans('aroaden.patient') }}</td>
+               <td class="wid95">{{ @trans('aroaden.day') }}</td>
+               <td class="wid95">{{ @trans('aroaden.hour') }}</td>             
+               <td class="wid450">{{ @trans('aroaden.notes') }}</td>
+           </tr>
+          </thead>
        </table>
  
-      <div class="box400">
-        <table class="table table-hover">
- 
+      <div class="box300">
+        <table class="table table-striped table-bordered table-hover">
+
           @foreach ($main_loop as $obj)
             <tr>
                 <td class="wid290"> 
@@ -100,17 +102,30 @@
                 </td>
                 <td class="wid95">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
                 <td class="wid95">{{ substr( $obj->hour, 0, -3 ) }}</td>
-                <td class="wid290">{{ $obj->notes }}</td>
-                <td class="wid290"></td>
+                <td class="wid450">{{ $obj->notes }}</td>
             </tr>
           @endforeach
 
         </table>
-      </div> </div> 
+      </div>
+
+      <table class="table table-striped table-bordered table-hover">
+          <tfoot>
+            <tr class="fonsi15">
+               <td class="wid290">{{ @trans('aroaden.patient') }}</td>
+               <td class="wid95">{{ @trans('aroaden.day') }}</td>
+               <td class="wid95">{{ @trans('aroaden.hour') }}</td>             
+               <td class="wid450">{{ @trans('aroaden.notes') }}</td>
+            </tr>
+          </tfoot>
+       </table>
+
+    </div> 
 
     @endif
 
-</div> </div>
+  </div> 
+</div>
 
 @endsection
 
@@ -178,17 +193,18 @@
               html = '<p><span class="label label-success fonsi15">' + response.msg + '</span></p>';
 
               html += '<div class="panel panel-default">';
-              html += '   <table class="table">';
-              html += '     <tr class="fonsi15 success">';
-              html += '       <td class="wid290">{{ @trans('aroaden.patient') }}</td>';
-              html += '       <td class="wid95">{{ @trans('aroaden.day') }}</td>';
-              html += '       <td class="wid95">{{ @trans('aroaden.hour') }}</td>';
-              html += '       <td class="wid290">{{ @trans('aroaden.notes') }}</td>';
-              html += '       <td class="wid290"></td>';
-              html += '     </tr>';
+              html += '   <table class="table table-striped table-bordered table-hover">';
+              html += '     <thead>';
+              html += '       <tr class="fonsi15">';
+              html += '         <td class="wid290">{{ @trans('aroaden.patient') }}</td>';
+              html += '         <td class="wid95">{{ @trans('aroaden.day') }}</td>';
+              html += '         <td class="wid95">{{ @trans('aroaden.hour') }}</td>';
+              html += '         <td class="wid450">{{ @trans('aroaden.notes') }}</td>';
+              html += '       </tr>';
+              html += '     </thead>';
               html += '   </table>';
-              html += '  <div class="box400">';
-              html += '    <table class="table table-hover">';
+              html += '  <div class="box300">';
+              html += '    <table class="table table-striped table-bordered table-hover">';
 
               $.each(response.main_loop, function(index, object){
                 html += '  <tr>';
@@ -199,14 +215,27 @@
                 html += '    </td>';
                 html += '    <td class="wid95">' + object.day.split("-").reverse().join("-") + '</td>';
                 html += '    <td class="wid95">' + object.hour.slice(0, -3); + '</td>';
-                html += '    <td class="wid290">' + object.notes + '</td>';
-                html += '    <td class="wid290"></td>';
+                html += '    <td class="wid450">' + object.notes + '</td>';
                 html += '  </tr>';
               });
 
               html += '    </table>';
-              html += '  </div> </div>';
-              html += ' </div> </div>';               
+              html += '  </div>';
+
+              html += '   <table class="table table-striped table-bordered table-hover">';
+              html += '     <tfoot>';
+              html += '       <tr class="fonsi15">';
+              html += '         <td class="wid290">{{ @trans('aroaden.patient') }}</td>';
+              html += '         <td class="wid95">{{ @trans('aroaden.day') }}</td>';
+              html += '         <td class="wid95">{{ @trans('aroaden.hour') }}</td>';
+              html += '         <td class="wid450">{{ @trans('aroaden.notes') }}</td>';
+              html += '       </tr>';
+              html += '     </tfoot>';
+              html += '   </table>';
+
+              html += '  </div>';
+              html += '  </div>';
+              html += '  </div>';
             }
 
             $('#item_list').empty();

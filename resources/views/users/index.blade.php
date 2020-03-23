@@ -17,44 +17,59 @@
 	          </legend>
 
 			  <div class="panel panel-default">
-					<table class="table">
-					  	 <tr class="fonsi14">
-							<td class="wid140">{!! Lang::get('aroaden.user') !!}</td>
-							<td class="wid50 textcent">{!! Lang::get('aroaden.edit') !!}</td>
-							<td class="wid95">{!! Lang::get('aroaden.permissions') !!}</td>
-							<td class="wid280">{!! Lang::get('aroaden.full_name') !!}</td>
-						 </tr>
+      				<table class="table table-striped table-bordered table-hover">
+			          	<thead>
+	       					<tr class="fonsi15">
+								<td class="wid140">{!! Lang::get('aroaden.user') !!}</td>
+								<td class="wid60 textcent">{!! Lang::get('aroaden.edit') !!}</td>
+								<td class="wid95">{!! Lang::get('aroaden.permissions') !!}</td>
+								<td class="wid280">{!! Lang::get('aroaden.full_name') !!}</td>
+							 </tr>
+			          	</thead>
 					</table>
-			 	<div class="box300">
-				 	 <table class="table table-striped table-bordered table-hover">
-						
-						@foreach ($main_loop as $obj)
-							<tr> 
-								<td class="wid140">{!! $obj->username !!}</td>
 
-					            <td class="wid50 textcent">
-					              <a class="btn btn-xs btn-success" type="button" href="/{{ "$main_route/$obj->uid/edit" }}">
-					                <i class="fa fa-edit"></i>
-					              </a>
-					            </td>
+				 	<div class="box300">
+					 	 <table class="table table-striped table-bordered table-hover">
+							
+							@foreach ($main_loop as $obj)
+								<tr> 
+									<td class="wid140">{!! $obj->username !!}</td>
 
-								<td class="wid95">
-									@if($obj->type == 'basic')
+						            <td class="wid60 textcent">
+						              <a class="btn btn-xs btn-success" type="button" href="/{{ "$main_route/$obj->uid/edit" }}">
+						                <i class="fa fa-edit"></i>
+						              </a>
+						            </td>
 
-										{{ @trans('aroaden.basic') }}
+									<td class="wid95">
+										@if($obj->type == 'basic')
 
-									@else
+											{{ @trans('aroaden.basic') }}
 
-										{{ @trans('aroaden.normal') }}
+										@else
 
-									@endif
-								</td>
-								<td class="wid280">{!! $obj->full_name !!}</td>
-							</tr>	
-						@endforeach
-								
+											{{ @trans('aroaden.normal') }}
+
+										@endif
+									</td>
+									<td class="wid280">{!! $obj->full_name !!}</td>
+								</tr>	
+							@endforeach
+									
+						</table>
+					</div>
+
+      				<table class="table table-striped table-bordered table-hover">
+			          	<tfoot>
+	       					<tr class="fonsi15">
+								<td class="wid140">{!! Lang::get('aroaden.user') !!}</td>
+								<td class="wid60 textcent">{!! Lang::get('aroaden.edit') !!}</td>
+								<td class="wid95">{!! Lang::get('aroaden.permissions') !!}</td>
+								<td class="wid280">{!! Lang::get('aroaden.full_name') !!}</td>
+							 </tr>
+			          	</tfoot>  
 					</table>
-				</div> 
+
 			</div>
 		</fieldset>
 	</div>

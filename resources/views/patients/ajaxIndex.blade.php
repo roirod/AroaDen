@@ -15,9 +15,9 @@
   <div class="row">
   	<div class="col-sm-12">
   	  <div class="panel panel-default">
-        <table class="table table-hover stripe" id="PatientsTable">
+        <table class="table table-striped table-bordered table-hover" id="PatientsTable">
           <thead>
-        	  <tr class="fonsi15 bgtra fonbla">
+        	  <tr class="fonsi15">
               <td class="wid290"></td>
         			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
         			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
@@ -26,7 +26,7 @@
         		</tr>
           </thead>
           <tfoot>
-            <tr class="fonsi15 bgtra fonbla">
+            <tr class="fonsi15">
               <td class="wid290"></td>
               <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
               <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
@@ -46,6 +46,7 @@
       }, 180);
 
       var PatientsTable = {
+        "aaSorting": [[ 1, "asc" ]],
         'oLanguage': {
           'sProcessing': 'Procesando...',
           'sLengthMenu': 'Selecciona _MENU_',

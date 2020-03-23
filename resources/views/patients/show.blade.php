@@ -95,52 +95,54 @@
 		</div> </div> </div>  </div> </div>
 
 		  <div class="row"> 
-		  <div class="col-sm-12">
-		   <div class="panel panel-default">
-		    <table class="table fonsi14">
-		     <tr class="success">
-				  <td class="wid95">{!! @trans("aroaden.hour") !!}</td>
-				  <td class="wid95">{!! @trans("aroaden.day") !!}</td>
-				  <td class="wid50"></td>
-				  <td class="wid50"></td> 		  
-				  <td class="wid450">{!! @trans("aroaden.notes") !!}</td>
-		     </tr>
-		    </table>
-		   	<div class="box260">
-		   	<table class="table table-striped fonsi13">      	  	
+		  	<div class="col-sm-12">
+		   		<div class="panel panel-default">
 
-		    @foreach($appointments as $appo)
-				<tr>
-		 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
-		 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
-		 			<td class="wid50">	
-						<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" data-checkpermissions="appointments.edit" class="btn btn-sm btn-success onEdit" role="button" title="{!! @trans("aroaden.edit") !!}">
-							<i class="fa fa-edit"></i>
-						</a>
-					</td>
-					<td class="wid50"> 	
-						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" data-removeTr="true" data-htmlContent="false" method="POST">
-						  		{!! csrf_field() !!}
+					 <table class="table table-striped table-bordered table-hover">
+					     <tr class="fonsi14">
+							  <td class="wid95">{!! @trans("aroaden.hour") !!}</td>
+							  <td class="wid95">{!! @trans("aroaden.day") !!}</td>
+							  <td class="wid50">{!! @trans("aroaden.edit") !!}</td>
+							  <td class="wid50">{!! @trans("aroaden.delete") !!}</td>
+							  <td class="wid450">{!! @trans("aroaden.notes") !!}</td>
+					     </tr>
+				    </table>
 
-								<input type="hidden" name="_method" value="DELETE">
+		   			<div class="box260">
+					 	<table class="table table-striped table-bordered table-hover">
 
-								<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-times"></i> <span class="caret"></span>  </button>
-								<ul class="dropdown-menu" role="menu"> 
-									<li>
-										@include('includes.delete_button')
-									</li>
-								</ul>			
-					 		</form>
+						    @foreach($appointments as $appo)
+								<tr class="fonsi13">
+						 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
+						 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
+						 			<td class="wid50">	
+										<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" data-checkpermissions="appointments.edit" class="btn btn-sm btn-success onEdit" role="button" title="{!! @trans("aroaden.edit") !!}">
+											<i class="fa fa-edit"></i>
+										</a>
+									</td>
+									<td class="wid50"> 	
+										<div class="btn-group">
+										 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-checkpermissions="appointments.delete" data-removeTr="true" data-htmlContent="false" method="POST">
+										  		{!! csrf_field() !!}
 
-						</div> 
-					</td>
-					<td class="wid450">{!! $appo->notes !!}</td>
-				</tr>
-		    @endforeach
+												<input type="hidden" name="_method" value="DELETE">
+
+												<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+												<i class="fa fa-times"></i> <span class="caret"></span>  </button>
+												<ul class="dropdown-menu" role="menu"> 
+													<li>
+														@include('includes.delete_button')
+													</li>
+												</ul>			
+									 		</form>
+
+										</div> 
+									</td>
+									<td class="wid450">{!! $appo->notes !!}</td>
+								</tr>
+						    @endforeach
 		    
-		 	</table>
+		 				</table>
 
 		 </div> </div> </div> </div>		
 					
@@ -160,82 +162,79 @@
 		</div> </div>
 
 		<div class="row">
-		 <div class="col-sm-12">
-		 <div class="panel panel-default">
-		  <table class="table fonsi14"> 
-			  <tr class="success">
-				  <td class="wid180">{!! @trans("aroaden.service") !!}</td>
-				  <td class="wid50 textcent">{!! @trans("aroaden.tax") !!}</td>			  
-				  <td class="wid50 textcent">{!! @trans("aroaden.price") !!}</td>
-				  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
-				  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
-				  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
-				  <td class="wid70">{!! @trans("aroaden.date") !!}</td>
-				  <td class="wid50 textcent"></td>
-				  <td class="wid50 textcent"></td> 
-				  <td class="wid95">{!! @trans("aroaden.staff") !!}</td>
-			   </tr> 
-		   </table> 
-		   <div class="box260">
-		   <table class="table table-striped fonsi13">
+		 	<div class="col-sm-12">
+		 		<div class="panel panel-default">
 
-		   	<script type="text/javascript">
-		   		defaulId = 'paymentsTable';
-		   	</script>
+					 <table class="table table-striped table-bordered table-hover">				  	
+						  <tr class="fonsi14">
+							  <td class="wid180">{!! @trans("aroaden.service") !!}</td>
+							  <td class="wid50 textcent">{!! @trans("aroaden.tax") !!}</td>			  
+							  <td class="wid50 textcent">{!! @trans("aroaden.price") !!}</td>
+							  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
+							  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
+							  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
+							  <td class="wid70 textcent">{!! @trans("aroaden.date") !!}</td>
+							  <td class="wid50 textcent">{!! @trans("aroaden.edit") !!}</td>
+							  <td class="wid50 textcent">{!! @trans("aroaden.delete") !!}</td>
+							  <td class="wid95">{!! @trans("aroaden.staff") !!}</td>
+						   </tr> 
+					   </table>
 
-		    @foreach($treatments["treatments"] as $treat)
-		    	<tr>
-		    		<td class="wid180">{!! $treat->service_name !!}</td> 
-					<td class="wid50 textcent">{!! $treat->tax !!} %</td>
-					<td class="wid50 textcent">{!! numformat($treat->price) !!} €</td>
-					<td class="wid50 textcent">{!! $treat->units !!}</td>
-					<td class="wid50 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
-					<td class="wid50 textcent">{!! numformat($treat->paid) !!} €</td>
-					<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
+		   			<div class="box260">
+						 <table class="table table-striped table-bordered table-hover">				  	
 
-					<td class="wid50 textcent">
-						<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" data-checkpermissions="treatments.edit" class="btn btn-sm btn-success onEdit" role="button" title="{!! @trans("aroaden.edit") !!}">
-							<i class="fa fa-edit"></i>
-						</a>
-					</td>
+						    @foreach($treatments["treatments"] as $treat)
+						  		<tr class="fonsi13">
+						    		<td class="wid180">{!! $treat->service_name !!}</td> 
+									<td class="wid50 textcent">{!! $treat->tax !!} %</td>
+									<td class="wid50 textcent">{!! numformat($treat->price) !!} €</td>
+									<td class="wid50 textcent">{!! $treat->units !!}</td>
+									<td class="wid50 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
+									<td class="wid50 textcent">{!! numformat($treat->paid) !!} €</td>
+									<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
-					<td class="wid50 textcent"> 	
-						<div class="btn-group">
-						 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" data-removeTr="true" data-htmlContent="true" method="POST">	
-						  		{!! csrf_field() !!}
+									<td class="wid50 textcent">
+										<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" data-checkpermissions="treatments.edit" class="btn btn-sm btn-success onEdit" role="button" title="{!! @trans("aroaden.edit") !!}">
+											<i class="fa fa-edit"></i>
+										</a>
+									</td>
 
-								<input type="hidden" name="_method" value="DELETE">
+									<td class="wid50 textcent"> 	
+										<div class="btn-group">
+										 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-checkpermissions="treatments.delete" data-removeTr="true" data-htmlContent="true" method="POST">	
+										  		{!! csrf_field() !!}
 
-								<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
-									<i class="fa fa-times"></i> <span class="caret"></span>  
-								</button>
-								<ul class="dropdown-menu" role="menu"> 
-									<li>
-										@include('includes.delete_button')
-									</li>
-								</ul>			
-					 		</form>
-						</div> 
-					</td>
+												<input type="hidden" name="_method" value="DELETE">
 
-					<td class="wid95">		
-					
-					@foreach ($treatments["staff_works"] as $staff_work)
+												<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+													<i class="fa fa-times"></i> <span class="caret"></span>  
+												</button>
+												<ul class="dropdown-menu" role="menu"> 
+													<li>
+														@include('includes.delete_button')
+													</li>
+												</ul>			
+									 		</form>
+										</div> 
+									</td>
 
-						@if ($treat->idtre == $staff_work->idtre)
+									<td class="wid95">		
+									
+										@foreach ($treatments["staff_works"] as $staff_work)
 
-							<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-sm btn-default" role="button">
-								<i class="fa fa-hand-pointer-o"></i>
-							</a>
+											@if ($treat->idtre == $staff_work->idtre)
 
-						@endif
-						
-					@endforeach
+												<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-sm btn-default" role="button">
+													<i class="fa fa-hand-pointer-o"></i>
+												</a>
 
-					</td>
-					 	 
-				</tr>
-			@endforeach
+											@endif
+											
+										@endforeach
+
+									</td>
+								</tr>
+							@endforeach
 
 		    </table>
 
@@ -263,6 +262,8 @@
     	<script type="text/javascript">
 		  $(document).ready(function(){
 			$('[data-toggle="tooltip"]').tooltip();
+
+			defaulId = 'paymentsTable';
 
 		    $('a.onEdit').on('click', function(evt) {
 		      evt.preventDefault();
