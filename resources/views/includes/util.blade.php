@@ -23,54 +23,21 @@
   var redirectRoute = false;
   var error = false;
 
+  // datatables staff
   var aLengthMenu = [
     [25, 50, 100],
     [25, 50, 100]
   ];
 
-  $(document).ajaxStart(function() {
-
-    /*
-      try {
-
-        util.checkSessionExpired().done(function(response) {
-
-            console.log('---------------- response  checkSessionExpired  ----------------------------');
-            console.dir(response);
-            console.log('--------------------------------------------');
-
-          if (response.checkSessionExpired)
-            throw new Error("{{ Lang::get('aroaden.session_expired') }}");
-        });
-
-      } catch(err) {
-
-            console.log('---------------- err  checkSessionExpired  ----------------------------');
-            console.dir(err);
-            console.log('--------------------------------------------');
-
-         util.showPopup(err.message, false, 2500);
-         window.location.href = '/login';
-
-      }
-
-    */
-  });
-
-
-  $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+  $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
     event.preventDefault();
     event.stopPropagation();
 
-      console.log('---------------- ajaxError settings  ----------------------------');
-      console.dir(settings);
+      console.log('---------------- ajaxError status  ----------------------------');
+      console.dir(jqXHR.status);
       console.log('--------------------------------------------');
 
-      console.log('---------------- ajaxError thrownError  ----------------------------');
-      console.dir(thrownError);
-      console.log('--------------------------------------------');
-
-    if (thrownError == "Unauthorized")
+    if (jqXHR.status == 401)
       return util.redirectTo("/login");
           
     if (thrownError == "Forbidden") {
@@ -162,13 +129,16 @@
       var success = (success == undefined) ? true : success;
 
       if (success) {
+
         swal({
           title: msg,
           type: 'success',
           showConfirmButton: false,             
           timer: time
         });
+
       } else {
+
         swal({
           text: msg,
           type: 'error',
@@ -176,6 +146,7 @@
           allowOutsideClick: true,
           timer: time
         });
+
       }
     },
 
@@ -219,7 +190,7 @@
 
       var ajax_data = {
         method : "GET",
-        url  : "/settings/jsonSettings"
+        url  : "/" + routes.settings_route + "/jsonSettings"
       };
 
       _this.processAjaxReturnsJson(ajax_data).done(function(response) {
@@ -234,17 +205,6 @@
         data : { action: action },
         method : "GET",
         url  : "/" + routes.settings_route + "/checkPermissions"
-      };
-
-      return _this.processAjaxReturnsJson(ajax_data);
-    },
-
-    checkSessionExpired: function() {
-      var _this = this;
-
-      var ajax_data = {
-        method : "GET",
-        url  : "/" + routes.settings_route + "/checkSessionExpired"
       };
 
       return _this.processAjaxReturnsJson(ajax_data);
@@ -317,6 +277,7 @@
 
       _this.checkPermissions(checkpermissions).done(function(response) {
         if (response.permission) {
+
           swal({
             title: '{{ Lang::get('aroaden.are_you_sure') }}',
             type: 'warning',
@@ -329,6 +290,7 @@
             confirmButtonClass: 'confirm-class',
             cancelButtonClass: 'cancel-class',
           }).then(
+
             function(isConfirm) {
               if (isConfirm) {
                 var ajax_data = {
@@ -340,14 +302,17 @@
                   if (response.error)
                     return _this.showPopup(response.msg, false, 2500);
 
-                  if (htmlContent == 'true') {
+                  if (htmlContent == 'true')
                     _this.showContentOnPage(defaulId, response.htmlContent);
-                  }
 
                   if (removeTr == 'true') {
-                    tr_content.remove();      
+
+                    tr_content.remove();
+
                   } else {
+
                     setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
+
                   }
 
                   return _this.showPopup(response.msg);

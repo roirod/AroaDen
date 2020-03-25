@@ -3,70 +3,78 @@
 @section('content')
 
 
-<div class="col-xs-12">
-	<div class="row">
+<div class="row">
 
-    <div class="col-xs-3 bgtra boradius border2px boxsha col_centered">
+  <div class="col-xs-6">
+    <div class="mar70"></div>
 
-      <div class="row">
-        <div class="col-xs-12 pad10">
+    <div class="col-md-12 textcent">
+      <h1 class="fonsi36 login_text textshadow textcent">
+        <i class="fa fa-child"></i>
+        <br>
+        Aroa<small>Den</small>
+      </h1>
+      <br>
+    </div> 
 
-          <div class="col-md-12 textcent">
-            <h1 class="fonsi36 login_text textshadow textcent">
-              <i class="fa fa-child"></i>
-              <br>
-              Aroa<small>Den</small>
-            </h1>
-            <br>
-          </div> 
+    <p class="login_text pad20 fonsi26 fontwe4 textshadow textcent">
+      {{ trans('aroaden.aroaden_full_name') }}
+    </p>
+  </div>
 
-           <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-              {!! csrf_field() !!}
+  <div class="col-xs-3">
+    <div class="mar30"></div>
 
-              <div class="col-md-12">
-                <input type="text" class="form-control input_login_form" name="username" value="{{ old('username') }}" placeholder="{{ trans('aroaden.user') }}" autofocus required>
+    <div class="row bgtra boradius border2px boxsha">
+      <div class="mar20"></div>
 
-               <br>
-              </div>
-            
-              <div class="col-md-12">
-                <input type="password" class="form-control input_login_form" name="password" placeholder="{{ trans('aroaden.password') }}" required >
-                <br> 
-              </div> 
+      <div class="col-xs-12 pad15">
 
-          	  @if ($errors->has('username'))
-                   <span class="help-block pad10 mar4">
-          	          <strong>{{ $errors->first('username') }}</strong>
-          	      </span>
-          	  @endif  
-           
-               @if ($errors->has('password'))
-                   <span class="help-block pad10 mar4">
-                       <strong>{{ $errors->first('password') }}</strong>
-                   </span>
-               @endif 
+        <div class="col-md-12">
+          <p class="fonsi18 login_text textshadow">
+            {{ trans('aroaden.login') }}
+          </p>
+        </div> 
 
-              <div class="col-md-12">
-                <button type="submit" class="btn btn_login">
-                  Acceder <i class="fa fa-chevron-circle-right"></i> 
-                </button> 
-              </div>
+         <form class="form-horizontal" method="POST" action="{{ url('/login') }}">
+            {!! csrf_field() !!}
 
-          </form> 
+            <div class="col-md-12">
+              <input type="text" class="form-control input_login_form" name="username" value="{{ old('username') }}" placeholder="{{ trans('aroaden.user') }}" autofocus required>
 
-        </div>
+             <br>
+            </div>
+          
+            <div class="col-md-12">
+              <input type="password" class="form-control input_login_form" name="password" placeholder="{{ trans('aroaden.password') }}" required>
+              <br> 
+            </div> 
+
+        	  @if ($errors->has('username'))
+                 <span class="help-block pad10 mar4">
+        	          <strong>{{ $errors->first('username') }}</strong>
+        	      </span>
+        	  @endif  
+         
+             @if ($errors->has('password'))
+                 <span class="help-block pad10 mar4">
+                     <strong>{{ $errors->first('password') }}</strong>
+                 </span>
+             @endif 
+
+            <div class="col-md-12">
+              <button type="submit" class="btn btn_login">
+                Acceder <i class="fa fa-chevron-circle-right"></i> 
+              </button>
+
+              <div class="mar20"></div>
+            </div>
+        </form> 
+
       </div>
+    </div>
+  </div>
 
-    <br> 
-
-</div> 
-
-<div class="col-md-12 textcent">
-  <p class="login_text pad10 textcent">
-    {{ trans('aroaden.aroaden_full_name') }}
-  </p>
-</div> 
-
-</div> </div>
+</div>
  
 @endsection

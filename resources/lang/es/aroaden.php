@@ -4,6 +4,8 @@ return [
 
   'aroaden_full_name'   => 'AroaDen | dental clinic software',
 
+  'login'   => 'Iniciar sesión',
+
   'are_you_sure'   => 'Estás seguro?',
   'yes'   => 'Sí',
   'no'   => 'No',

@@ -121,10 +121,10 @@ class PatientsController extends BaseController implements BaseInterface
         }
 
         $sWhere = "";
-        $sSearch = $request->input('sSearch');
+        $sSearch = $this->sanitizeData($request->input('sSearch'));
 
         if ($sSearch != "")
-            $sWhere = $this->sanitizeData($sSearch);
+            $sWhere = $sSearch;
 
         $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
         $countTotal = $this->model::CountAll();
@@ -145,7 +145,7 @@ class PatientsController extends BaseController implements BaseInterface
             "sEcho" => intval($request->input('sEcho')),
             "iTotalRecords" => $countTotal,
             "iTotalDisplayRecords" => $countFiltered,
-            "aaData" => array_values($resultArray)
+            "aaData" => $resultArray
         ];
 
         $this->echoJsonOuptut($output);  

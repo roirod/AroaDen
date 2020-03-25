@@ -13,6 +13,7 @@
 
 <div class="row"> 
   <div class="col-sm-12">
+
     <form class="form" id="searchService">     
       <div class="input-group">
         <span class="input-group-btn pad10"> 
@@ -28,6 +29,7 @@
         </div>
       </div>
     </form>
+
   </div>
 </div>
 
@@ -76,7 +78,7 @@
       event.preventDefault();
       event.stopPropagation();
 
-      var string_val = $(this).val();
+      var string_val = $(this).val().trim();
       var string_val_length = string_val.length;
 
       if (string_val != '' && string_val_length > 1) {

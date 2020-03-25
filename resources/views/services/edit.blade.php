@@ -8,8 +8,6 @@
       </legend>
 
       <form id="form" class="editServiceForm form" action="{{ url("/$services_route/$id") }}" method="POST">
-      	{!! csrf_field() !!}
-
       	<input type="hidden" name="_method" value="PUT">
 
         @include('form_fields.common_alternative')

@@ -54,7 +54,7 @@ class PaysController extends BaseController
             "sEcho" => intval($request->input('sEcho')),
             "iTotalRecords" => $countTotal,
             "iTotalDisplayRecords" => $countTotal,
-            "aaData" => array_values($resultArray)
+            "aaData" => $resultArray
         ];
 
         $this->echoJsonOuptut($output);  

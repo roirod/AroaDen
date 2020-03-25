@@ -8,8 +8,6 @@
       </legend>
 
       <form id="form" class="createServiceForm form" action="{!! $services_route !!}" method="post">
-      	{!! csrf_field() !!}
-
         @include('form_fields.common_alternative')
 
       @include('form_fields.fields.closeform')
