@@ -3,6 +3,7 @@
 return [
 
   'aroaden_full_name'   => 'AroaDen | dental clinic software',
+  'aroaden_desc'   => 'Dental clinic software',
 
   'login'   => 'Iniciar sesión',
 
@@ -149,7 +150,7 @@ return [
   'create_appointment' => 'Crear cita',
   'edit_appointment' => 'Editar cita',
   'no_appointments_on_db'   => 'No hay citas en la base de datos',
-  'no_appointments_today'   => 'No hay citas para',
+  'no_appointments_today'   => 'No hay citas para hoy',
   'appointments_of'   => 'Citas de',
   'today_appointments' => 'Citas de hoy',
   '1week_appointments' => 'Citas de +1 semana',

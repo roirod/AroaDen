@@ -9,7 +9,7 @@
     <div class="mar70"></div>
 
     <div class="col-md-12 textcent">
-      <h1 class="fonsi36 login_text textshadow textcent">
+      <h1 class="fonsi46 login_text textshadow textcent">
         <i class="fa fa-child"></i>
         <br>
         Aroa<small>Den</small>
@@ -17,8 +17,8 @@
       <br>
     </div> 
 
-    <p class="login_text pad20 fonsi26 fontwe4 textshadow textcent">
-      {{ trans('aroaden.aroaden_full_name') }}
+    <p class="login_text pad20 fonsi20 fontwe4 textshadow textcent">
+      {{ trans('aroaden.aroaden_desc') }}
     </p>
   </div>
 
