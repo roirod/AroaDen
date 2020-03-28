@@ -180,6 +180,11 @@ class BaseController extends Controller
     protected $main_object;
 
     /**
+     * @var object $request  request
+     */
+    protected $request;
+
+    /**
      * @var bool $has_odontogram  si tiene odontograma o no
      */
     protected $has_odontogram = false;   
@@ -210,34 +215,7 @@ class BaseController extends Controller
         $this->createDefaultCompanyData();
         $this->createSymlinks();
 
-        $this->form_fields = [
-            'surname' => false,
-            'name' => false,
-            'position' => false,
-            'address' => false,
-            'city' => false,
-            'birth' => false,
-            'dni' => false,
-            'sex' => false,
-            'tel1' => false,
-            'tel2' => false,
-            'tel3' => false,
-            'units' => false,
-            'price' => false,
-            'paid' => false,            
-            'tax' => false,
-            'hour' => false,
-            'day' => false,
-            'issue_date' => false,
-            'no_tax_msg' => false,
-            'staff' => false,            
-            'notes' => false,
-            'user' => false,            
-            'password' => false,
-            'full_name' => false,
-            'scopes' => false,
-            'save' => false
-        ];
+        $this->form_fields = $this->config['form_fields'];
     }
 
     /**

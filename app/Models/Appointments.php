@@ -39,13 +39,15 @@ class Appointments extends Model
 
     public function scopeAllBetweenRangeOrderByDay($query, $date1, $date2)
     {
-        return $query->join('patients','appointments.idpat','=','patients.idpat')
+        $result = $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
                         ->whereBetween('day', [$date1, $date2])
                         ->whereNull('patients.deleted_at')
                         ->orderBy('day' , 'DESC')
                         ->orderBy('hour' , 'ASC')
-                        ->get(); 
+                        ->get();
+
+        return $result;
     }
 
     public function scopeAllTodayOrderByDay($query)
@@ -65,13 +67,11 @@ class Appointments extends Model
     {
         $today = date('Y-m-d');
 
-        $result = DB::table('appointments')
+        $count = DB::table('appointments')
                         ->join('patients','appointments.idpat','=','patients.idpat')
                         ->where('appointments.day', $today)
                         ->whereNull('patients.deleted_at')
-                        ->get();
-
-        $count = count($result);
+                        ->count();
 
         return (int)$count;
     }
@@ -96,8 +96,7 @@ class Appointments extends Model
 
     public function scopeCheckIfIdExists($query, $id)
     {
-        return $query->where('idapp', $id)
-                        ->exists();
+        return $query->where('idapp', $id)->exists();
     }
 
 }

@@ -61,9 +61,6 @@
       var method = (obj.method == undefined) ? "GET" : obj.method;
       var popup = (obj.popup == undefined) ? false : obj.popup;
 
-      currentContent = $('#'+id).clone();
-      currentId = id;
-
       var ajax_data = {
         method : method,
         url  : obj.url,

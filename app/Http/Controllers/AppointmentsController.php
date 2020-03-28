@@ -15,316 +15,303 @@ use DB;
 
 class AppointmentsController extends BaseController implements BaseInterface
 {
-    public function __construct(Appointments $appointments, Patients $patients)
-    {
-        parent::__construct();
+  public function __construct(Appointments $appointments, Patients $patients)
+  {
+    parent::__construct();
 
-        $this->main_route = $this->config['routes']['appointments'];
-        $this->other_route = $this->config['routes']['patients'];      
-        $this->views_folder = $this->config['routes']['appointments'];        
-        $this->model = $appointments;        
-        $this->model2 = $patients; 
-        $this->form_route = 'list';
-       
-        $fields = [
-            'hour' => true,
-            'day' => true,
-            'notes' => true,
-            'save' => true,
-        ];
+    $this->main_route = $this->config['routes']['appointments'];
+    $this->other_route = $this->config['routes']['patients'];      
+    $this->views_folder = $this->config['routes']['appointments'];        
+    $this->model = $appointments;        
+    $this->model2 = $patients; 
+    $this->form_route = 'list';
+   
+    $fields = [
+      'hour' => true,
+      'day' => true,
+      'notes' => true,
+      'save' => true
+    ];
 
-        $this->form_fields = array_replace($this->form_fields, $fields);
-    }
-    
-    public function index(Request $request)
-    {   
-        $main_loop = $this->model::AllTodayOrderByDay();
-        $count = $this->model::CountAllToday();
+    $this->form_fields = array_replace($this->form_fields, $fields);
+  }
+  
+  public function index(Request $request)
+  {
 
-        $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['count'] = $count;
-        $this->view_data['form_route'] = $this->form_route;
+    $this->view_data['form_route'] = $this->form_route;
+    $this->view_data['error'] = false;
+    $this->view_data['msg'] = Lang::get('aroaden.today_appointments');
 
-        $this->setPageTitle(Lang::get('aroaden.appointments'));
+    try {
 
-        return parent::index($request);
-    }
-    
-    public function list(Request $request)
-    {
-        $select_val = $this->sanitizeData($request->input('select_val'));
-        $date_from = $this->sanitizeData($request->input('date_from'));
-        $date_to = $this->sanitizeData($request->input('date_to'));
+      $this->view_data['main_loop'] = $this->model::AllTodayOrderByDay();
+      $this->view_data['count'] = $this->model::CountAllToday();
 
-        $data = [];
-        $data['main_loop'] = false;
-        $data['msg'] = false;
-        $data['error'] = false;
+      if ($this->view_data['count'] === 0)
+        $this->view_data['msg'] = Lang::get('aroaden.no_appointments_today');
 
-        $count = $this->model::CountAll();
+    } catch (Exception $e) {
 
-        if ($count === 0) {
+      $this->view_data['error'] = true;
+      $this->view_data['msg'] = $e->getMessage();
 
-            $data['error'] = true;    
-            $data['msg'] = Lang::get('aroaden.no_appointments_on_db');
-            $this->echoJsonOuptut($data);
-
-        }
-
-        try {
-
-            if ($select_val == 'date_range') {
-
-                if (!$this->validateDateDDMMYYYY($date_from) || !$this->validateDateDDMMYYYY($date_to)) {
-
-                    $data['error'] = true; 
-                    $data['msg'] = Lang::get('aroaden.date_format_fail');
-                    $this->echoJsonOuptut($data);
-
-                }
-
-                $date_from_DmY = $date_from;
-                $date_to_DmY = $date_to;
-
-                $date_from = $this->convertDmYToYmd($date_from);
-                $date_to = $this->convertDmYToYmd($date_to);
-
-                if ($date_from > $date_to) {
-
-                    $data['error'] = true;
-                    $data['msg'] = Lang::get('aroaden.date_from_is_older', ['date_to' => $date_to_DmY, 'date_from' => $date_from_DmY]);
-                    $this->echoJsonOuptut($data);
-
-                } 
-
-                $date_f = new DateTime($date_from);
-                $date_t = new DateTime($date_to);
-                $diff = $date_f->diff($date_t);
-
-                if ((int)$diff->days > (int)$this->date_max_days) {
-
-                    $data['error'] = true;    
-                    $data['msg'] = Lang::get('aroaden.date_out_range', ['date_max_days' => $this->date_max_days]);
-                    $this->echoJsonOuptut($data);
-
-                }
-
-                $data = $this->getItemsByDate($select_val, $date_from, $date_to);
-                $this->echoJsonOuptut($data);
-
-            }
-
-            $data = $this->getItemsByDate($select_val);
-            $this->echoJsonOuptut($data);
-
-        } catch (Exception $e) {
-
-            $data['error'] = true;    
-            $data['msg'] = $e->getMessage();
-            $this->echoJsonOuptut($data);
-
-        }
     }
 
-    private function getItemsByDate($select, $date_from = null, $date_to = null)
-    {
-        switch ($select) {
+    $this->setPageTitle(Lang::get('aroaden.appointments'));
 
-            case 'today_appointments':
-                $msg = Lang::get('aroaden.today_appointments');
-                $main_loop = $this->model::AllTodayOrderByDay();
-                break;
+    return parent::index($request);
+  }
+  
+  public function list(Request $request)
+  {
+    $this->request = $request;
 
-            case '1week_appointments':
-                $date_from = date('Y-m-d');
-                $date_to = date('Y-m-d', strtotime('+1 Week'));
-                $msg = Lang::get('aroaden.1week_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
+    $this->misc_array['main_loop'] = false;
+    $this->misc_array['msg'] = false;
+    $this->misc_array['count'] = false;
+    $this->misc_array['error'] = false;
 
-            case '1month_appointments':
-                $date_from = date('Y-m-d');
-                $date_to = date('Y-m-d', strtotime('+1 Month'));
-                $msg = Lang::get('aroaden.1month_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
+    try {
 
-            case 'minus1week_appointments':
-                $date_to = date('Y-m-d');
-                $date_from = date('Y-m-d', strtotime('-1 Week'));
-                $msg = Lang::get('aroaden.minus1week_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
+      $this->getItemsByDate();
 
-            case 'minus1month_appointments':
-                $date_to = date('Y-m-d');
-                $date_from = date('Y-m-d', strtotime('-1 Month'));
-                $msg = Lang::get('aroaden.minus1month_appointments');
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                break;
+    } catch (Exception $e) {
 
-            case 'date_range':
-                $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from, $date_to);
-                $date_from = $this->convertYmdToDmY($date_from);
-                $date_to = $this->convertYmdToDmY($date_to);
-                $msg = Lang::get('aroaden.appointments_range', ['date_from' => $date_from, 'date_to' => $date_to]);
-                break;
-        }
+      $this->misc_array['error'] = true;
+      $this->misc_array['msg'] = $e->getMessage();
 
-        $count = count($main_loop);
-
-        if ((int)$count === 0)
-            throw new NoAppointmentsFoundException(Lang::get('aroaden.no_query_results'));
-
-        $data = [];
-        $data['main_loop'] = $main_loop;
-        $data['msg'] = $msg;
-        $data['error'] = false;
-
-        return $data;
     }
 
-    public function create(Request $request, $id = false)
-    {     
-        $this->redirectIfIdIsNull($id, $this->other_route);
+    $this->view_name = 'tableStaff';
+    $this->view_data['main_loop'] = $this->misc_array['main_loop'];
+    $this->view_data['msg'] = $this->misc_array['msg'];
+    $this->view_data['count'] = $this->misc_array['count'];
+    $this->view_data['error'] = $this->misc_array['error'];
+    $this->view_data['request'] = $request;
 
-        $object = $this->model2::FirstById($id);
-        $this->setPageTitle($object->surname.', '.$object->name);
+    return $this->loadView();
+  }
 
-        $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $object->idpat;
-        $this->view_data['object'] = $object;
-        $this->view_data['form_fields'] = $this->form_fields;
+  private function getItemsByDate()
+  {
+    $this->misc_array['select_val'] = $this->sanitizeData($this->request->input('select_val'));
 
-        return parent::create($request, $id);  
+    if ($this->misc_array['select_val'] == 'date_range') {
+
+      $this->misc_array['date_from_DmY'] = $this->sanitizeData($this->request->input('date_from'));
+      $this->misc_array['date_to_DmY'] = $this->sanitizeData($this->request->input('date_to'));
+      $this->misc_array['date_from_Ymd'] = $this->convertDmYToYmd($this->misc_array['date_from_DmY']);
+      $this->misc_array['date_to_Ymd'] = $this->convertDmYToYmd($this->misc_array['date_to_DmY']);
+
+      if (
+          !$this->validateDateDDMMYYYY($this->misc_array['date_from_DmY']) || 
+          !$this->validateDateDDMMYYYY($this->misc_array['date_to_DmY'])
+        )
+          throw new Exception(Lang::get('aroaden.date_format_fail'));
+
+      if ($this->misc_array['date_from_Ymd'] > $this->misc_array['date_to_Ymd'])
+        throw new Exception(Lang::get('aroaden.date_from_is_older', ['date_to' => $this->misc_array['date_to_DmY'], 'date_from' => $this->misc_array['date_from_DmY']]));
+
+      $date_f = new DateTime($this->misc_array['date_from_Ymd']);
+      $date_t = new DateTime($this->misc_array['date_to_Ymd']);
+      $diff = $date_f->diff($date_t);
+
+      if ((int)$diff->days > (int)$this->date_max_days)
+          throw new Exception(Lang::get('aroaden.date_out_range', ['date_max_days' => $this->date_max_days]));
     }
 
-    public function store(Request $request)
-    {
-        $idpat = $request->input('idpat');
-        $this->redirectIfIdIsNull($idpat, $this->other_route);      
-        
-        $hour = trim($request->input('hour'));
-        $day = trim($request->input('day'));
-        $notes = $this->sanitizeData($request->input('notes'));
+    switch ($this->misc_array['select_val']) {
+      case 'today_appointments':
+        $this->misc_array['msg'] = Lang::get('aroaden.today_appointments');
+        break;
 
-        if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
-            $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
-            return redirect("/$this->main_route/$idpat/create");
-        }
+      case '1week_appointments':
+        $this->misc_array['date_from_Ymd'] = date('Y-m-d');
+        $this->misc_array['date_to_Ymd'] = date('Y-m-d', strtotime('+1 Week'));
+        $this->misc_array['msg'] = Lang::get('aroaden.1week_appointments');
+        break;
 
-        $validator = Validator::make($request->all(), [
-            'hour' => 'required',
-            'day' => 'required',
-            'notes' => ''
-        ]);
-            
-        if ($validator->fails()) {
-            return redirect("/$this->main_route/$idpat/create")
-                         ->withErrors($validator)
-                         ->withInput();
-        } else {
+      case '1month_appointments':
+        $this->misc_array['date_from_Ymd'] = date('Y-m-d');
+        $this->misc_array['date_to_Ymd'] = date('Y-m-d', strtotime('+1 Month'));
+        $this->misc_array['msg'] = Lang::get('aroaden.1month_appointments');
+        break;
 
-            $day = $this->convertDmYToYmd($day);
+      case 'minus1week_appointments':
+        $this->misc_array['date_from_Ymd'] = date('Y-m-d', strtotime('-1 Week'));
+        $this->misc_array['date_to_Ymd'] = date('Y-m-d');
+        $this->misc_array['msg'] = Lang::get('aroaden.minus1week_appointments');
+        break;
 
-            try {
-                
-                $this->model::create([
-                    'idpat' => $idpat,
-                    'hour' => $hour,
-                    'day' => $day,
-                    'notes' => $notes
-                ]);
+      case 'minus1month_appointments':
+        $this->misc_array['date_from_Ymd'] = date('Y-m-d', strtotime('-1 Month'));
+        $this->misc_array['date_to_Ymd'] = date('Y-m-d');
+        $this->misc_array['msg'] = Lang::get('aroaden.minus1month_appointments');
+        break;
 
-            } catch (Exception $e) {
-
-                $request->session()->flash($this->error_message_name, $e->getMessage());
-                return redirect("/$this->main_route/$idpat/create");
-
-            }
-
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-            return redirect("/$this->main_route/$idpat/create");
-        }     
+      case 'date_range':
+        $this->misc_array['msg'] = Lang::get('aroaden.appointments_range', ['date_from' => $this->misc_array['date_from_DmY'], 'date_to' => $this->misc_array['date_to_DmY']]);
+        break;
     }
 
-    public function edit(Request $request, $id)
-    {
-        $this->redirectIfIdIsNull($id, $this->other_route);
-        $id = $this->sanitizeData($id);
-        $object = $this->model::FirstById($id);
+    if ($this->misc_array['select_val'] == 'today_appointments') {
 
-        $this->autofocus = 'hour';
-        $this->view_data['object'] = $object;
-        $this->view_data['id'] = $id;
-        $this->view_data['idnav'] = $object->idpat;
-        $this->view_data['name'] = $object->name;
-        $this->view_data['surname'] = $object->surname;
-        $this->view_data['form_fields'] = $this->form_fields;
-        $this->view_data['autofocus'] = $this->autofocus;
+      $this->misc_array['main_loop'] = $this->model::AllTodayOrderByDay();
 
-        $this->setPageTitle($object->surname.', '.$object->name);
+    } else {
 
-        return parent::edit($request, $id);
+      $this->misc_array['main_loop'] = $this->model::AllBetweenRangeOrderByDay($this->misc_array['date_from_Ymd'], $this->misc_array['date_to_Ymd']);
+
     }
 
-    public function update(Request $request, $id)
-    {
-        $id = $this->sanitizeData($id);
-        $exists = $this->model::CheckIfIdExists($id);
-        $route = "/$this->main_route/$id/edit";
+    $this->misc_array['count'] = $this->misc_array['main_loop']->count();
 
-        if (!$exists) {
-            $request->session()->flash($this->error_message_name, 'Error');  
-            return redirect($route);
-        }
+    if ((int) $this->misc_array['count'] === 0)
+      throw new Exception(Lang::get('aroaden.no_query_results'));
+  }
 
-        $this->redirectIfIdIsNull($id, $this->other_route);
+  public function create(Request $request, $id = false)
+  {     
+      $this->redirectIfIdIsNull($id, $this->other_route);
+
+      $object = $this->model2::FirstById($id);
+      $this->setPageTitle($object->surname.', '.$object->name);
+
+      $this->view_data['id'] = $id;
+      $this->view_data['idnav'] = $object->idpat;
+      $this->view_data['object'] = $object;
+      $this->view_data['form_fields'] = $this->form_fields;
+
+      return parent::create($request, $id);  
+  }
+
+  public function store(Request $request)
+  {
+      $idpat = $request->input('idpat');
+      $this->redirectIfIdIsNull($idpat, $this->other_route);      
+      
+      $hour = trim($request->input('hour'));
+      $day = trim($request->input('day'));
+      $notes = $this->sanitizeData($request->input('notes'));
+
+      if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
+          $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
+          return redirect("/$this->main_route/$idpat/create");
+      }
+
+      $validator = Validator::make($request->all(), [
+          'hour' => 'required',
+          'day' => 'required',
+          'notes' => ''
+      ]);
           
-        $validator = Validator::make($request->all(), [
-            'hour' => 'required',
-            'day' => 'required',
-            'notes' => ''
-        ]);
-            
-        if ($validator->fails()) {
-            return redirect($route)
-                         ->withErrors($validator)
-                         ->withInput();
-        } else { 
-            
-            $hour = trim($request->input('hour'));
-            $day = trim($request->input('day'));
-            $notes = $this->sanitizeData($request->input('notes'));
+      if ($validator->fails()) {
+          return redirect("/$this->main_route/$idpat/create")
+                       ->withErrors($validator)
+                       ->withInput();
+      } else {
 
-            if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
-                return redirect($route);
-            }
-                
-            $object = $this->model::find($id);
+          $day = $this->convertDmYToYmd($day);
 
-            $day = $this->convertDmYToYmd($day);
+          try {
+              
+              $this->model::create([
+                  'idpat' => $idpat,
+                  'hour' => $hour,
+                  'day' => $day,
+                  'notes' => $notes
+              ]);
 
-            $object->hour = $this->sanitizeData($hour);
-            $object->day = $this->sanitizeData($day);
-            $object->notes = $this->sanitizeData($notes);
-            
-            $object->save();
+          } catch (Exception $e) {
 
-            $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-            return redirect("$this->other_route/$object->idpat");
-        }   
-    }
+              $request->session()->flash($this->error_message_name, $e->getMessage());
+              return redirect("/$this->main_route/$idpat/create");
 
-    public function destroy(Request $request, $id)
-    {
-        $id = $this->sanitizeData($id);
-        $object = $this->model::find($id);
+          }
 
-        $this->redirect_to = "/$this->other_route/$object->idpat";
+          $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+          return redirect("/$this->main_route/$idpat/create");
+      }     
+  }
 
-        return parent::destroy($request, $id);        
-    }
+  public function edit(Request $request, $id)
+  {
+      $this->redirectIfIdIsNull($id, $this->other_route);
+      $id = $this->sanitizeData($id);
+      $object = $this->model::FirstById($id);
+
+      $this->autofocus = 'hour';
+      $this->view_data['object'] = $object;
+      $this->view_data['id'] = $id;
+      $this->view_data['idnav'] = $object->idpat;
+      $this->view_data['name'] = $object->name;
+      $this->view_data['surname'] = $object->surname;
+      $this->view_data['form_fields'] = $this->form_fields;
+      $this->view_data['autofocus'] = $this->autofocus;
+
+      $this->setPageTitle($object->surname.', '.$object->name);
+
+      return parent::edit($request, $id);
+  }
+
+  public function update(Request $request, $id)
+  {
+      $id = $this->sanitizeData($id);
+      $exists = $this->model::CheckIfIdExists($id);
+      $route = "/$this->main_route/$id/edit";
+
+      if (!$exists) {
+          $request->session()->flash($this->error_message_name, 'Error');  
+          return redirect($route);
+      }
+
+      $this->redirectIfIdIsNull($id, $this->other_route);
+        
+      $validator = Validator::make($request->all(), [
+          'hour' => 'required',
+          'day' => 'required',
+          'notes' => ''
+      ]);
+          
+      if ($validator->fails()) {
+          return redirect($route)
+                       ->withErrors($validator)
+                       ->withInput();
+      } else { 
+          
+          $hour = trim($request->input('hour'));
+          $day = trim($request->input('day'));
+          $notes = $this->sanitizeData($request->input('notes'));
+
+          if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
+              $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
+              return redirect($route);
+          }
+              
+          $object = $this->model::find($id);
+
+          $day = $this->convertDmYToYmd($day);
+
+          $object->hour = $this->sanitizeData($hour);
+          $object->day = $this->sanitizeData($day);
+          $object->notes = $this->sanitizeData($notes);
+          
+          $object->save();
+
+          $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+          return redirect("$this->other_route/$object->idpat");
+      }   
+  }
+
+  public function destroy(Request $request, $id)
+  {
+      $id = $this->sanitizeData($id);
+      $object = $this->model::find($id);
+
+      $this->redirect_to = "/$this->other_route/$object->idpat";
+
+      return parent::destroy($request, $id);        
+  }
 
 }
