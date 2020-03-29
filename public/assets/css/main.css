@@ -35,6 +35,11 @@ img.center {
   border-radius: 4px !important;
 }
 
+.mainContainer { 
+  width: 1320px !important; 
+  max-width: 1320px !important; 
+  min-width: 1320px !important; 
+}
 
 .widCol1 { 
   width: 100px !important; 
@@ -49,6 +54,13 @@ img.center {
 }
 
 .minHeight { min-height: 700px !important; }
+
+
+
+.ss-main .ss-multi-selected .ss-values .ss-disabled {
+    color: #7b7b7b  !important; 
+}
+
 
 .dataTables_length { 
   margin: 4px !important;

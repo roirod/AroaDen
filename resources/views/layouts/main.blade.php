@@ -48,7 +48,7 @@
 
 <div class="mar4"></div>
 
-<div class="jumbotron container bgwi pad10">
+<div class="jumbotron container bgwi pad10 mainContainer">
   <div class="row">  
 
     <div class="col-sm-1 widCol1 textcent">

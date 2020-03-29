@@ -182,6 +182,7 @@ class StaffController extends BaseController implements BaseInterface
 
         $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
         $this->view_data['form_fields'] = $this->form_fields;
+        $this->view_data['misc_text'] = Lang::get('aroaden.add_staff');
 
         return parent::create($request);
     }
@@ -288,6 +289,7 @@ class StaffController extends BaseController implements BaseInterface
         $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
         $this->view_data['staffPositionsEntries'] = StaffPositionsEntries::AllByStaffId($id);
         $this->view_data['is_create_view'] = false;
+        $this->view_data['misc_text'] = Lang::get('aroaden.edit_staff');
 
         $this->setPageTitle($object->surname.', '.$object->name);
 

@@ -71,6 +71,10 @@ return [
   'select'   => 'Selecciona',
   'select_date_range'   => 'Selecciona rango de fechas',
 
+
+  'select_one_or_more'   => 'Selecciona uno o varios',
+
+
   'hour' => 'Hora',
   'day' => 'Día',
   'date'   => 'Fecha',
