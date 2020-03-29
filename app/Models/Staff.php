@@ -120,14 +120,13 @@ class Staff extends Model implements BaseModelInterface
 
     public static function FindStringOnField($sLimit, $sWhere, $sOrder)
     {
-        $where = '';
+        $having = '';
 
         if ($sWhere != '')
-          $where = "
-            AND (
-                sta.surname LIKE '%". $sWhere ."%' OR sta.name LIKE '%". $sWhere ."%' OR
-                sta.dni LIKE '%". $sWhere ."%' OR sta.tel1 LIKE '%". $sWhere ."%'
-            ) 
+          $having = "
+            HAVING
+                surname_name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%' OR 
+                tel1 LIKE '%". $sWhere ."%' OR positions LIKE '%". $sWhere ."%'
           ";
 
         if ($sOrder != '') {
@@ -149,35 +148,46 @@ class Staff extends Model implements BaseModelInterface
             FROM 
                 staff sta
             WHERE 
-                deleted_at IS NULL 
-                " . $where . " 
+                sta.deleted_at IS NULL 
+            " . $having . " 
             " . $order . " 
             " . $sLimit . "
-        ;";
+        ";
 
         return DB::select($query);
     }
 
     public static function CountFindStringOnField($sWhere = '')
     {
-        $where = '';
-                
+        $having = '';
+
         if ($sWhere != '')
-          $where = "
-            AND (
-                sta.surname LIKE '%". $sWhere ."%' OR sta.name LIKE '%". $sWhere ."%' OR
-                sta.dni LIKE '%". $sWhere ."%' OR sta.tel1 LIKE '%". $sWhere ."%'
-            ) 
+          $having = "
+            HAVING
+                surname_name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%' OR 
+                tel1 LIKE '%". $sWhere ."%' OR positions LIKE '%". $sWhere ."%'
           ";
 
         $query = "
-            SELECT count(*) AS total
+            SELECT 
+                CONCAT(sta.surname, ', ', sta.name) AS surname_name, sta.dni, sta.tel1,
+                (
+                    SELECT GROUP_CONCAT(stapo.name  SEPARATOR ', ')
+                    FROM staff_positions_entries entr
+                    INNER JOIN staff_positions stapo
+                    ON stapo.idstpo = entr.idstpo
+                    WHERE entr.idsta = sta.idsta             
+                ) AS positions
             FROM 
                 staff sta
             WHERE 
-                deleted_at IS NULL 
-                " . $where . " 
-        ;";
+                sta.deleted_at IS NULL 
+            " . $having . " 
+        ";
+
+        $query = "
+            SELECT COUNT(*) AS total FROM ($query) AS table1;
+        ";
 
         return DB::select($query);
     }

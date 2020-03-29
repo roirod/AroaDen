@@ -111,11 +111,6 @@
               var resultado = '<a href="{!! $staff_route !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
               return resultado;
             }
-          },
-          {
-            "aTargets": [4],
-            "bSortable": false,
-            "bSearchable": false
           }
         ],
       };

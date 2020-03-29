@@ -99,24 +99,26 @@ class PatientsController extends BaseController implements BaseInterface
             4 => 'city',
         ];
 
-        $iDisplayLength = $request->input('iDisplayLength');
-        $iDisplayStart = $request->input('iDisplayStart');
+        $iDisplayLength = $this->sanitizeData($request->input('iDisplayLength'));
+        $iDisplayStart = $this->sanitizeData($request->input('iDisplayStart'));
+        $sEcho = $this->sanitizeData($request->input('sEcho'));
 
         $sLimit = "";
-        if ( isset( $iDisplayStart ) && $iDisplayLength != '-1' )
+
+        if (isset( $iDisplayStart ) && $iDisplayLength != '-1')
             $sLimit = "LIMIT ".$iDisplayStart.",". $iDisplayLength;
 
-        $iSortCol_0 = (int) $request->input('iSortCol_0');
+        $iSortCol_0 = (int)$this->sanitizeData($request->input('iSortCol_0'));
 
-        if ( isset( $iSortCol_0 ) ) {
+        if (isset($iSortCol_0)) {
             $sOrder = " ";
-            $bSortable = $request->input("bSortable_$iSortCol_0");
-            $sSortDir_0 = $request->input('sSortDir_0');
+            $bSortable = $this->sanitizeData($request->input('bSortable_'.$iSortCol_0));
+            $sSortDir_0 = $this->sanitizeData($request->input('sSortDir_0'));
 
-            if ( $bSortable == "true" )
-              $sOrder = $aColumns[ $iSortCol_0 ] ." ". $sSortDir_0;
+            if ($bSortable == "true")
+              $sOrder = $aColumns[$iSortCol_0] ." ". $sSortDir_0;
 
-            if ( $sOrder == " " )
+            if ($sOrder == " ")
               $sOrder = "";
         }
 
@@ -142,7 +144,7 @@ class PatientsController extends BaseController implements BaseInterface
         }
 
         $output = [
-            "sEcho" => intval($request->input('sEcho')),
+            "sEcho" => intval($sEcho),
             "iTotalRecords" => $countTotal,
             "iTotalDisplayRecords" => $countFiltered,
             "aaData" => $resultArray

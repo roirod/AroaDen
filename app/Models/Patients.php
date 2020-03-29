@@ -142,7 +142,7 @@ class Patients extends Model implements BaseModelInterface
             WHERE pa.deleted_at IS NULL
             GROUP BY tre.idpat 
             HAVING 
-                tre.idpat=tre.idpat  AND rest > 0
+                tre.idpat=tre.idpat AND rest > 0
             ORDER BY rest DESC
             " . $sLimit . "
         ";
