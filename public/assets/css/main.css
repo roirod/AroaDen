@@ -224,11 +224,8 @@ background: linear-gradient(45deg,  rgba(14,14,14,0.32) 0%,rgba(65,66,65,0.32) 4
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', endColorstr='#7d7e7d',GradientType=1 );
 }
 
-.bgtra  {
-  background-color: rgba(232, 231, 231, 0.66);
-}
-
-
+.bgtra  { background-color: rgba(232, 231, 231, 0.66); }
+.bggrey { background-color: rgb(213, 213, 213); }
 .bggreyblack { background: #333333 !important; }
 .bgblack { background-color: black !important; }
 .bgwi { background-color: white !important; }

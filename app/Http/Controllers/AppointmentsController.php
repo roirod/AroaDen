@@ -83,6 +83,8 @@ class AppointmentsController extends BaseController implements BaseInterface
 
     }
 
+    $this->setPageTitle($this->misc_array['msg']);
+
     $this->view_name = 'tableStaff';
     $this->view_data['main_loop'] = $this->misc_array['main_loop'];
     $this->view_data['msg'] = $this->misc_array['msg'];

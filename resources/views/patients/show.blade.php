@@ -224,7 +224,7 @@
 
 											@if ($treat->idtre == $staff_work->idtre)
 
-												<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-sm btn-default" role="button">
+												<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-sm btn-default mar4" role="button">
 													<i class="fa fa-hand-pointer-o"></i>
 												</a>
 
