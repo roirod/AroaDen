@@ -48,6 +48,7 @@
       }, 180);
 
       var PaysTable = {
+        "aaSorting": [[4, "desc"]],
         'oLanguage': {
           'sProcessing': 'Procesando...',
           'sLengthMenu': 'Selecciona _MENU_',
@@ -64,7 +65,7 @@
           },
         },
         "sDom": 
-          "<'row'<'col-sm-12'l>>" +
+          "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
           "<'row'<'col-sm-12'r>>" +
           "<'row'<'col-sm-7'i><'col-sm-5'p>>" +
           "<'row'<'col-sm-12't>>" +
@@ -103,9 +104,9 @@
           },
           {
             "aTargets": [1],
-            "bSortable": false,
-            "bSearchable": false,
             "sClass": "wid290",
+            "bSortable": true,
+            "bSearchable": true,
             "mData": null,            
             "mRender": function (data, type, full) {
               var result = '<a href="'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
@@ -136,7 +137,6 @@
           },
           {
             "aTargets": [4],
-            "bSortable": false,
             "bSearchable": false,
             "sClass": "wid110 textcent",
             "mData": null,            

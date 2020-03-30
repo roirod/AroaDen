@@ -36,9 +36,11 @@ img.center {
 }
 
 .mainContainer { 
-  width: 1320px !important; 
-  max-width: 1320px !important; 
-  min-width: 1320px !important; 
+  width: 1280px !important; 
+  max-width: 1280px !important; 
+  min-width: 1280px !important;
+  min-height: 680px !important;
+  overflow: visible !important;
 }
 
 .widCol1 { 
@@ -48,14 +50,12 @@ img.center {
 }
 
 .widCol2 { 
-  width: 1160px !important; 
-  max-width: 1160px !important; 
-  min-width: 1160px !important; 
+  width: 1180px !important; 
+  max-width: 1180px !important; 
+  min-width: 1180px !important; 
 }
 
 .minHeight { min-height: 700px !important; }
-
-
 
 .ss-main .ss-multi-selected .ss-values .ss-disabled {
     color: #7b7b7b  !important; 
@@ -172,14 +172,6 @@ table { table-layout:fixed !important; }
 .textder { text-align: right !important; }
 .textcent { text-align: center !important; }
 
-.container {
-  width: 1250px !important;
-  max-width: 1250px !important;
-  min-width: 1250px !important;
-  min-height: 550px !important;
-  overflow: visible !important;
-}
-
 .wPa { position:relative; width:633px; height:678px; padding:20px; margin:20px; z-index:99; } 
 
 .texcor {
@@ -236,6 +228,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
   background-color: rgba(232, 231, 231, 0.66);
 }
 
+
+.bggreyblack { background: #333333 !important; }
+.bgblack { background-color: black !important; }
+.bgwi { background-color: white !important; }
+
 .logo  {
  background-color: rgba(0, 0, 0, 0.66); 
 }
@@ -261,8 +258,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .fonbla { color: white !important; }
 .fuengrisoscu { color: rgb(20, 20, 20); }
 
-.bgblack { background-color: black !important; }
-.bgwi { background-color: white !important; }
 
 .textshadow { 
   text-shadow:  2px 2px 0px #000;

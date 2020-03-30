@@ -54,7 +54,7 @@
     <div class="col-sm-1 widCol1 textcent">
       <div class="affix">
 
-        <h5 class="pad10 login_text bgblack textshadow borderradius">
+        <h5 class="pad10 login_text bggreyblack textshadow borderradius">
           <i class="fa fa-child"></i>
           <br>
           {!! $app_name !!}

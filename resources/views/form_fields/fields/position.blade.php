@@ -4,7 +4,7 @@
 		{{ @trans('aroaden.positions') }} 
 	</label>
 
-	<select name="positions[]" id="positions" multiple="multiple" required="required">
+	<select name="positions[]" id="positions" multiple="multiple">
 
 		<option data-placeholder="true"></option>
 

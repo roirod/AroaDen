@@ -8,7 +8,7 @@
 	@include('includes.errors')
 
     <div class="col-sm-12 pad10">
-        @include('form_fields.show.name')
+      @include('form_fields.show.name')
     </div>	
 
     <div class="row">
@@ -176,15 +176,5 @@
 
 @endsection
 
-@section('js')
-    @parent   
-	<script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
+@include('treatments.common')
 
-	<script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
-	<link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
-    <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
-@endsection

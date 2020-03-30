@@ -77,6 +77,15 @@ class Patients extends Model implements BaseModelInterface
         return $exists;
     }
 
+    public static function CountAll()
+    {
+        $result = DB::table('patients')
+                    ->whereNull('deleted_at')
+                    ->count();
+
+        return (int)$result;
+    }
+
     public static function FindStringOnField($sLimit, $sWhere, $sOrder)
     {
         $where = '';
@@ -129,39 +138,62 @@ class Patients extends Model implements BaseModelInterface
         return DB::select($query);
     }
 
-    public static function GetTotalPayments($sLimit)
+    public static function GetPayments($sLimit, $sWhere, $sOrder)
     {
+        $having = '';
+                
+        if ($sWhere != '')
+          $having = "
+            AND (
+                surname_name LIKE '%". $sWhere ."%'
+            ) 
+          ";
+
+        if ($sOrder != '') {
+          $order = "ORDER BY " . $sOrder;
+        } else {
+          $order = 'ORDER BY rest DESC';
+        }
+
         $query = "
-            SELECT pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-            SUM(tre.units*tre.price) as total, 
-            SUM(tre.paid) as paid, 
-            SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
-            FROM treatments tre
-            INNER JOIN patients pa
-            ON tre.idpat=pa.idpat 
-            WHERE pa.deleted_at IS NULL
-            GROUP BY tre.idpat 
+            SELECT 
+                pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
+                SUM(tre.units*tre.price) as total, 
+                SUM(tre.paid) as paid, 
+                SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+            FROM 
+                treatments tre
+            INNER JOIN 
+                patients pa ON tre.idpat=pa.idpat 
+            WHERE 
+                pa.deleted_at IS NULL
+            GROUP BY 
+                tre.idpat 
             HAVING 
-                tre.idpat=tre.idpat AND rest > 0
-            ORDER BY rest DESC
+                tre.idpat=tre.idpat AND rest > 0 
+                " . $having . "
+            " . $order . " 
             " . $sLimit . "
         ";
 
         return DB::select($query);
     }
 
-    public static function countTotalPatientsPayments()
+    public static function countPayments()
     {
         $query = "
             SELECT count(*) AS total
             FROM (
                 SELECT 
                     pa.idpat, SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
-                FROM treatments tre
-                INNER JOIN patients pa
-                ON tre.idpat=pa.idpat 
-                WHERE pa.deleted_at IS NULL
-                GROUP BY tre.idpat 
+                FROM 
+                    treatments tre
+                INNER JOIN 
+                    patients pa ON tre.idpat=pa.idpat 
+                WHERE 
+                    pa.deleted_at IS NULL
+                GROUP BY 
+                    tre.idpat 
                 HAVING 
                     tre.idpat=tre.idpat  AND rest > 0
             ) AS table1
@@ -170,13 +202,39 @@ class Patients extends Model implements BaseModelInterface
         return DB::select($query);
     }
 
-    public static function CountAll()
+    public static function countFilteredPayments($sWhere = '')
     {
-        $result = DB::table('patients')
-                    ->whereNull('deleted_at')
-                    ->get();
+        $having = '';
+                
+        if ($sWhere != '')
+          $having = "
+            AND (
+                surname_name LIKE '%". $sWhere ."%'
+            ) 
+          ";
 
-        return (int)count($result);
+        $query = "
+            SELECT 
+                count(*) AS total
+            FROM (
+                SELECT 
+                    CONCAT(pa.surname, ', ', pa.name) AS surname_name,
+                    SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+                FROM 
+                    treatments tre
+                INNER JOIN 
+                    patients pa ON tre.idpat=pa.idpat 
+                WHERE 
+                    pa.deleted_at IS NULL
+                GROUP BY 
+                    tre.idpat 
+                HAVING 
+                    tre.idpat=tre.idpat AND rest > 0 
+                    " . $having . "
+            ) AS table1
+        ;";
+
+        return DB::select($query);
     }
 
 }
