@@ -70,11 +70,10 @@ return [
   'today'   => 'hoy',
   'select'   => 'Selecciona',
   'select_date_range'   => 'Selecciona rango de fechas',
-
-
   'select_one_or_more'   => 'Selecciona uno o varios',
 
-
+  'age'   => 'Edad',
+  'years'   => 'Años',
   'hour' => 'Hora',
   'day' => 'Día',
   'date'   => 'Fecha',

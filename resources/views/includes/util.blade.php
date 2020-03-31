@@ -125,6 +125,10 @@
       var time = (time == undefined) ? 1200 : time;
       var success = (success == undefined) ? true : success;
 
+      console.log('---------------- showPopup msg  ----------------------------');
+      console.dir(msg);
+      console.log('--------------------------------------------');
+
       if (success) {
 
         swal({

@@ -102,7 +102,7 @@ class TreatmentsController extends BaseController
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
-            if (count($staff) > 0) {
+            if (is_array($staff) && count($staff) > 0) {
                 foreach ($staff as $idsta) {
                     StaffWorks::create([
                       'idsta' => $idsta,

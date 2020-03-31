@@ -1,7 +1,7 @@
 	<div class="col-sm-3 pad4"> 	
 		<i class="fa fa-circle-o fa-min"></i> 
-    Edad: 
+    {{ @trans('aroaden.age') }}: 
     <span class="bggrey pad4">
-     {{ $age }} años
+     {{ $age }} {{ @trans('aroaden.years') }}
     </span>
 	</div>
