@@ -58,7 +58,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
     }
 
-    $this->setPageTitle(Lang::get('aroaden.appointments'));
+    $this->setPageTitle(Lang::get('aroaden.today_appointments'));
 
     return parent::index($request);
   }
@@ -124,29 +124,29 @@ class AppointmentsController extends BaseController implements BaseInterface
     }
 
     switch ($this->misc_array['select_val']) {
-      case 'today_appointments':
+      case 'today':
         $this->misc_array['msg'] = Lang::get('aroaden.today_appointments');
         break;
 
-      case '1week_appointments':
+      case '1week':
         $this->misc_array['date_from_Ymd'] = date('Y-m-d');
         $this->misc_array['date_to_Ymd'] = date('Y-m-d', strtotime('+1 Week'));
         $this->misc_array['msg'] = Lang::get('aroaden.1week_appointments');
         break;
 
-      case '1month_appointments':
+      case '1month':
         $this->misc_array['date_from_Ymd'] = date('Y-m-d');
         $this->misc_array['date_to_Ymd'] = date('Y-m-d', strtotime('+1 Month'));
         $this->misc_array['msg'] = Lang::get('aroaden.1month_appointments');
         break;
 
-      case 'minus1week_appointments':
+      case 'minus1week':
         $this->misc_array['date_from_Ymd'] = date('Y-m-d', strtotime('-1 Week'));
         $this->misc_array['date_to_Ymd'] = date('Y-m-d');
         $this->misc_array['msg'] = Lang::get('aroaden.minus1week_appointments');
         break;
 
-      case 'minus1month_appointments':
+      case 'minus1month':
         $this->misc_array['date_from_Ymd'] = date('Y-m-d', strtotime('-1 Month'));
         $this->misc_array['date_to_Ymd'] = date('Y-m-d');
         $this->misc_array['msg'] = Lang::get('aroaden.minus1month_appointments');
@@ -157,7 +157,7 @@ class AppointmentsController extends BaseController implements BaseInterface
         break;
     }
 
-    if ($this->misc_array['select_val'] == 'today_appointments') {
+    if ($this->misc_array['select_val'] == 'today') {
 
       $this->misc_array['main_loop'] = $this->model::AllTodayOrderByDay();
 

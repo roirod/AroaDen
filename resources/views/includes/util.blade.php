@@ -33,9 +33,7 @@
     event.preventDefault();
     event.stopPropagation();
 
-      console.log('---------------- ajaxError status  ----------------------------');
-      console.dir(jqXHR.status);
-      console.log('--------------------------------------------');
+      console.log('---------------- ajaxError ----------------------------');
 
     if (jqXHR.status == 401)
       return util.redirectTo("/login");

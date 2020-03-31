@@ -2,7 +2,7 @@
 @if ($error)
 
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-9">
       <p class="label label-warning fonsi15">
         {{ $msg }}
       </p>
@@ -16,7 +16,7 @@
   <div class="mar4"></div>
 
   <div class="row">
-    <div class="col-sm-12">    
+    <div class="col-sm-9">    
 
       @if ($count === 0)
 

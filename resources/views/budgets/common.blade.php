@@ -24,13 +24,13 @@
 <div class="row">
 	<div class="col-sm-12 fonsi15">
 	  <div class="panel panel-default">
-      		<table class="table table-striped table-bordered table-hover">
-			  	 <tr>
+      <table class="table table-striped table-bordered table-hover">
+			  <tr>
 					<td class="wid230">Tratamiento</td>
 					<td class="wid70 textcent">IVA</td>
 					<td class="wid70 textcent">Cantidad</td>
 					<td class="wid70 textcent">Precio</td>			
-				 </tr>
+				</tr>
 
 				@foreach ($budgets as $bud)
 						

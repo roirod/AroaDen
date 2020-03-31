@@ -31,8 +31,8 @@
 
              	<div class="panel panel-default">
 
-              	<table class="table">
-          		    <tr class="fonsi14 success">
+                <table class="table table-striped table-bordered table-hover">
+          		    <tr class="fonsi14">
           				  <td class="wid140">Tratamiento</td>
           				  <td class="wid50 textcent">Cantidad</td>
           				  <td class="wid50"></td>
@@ -41,7 +41,7 @@
               	</table>
 
              		<div class="box400">
-          	   		<table class="table table-striped">      	  	
+                  <table class="table table-striped table-bordered table-hover">
 
           		   		@foreach ($main_loop as $service)
 
@@ -73,8 +73,8 @@
               {!! addText("Añadidos") !!}
 
              	<div class="panel panel-default">
-              	<table class="table">
-          		    <tr class="fonsi14 success">
+                <table class="table table-striped table-bordered table-hover">
+          		    <tr class="fonsi14">
             				<td class="wid140">Tratamiento</td>
             				<td class="wid95 textcent">Cantidad</td>
             				<td class="wid70 textcent">Precio</td>				  
@@ -84,7 +84,7 @@
               	</table>
 
              		<div class="box400">
-          	   		<table class="table table-striped">
+                  <table class="table table-striped table-bordered table-hover">
           	   			<tbody id="budgets_list">
           	   			</tbody>
           	   		</table>

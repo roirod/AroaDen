@@ -15,11 +15,11 @@
 
         <form>
           <select name="select_val" class="form-control select_val">
-            <option value="today_appointments" selected>{{ @trans('aroaden.today_appointments') }}</option> 
-            <option value="1week_appointments">{{ @trans('aroaden.1week_appointments') }}</option> 
-            <option value="1month_appointments">{{ @trans('aroaden.1month_appointments') }}</option>
-            <option value="minus1week_appointments">{{ @trans('aroaden.minus1week_appointments') }}</option>
-            <option value="minus1month_appointments">{{ @trans('aroaden.minus1month_appointments') }}</option>
+            <option value="today" selected>{{ @trans('aroaden.today_appointments') }}</option> 
+            <option value="1week">{{ @trans('aroaden.1week_appointments') }}</option> 
+            <option value="1month">{{ @trans('aroaden.1month_appointments') }}</option>
+            <option value="minus1week">{{ @trans('aroaden.minus1week_appointments') }}</option>
+            <option value="minus1month">{{ @trans('aroaden.minus1month_appointments') }}</option>
           </select> 
         </form> 
       </fieldset>
@@ -34,6 +34,7 @@
         <div class="col-sm-5">
           <form>
             <input type="hidden" name="select_val" value="date_range">
+
             <div class="input-group date pad4" id="datepicker1">
               <p class="input-group-btn pad4"> {{ @trans('aroaden.date_from') }} </p>
               <input name="date_from" type="text" autofocus required>
@@ -41,6 +42,7 @@
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>
+
             <div class="input-group date pad4" id="datepicker2">
               <p class="input-group-btn pad4"> {{ @trans('aroaden.date_to') }} </p>
               <input name="date_to" type="text" required>
@@ -48,6 +50,7 @@
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>
+            
             <div class="pad10">
               <input type="button" class="btn btn-sm btn-primary searchButton" value="{{ Lang::get('aroaden.search') }}">
             </div>

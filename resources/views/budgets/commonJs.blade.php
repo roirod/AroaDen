@@ -13,7 +13,7 @@
 
       var redirectUrl = $(this).attr('href');
 
-      if (typeof budgetArray === 'undefined' || budgetArray.length == 0) {
+      if (typeof budgetArray === 'undefined' || budgetArray.length === 0) {
         if (onUpdate) {
 
           onUpdateDeleteAll = true;
@@ -28,7 +28,6 @@
       var ajax_data = {
         url  :   '{!! url("/$main_route") !!}',
         data : {
-          '_token' : '{!! csrf_token() !!}',
           'budgetArray' : budgetArray,
           'onUpdate': onUpdate,
           'onUpdateDeleteAll': onUpdateDeleteAll,

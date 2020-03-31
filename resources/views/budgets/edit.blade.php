@@ -78,7 +78,7 @@
         							<tr class="fonsi13" id="budgetId_{!! $bud->idser !!}">
         							  <td class="wid140">{!! $bud->name !!}</td>
         							  <td class="wid95 textcent">{!! $bud->units !!} </td>
-        							  <td class="wid95 textcent">{!! numformat($bud->price) !!} €</td>
+        							  <td class="wid70 textcent">{!! numformat($bud->price) !!} €</td>
         							  <td class="wid50">
         							    <div class="btn-group"> 
         							    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">

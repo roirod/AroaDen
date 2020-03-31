@@ -61,7 +61,6 @@ img.center {
     color: #7b7b7b  !important; 
 }
 
-
 .dataTables_length { 
   margin: 4px !important;
 }
@@ -270,6 +269,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
     text-align:left;
     /* inline-block space fix */
     margin-right:-4px;
+}
+
+.label {
+  white-space: normal !important;
 }
 
 fieldset{

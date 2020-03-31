@@ -5,3 +5,4 @@ Homestead.yaml
 Homestead.json
 .env
 /database/migrations/invoices.zip
+composer.lock
