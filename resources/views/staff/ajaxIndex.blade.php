@@ -76,7 +76,7 @@
           "<br>" +
           "<'row'<'col-sm-7'i><'col-sm-5'p>>",
         "iDisplayStart": 0,
-        "iDisplayLength": 25,
+        "iDisplayLength": iDisplayLength,
         "bAutoWidth": false,
         'bPaginate': true,
         'bLengthChange': true,

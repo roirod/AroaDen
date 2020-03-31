@@ -25,9 +25,11 @@
 
   // datatables staff
   var aLengthMenu = [
-    [25, 50, 100],
-    [25, 50, 100]
+    [15, 25, 50, 100],
+    [15, 25, 50, 100]
   ];
+
+  var iDisplayLength = 15;
 
   $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
     event.preventDefault();
