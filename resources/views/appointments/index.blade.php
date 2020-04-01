@@ -14,7 +14,7 @@
         </legend>
 
         <form>
-          <select name="select_val" class="form-control select_val">
+          <select name="select" class="form-control select">
             <option value="today" selected>{{ @trans('aroaden.today_appointments') }}</option> 
             <option value="1week">{{ @trans('aroaden.1week_appointments') }}</option> 
             <option value="1month">{{ @trans('aroaden.1month_appointments') }}</option>
@@ -33,10 +33,12 @@
 
         <div class="col-sm-5">
           <form>
-            <input type="hidden" name="select_val" value="date_range">
+            <input type="hidden" name="select" value="date_range">
 
             <div class="input-group date pad4" id="datepicker1">
-              <p class="input-group-btn pad4"> {{ @trans('aroaden.date_from') }} </p>
+              <p class="input-group-btn pad4"> 
+                {{ @trans('aroaden.date_from') }} 
+              </p>
               <input name="date_from" type="text" autofocus required>
               <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
@@ -44,7 +46,9 @@
             </div>
 
             <div class="input-group date pad4" id="datepicker2">
-              <p class="input-group-btn pad4"> {{ @trans('aroaden.date_to') }} </p>
+              <p class="input-group-btn pad4"> 
+                {{ @trans('aroaden.date_to') }} 
+              </p>
               <input name="date_to" type="text" required>
               <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
@@ -86,7 +90,7 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
-      $(".select_val").change(function() {
+      $(".select").change(function() {
         var _this = $(this);
 
         return Module.findAppointments(_this);
@@ -103,9 +107,9 @@
           var form = _this.closest("form");
           var data = form.serialize();
 
-          var select_val = form[0].elements.select_val.value.trim();
+          var select = form[0].elements.select.value.trim();
 
-          if (select_val == 'date_range') {
+          if (select == 'date_range') {
 
             var date_from = form[0].elements.date_from.value.trim();
             var date_to = form[0].elements.date_to.value.trim();

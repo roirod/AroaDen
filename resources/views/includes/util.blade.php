@@ -15,12 +15,12 @@
 
   var defaulId = 'ajax_content';
   var defaulTableId = 'item_list';
-  var lastRoute = '';
+  var currentId = '';  
   var currentContent = '';
-  var currentId = '';
   var mainUrl = '/' + "{{ $main_route }}";
   var mainUrlAjax = mainUrl + '/ajaxIndex';
-  var redirectRoute = false;
+  var lastRoute = '';
+  var redirectRoute = '';
   var error = false;
 
   // datatables staff
@@ -270,65 +270,56 @@
       var data = form.serialize();
       var attributes = form[0].attributes;
       var url = attributes['action'].value;
-      var checkpermissions = attributes['data-checkpermissions'].value;
       var removeTr = attributes['data-removeTr'].value;
       var htmlContent = attributes['data-htmlContent'].value;
 
       var tr_content = $this.closest('tr');
 
-      _this.checkPermissions(checkpermissions).done(function(response) {
-        if (response.permission) {
+      swal({
 
-          swal({
-            title: '{{ Lang::get('aroaden.are_you_sure') }}',
-            type: 'warning',
-            showCancelButton: true,
-            allowOutsideClick: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '{{ Lang::get('aroaden.yes') }}',
-            cancelButtonText: '{{ Lang::get('aroaden.no') }}',
-            confirmButtonClass: 'confirm-class',
-            cancelButtonClass: 'cancel-class',
-          }).then(
+        title: '{{ Lang::get('aroaden.are_you_sure') }}',
+        type: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '{{ Lang::get('aroaden.yes') }}',
+        cancelButtonText: '{{ Lang::get('aroaden.no') }}',
+        confirmButtonClass: 'confirm-class',
+        cancelButtonClass: 'cancel-class'
 
-            function(isConfirm) {
-              if (isConfirm) {
-                var ajax_data = {
-                  url  : url,
-                  data : data
-                };
+      }).then(
 
-                _this.processAjaxReturnsJson(ajax_data).done(function(response) {
-                  if (response.error)
-                    return _this.showPopup(response.msg, false, 2500);
+        function(isConfirm) {
+          if (isConfirm) {
+            var ajax_data = {
+              url  : url,
+              data : data
+            };
 
-                  if (htmlContent == 'true')
-                    _this.showContentOnPage(defaulId, response.htmlContent);
+            _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+              if (response.error)
+                return _this.showPopup(response.msg, false, 2500);
 
-                  if (removeTr == 'true') {
+              if (htmlContent == 'true')
+                _this.showContentOnPage(defaulId, response.htmlContent);
 
-                    tr_content.remove();
+              if (removeTr == 'true') {
 
-                  } else {
+                tr_content.remove();
 
-                    setTimeout(function(){ window.location.href = response.redirect_to; }, 1100);
+              } else {
 
-                  }
+                setTimeout(function(){  _this.redirectTo(redirectRoute); }, 1100);
 
-                  return _this.showPopup(response.msg);
-                });
               }
-            }
-          );
 
-        } else {
-
-          return _this.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
+              return _this.showPopup(response.msg);
+            });
+          }
         }
-      });
-    },
+      );
+    }
 
   }
 

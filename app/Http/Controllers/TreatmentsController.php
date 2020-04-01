@@ -191,7 +191,7 @@ class TreatmentsController extends BaseController
 
                 StaffWorks::where('idtre', $id)->delete();
 
-                if (count($staff) > 0) {
+                if (is_array($staff) && count($staff) > 0) {
                     foreach ($staff as $idsta) {
                         StaffWorks::create([
                           'idsta' => $idsta,

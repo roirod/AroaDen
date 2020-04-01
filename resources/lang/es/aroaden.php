@@ -108,7 +108,7 @@ return [
   'appointments_range'   => 'Citas entre el :date_from y el :date_to',
   'date_from'   => 'Fecha de',
   'date_to'   => 'Hasta',
-  'date_out_range'   => 'La diferencia entre las dos fechas es superior a :date_max_days días, esto puede causar un mal funcionamiento del programa, introduce dos fechas que no superen :date_max_days días de diferencia entre ellas',
+  'date_out_range'   => 'La diferencia entre las dos fechas es superior a :date_max_days días, esto puede causar un problema.',
   'db_query_error'   => 'Error en la consulta a la base de datos',
   'name_in_use' => 'Nombre - :name - ya en uso, use cualquier otro',
   'dni_in_use' => 'Repetido. El dni: :dni, pertenece a: :surname, :name',

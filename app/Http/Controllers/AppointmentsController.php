@@ -38,7 +38,6 @@ class AppointmentsController extends BaseController implements BaseInterface
   
   public function index(Request $request)
   {
-
     $this->view_data['form_route'] = $this->form_route;
     $this->view_data['error'] = false;
     $this->view_data['msg'] = Lang::get('aroaden.today_appointments');
@@ -48,7 +47,7 @@ class AppointmentsController extends BaseController implements BaseInterface
       $this->view_data['main_loop'] = $this->model::AllTodayOrderByDay();
       $this->view_data['count'] = $this->model::CountAllToday();
 
-      if ($this->view_data['count'] === 0)
+      if ((int)$this->view_data['count'] === 0)
         $this->view_data['msg'] = Lang::get('aroaden.no_appointments_today');
 
     } catch (Exception $e) {
@@ -65,12 +64,15 @@ class AppointmentsController extends BaseController implements BaseInterface
   
   public function list(Request $request)
   {
+    unset($this->request);
     $this->request = $request;
 
+    unset($this->misc_array);
     $this->misc_array['main_loop'] = false;
     $this->misc_array['msg'] = false;
     $this->misc_array['count'] = false;
     $this->misc_array['error'] = false;
+    $this->misc_array['select'] = $this->sanitizeData($this->request->select);
 
     try {
 
@@ -97,80 +99,84 @@ class AppointmentsController extends BaseController implements BaseInterface
 
   private function getItemsByDate()
   {
-    $this->misc_array['select_val'] = $this->sanitizeData($this->request->input('select_val'));
+    extract($this->misc_array);
 
-    if ($this->misc_array['select_val'] == 'date_range') {
+    if ($select == 'date_range') {
 
-      $this->misc_array['date_from_DmY'] = $this->sanitizeData($this->request->input('date_from'));
-      $this->misc_array['date_to_DmY'] = $this->sanitizeData($this->request->input('date_to'));
-      $this->misc_array['date_from_Ymd'] = $this->convertDmYToYmd($this->misc_array['date_from_DmY']);
-      $this->misc_array['date_to_Ymd'] = $this->convertDmYToYmd($this->misc_array['date_to_DmY']);
+      $date_from_DmY = $this->sanitizeData($this->request->date_from);
+      $date_to_DmY = $this->sanitizeData($this->request->date_to);
+      $date_from_Ymd = $this->convertDmYToYmd($date_from_DmY);
+      $date_to_Ymd = $this->convertDmYToYmd($date_to_DmY);
 
       if (
-          !$this->validateDateDDMMYYYY($this->misc_array['date_from_DmY']) || 
-          !$this->validateDateDDMMYYYY($this->misc_array['date_to_DmY'])
+          !$this->validateDateDDMMYYYY($date_from_DmY) || 
+          !$this->validateDateDDMMYYYY($date_to_DmY)
         )
           throw new Exception(Lang::get('aroaden.date_format_fail'));
 
-      if ($this->misc_array['date_from_Ymd'] > $this->misc_array['date_to_Ymd'])
-        throw new Exception(Lang::get('aroaden.date_from_is_older', ['date_to' => $this->misc_array['date_to_DmY'], 'date_from' => $this->misc_array['date_from_DmY']]));
+      if ($date_from_Ymd > $date_to_Ymd)
+        throw new Exception(Lang::get('aroaden.date_from_is_older', ['date_to' => $date_to_DmY, 'date_from' => $date_from_DmY]));
 
-      $date_f = new DateTime($this->misc_array['date_from_Ymd']);
-      $date_t = new DateTime($this->misc_array['date_to_Ymd']);
+      $date_f = new DateTime($date_from_Ymd);
+      $date_t = new DateTime($date_to_Ymd);
       $diff = $date_f->diff($date_t);
 
       if ((int)$diff->days > (int)$this->date_max_days)
           throw new Exception(Lang::get('aroaden.date_out_range', ['date_max_days' => $this->date_max_days]));
     }
 
-    switch ($this->misc_array['select_val']) {
+    switch ($select) {
       case 'today':
-        $this->misc_array['msg'] = Lang::get('aroaden.today_appointments');
+        $msg = Lang::get('aroaden.today_appointments');
         break;
 
       case '1week':
-        $this->misc_array['date_from_Ymd'] = date('Y-m-d');
-        $this->misc_array['date_to_Ymd'] = date('Y-m-d', strtotime('+1 Week'));
-        $this->misc_array['msg'] = Lang::get('aroaden.1week_appointments');
+        $date_from_Ymd = date('Y-m-d');
+        $date_to_Ymd = date('Y-m-d', strtotime('+1 Week'));
+        $msg = Lang::get('aroaden.1week_appointments');
         break;
 
       case '1month':
-        $this->misc_array['date_from_Ymd'] = date('Y-m-d');
-        $this->misc_array['date_to_Ymd'] = date('Y-m-d', strtotime('+1 Month'));
-        $this->misc_array['msg'] = Lang::get('aroaden.1month_appointments');
+        $date_from_Ymd = date('Y-m-d');
+        $date_to_Ymd = date('Y-m-d', strtotime('+1 Month'));
+        $msg = Lang::get('aroaden.1month_appointments');
         break;
 
       case 'minus1week':
-        $this->misc_array['date_from_Ymd'] = date('Y-m-d', strtotime('-1 Week'));
-        $this->misc_array['date_to_Ymd'] = date('Y-m-d');
-        $this->misc_array['msg'] = Lang::get('aroaden.minus1week_appointments');
+        $date_from_Ymd = date('Y-m-d', strtotime('-1 Week'));
+        $date_to_Ymd = date('Y-m-d');
+        $msg = Lang::get('aroaden.minus1week_appointments');
         break;
 
       case 'minus1month':
-        $this->misc_array['date_from_Ymd'] = date('Y-m-d', strtotime('-1 Month'));
-        $this->misc_array['date_to_Ymd'] = date('Y-m-d');
-        $this->misc_array['msg'] = Lang::get('aroaden.minus1month_appointments');
+        $date_from_Ymd = date('Y-m-d', strtotime('-1 Month'));
+        $date_to_Ymd = date('Y-m-d');
+        $msg = Lang::get('aroaden.minus1month_appointments');
         break;
 
       case 'date_range':
-        $this->misc_array['msg'] = Lang::get('aroaden.appointments_range', ['date_from' => $this->misc_array['date_from_DmY'], 'date_to' => $this->misc_array['date_to_DmY']]);
+        $msg = Lang::get('aroaden.appointments_range', ['date_from' => $date_from_DmY, 'date_to' => $date_to_DmY]);
         break;
     }
 
-    if ($this->misc_array['select_val'] == 'today') {
+    if ($select == 'today') {
 
-      $this->misc_array['main_loop'] = $this->model::AllTodayOrderByDay();
+      $main_loop = $this->model::AllTodayOrderByDay();
 
     } else {
 
-      $this->misc_array['main_loop'] = $this->model::AllBetweenRangeOrderByDay($this->misc_array['date_from_Ymd'], $this->misc_array['date_to_Ymd']);
+      $main_loop = $this->model::AllBetweenRangeOrderByDay($date_from_Ymd, $date_to_Ymd);
 
     }
 
-    $this->misc_array['count'] = $this->misc_array['main_loop']->count();
+    $count = $main_loop->count();
 
-    if ((int) $this->misc_array['count'] === 0)
+    if ((int)$count === 0)
       throw new Exception(Lang::get('aroaden.no_query_results'));
+
+    $this->misc_array['msg'] = $msg;
+    $this->misc_array['main_loop'] = $main_loop;
+    $this->misc_array['count'] = $count;
   }
 
   public function create(Request $request, $id = false)
