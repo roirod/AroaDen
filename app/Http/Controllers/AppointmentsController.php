@@ -181,66 +181,52 @@ class AppointmentsController extends BaseController implements BaseInterface
 
   public function create(Request $request, $id = false)
   {     
-      $this->redirectIfIdIsNull($id, $this->other_route);
+    $this->redirectIfIdIsNull($id, $this->other_route);
 
-      $object = $this->model2::FirstById($id);
-      $this->setPageTitle($object->surname.', '.$object->name);
+    $object = $this->model2::FirstById($id);
+    $this->setPageTitle($object->surname.', '.$object->name);
 
-      $this->view_data['id'] = $id;
-      $this->view_data['idnav'] = $object->idpat;
-      $this->view_data['object'] = $object;
-      $this->view_data['form_fields'] = $this->form_fields;
+    $this->view_data['id'] = $id;
+    $this->view_data['idnav'] = $object->idpat;
+    $this->view_data['object'] = $object;
+    $this->view_data['form_fields'] = $this->form_fields;
 
-      return parent::create($request, $id);  
+    return parent::create($request, $id);  
   }
 
   public function store(Request $request)
   {
-      $idpat = $request->input('idpat');
-      $this->redirectIfIdIsNull($idpat, $this->other_route);      
-      
-      $hour = trim($request->input('hour'));
-      $day = trim($request->input('day'));
-      $notes = $this->sanitizeData($request->input('notes'));
+    extract($this->sanitizeRequest($request->all()));
 
-      if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
-          $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
-          return redirect("/$this->main_route/$idpat/create");
-      }
+    $this->redirectIfIdIsNull($idpat, $this->other_route);
 
-      $validator = Validator::make($request->all(), [
-          'hour' => 'required',
-          'day' => 'required',
-          'notes' => ''
+    $route = "/$this->main_route/$idpat/create";
+
+    if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
+      $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
+      return redirect($route);
+    }
+
+    $day = $this->convertDmYToYmd($day);
+
+    try {
+        
+      $this->model::create([
+        'idpat' => $idpat,
+        'hour' => $hour,
+        'day' => $day,
+        'notes' => $notes
       ]);
-          
-      if ($validator->fails()) {
-          return redirect("/$this->main_route/$idpat/create")
-                       ->withErrors($validator)
-                       ->withInput();
-      } else {
 
-          $day = $this->convertDmYToYmd($day);
+    } catch (Exception $e) {
 
-          try {
-              
-              $this->model::create([
-                  'idpat' => $idpat,
-                  'hour' => $hour,
-                  'day' => $day,
-                  'notes' => $notes
-              ]);
+      $request->session()->flash($this->error_message_name, $e->getMessage());
+      return redirect($route);
 
-          } catch (Exception $e) {
+    }
 
-              $request->session()->flash($this->error_message_name, $e->getMessage());
-              return redirect("/$this->main_route/$idpat/create");
-
-          }
-
-          $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-          return redirect("/$this->main_route/$idpat/create");
-      }     
+    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+    return redirect($route); 
   }
 
   public function edit(Request $request, $id)
@@ -265,51 +251,36 @@ class AppointmentsController extends BaseController implements BaseInterface
 
   public function update(Request $request, $id)
   {
-      $id = $this->sanitizeData($id);
-      $exists = $this->model::CheckIfIdExists($id);
-      $route = "/$this->main_route/$id/edit";
+    $id = $this->sanitizeData($id);
+    $this->redirectIfIdIsNull($id, $this->other_route);
 
-      if (!$exists) {
-          $request->session()->flash($this->error_message_name, 'Error');  
-          return redirect($route);
-      }
+    $exists = $this->model::CheckIfIdExists($id);
+    $route = "/$this->main_route/$id/edit";
 
-      $this->redirectIfIdIsNull($id, $this->other_route);
+    if (!$exists) {
+      $request->session()->flash($this->error_message_name, 'Error');  
+      return redirect($route);
+    }      
+
+    extract($this->sanitizeRequest($request->all()));
+
+    if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
+        $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
+        return redirect($route);
+    }
         
-      $validator = Validator::make($request->all(), [
-          'hour' => 'required',
-          'day' => 'required',
-          'notes' => ''
-      ]);
-          
-      if ($validator->fails()) {
-          return redirect($route)
-                       ->withErrors($validator)
-                       ->withInput();
-      } else { 
-          
-          $hour = trim($request->input('hour'));
-          $day = trim($request->input('day'));
-          $notes = $this->sanitizeData($request->input('notes'));
+    $object = $this->model::find($id);
 
-          if (!$this->validateDateDDMMYYYY($day) || !$this->validateTime($hour)) {
-              $request->session()->flash($this->error_message_name, Lang::get('aroaden.date_time_fail')); 
-              return redirect($route);
-          }
-              
-          $object = $this->model::find($id);
+    $day = $this->convertDmYToYmd($day);
 
-          $day = $this->convertDmYToYmd($day);
+    $object->hour = $hour;
+    $object->day = $day;
+    $object->notes = $notes;
+    
+    $object->save();
 
-          $object->hour = $this->sanitizeData($hour);
-          $object->day = $this->sanitizeData($day);
-          $object->notes = $this->sanitizeData($notes);
-          
-          $object->save();
-
-          $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-          return redirect("$this->other_route/$object->idpat");
-      }   
+    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+    return redirect("$this->other_route/$object->idpat");
   }
 
   public function destroy(Request $request, $id)

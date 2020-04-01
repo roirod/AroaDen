@@ -10,147 +10,167 @@ use Lang;
 
 trait BaseTrait {
 
-    /**
-     *  sanitize Data / convert to html entities
-     * 
-     *  @param string|int $data
-     *  @return string       
-     */
-    protected function sanitizeData($data)
-    {   
-        $data = trim($data);
-        $data = htmlentities($data, ENT_QUOTES, "UTF-8");
+  /**
+   *  sanitize Data / convert to html entities
+   * 
+   *  @param string|int $data
+   *  @return string       
+   */
+  protected function sanitizeData($data)
+  {   
+    $data = trim($data);
+    $data = htmlentities($data, ENT_QUOTES, "UTF-8");
 
-        return $data;
+    return $data;
+  }
+
+  /**
+   *  sanitize Data / convert to html entities
+   * 
+   *  @param string|int $data
+   *  @return string       
+   */
+  protected function sanitizeRequest($data)
+  {
+    if (isset($data["_token"]))
+      unset($data["_token"]);
+
+    foreach ($data as $key => $val) {
+
+      $data[$key] = $this->sanitizeData($data[$key]);
+
     }
 
-    /**
-     *  redirect If Id Is Null
-     * 
-     *  @param int $int
-     *  @param string $route
-     *  @return object       
-     */
-    protected function redirectIfIdIsNull($id, $route)
-    {   
-        if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
-            return redirect($route);
-    }
+    return $data;
+  }
 
-    /**
-     *  echo Json Ouptut, used in ajax response
-     * 
-     *  @param $data string  
-     */
-    protected function echoJsonOuptut($data)
-    {   
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($data);
-        exit();    
-    }
+  /**
+   *  redirect If Id Is Null
+   * 
+   *  @param int $int
+   *  @param string $route
+   *  @return object       
+   */
+  protected function redirectIfIdIsNull($id, $route)
+  {   
+      if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
+          return redirect($route);
+  }
 
-    /**
-     *  format Number
-     * 
-     *  @param int $num
-     *  @return int       
-     */
-    protected function formatNumber($num)
-    {   
-        return number_format($num, 0, '', '.');
-    }
+  /**
+   *  echo Json Ouptut, used in ajax response
+   * 
+   *  @param $data string  
+   */
+  protected function echoJsonOuptut($data)
+  {   
+      header('Content-type: application/json; charset=utf-8');
+      echo json_encode($data);
+      exit();    
+  }
 
-    /**
-     *  convert date Y m d To D m Y
-     * 
-     *  @param string $date
-     *  @return string       
-     */
-    protected function convertYmdToDmY($date)
-    {   
-        $date = date('d-m-Y', strtotime($date));
+  /**
+   *  format Number
+   * 
+   *  @param int $num
+   *  @return int       
+   */
+  protected function formatNumber($num)
+  {   
+      return number_format($num, 0, '', '.');
+  }
 
-        return $date;
-    }
+  /**
+   *  convert date Y m d To D m Y
+   * 
+   *  @param string $date
+   *  @return string       
+   */
+  protected function convertYmdToDmY($date)
+  {   
+      $date = date('d-m-Y', strtotime($date));
 
-    /**
-     *  convert date Y m d To D m Y
-     * 
-     *  @param string $date
-     *  @return string       
-     */
-    protected function convertDmYToYmd($date)
-    {
-        return date('Y-m-d', strtotime($date));
-    }
+      return $date;
+  }
 
-    /**
-     *  validate Date
-     * 
-     *  @param string $date
-     *  @return bool
-     */
-    protected function validateDateDDMMYYYY($date)
-    {   
-        list($d, $m, $y) = array_pad(explode('-', $date, 3), 3, 0);
+  /**
+   *  convert date Y m d To D m Y
+   * 
+   *  @param string $date
+   *  @return string       
+   */
+  protected function convertDmYToYmd($date)
+  {
+      return date('Y-m-d', strtotime($date));
+  }
 
-        return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
-    }
+  /**
+   *  validate Date
+   * 
+   *  @param string $date
+   *  @return bool
+   */
+  protected function validateDateDDMMYYYY($date)
+  {   
+      list($d, $m, $y) = array_pad(explode('-', $date, 3), 3, 0);
 
-    /**
-     *  validate Date
-     * 
-     *  @param string $date
-     *  @return bool
-     */
-    protected function validateDateYYYYMMDD($date)
-    {   
-        list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
+      return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
+  }
 
-        return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
-    }
+  /**
+   *  validate Date
+   * 
+   *  @param string $date
+   *  @return bool
+   */
+  protected function validateDateYYYYMMDD($date)
+  {   
+      list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
 
-    /**
-     *  validate Time
-     * 
-     *  @param string $time
-     *  @return bool   
-     */
-    protected function validateTime($time)
-    {   
-        if ( preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time) )
-            return true;
+      return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
+  }
 
-        return false;
-    }
+  /**
+   *  validate Time
+   * 
+   *  @param string $time
+   *  @return bool   
+   */
+  protected function validateTime($time)
+  {   
+      if ( preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time) )
+          return true;
 
-    /**
-     *  get Settings, company info, etc.
-     *
-     *  @return object   
-     */
-    protected function getSettings()
-    {
-        if (env('REDIS_SERVER_IS_ON')) 
-            return json_decode(Redis::get('settings'));
+      return false;
+  }
 
-        return Settings::getObject();
-    }
+  /**
+   *  get Settings, company info, etc.
+   *
+   *  @return object   
+   */
+  protected function getSettings()
+  {
+      if (env('REDIS_SERVER_IS_ON')) 
+          return json_decode(Redis::get('settings'));
 
-    /**
-     *  check If Paid Is Higher
-     * 
-     *  @param int $units
-     *  @param int $price
-     *  @param int $paid
-     *  @return bool       
-     */
-    protected function checkIfPaidIsHigher($units, $price, $paid)
-    {   
-        $total = (int)$units * (int)$price;
+      return Settings::getObject();
+  }
 
-        if ( (int)$paid > (int)$total )
-            return true;
-    }
+  /**
+   *  check If Paid Is Higher
+   * 
+   *  @param int $units
+   *  @param int $price
+   *  @param int $paid
+   *  @return bool       
+   */
+  protected function checkIfPaidIsHigher($units, $price, $paid)
+  {   
+      $total = (int)$units * (int)$price;
+
+      if ( (int)$paid > (int)$total )
+          return true;
+  }
 
 }

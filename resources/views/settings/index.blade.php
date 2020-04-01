@@ -2,10 +2,8 @@
 
 @section('content')
 
-@include('includes.messages')
-@include('includes.errors')
-
-@if( $username == 'admin' )
+	@include('includes.messages')
+	@include('includes.errors')
 
 	<div class="row"> 
 	  <div class="col-sm-12"> 
@@ -18,17 +16,5 @@
 	          </a>
 	        </div>  
 	</div> </div> </div> </div>
-
-@else
-
-	<h2 class="col-sm-12 mar30 text-danger"> <br>
-	<i class="fa fa-warning"></i> No tienes permisos para acceder a esta área. </h2>
-   
-@endif
-
-
-<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
-<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
-
 
 @endsection

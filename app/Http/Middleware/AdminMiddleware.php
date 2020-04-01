@@ -13,7 +13,7 @@ class AdminMiddleware
     	$username = Auth::user()->username;
         $uid = Auth::user()->uid;
 
-    	if ($username != 'admin' && $uid == 1) {
+    	if ($username != 'admin' && (int)$uid !== 1) {
             if($request->ajax())
                 return response('Forbidden', 403);
 

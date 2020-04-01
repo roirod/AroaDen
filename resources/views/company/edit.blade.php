@@ -5,7 +5,7 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-		  	<form id="save_form">
+		  <form id="save_form">
 
 				@foreach ($main_loop as $item)
 
