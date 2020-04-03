@@ -4,8 +4,8 @@
 
   <div class="row">
 
-    <div class="col-xs-3">
-      <div class="mar30"></div>
+    <div class="col-xs-3 col-xs-offset-2">
+      <div class="mar40"></div>
 
       <div class="row bgtra boradius border2px boxsha">
         <div class="mar20"></div>
