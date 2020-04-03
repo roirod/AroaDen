@@ -43,8 +43,7 @@
 
     		<div class="row">
   		    <div class="col-sm-12 mar10" id="ajax_content">
-            <p class="label label-info fonsi15 pad10 mar10" id="name_price">              
-            </p>
+            <p class="label label-info fonsi15 pad10 mar10" id="name_price"></p>
 
             <div class="mar10"></div>
             <br>

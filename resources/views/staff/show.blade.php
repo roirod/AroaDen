@@ -1,28 +1,28 @@
 @extends('layouts.main')
 
-<div id="ajax_content">
+@section('content')
 
-	@section('content')
+	@include('includes.staff_nav')
 
-		@include('includes.staff_nav')
+	@include('includes.messages')
+	@include('includes.errors')
 
-		@include('includes.messages')
-		@include('includes.errors')
+	<div class="row"> 
+    <div class="col-sm-12"> 
+			<div class="input-group"> 
+				<span class="input-group-btn pad10">  
+					<p> {!! @trans("aroaden.staff") !!} </p>
+				</span>
 
-		<div class="row"> 
-		    <div class="col-sm-12"> 
-				<div class="input-group"> 
-					<span class="input-group-btn pad10">  
-						<p> {!! @trans("aroaden.staff") !!} </p>
-					</span>
-					<div class="btn-toolbar pad4" role="toolbar"> 
-						<div class="btn-group">
-							<a href="{{ url("/$main_route/$id/edit") }}" data-checkpermissions="staff.edit" role="button" class="btn btn-sm btn-success onEdit">
-								<i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
-							</a>
-						</div>	
+				<div class="btn-toolbar pad4" role="toolbar"> 
 					<div class="btn-group">
-					 	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="staff.delete" data-removeTr="false" data-htmlContent="false">	
+						<a href="{{ url("/$main_route/$id/edit") }}" role="button" class="btn btn-sm btn-success">
+							<i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
+						</a>
+					</div>
+
+					<div class="btn-group">
+					 	<form class="form" action="{!! url("/$main_route/$id") !!}" data-removeTr="false" data-htmlContent="false">	
 					  		{!! csrf_field() !!}
 
 							<input type="hidden" name="_method" value="DELETE">
@@ -36,22 +36,23 @@
 								</li>
 							</ul>
 				 		</form>
+				 	</div> 
+				</div> 
+			</div> 
+		</div> 
+	</div>
 
-		</div> </div> </div> </div> </div>
+	@include('form_fields.show.upload_photo')
 
+	<hr>
 
-		@include('form_fields.show.upload_photo')
+	<div class="row mar10"> 
+	  <div class="col-sm-12"> 
+	    <div class="row fonsi15">
 
-
-		<hr>
-
-		<div class="row mar10"> 
-		  <div class="col-sm-12"> 
-		    <div class="row fonsi15">
-
-		    	<div id="profile_photo">
-		    	    @include('form_fields.show.profile_photo')
-		    	</div>
+	    	<div id="profile_photo">
+	    	    @include('form_fields.show.profile_photo')
+	    	</div>
 
 				<div class="col-sm-10">
 
@@ -75,20 +76,22 @@
 
 				@include('form_fields.show.notes')
 
-		 </div> </div> </div>
+	 		</div> 
+		</div> 
+	</div>
 
-		<hr>
-		<br>
+	<hr>
+	<br>
 
-		<div class="row">
-		  	<div class="col-sm-12"> 
-		 		<p> Trabajos realizados: </p> 
-			</div> 
-		</div>
+	<div class="row">
+	  <div class="col-sm-12"> 
+	 		<p> Trabajos realizados: </p> 
+		</div> 
+	</div>
 
-		<div class="row">
-		 <div class="col-sm-12">
-		  <div class="panel panel-default">
+	<div class="row">
+		<div class="col-sm-12">
+	  	<div class="panel panel-default">
 				<table class="table table-striped table-bordered table-hover">
 			       <tr class="fonsi15">
 				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
@@ -100,23 +103,23 @@
 			   </table>
 
 			   <div class="box400">
-				 <table class="table table-striped table-bordered table-hover">
+					 <table class="table table-striped table-bordered table-hover">
 
-					@foreach ($treatments as $treat)
-			       		<tr class="fonsi13">
-							<td class="wid180">
-								<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
-									{{ $treat->surname }}, {{ $treat->name }}
-								</a>
-							</td>
-						   	<td class="wid180">{{ $treat->service_name }}</td>
-						   	<td class="wid95 textcent">{{ $treat->units }}</td>
-						   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
-						   	<td class="wid180"></td>
-				   		</tr>						
-					@endforeach
+						@foreach ($treatments as $treat)
+				       		<tr class="fonsi13">
+								<td class="wid180">
+									<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
+										{{ $treat->surname }}, {{ $treat->name }}
+									</a>
+								</td>
+							   	<td class="wid180">{{ $treat->service_name }}</td>
+							   	<td class="wid95 textcent">{{ $treat->units }}</td>
+							   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
+							   	<td class="wid180"></td>
+					   		</tr>						
+						@endforeach
 
-				 </table>
+					 </table>
 				</div>
 
 				<table class="table table-striped table-bordered table-hover">
@@ -129,26 +132,14 @@
 			   	 	</tr>
 			   </table>
 
-		 </div> </div> </div>
-   
-  @endsection
+			</div> 
+		</div>
+	</div>
+ 
+@endsection
 
-  @section('footer_script')
+@section('footer_script')
 
-    <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
-
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $('a.onEdit').on('click', function(evt) {
-          evt.preventDefault();
-          evt.stopPropagation();
-
-          var _this = $(this);
-          return util.onEditResource(_this);
-        });
-      });
-    </script>
-    
-  @endsection
-
-</div>
+  <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
+  
+@endsection

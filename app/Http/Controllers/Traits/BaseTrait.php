@@ -37,6 +37,9 @@ trait BaseTrait {
 
     foreach ($data as $key => $val) {
 
+      if (is_array($data[$key]))
+        continue;
+
       $data[$key] = $this->sanitizeData($data[$key]);
 
     }
