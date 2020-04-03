@@ -2,86 +2,87 @@
 
 @section('content')
 
-    @include('includes.patients_nav')
+  @include('includes.patients_nav')
 
-    @include('includes.messages')
-    @include('includes.errors')
+  @include('includes.messages')
+  @include('includes.errors')
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.multiply_units_price') }}"><i class="fa fa-lg fa-close"></i></a>';
-            $('input[name="paid"]').parent().find('label').append(append);
+  <div class="col-sm-12 pad10">
+    @include('form_fields.show.name')
+  </div>  
 
-            var append = ' <a id="put_zero" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.put_zero') }}"><i class="fa fa-close fa-lg text-danger"></i></a>';
-            $('input[name="paid"]').parent().find('label').append(append);
+  <div class="row">
+    <div class="col-sm-12">
+      <fieldset>
+        <legend>
+          {!! @trans('aroaden.edit_treatments') !!}
+        </legend>
 
-            $('#multiply_units_price').click(function (evt) {
-                var price = {{ $treatment->price }};
-                var units = $('input[name="units"]').val();
-                var paid = util.multiply(units, price);    
+        <div class="row pad4">
+          <div class="col-sm-12">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                 <tr class="fonsi15">
+                   <td class="wid140">{{ @trans('aroaden.name') }}</td>
+                   <td class="wid95">{{ @trans('aroaden.price') }}</td>
+                   <td class="wid95">{{ @trans('aroaden.units') }}</td>             
+                   <td class="wid95">{{ @trans('aroaden.tax') }}</td>
+                   <td class="wid95">{{ @trans('aroaden.total') }}</td>
+                   <td class="wid95">{{ @trans('aroaden.paid') }}</td>
+                   <td class="wid140">{{ @trans('aroaden.day') }}</td>
+                 </tr>
+                </thead>
+                <tbody>
+                 <tr class="fonsi15">
+                   <td class="wid140">{{ $treatment->name }}</td>
+                   <td class="wid95">{{ $treatment->price }} €</td>
+                   <td class="wid95">{{ $treatment->units }}</td>             
+                   <td class="wid95">{{ $treatment->tax }} %</td>
+                   <td class="wid95">{{ numformat($treatment->units * $treatment->price) }} €</td>
+                   <td class="wid95">{{ $treatment->paid }} €</td>
+                   <td class="wid140">{{ date('d-m-Y', strtotime ($treatment->day) ) }}</td>
+                 </tr>
+                </tbody>
+             </table>
+          </div>
+        </div>
 
-                $('input[name="paid"]').val(paid);
+        <hr>
 
-                evt.preventDefault();
-                evt.stopPropagation();              
-            });
+        @php
+        {{
+          $object = $treatment;
+        }}
+        @endphp
 
-            $('#put_zero').click(function (evt) {
-                $('input[name="paid"]').val(0);
+        @include('form_fields.fields.openform')
 
-                evt.preventDefault();
-                evt.stopPropagation();              
-            });
-        });
-    </script>
+          <input type="hidden" name="price" value="{{ $object->price }}">
 
-    <div class="col-sm-12 pad10">
-        @include('form_fields.show.name')
-    </div>  
+          @include('form_fields.common_alternative')
 
-    <div class="row">
-      <div class="col-sm-12">
-        <fieldset>
-          <legend>
-            {!! @trans('aroaden.edit_treatments') !!}
-          </legend>
+        @include('form_fields.fields.closeform')
 
-            <p class="pad4 fonsi15">
-                {{ $treatment->name }}
-                <br>
-                Precio: {{ $treatment->price }} €
-                <br>
-                Cantidad: {{ $treatment->units }}
-                <br>
-                IVA: {{ $treatment->tax }} %
-                <br>
-                Total: {{ numformat($treatment->units * $treatment->price) }} €
-                <br>
-                Pagado: {{ $treatment->paid }} €
-                <br>
-                Fecha: {{ date('d-m-Y', strtotime ($treatment->day) ) }}     
-            </p>
-
-            <hr>
-
-            @php
-            {{
-                $object = $treatment;
-            }}
-            @endphp
-
-            @include('form_fields.fields.openform')
-
-                <input type="hidden" name="price" value="{{ $object->price }}">
-
-                @include('form_fields.common_alternative')
-
-            @include('form_fields.fields.closeform')
-
-        </fieldset>
-      </div>
+      </fieldset>
     </div>
+  </div>
+
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#multiply_units_price').click(function (evt) {
+        var price = {{ $treatment->price }};
+        
+        return getPaid(price);
+      });
+    });
+  </script>
+
+
+  @include('treatments.common')
+
 
 @endsection
 
-@include('treatments.common')
+
+

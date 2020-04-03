@@ -90,7 +90,7 @@ return [
   'manuals' => 'Manuales',
   'data' => 'Datos',
   'settings' => 'Ajustes',
-  'deny_access' => 'No tienes permisos para hacer esto',
+  'deny_access' => 'Permiso denegado',
   'accounting' => 'Contable',
   'empty_db' => 'No hay registros en la base de datos',
   'rest' => 'Resto',
