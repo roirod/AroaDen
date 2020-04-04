@@ -287,9 +287,7 @@ class AppointmentsController extends BaseController implements BaseInterface
   {
       $id = $this->sanitizeData($id);
       $object = $this->model::find($id);
-
-      $this->redirect_to = "/$this->other_route/$object->idpat";
-
+      
       return parent::destroy($request, $id);        
   }
 

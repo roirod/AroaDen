@@ -22,7 +22,7 @@
 					</div>
 
 					<div class="btn-group">
-					 	<form class="form" action="{!! url("/$main_route/$id") !!}" data-removeTr="false" data-htmlContent="false">	
+					 	<form class="form" action="{!! url("/$main_route/$id") !!}">	
 					  		{!! csrf_field() !!}
 
 							<input type="hidden" name="_method" value="DELETE">

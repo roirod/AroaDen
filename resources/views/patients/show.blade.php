@@ -23,8 +23,7 @@
 					</div>
 
 					<div class="btn-group">
-						<form class="form" action="{!! url("/$main_route/$id") !!}" data-removeTr="false" data-htmlContent="false">	
-							{!! csrf_field() !!}
+						<form class="form" action="{!! url("/$main_route/$id") !!}">	
 							<input type="hidden" name="_method" value="DELETE">
 
 							<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -133,7 +132,7 @@
 								</td>
 								<td class="wid50"> 	
 									<div class="btn-group">
-									 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-removeTr="true" data-htmlContent="false" method="POST">
+									 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-removeTr="true" method="POST">
 											<input type="hidden" name="_method" value="DELETE">
 
 											<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -219,9 +218,7 @@
 
 								<td class="wid50 textcent"> 	
 									<div class="btn-group">
-									 	<form class="form" id="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
-									  		{!! csrf_field() !!}
-
+									 	<form class="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
 											<input type="hidden" name="_method" value="DELETE">
 
 											<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">

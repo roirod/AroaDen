@@ -2,19 +2,20 @@
 
 <div class="row">
   <div class="col-sm-12">
+
     <fieldset>
-        <legend>
+      <legend>
         <div class="input-group"> 
           <span class="input-group-btn pad10"> <p>{!! @trans('aroaden.company_data') !!}</p> </span>
           <div class="btn-toolbar pad4" role="toolbar">
-             <div class="btn-group">
-                <a href="{{ url("/$company_route/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
-                  <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
-                </a>
-             </div> 
+            <div class="btn-group">
+              <a href="{{ url("/$company_route/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
+                <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
+              </a>
+            </div> 
           </div> 
         </div> 
-        </legend>
+      </legend>
 
       <br>
 
@@ -53,6 +54,7 @@
       </div>
 
     </fieldset>
+    
   </div>
 </div>
 
@@ -64,20 +66,11 @@
 
       var url_href = $(this).attr('href');
 
-      util.checkPermissions('company.edit').done(function(response) {
-        if (response.permission) {
-          var obj = {      
-            url  : url_href
-          };
+      var obj = {      
+        url  : url_href
+      };
 
-          return util.processAjaxReturnsHtml(obj);
-
-        } else {
-
-          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
-        }
-      });
+      return util.processAjaxReturnsHtml(obj);
     });
   });
 </script>

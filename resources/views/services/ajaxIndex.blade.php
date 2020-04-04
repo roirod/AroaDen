@@ -34,7 +34,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-7">
+  <div class="col-sm-8">
     <div id="item_list">
 
       @include('services.servicesList')
@@ -58,20 +58,11 @@
       lastRoute = routes.services_route + '/ajaxIndex';
       var url_href = _this.attr('href');
 
-      util.checkPermissions('services.create').done(function(response) {
-        if (response.permission) {
-          var obj = {      
-            url  : url_href
-          };
+      var obj = {      
+        url  : url_href
+      };
 
-          return util.processAjaxReturnsHtml(obj);
-
-        } else {
-
-          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
-        }
-      });
+      return util.processAjaxReturnsHtml(obj);
     }
 
     $("#string").on('keyup change', function(event) {

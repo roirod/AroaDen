@@ -34,32 +34,4 @@ class SettingsController extends BaseController
         $this->echoJsonOuptut($data);
     }
 
-    public function checkPermissions(Request $request)
-    {
-        $data = [];
-        $data['permission'] = false;
-
-        $action = $request->input('action');
-        $action = explode('.', $action);
-
-        $type = Auth::user()->type;
-        $username = Auth::user()->username;
-
-        $permissions = Config::get('aroaden.permissions');
-        $type = $permissions[$type];
-
-        if ($username == 'admin') {
-
-            $data['permission'] = true;
-
-        } else {
-
-            if ($type[$action[0]][$action[1]])
-                $data['permission'] = true;
-
-        }
-
-        $this->echoJsonOuptut($data);
-    }
-
 }

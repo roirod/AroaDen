@@ -14,7 +14,7 @@
 	        {!! @trans('aroaden.create_patient') !!}
 	      </legend>
 
-			@include('form_fields.common')
+				@include('form_fields.common')
 
 	    </fieldset>
 	  </div>

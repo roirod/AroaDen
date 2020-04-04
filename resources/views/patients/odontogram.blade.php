@@ -74,29 +74,20 @@
         var formData = new FormData(this);
         $('input[type="file"]').val('');
 
-        util.checkPermissions('patients.uploadOdontogram').done(function(response) {
-          if (response.permission) {
+        var obj = {
+          data: formData,          
+          url: '{!! "/$main_route/uploadOdontogram/$id" !!}',
+          uploadFiles: true
+        };       
 
-            var obj = {
-              data: formData,          
-              url: '{!! "/$main_route/uploadOdontogram/$id" !!}',
-              uploadFiles: true
-            };       
+        util.processAjaxReturnsJson(obj).done(function(response) {
+          if (response.error)
+            return util.showPopup(response.msg, false);
 
-            util.processAjaxReturnsJson(obj).done(function(response) {
-              if (response.error)
-                return util.showPopup(response.msg, false);
-
-              $("#upodog_img img").remove();
-              $("#upodog_img").append('<img src="' + response.odontogram + '" class="wPa" />').fadeIn(4000);
-            });
-
-          } else {
-
-            return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
-          }
+          $("#upodog_img img").remove();
+          $("#upodog_img").append('<img src="' + response.odontogram + '" class="wPa" />').fadeIn(4000);
         });
+
       });
     });
   </script>

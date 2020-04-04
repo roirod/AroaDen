@@ -16,7 +16,8 @@
     @endif
 
     <p class="label label-success fonsi15">
-      {{ @trans('aroaden.services') }} <span class="badge"> {!! $count !!} </span>
+      <span class="badge" id="countcurrentId"><span> {!! $count !!} </span></span>
+      {{ @trans('aroaden.services') }} 
     </p>
   </div>
 
@@ -24,12 +25,14 @@
 
   <div class="panel panel-default">
     <table class="table table-striped table-bordered table-hover">
-       <tr class="fonsi15">
+      <tr class="fonsi15">
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
-        <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
+        <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
-        <td class="wid95 textcent">{{ Lang::get('aroaden.edit') }}</td>
-       </tr>
+        <td class="wid70 textcent">{{ Lang::get('aroaden.edit') }}</td>
+        <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
+        <td class="wid70 textcent"></td>        
+      </tr>
     </table>
 
     <div class="box300">
@@ -37,37 +40,69 @@
 
         @foreach ($main_loop as $obj)
 
-         <tr>
+          <tr>
             <td class="wid200">{{ $obj->name }}</td>
-            <td class="wid95 textcent">{{ $obj->tax }} %</td>             
+            <td class="wid70 textcent">{{ $obj->tax }} %</td>             
             <td class="wid110 textcent">{{ $obj->price }} €</td>
 
-            <td class="wid95 textcent">
+            <td class="wid70 textcent">
               <a class="btn btn-sm btn-success editService" type="button" href="/{{ "$services_route/$obj->idser/edit" }}">
                 <i class="fa fa-edit"></i>
               </a>
-            </td>   
-         </tr>
+            </td>
+
+            <td class="wid70">  
+              <div class="btn-group">
+                <form class="form" id="form" action="{!! url("/$services_route/$obj->idser") !!}" data-removeTr="true" data-count="true" method="POST">
+                  <input type="hidden" name="_method" value="DELETE">
+
+                  <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-times"></i> <span class="caret"></span>  
+                  </button>
+                  <ul class="dropdown-menu" role="menu"> 
+                    <li>
+                      @include('includes.delete_button')
+                    </li>
+                  </ul>     
+                </form>
+              </div> 
+            </td>
+
+            <td class="wid70 textcent"></td>
+          </tr>
           
         @endforeach
+
+          <tr>
+            <td class="wid200"></td>
+          </tr>
+          <tr>
+            <td class="wid200"></td>
+          </tr>
 
       </table>
     </div>
 
     <table class="table table-striped table-bordered table-hover">
-       <tr class="fonsi15">
+      <tr class="fonsi15">
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
-        <td class="wid95 textcent">{{ @trans('aroaden.tax') }}</td>
+        <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
-        <td class="wid95 textcent">{{ Lang::get('aroaden.edit') }}</td>
-       </tr>
+        <td class="wid70 textcent">{{ Lang::get('aroaden.edit') }}</td>
+        <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
+        <td class="wid70 textcent"></td>        
+      </tr>
     </table>
 
   </div>
 
 @endif
 
+<script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
+
 <script type="text/javascript">
+  currentId = 'countcurrentId';
+
   $(document).ready(function() {
     $('a.editService').on('click', function(evt) {
       evt.preventDefault();
@@ -82,20 +117,11 @@
       lastRoute = routes.services_route + '/ajaxIndex';
       var url_href = _this.attr('href');
 
-      util.checkPermissions('services.edit').done(function(response) {
-        if (response.permission) {
-          var obj = {      
-            url  : url_href
-          };
+      var obj = {      
+        url  : url_href
+      };
 
-          return util.processAjaxReturnsHtml(obj);
-
-        } else {
-
-          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
-        }
-      });
+      return util.processAjaxReturnsHtml(obj);
     }
   });
 </script>

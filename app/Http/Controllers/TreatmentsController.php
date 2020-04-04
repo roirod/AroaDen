@@ -226,16 +226,14 @@ class TreatmentsController extends BaseController
   {               
     $id = $this->sanitizeData($id);
     $object = $this->model::find($id);
-    $error = false;
-    $msg = Lang::get('aroaden.success_message');
-
-    $this->redirect_to = "/$this->other_route/$object->idpat";
+    $data['error'] = false;
 
     DB::beginTransaction();
 
     try {
 
-      $this->model::destroy($id);           
+      $this->model::destroy($id);
+      
       StaffWorks::where('idtre', $id)->delete();
 
       DB::commit();
@@ -244,14 +242,11 @@ class TreatmentsController extends BaseController
 
       DB::rollBack();
 
-      $error = true;
-      $msg = $e->getMessage();
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
 
     }
 
-    $data['error'] = $error;
-    $data['msg'] = $msg;
-    $data['redirect_to'] = url($this->redirect_to);
     $data['htmlContent'] = $this->renderPaymentsTable($object->idpat);
 
     $this->echoJsonOuptut($data);

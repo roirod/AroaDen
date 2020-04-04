@@ -15,8 +15,7 @@ return [
   'create_user'   => 'Crear usuario',
   'edit_user'   => 'Editar usuario',
   'del_user'   => 'Eliminar usuario',
-
-
+  'form_field_required'   => 'Dato/s de formulario no introducidos',
   'new_pass'   => 'Contraseña nueva',
   'change_pass'   => 'Cambiar contraseña',
   'password'   => 'Contraseña',
@@ -169,6 +168,7 @@ return [
   'service' => 'Servicio',
   'no_services_on_db'   => 'No hay servicios en la base de datos',
   'select_service' => 'Selecciona servicio',   
+  'service_delete_warning' => 'Servicio añadido a tratamiento, no se puede eliminar',
 
 
   'staff11' => 'Personal 1',

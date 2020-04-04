@@ -1,5 +1,14 @@
 <script type="text/javascript">
 
+  // datatables staff
+  var aLengthMenu = [
+    [15, 25, 50, 100],
+    [15, 25, 50, 100]
+  ];
+
+  var iDisplayLength = 15;
+  // datatables staff
+
   var routes = {
     patients_route: "{{ $patients_route }}",
     invoices_route: "{{ $invoices_route }}",
@@ -23,19 +32,17 @@
   var redirectRoute = '';
   var error = false;
 
-  // datatables staff
-  var aLengthMenu = [
-    [15, 25, 50, 100],
-    [15, 25, 50, 100]
-  ];
-
-  var iDisplayLength = 15;
-
   $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
     event.preventDefault();
     event.stopPropagation();
 
-      console.log('---------------- ajaxError ----------------------------');
+    console.log('---------------- ajaxError thrownError  ----------------------------');
+    console.dir(thrownError);
+    console.log('--------------------------------------------');
+
+    console.log('---------------- ajaxError jqXHR.status  ----------------------------');
+    console.dir(jqXHR.status);
+    console.log('--------------------------------------------');
 
     if (jqXHR.status == 401)
       return util.redirectTo("/login");
@@ -50,6 +57,12 @@
   var util = {
 
     redirectTo: function(string) {
+      var string = (string == undefined) ? redirectRoute : string;
+
+      console.log('---------------- redirectTo string  ----------------------------');
+      console.dir(string);
+      console.log('--------------------------------------------');
+
       return window.location.href = string;
     },
 
@@ -71,12 +84,20 @@
             _this.showContentOnPage(id, response);
 
             if (popup)
-              _this.showPopup("{{ Lang::get('aroaden.success_message') }}");
+              _this.showPopup();
 
             _this.getSettings();
           }
         }
       };
+
+      console.log('---------------- processAjaxReturnsHtml obj  ----------------------------');
+      console.dir(obj);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- processAjaxReturnsHtml ajax_data  ----------------------------');
+      console.dir(ajax_data);
+      console.log('--------------------------------------------');
 
       return $.ajax(ajax_data);
     },
@@ -97,6 +118,14 @@
         ajax_data.contentType = false;
         ajax_data.cache = false;      
       }
+
+      console.log('---------------- processAjaxReturnsJson obj  ----------------------------');
+      console.dir(obj);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- processAjaxReturnsJson ajax_data  ----------------------------');
+      console.dir(ajax_data);
+      console.log('--------------------------------------------');
 
       return $.ajax(ajax_data);
     },
@@ -122,11 +151,20 @@
     },
 
     showPopup: function(msg, success, time) {
-      var time = (time == undefined) ? 1200 : time;
+      var msg = (msg == undefined) ? "{{ Lang::get('aroaden.success_message') }}" : msg;
       var success = (success == undefined) ? true : success;
+      var time = (time == undefined) ? 1200 : time;
 
       console.log('---------------- showPopup msg  ----------------------------');
       console.dir(msg);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- showPopup success  ----------------------------');
+      console.dir(success);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- showPopup time  ----------------------------');
+      console.dir(time);
       console.log('--------------------------------------------');
 
       if (success) {
@@ -164,8 +202,20 @@
     showContentOnPage: function(id, content, error) {
       var _this = this;
 
-      var id = (id == false) ? defaulId : id;
+      var id = (id == undefined) ? defaulId : id;
       var error = (error == undefined) ? false : error;
+
+      console.log('---------------- showContentOnPage id  ----------------------------');
+      console.dir(id);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- showContentOnPage error  ----------------------------');
+      console.dir(error);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- showContentOnPage content  ----------------------------');
+      console.dir(content);
+      console.log('--------------------------------------------');
 
       if (error)
         content = '<p class="text-danger">' + content + '</p>';
@@ -182,6 +232,10 @@
       var id = (id == undefined) ? defaulId : id;
       var loading = '<img class="center" src="/assets/img/loading.gif"/>';
 
+      console.log('---------------- showLoadingGif id  ----------------------------');
+      console.dir(id);
+      console.log('--------------------------------------------');
+
       $('#'+id).empty();
       $('#'+id).html(loading);
     },
@@ -194,27 +248,23 @@
         url  : "/" + routes.settings_route + "/jsonSettings"
       };
 
+      console.log('---------------- getSettings ajax_data  ----------------------------');
+      console.dir(error);
+      console.log('--------------------------------------------');
+
       _this.processAjaxReturnsJson(ajax_data).done(function(response) {
         document.title = response.page_title;
       });
-    },
-
-    checkPermissions: function(action) {
-      var _this = this;
-
-      var ajax_data = {
-        data : { action: action },
-        method : "GET",
-        url  : "/" + routes.settings_route + "/checkPermissions"
-      };
-
-      return _this.processAjaxReturnsJson(ajax_data);
     },
 
     showSearchText: function() {
       if (document.getElementById('searched')) {
         var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
         $('#searched').prepend(searched);
+
+        console.log('---------------- showSearchText searched  ----------------------------');
+        console.dir(searched);
+        console.log('--------------------------------------------');
       }
     },
 
@@ -248,19 +298,12 @@
 
       var attributes = $this[0].attributes;
       var url = attributes['href'].value;
-      var checkpermissions = attributes['data-checkpermissions'].value;
 
-      _this.checkPermissions(checkpermissions).done(function(response) {
-        if (response.permission) {
+      console.log('---------------- onEditResource attributes  ----------------------------');
+      console.dir(attributes);
+      console.log('--------------------------------------------');
 
-          window.location.href = url;
-
-        } else {
-
-          return _this.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
-        }
-      });
+      window.location.href = url;
     },
 
     confirmDeleteAlert: function($this) {
@@ -269,11 +312,18 @@
       var form = $this.closest('form');
       var data = form.serialize();
       var attributes = form[0].attributes;
-      var url = attributes['action'].value;
-      var removeTr = attributes['data-removeTr'].value;
-      var htmlContent = attributes['data-htmlContent'].value;
+      var url = (attributes['action'] == undefined) ? false : attributes['action'].value;
+      var removeTr = (attributes['data-removeTr'] == undefined) ? false : attributes['data-removeTr'].value;
+      var htmlContent = (attributes['data-htmlContent'] == undefined) ? false : attributes['data-htmlContent'].value;
+      var count = (attributes['count'] == undefined) ? false : attributes['count'].value;
 
-      var tr_content = $this.closest('tr');
+      console.log('---------------- confirmDeleteAlert attributes  ----------------------------');
+      console.dir(attributes);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- confirmDeleteAlert data form ----------------------------');
+      console.dir(data);
+      console.log('--------------------------------------------');
 
       swal({
 
@@ -298,23 +348,43 @@
             };
 
             _this.processAjaxReturnsJson(ajax_data).done(function(response) {
+
+              console.log('---------------- confirmDeleteAlert response  error----------------------------');
+              console.dir(response.error);
+              console.log('--------------------------------------------');
+              
+              console.log('---------------- confirmDeleteAlert response  htmlContent----------------------------');
+              console.dir(response.htmlContent);
+              console.log('--------------------------------------------');
+
+              console.log('---------------- confirmDeleteAlert response  count----------------------------');
+              console.dir(response.count);
+              console.log('--------------------------------------------');
+
               if (response.error)
-                return _this.showPopup(response.msg, false, 2500);
+                return _this.showPopup(response.msg, false, 3500);
+
+              if (count == 'true') {
+                var countContent = '<span>' + response.count + '</span>';
+                _this.showContentOnPage(currentId, countContent);
+              }
 
               if (htmlContent == 'true')
-                _this.showContentOnPage(defaulId, response.htmlContent);
+                _this.showContentOnPage(currentId, response.htmlContent);
 
               if (removeTr == 'true') {
 
-                tr_content.remove();
+                $this.closest('tr').remove();
 
               } else {
 
-                setTimeout(function(){  _this.redirectTo(redirectRoute); }, 1100);
+                setTimeout(function(_this){  
+                  _this.redirectTo(); 
+                }, 1100);
 
               }
 
-              return _this.showPopup(response.msg);
+              return _this.showPopup();
             });
           }
         }

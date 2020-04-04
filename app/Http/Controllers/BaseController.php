@@ -459,23 +459,24 @@ class BaseController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $error = false;
-        $msg = Lang::get('aroaden.success_message');
+        $data['error'] = false;
 
         try {
+
+            if (isset($this->misc_array['checkDestroy']) && $this->misc_array['checkDestroy'])
+                $this->model::checkDestroy($id);           
+
+            if (isset($this->misc_array['count']) && $this->misc_array['count'])
+                $data['count'] = $this->model::CountAll();
 
             $this->model::destroy($id);           
 
         } catch (Exception $e) {
 
-            $error = true;
-            $msg = $e->getMessage();
+            $data['error'] = true;
+            $data['msg'] = $e->getMessage();
 
         }
-
-        $data['error'] = $error;
-        $data['msg'] = $msg;
-        $data['redirect_to'] = url($this->redirect_to);
 
         $this->echoJsonOuptut($data);
     }

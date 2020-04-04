@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
+use Exception;
+use Lang;
 
 class Services extends Model implements BaseModelInterface
 {
@@ -35,6 +37,18 @@ class Services extends Model implements BaseModelInterface
                         ->whereNull('deleted_at')
                         ->first();
     }
+
+    public static function checkDestroy($idser)
+    {
+        $result = DB::table('treatments')
+            ->select('treatments.idtre')
+            ->where('idser', $idser)
+            ->first();
+
+        if ($result !== NULL)
+            throw new Exception(Lang::get('aroaden.service_delete_warning'));
+    }
+
 
     public static function CountAll()
     {

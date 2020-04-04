@@ -17,6 +17,10 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 		Route::delete($route["staff"].'/{id}', 'StaffController@destroy');
 
+		Route::delete($route["services"].'/{id}', 'ServicesController@destroy');
+
+		Route::delete($route["staff_positions"].'/{id}', 'StaffPositionsController@destroy');
+
 		Route::get($route["users"].'/deleteView', 'UsersController@deleteView');
 		Route::post($route["users"].'/userDelete', 'UsersController@userDelete');
 		Route::resource($route["users"], 'UsersController', ['except' => ['create', 'show', 'destroy']]);
@@ -81,12 +85,12 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::delete($route["staff"].'/deleteFile/{idfiles}', 'StaffController@deleteFile');
 		Route::resource($route["staff"], 'StaffController');
 
-		Route::resource($route["staff_positions"], 'StaffPositionsController', ['except' => ['show', 'destroy']]);
+		Route::resource($route["staff_positions"], 'StaffPositionsController', ['except' => ['show']]);
 
 		Route::get($route["services"].'/ajaxIndex', 'ServicesController@ajaxIndex');
 		Route::get($route["services"].'/create', 'ServicesController@create');	
 		Route::get($route["services"].'/search', 'ServicesController@search');
-		Route::resource($route["services"], 'ServicesController', ['except' => ['show', 'destroy']]);
+		Route::resource($route["services"], 'ServicesController', ['except' => ['show']]);
 
 		Route::get($route["accounting"], 'AccountingController@index');
 
