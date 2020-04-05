@@ -14,7 +14,6 @@ class CreateServicesTable extends Migration
             $table->smallInteger('price');
             $table->tinyInteger('tax')->default(0);
             $table->timestamps();
-            $table->softDeletes();
             $table->unique('name');       
         });
     }

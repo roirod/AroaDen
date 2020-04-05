@@ -135,6 +135,7 @@ return [
   'positions' => 'Cargos',
   'create_position' => 'Crear cargo',
   'edit_position' => 'Editar cargo',
+  'staff_positions_delete_warning' => 'Cargo añadido a personal, no se puede eliminar',
 
 
   'invoices' => 'Facturas',

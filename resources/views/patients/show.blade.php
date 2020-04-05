@@ -23,18 +23,7 @@
 					</div>
 
 					<div class="btn-group">
-						<form class="form" action="{!! url("/$main_route/$id") !!}">	
-							<input type="hidden" name="_method" value="DELETE">
-
-							<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-times"></i> {!! @trans("aroaden.delete") !!} <span class="caret"></span>  
-							</button>
-							<ul class="dropdown-menu" role="menu"> 
-								<li>
-									@include('includes.delete_button')
-								</li>
-							</ul>
-						</form>
+						@include('includes.delete_dropdown')
 					</div>
 
       	</div>
@@ -277,12 +266,12 @@
 
 	<script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
 
-  	<script type="text/javascript">
+	<script type="text/javascript">
+		defaulId = 'paymentsTable';
+		redirectRoute = '{!! url("/$main_route") !!}';				
+
 	  $(document).ready(function(){
 			$('[data-toggle="tooltip"]').tooltip();
-
-			defaulId = 'paymentsTable';
-			redirectRoute = '{!! url("/$main_route/$id") !!}';				
 	  });
 	</script>
 	

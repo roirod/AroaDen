@@ -16,7 +16,7 @@
     @endif
 
     <p class="label label-success fonsi15">
-      <span class="badge" id="countcurrentId"><span> {!! $count !!} </span></span>
+      <span class="badge" id="countcurrentId">{!! $count !!}</span>
       {{ @trans('aroaden.services') }} 
     </p>
   </div>
@@ -53,7 +53,7 @@
 
             <td class="wid70">  
               <div class="btn-group">
-                <form class="form" id="form" action="{!! url("/$services_route/$obj->idser") !!}" data-removeTr="true" data-count="true" method="POST">
+                <form class="form" action="{!! url("/$services_route/$obj->idser") !!}" data-removeTr="true" data-count="true" method="POST">
                   <input type="hidden" name="_method" value="DELETE">
 
                   <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -75,8 +75,10 @@
 
           <tr>
             <td class="wid200"></td>
+            <td class="wid200"></td>
           </tr>
           <tr>
+            <td class="wid200"></td>
             <td class="wid200"></td>
           </tr>
 

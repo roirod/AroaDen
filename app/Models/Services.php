@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
@@ -11,10 +10,7 @@ use Lang;
 
 class Services extends Model implements BaseModelInterface
 {
-	use SoftDeletes;
-
 	protected $table = 'services';
-	protected $dates = ['deleted_at'];
     protected $fillable = ['name','price','tax'];
     protected $primaryKey = 'idser';
 
@@ -25,16 +21,13 @@ class Services extends Model implements BaseModelInterface
 
     public function scopeAllOrderByName($query)
     {
-        return $query->whereNull('deleted_at')
-                        ->orderBy('name', 'ASC')
+        return $query->orderBy('name', 'ASC')
                         ->get();
-
     }
 
     public function scopeFirstById($query, $id)
     {
         return $query->where('idser', $id)
-                        ->whereNull('deleted_at')
                         ->first();
     }
 
@@ -49,14 +42,12 @@ class Services extends Model implements BaseModelInterface
             throw new Exception(Lang::get('aroaden.service_delete_warning'));
     }
 
-
     public static function CountAll()
     {
         $result = DB::table('services')
-                    ->whereNull('deleted_at')
-                    ->get();
+                    ->count();
 
-        return (int)count($result);
+        return (int)$result;
     }
 
     public function scopeFirstByNameDeleted($query, $name)
@@ -81,8 +72,7 @@ class Services extends Model implements BaseModelInterface
 
     public function scopeFindStringOnField($query, $string)
     {
-        return $query->whereNull('deleted_at')
-                        ->where('name', 'LIKE', '%'.$string.'%')
+        return $query->where('name', 'LIKE', '%'.$string.'%')
                         ->orderBy('name','ASC')
                         ->get();
     }
@@ -90,11 +80,10 @@ class Services extends Model implements BaseModelInterface
     public static function CountFindStringOnField($string)
     {
         $result = DB::table('services')
-                    ->whereNull('deleted_at')
                     ->where('name', 'LIKE', '%'.$string.'%')
-                    ->get();
+                    ->count();
 
-        return count($result);
+        return $result;
     }
 
 }

@@ -228,6 +228,32 @@
       }, 400);  
     },
 
+    changeText: function(id, content, error) {
+      var _this = this;
+
+      var id = (id == undefined) ? currentId : id;
+      var error = (error == undefined) ? false : error;
+
+      console.log('---------------- changeText id  ----------------------------');
+      console.dir(id);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- changeText error  ----------------------------');
+      console.dir(error);
+      console.log('--------------------------------------------');
+
+      console.log('---------------- changeText content  ----------------------------');
+      console.dir(content);
+      console.log('--------------------------------------------');
+
+      if (error)
+        return util.showPopup("{{ Lang::get('aroaden.error_message') }}", false, 2500);
+
+      window.setTimeout(function () {
+        $('#'+id).text(content);
+      }, 400);  
+    },
+
     showLoadingGif: function(id) {
       var id = (id == undefined) ? defaulId : id;
       var loading = '<img class="center" src="/assets/img/loading.gif"/>';
@@ -315,7 +341,8 @@
       var url = (attributes['action'] == undefined) ? false : attributes['action'].value;
       var removeTr = (attributes['data-removeTr'] == undefined) ? false : attributes['data-removeTr'].value;
       var htmlContent = (attributes['data-htmlContent'] == undefined) ? false : attributes['data-htmlContent'].value;
-      var count = (attributes['count'] == undefined) ? false : attributes['count'].value;
+      var count = (attributes['data-count'] == undefined) ? false : attributes['data-count'].value;
+      var redirect = (attributes['data-redirect'] == undefined) ? false : attributes['data-redirect'].value;
 
       console.log('---------------- confirmDeleteAlert attributes  ----------------------------');
       console.dir(attributes);
@@ -364,25 +391,19 @@
               if (response.error)
                 return _this.showPopup(response.msg, false, 3500);
 
-              if (count == 'true') {
-                var countContent = '<span>' + response.count + '</span>';
-                _this.showContentOnPage(currentId, countContent);
-              }
+              if (count == 'true')
+                _this.changeText(undefined, response.count);
 
               if (htmlContent == 'true')
-                _this.showContentOnPage(currentId, response.htmlContent);
+                _this.showContentOnPage(undefined, response.htmlContent);
 
-              if (removeTr == 'true') {
-
+              if (removeTr == 'true')
                 $this.closest('tr').remove();
 
-              } else {
-
+              if (redirect == 'true')
                 setTimeout(function(_this){  
                   _this.redirectTo(); 
-                }, 1100);
-
-              }
+                }, 1200);
 
               return _this.showPopup();
             });

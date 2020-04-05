@@ -466,10 +466,10 @@ class BaseController extends Controller
             if (isset($this->misc_array['checkDestroy']) && $this->misc_array['checkDestroy'])
                 $this->model::checkDestroy($id);           
 
+            $this->model::destroy($id);
+
             if (isset($this->misc_array['count']) && $this->misc_array['count'])
                 $data['count'] = $this->model::CountAll();
-
-            $this->model::destroy($id);           
 
         } catch (Exception $e) {
 

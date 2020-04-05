@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
+use Exception;
+use Lang;
 
 class StaffPositions extends Model implements BaseModelInterface
 {
@@ -50,6 +52,17 @@ class StaffPositions extends Model implements BaseModelInterface
                     ->get();
 
         return (int)count($result);
+    }
+
+    public static function checkDestroy($idstpo)
+    {
+        $result = DB::table('staff_positions_entries')
+            ->select('staff_positions_entries.idsta')
+            ->where('idstpo', $idstpo)
+            ->first();
+
+        if ($result !== NULL)
+            throw new Exception(Lang::get('aroaden.staff_positions_delete_warning'));
     }
 
 }
