@@ -91,10 +91,6 @@
         }
       };
 
-      console.log('---------------- processAjaxReturnsHtml obj  ----------------------------');
-      console.dir(obj);
-      console.log('--------------------------------------------');
-
       console.log('---------------- processAjaxReturnsHtml ajax_data  ----------------------------');
       console.dir(ajax_data);
       console.log('--------------------------------------------');
@@ -118,10 +114,6 @@
         ajax_data.contentType = false;
         ajax_data.cache = false;      
       }
-
-      console.log('---------------- processAjaxReturnsJson obj  ----------------------------');
-      console.dir(obj);
-      console.log('--------------------------------------------');
 
       console.log('---------------- processAjaxReturnsJson ajax_data  ----------------------------');
       console.dir(ajax_data);
@@ -161,10 +153,6 @@
 
       console.log('---------------- showPopup success  ----------------------------');
       console.dir(success);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- showPopup time  ----------------------------');
-      console.dir(time);
       console.log('--------------------------------------------');
 
       if (success) {
@@ -329,7 +317,7 @@
       console.dir(attributes);
       console.log('--------------------------------------------');
 
-      window.location.href = url;
+      _this.redirectTo(url); 
     },
 
     confirmDeleteAlert: function($this) {
@@ -346,10 +334,6 @@
 
       console.log('---------------- confirmDeleteAlert attributes  ----------------------------');
       console.dir(attributes);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- confirmDeleteAlert data form ----------------------------');
-      console.dir(data);
       console.log('--------------------------------------------');
 
       swal({

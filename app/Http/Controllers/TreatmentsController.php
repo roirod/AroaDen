@@ -39,7 +39,8 @@ class TreatmentsController extends BaseController
   }   
 
   public function create(Request $request, $id = false)
-  {  
+  {
+    $id = $this->sanitizeData($id);
     $this->redirectIfIdIsNull($id, $this->other_route);
     $object = Patients::FirstById($id);
 
@@ -90,7 +91,7 @@ class TreatmentsController extends BaseController
     try {
 
       if ($this->checkIfPaidIsHigher($units, $price, $paid))
-          throw new Exception(Lang::get('aroaden.paid_is_higher'));
+        throw new Exception(Lang::get('aroaden.paid_is_higher'));
 
       $idtre = Treatments::insertGetId([
         'idpat' => $idpat,
@@ -128,8 +129,8 @@ class TreatmentsController extends BaseController
 
   public function edit(Request $request, $id)
   {
+    $id = $this->sanitizeData($id);   
     $this->redirectIfIdIsNull($id, $this->other_route);
-    $id = $this->sanitizeData($id);
 
     $treatment = Treatments::FirstById($id);
     $object = Patients::FirstById($treatment->idpat);
@@ -157,9 +158,7 @@ class TreatmentsController extends BaseController
       'units' => 'required',            
       'paid' => 'required',
       'price' => 'required',
-      'day' => 'required|date',
-      'per1' => '',
-      'per2' => ''
+      'day' => 'required|date'
     ]);
         
     if ($validator->fails()) {
@@ -180,7 +179,7 @@ class TreatmentsController extends BaseController
         $treatment = Treatments::find($id);
 
         if ($this->checkIfPaidIsHigher($units, $price, $paid))
-            throw new Exception(Lang::get('aroaden.paid_is_higher'));
+          throw new Exception(Lang::get('aroaden.paid_is_higher'));
 
         $treatment->units = $units;
         $treatment->paid = $paid;
@@ -217,9 +216,12 @@ class TreatmentsController extends BaseController
 
   public function renderPaymentsTable($idpat)
   {
+    $this->views_folder = 'patients';
+    $this->view_name = 'paymentsTable';
+
     $this->view_data['treatments_sum'] = $this->model::SumByPatientId($idpat);
 
-    return (string)View::make('patients.paymentsTable', $this->view_data);
+    return $this->returnViewString();
   }
 
   public function destroy(Request $request, $id)

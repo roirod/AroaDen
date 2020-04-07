@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Controllers\Traits\DefaultTrait;
 use App\Http\Controllers\Traits\BaseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -23,7 +24,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers,BaseTrait;
+    use AuthenticatesUsers,DefaultTrait,BaseTrait;
 
     protected $redirectTo = '/home';
     protected $redirectAfterLogout = '/login';
@@ -36,35 +37,10 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->checkIfUserExists();
+        if (env('CREATE_DEFAULT_USERS'))
+            $this->checkIfUserExists();
         
         $this->middleware('guest', ['except' => 'logout']);
-    }
-
-    private function checkIfUserExists()
-    {
-        if ( env('CREATE_DEFAULT_USERS') ) {
-            $default_users = Config::get('aroaden.default_users');
-
-            foreach ($default_users as $user) {
-
-                $exits = User::where('username', $user["username"])->first();
-
-                if ($exits == null) {
-
-                    User::insert([
-                        'username' => $user["username"],
-                        'password' => bcrypt($user["password"]),
-                        'type' => $user["type"],
-                        'full_name' => $user["full_name"]
-                    ]);                
-                    
-                }
-
-            }
-
-            return redirect("/login");
-        }
     }
 
     public function logout()

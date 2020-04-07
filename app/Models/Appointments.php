@@ -20,7 +20,6 @@ class Appointments extends Model
     {
         return $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
-                        ->whereNull('patients.deleted_at')
                         ->orderBy('appointments.day' , 'DESC')
                         ->orderBy('appointments.hour' , 'ASC')
                         ->get();
@@ -31,7 +30,6 @@ class Appointments extends Model
         $count = DB::table('appointments')
             ->join('patients','appointments.idpat','=','patients.idpat')
             ->select('appointments.*','patients.surname','patients.name')
-            ->whereNull('patients.deleted_at')
             ->count();
 
         return (int)$count;
@@ -42,7 +40,6 @@ class Appointments extends Model
         $result = $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
                         ->whereBetween('day', [$date1, $date2])
-                        ->whereNull('patients.deleted_at')
                         ->orderBy('day' , 'DESC')
                         ->orderBy('hour' , 'ASC')
                         ->get();
@@ -57,7 +54,6 @@ class Appointments extends Model
         return $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
                         ->where('appointments.day', $today)
-                        ->whereNull('patients.deleted_at')
                         ->orderBy('appointments.day' , 'DESC')
                         ->orderBy('appointments.hour' , 'ASC')
                         ->get();
@@ -70,7 +66,6 @@ class Appointments extends Model
         $count = DB::table('appointments')
                         ->join('patients','appointments.idpat','=','patients.idpat')
                         ->where('appointments.day', $today)
-                        ->whereNull('patients.deleted_at')
                         ->count();
 
         return (int)$count;

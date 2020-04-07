@@ -2,17 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
 
 class Patients extends Model implements BaseModelInterface
-{
-    use SoftDeletes;
-    
+{   
 	protected $table = 'patients';
-    protected $dates = ['deleted_at'];
     protected $fillable = ['surname','name','dni','tel1','tel2','tel3','sex','address','city','birth','notes'];
     protected $primaryKey = 'idpat';
 
@@ -44,7 +40,6 @@ class Patients extends Model implements BaseModelInterface
     public function scopeAllOrderBySurname($query, $num_paginate)
     {
         return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
-                        ->whereNull('deleted_at')
                         ->orderBy('surname', 'ASC')
                         ->orderBy('name', 'ASC')
                         ->paginate($num_paginate);
@@ -53,7 +48,6 @@ class Patients extends Model implements BaseModelInterface
     public function scopeFirstById($query, $id)
     {
         return $query->where('idpat', $id)
-                        ->whereNull('deleted_at')
                         ->first();
     }
 
@@ -80,7 +74,6 @@ class Patients extends Model implements BaseModelInterface
     public static function CountAll()
     {
         $result = DB::table('patients')
-                    ->whereNull('deleted_at')
                     ->count();
 
         return (int)$result;
@@ -92,11 +85,10 @@ class Patients extends Model implements BaseModelInterface
 
         if ($sWhere != '')
           $where = "
-            AND (
+            WHERE 
                 surname LIKE '%". $sWhere ."%' 
                 OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
                 OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
-            ) 
           ";
 
         if ($sOrder != '') {
@@ -108,7 +100,6 @@ class Patients extends Model implements BaseModelInterface
         $query = "
             SELECT idpat, CONCAT(surname, ', ', name) AS surname_name, dni, tel1, city
             FROM patients
-            WHERE deleted_at IS NULL 
             " . $where . " 
             " . $order . " 
             " . $sLimit . "
@@ -123,15 +114,15 @@ class Patients extends Model implements BaseModelInterface
                 
         if ($sWhere != '')
           $where = "
-            AND (surname LIKE '%". $sWhere ."%' 
-            OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
-            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%') 
+            WHERE 
+                surname LIKE '%". $sWhere ."%' 
+                OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+                OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
           ";
 
         $query = "
             SELECT count(*) AS total
             FROM patients
-            WHERE deleted_at IS NULL 
             " . $where . "
         ;";
 
@@ -165,8 +156,6 @@ class Patients extends Model implements BaseModelInterface
                 treatments tre
             INNER JOIN 
                 patients pa ON tre.idpat=pa.idpat 
-            WHERE 
-                pa.deleted_at IS NULL
             GROUP BY 
                 tre.idpat 
             HAVING 
@@ -190,8 +179,6 @@ class Patients extends Model implements BaseModelInterface
                     treatments tre
                 INNER JOIN 
                     patients pa ON tre.idpat=pa.idpat 
-                WHERE 
-                    pa.deleted_at IS NULL
                 GROUP BY 
                     tre.idpat 
                 HAVING 
@@ -224,8 +211,6 @@ class Patients extends Model implements BaseModelInterface
                     treatments tre
                 INNER JOIN 
                     patients pa ON tre.idpat=pa.idpat 
-                WHERE 
-                    pa.deleted_at IS NULL
                 GROUP BY 
                     tre.idpat 
                 HAVING 
