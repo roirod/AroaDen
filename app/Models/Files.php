@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Files extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'files';
     protected $fillable = ['iduser','info', 'originalName'];
     protected $primaryKey = 'idfiles';

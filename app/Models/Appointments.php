@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+namespace App\Models;
+
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Appointments extends Model
 {
+    use GetTableNameTrait;
+
     protected $table = 'appointments';
     protected $fillable = ['idpat','day','hour','notes'];
     protected $primaryKey = 'idapp';

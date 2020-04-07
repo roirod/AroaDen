@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Budgets extends Model
 {
+    use GetTableNameTrait;
+    
 	protected $table = 'budgets';
     protected $fillable = ['idpat','idser','price','units','uniqid','tax','created_at'];
     protected $primaryKey = 'idbud';

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Record extends Model
 {
-	protected $table = 'record';
+    use GetTableNameTrait;
+
+    protected $table = 'record';
     protected $fillable = ['idpat','medical_record','diseases','medicines','allergies','notes'];
     protected $primaryKey = 'idpat';
 

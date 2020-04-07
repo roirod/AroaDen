@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
 
 class Patients extends Model implements BaseModelInterface
 {   
+    use GetTableNameTrait;
+
 	protected $table = 'patients';
     protected $fillable = ['surname','name','dni','tel1','tel2','tel3','sex','address','city','birth','notes'];
     protected $primaryKey = 'idpat';

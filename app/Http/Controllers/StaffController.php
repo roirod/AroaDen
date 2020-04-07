@@ -188,6 +188,7 @@ class StaffController extends BaseController implements BaseInterface
   public function store(Request $request)
   {
     extract($this->sanitizeRequest($request->all()));
+    
     $route = "$this->main_route/create";
 
     $exists = $this->model::FirstByDniDeleted($dni);
@@ -203,7 +204,7 @@ class StaffController extends BaseController implements BaseInterface
     $validator = Validator::make($request->all(),[
       'name' => 'required|max:111',
       'surname' => 'required|max:111',
-      'dni' => 'unique:staff|max:12',
+      'dni' => 'unique:'. $this->model->getTableName() .'|max:12',
       'tel1' => 'max:11',
       'tel2' => 'max:11',
       'address' => 'max:111',

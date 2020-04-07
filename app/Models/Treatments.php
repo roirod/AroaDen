@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\StaffWorks;
 
 class Treatments extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'treatments';
     protected $fillable = ['idpat','idser','price','units','paid','day','tax'];
     protected $primaryKey = 'idtre';

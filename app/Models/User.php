@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,GetTableNameTrait;
     
 	protected $table = 'users';
     protected $fillable = ['username','password','type', 'full_name'];

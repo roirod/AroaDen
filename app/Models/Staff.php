@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
 
 class Staff extends Model implements BaseModelInterface
 {
+  use GetTableNameTrait;
+
   protected $table = 'staff';
   protected $fillable = ['name','surname','dni','tel1','tel2','address','city','birth','notes'];
   protected $primaryKey = 'idsta';

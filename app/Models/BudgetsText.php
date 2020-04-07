@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class BudgetsText extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'budgets_text';
     protected $fillable = ['idpat','uniqid','text'];
     protected $primaryKey = 'idbute';

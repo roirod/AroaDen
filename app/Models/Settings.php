@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use StdClass;
 
 class Settings extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'settings';
     protected $fillable = ['key','value', 'type'];
     protected $primaryKey = 'id';

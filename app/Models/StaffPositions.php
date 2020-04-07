@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\BaseModelInterface;
@@ -10,6 +11,8 @@ use Lang;
 
 class StaffPositions extends Model implements BaseModelInterface
 {
+    use GetTableNameTrait;
+
 	protected $table = 'staff_positions';
     protected $fillable = ['name'];
     protected $primaryKey = 'idstpo';
