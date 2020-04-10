@@ -10,7 +10,7 @@
         {!! @trans('aroaden.edit_service') !!}
       </legend>
 
-      <form id="form" class="editServiceForm form" action="{{ url("/$routes['services']/$id") }}" method="POST">
+      <form id="form" class="editServiceForm form" action="{{ url($routes['services']."/$id") }}" method="POST">
       	<input type="hidden" name="_method" value="PUT">
 
         @include('form_fields.common_alternative')

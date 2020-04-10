@@ -5,7 +5,7 @@
       <span class="input-group-btn pad10">  <p> {{ Lang::get('aroaden.service') }} </p> </span>
       <div class="btn-toolbar pad4" role="toolbar"> 
         <div class="btn-group">
-          <a href="{{ url("/$routes['services']/create") }}" role="button" class="btn btn-sm btn-primary">
+          <a href="{{ url($routes['services']."/create") }}" role="button" class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
           </a>
         </div>
@@ -23,7 +23,7 @@
           <input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus>
         </div>
         <div class="col-sm-3">
-          <a href="{{ url("/$routes['services']") }}" role="button" class="btn btn-md btn-danger">
+          <a href="{{ url($routes['services']) }}" role="button" class="btn btn-md btn-danger">
             <i class="fa fa-trash"></i> {{ Lang::get('aroaden.remove_text') }}
           </a>
         </div>
@@ -45,7 +45,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $('a[href="{{ url("/$routes['services']/create") }}"]').on('click', function(evt) {
+    $('a[href="{{ url($routes['services']."/create") }}"]').on('click', function(evt) {
       evt.preventDefault();
       evt.stopPropagation();
 

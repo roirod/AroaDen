@@ -46,14 +46,14 @@
             <td class="wid110 textcent">{{ $obj->price }} €</td>
 
             <td class="wid70 textcent">
-              <a class="btn btn-sm btn-success editService" type="button" href="/{{ "$routes['services']/$obj->idser/edit" }}">
+              <a class="btn btn-sm btn-success editService" type="button" href="{{ $routes['services']."/$obj->idser/edit" }}">
                 <i class="fa fa-edit"></i>
               </a>
             </td>
 
             <td class="wid70">  
               <div class="btn-group">
-                <form class="form" action="{!! url("/$routes['services']/$obj->idser") !!}" data-removeTr="true" data-count="true" method="POST">
+                <form class="form" action="{!! url($routes['services']."/$obj->idser") !!}" data-removeTr="true" data-count="true" method="POST">
                   <input type="hidden" name="_method" value="DELETE">
 
                   <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">

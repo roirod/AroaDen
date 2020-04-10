@@ -350,18 +350,6 @@ class BaseController extends Controller
     View::share('form_fields', $this->form_fields);        
 
     View::share('routes', $this->config['routes']);
-
-    View::share('patients_route', $this->config['routes']['patients']);
-    View::share('invoices_route', $this->config['routes']['invoices']);
-    View::share('budgets_route', $this->config['routes']['budgets']);
-    View::share('company_route', $this->config['routes']['company']);
-    View::share('appointments_route', $this->config['routes']['appointments']);
-    View::share('staff_route', $this->config['routes']['staff']);
-    View::share('staff_positions_route', $this->config['routes']['staff_positions']);
-    View::share('services_route', $this->config['routes']['services']);
-    View::share('accounting_route', $this->config['routes']['accounting']);
-    View::share('treatments_route', $this->config['routes']['treatments']);        
-    View::share('settings_route', $this->config['routes']['settings']);
   }
 
   /**
