@@ -288,7 +288,7 @@ class BaseController extends Controller
    */
   public function list(Request $request)
   {
-    $string = $request->input('string');
+    $string = $request->string;
     $this->misc_array['string'] = $this->sanitizeData($string);
 
     $data = [];
@@ -347,6 +347,9 @@ class BaseController extends Controller
     View::share('main_route', $this->main_route);
     View::share('other_route', $this->other_route);
     View::share('form_route', $this->form_route);        
+    View::share('form_fields', $this->form_fields);        
+
+    View::share('routes', $this->config['routes']);
 
     View::share('patients_route', $this->config['routes']['patients']);
     View::share('invoices_route', $this->config['routes']['invoices']);

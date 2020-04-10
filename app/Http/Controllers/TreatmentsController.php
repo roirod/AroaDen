@@ -49,7 +49,6 @@ class TreatmentsController extends BaseController
     $this->view_data['object'] = $object;
     $this->view_data['services'] = Services::AllOrderByName();
     $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
-    $this->view_data['form_fields'] = $this->form_fields;
 
     $this->setPageTitle($object->surname.', '.$object->name);
 
@@ -135,14 +134,14 @@ class TreatmentsController extends BaseController
     $treatment = Treatments::FirstById($id);
     $object = Patients::FirstById($treatment->idpat);
 
+    $this->autofocus = 'units';
+
     $this->view_data['id'] = $id;
     $this->view_data['idnav'] = $object->idpat;        
     $this->view_data['object'] = $object;
     $this->view_data['treatment'] = $treatment;
     $this->view_data['staff_works'] = StaffWorks::AllById($id)->toArray();
     $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
-    $this->view_data['form_fields'] = $this->form_fields;        
-    $this->view_data['autofocus'] = 'units';
     
     $this->setPageTitle($object->surname.', '.$object->name);
 

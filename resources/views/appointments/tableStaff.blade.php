@@ -61,7 +61,7 @@
                 @foreach ($main_loop as $obj)
                   <tr>
                       <td class="wid290"> 
-                        <a href="{{ url("/$patients_route/$obj->idpat") }}" class="pad4" target="_blank">
+                        <a href="{{ url("/$routes['patients']/$obj->idpat") }}" class="pad4" target="_blank">
                             {{ $obj->surname }}, {{ $obj->name }} 
                         </a>
                       </td>

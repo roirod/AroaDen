@@ -113,7 +113,6 @@ class ServicesController extends BaseController implements BaseInterface
     $this->autofocus = 'name';
 
     $this->view_data['tax_types'] = $this->tax_types;
-    $this->view_data['form_fields'] = $this->form_fields;
 
     $this->setPageTitle(Lang::get('aroaden.create_service'));
 
@@ -176,7 +175,6 @@ class ServicesController extends BaseController implements BaseInterface
     $this->view_data['id'] = $id;
     $this->view_data['object'] = $object;
     $this->view_data['tax_types'] = $this->tax_types;
-    $this->view_data['form_fields'] = $this->form_fields;
 
     $this->setPageTitle(Lang::get('aroaden.edit_service'));
 

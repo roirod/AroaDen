@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\GetTableNameTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Models\BaseModelInterface;
+use App\Models\GetTableNameTrait;
+use App\Models\BaseModel;
 
-class Staff extends Model implements BaseModelInterface
+class Staff extends BaseModel
 {
   use GetTableNameTrait;
 
@@ -18,6 +17,27 @@ class Staff extends Model implements BaseModelInterface
   public function staffPositionsEntries()
   {
     return $this->hasMany('App\Models\StaffPositionsEntries', 'idsta', 'idsta');
+  }
+
+  public function scopeFirstById($query, $id)
+  {
+    $this->whereRaw = "$this->primaryKey = '$id'";
+
+    return $this->scopeFirstWhereRaw($query);
+  }
+
+  public function scopeFirstByDni($query, $dni)
+  {
+    $this->whereRaw = "dni = '$dni'";
+
+    return $this->scopeFirstWhereRaw($query);
+  }
+
+  public function scopeCheckIfDniExistsOnUpdate($query, $id, $dni)
+  {
+    $this->whereRaw = "$this->primaryKey != '$id' AND dni = '$dni'";
+
+    return $this->scopeFirstWhereRaw($query);
   }
 
   public function scopeAllOrderBySurname($query, $num_paginate)
@@ -48,26 +68,6 @@ class Staff extends Model implements BaseModelInterface
     return DB::select($query);
   }
 
-  public static function CountAll()
-  {
-    $result = DB::table('staff')
-                ->count();
-
-    return (int)$result;
-  }
-
-  public function scopeFirstById($query, $id)
-  {
-    return $query->where('idsta', $id)
-                    ->first();
-  }
-
-  public function scopeFirstByDniDeleted($query, $dni)
-  {
-    return $query->where('dni', $dni)
-                    ->first();
-  }
-
   public function scopeAllAppointmentsById($query, $id)
   {
     return DB::table('patients')
@@ -95,20 +95,6 @@ class Staff extends Model implements BaseModelInterface
                   ->selectRaw('SUM(units*price) AS total_sum, SUM(paid) AS total_paid, SUM(units*price)-SUM(paid) AS rest')
                   ->where('idsta', $id)
                   ->get();
-  }
-
-  public static function CheckIfExistsOnUpdate($id, $dni)
-  {
-      $exists = DB::table('staff')
-                  ->where('idsta', '!=', $id)
-                  ->where('dni', $dni)
-                  ->first();
-
-      if ( is_null($exists) ) {
-          return true;
-      }
-
-      return $exists;
   }
 
   public static function FindStringOnField($sLimit, $sWhere, $sOrder)

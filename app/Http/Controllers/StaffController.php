@@ -179,7 +179,6 @@ class StaffController extends BaseController implements BaseInterface
   public function create(Request $request, $id = false)
   {
     $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
-    $this->view_data['form_fields'] = $this->form_fields;
     $this->view_data['misc_text'] = Lang::get('aroaden.add_staff');
 
     return parent::create($request);
@@ -191,15 +190,13 @@ class StaffController extends BaseController implements BaseInterface
     
     $route = "$this->main_route/create";
 
-    $exists = $this->model::FirstByDniDeleted($dni);
+    $exists = $this->model::FirstByDni($dni);
 
     if ( isset($exists->dni) ) {
       $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$exists->surname.', '.$exists->name;
       $request->session()->flash($this->error_message_name, $messa);
       return redirect($route)->withInput();
     }
-
-    $birth = $this->convertDmYToYmd($birth);
 
     $validator = Validator::make($request->all(),[
       'name' => 'required|max:111',
@@ -222,6 +219,8 @@ class StaffController extends BaseController implements BaseInterface
       DB::beginTransaction();
 
       try {
+
+        $birth = $this->convertDmYToYmd($birth);
 
         $idsta = $this->model::insertGetId([
           'name' => $name,
@@ -254,7 +253,7 @@ class StaffController extends BaseController implements BaseInterface
         DB::rollBack();
 
         $request->session()->flash($this->error_message_name, $e->getMessage());  
-        return redirect($route);
+        return redirect($route)->withInput();
 
       }
 
@@ -273,7 +272,6 @@ class StaffController extends BaseController implements BaseInterface
     $this->view_data['object'] = $object;
     $this->view_data['idnav'] = $id;       
     $this->view_data['id'] = $id;
-    $this->view_data['form_fields'] = $this->form_fields;
     $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
     $this->view_data['staffPositionsEntries'] = StaffPositionsEntries::AllByStaffId($id);
     $this->view_data['misc_text'] = Lang::get('aroaden.edit_staff');
@@ -291,7 +289,7 @@ class StaffController extends BaseController implements BaseInterface
 
     extract($this->sanitizeRequest($request->all()));
 
-    $exists = $this->model::CheckIfExistsOnUpdate($id, $dni);
+    $exists = $this->model::CheckIfDniExistsOnUpdate($id, $dni);
 
     if ( isset($exists->dni) ) {
       $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);

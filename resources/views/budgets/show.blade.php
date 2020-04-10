@@ -72,7 +72,7 @@
 
             <tr>
               <td class="wid110">
-                <a href="{!! url("/$budgets_route/$bud->uniqid/edit") !!}" role="button" class="btn btn-sm btn-success">
+                <a href="{!! url("/$routes['budgets']/$bud->uniqid/edit") !!}" role="button" class="btn btn-sm btn-success">
                    <i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
                 </a>
               </td>

@@ -83,7 +83,7 @@
 	   		<span class="input-group-btn pad10"> <p> {!! @trans("aroaden.appointments") !!} </p> </span>
 	   		<div class="btn-toolbar pad4" role="toolbar"> 
 	    		<div class="btn-group">
-			       <a href="{!! url("/$appointments_route/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
+			       <a href="{!! url("/$routes['appointments']/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
 			          <i class="fa fa-plus"></i> {!! @trans("aroaden.new") !!}
 			       </a>
 					</div> 
@@ -115,16 +115,16 @@
 					 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
 					 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
 					 			<td class="wid50">	
-									<a href="{!! url("/$appointments_route/$appo->idapp/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+									<a href="{!! url("/$routes['appointments']/$appo->idapp/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 										<i class="fa fa-edit"></i>
 									</a>
 								</td>
 								<td class="wid50"> 	
 									<div class="btn-group">
-									 	<form class="form" id="form" action="{!! url("/$appointments_route/$appo->idapp") !!}" data-removeTr="true" method="POST">
+									 	<form class="form" action="{!! url("/$routes['appointments']/$appo->idapp") !!}" data-removeTr="true" method="POST">
 											<input type="hidden" name="_method" value="DELETE">
 
-											<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+											<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
 											<i class="fa fa-times"></i> <span class="caret"></span>  </button>
 											<ul class="dropdown-menu" role="menu"> 
 												<li>
@@ -140,6 +140,15 @@
 
 				    @endforeach
 	    
+					  <tr class="fonsi14">
+						  <td class="wid180"></td>
+						  <td class="wid180"></td>
+					  </tr> 
+					  <tr class="fonsi14">
+						  <td class="wid180"></td>
+						  <td class="wid180"></td>
+					  </tr>
+
 	 				</table>
 
 	 			</div> 
@@ -157,7 +166,7 @@
 
 		   	<div class="btn-toolbar pad4" role="toolbar"> 
 		   		<div class="btn-group">
-			       <a href="{!! url("/$treatments_route/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
+			       <a href="{!! url("/$routes['treatments']/$id/create") !!}" role="button" class="btn btn-sm btn-primary">
 			          <i class="fa fa-plus"></i> {!! @trans("aroaden.new") !!}
 			       </a>
 					</div> 
@@ -200,17 +209,17 @@
 								<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 								<td class="wid50 textcent">
-									<a href="{!! url("/$treatments_route/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+									<a href="{!! url("/$routes['treatments']/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 										<i class="fa fa-edit"></i>
 									</a>
 								</td>
 
 								<td class="wid50 textcent"> 	
 									<div class="btn-group">
-									 	<form class="form" action="{!! url("/$treatments_route/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
+									 	<form class="form" action="{!! url("/$routes['treatments']/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
 											<input type="hidden" name="_method" value="DELETE">
 
-											<button type="button" class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">
+											<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
 												<i class="fa fa-times"></i> <span class="caret"></span>  
 											</button>
 											<ul class="dropdown-menu" role="menu"> 
@@ -228,7 +237,7 @@
 
 										@if ($treat->idtre == $staff_work->idtre)
 
-											<a href="{!! url("/$staff_route/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-sm btn-default mar4" role="button">
+											<a href="{!! url("/$routes['staff']/$staff_work->idsta") !!}" data-toggle="tooltip" title="{!! $staff_work->surname.', '.$staff_work->name !!}" target="_blank" class="btn btn-sm btn-default mar4" role="button">
 												<i class="fa fa-hand-pointer-o"></i>
 											</a>
 
@@ -240,6 +249,15 @@
 							</tr>
 
 						@endforeach
+
+					  <tr class="fonsi14">
+						  <td class="wid180"></td>
+						  <td class="wid180"></td>
+					  </tr> 
+					  <tr class="fonsi14">
+						  <td class="wid180"></td>
+						  <td class="wid180"></td>
+					  </tr> 
 
 	    		</table>
 				</div>

@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-use App\Models\GetTableNameTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
+use App\Models\BaseModel;
 
-class BudgetsText extends Model
+class BudgetsText extends BaseModel
 {
-    use GetTableNameTrait;
+  use GetTableNameTrait;
 
-	protected $table = 'budgets_text';
-    protected $fillable = ['idpat','uniqid','text'];
-    protected $primaryKey = 'idbute';
+  protected $table = 'budgets_text';
+  protected $fillable = ['idpat','uniqid','text'];
+  protected $primaryKey = 'idbute';
 
-    public static function FirstById($id, $uniqid)
-    {
-        return DB::table('budgets_text')
-				->where('idpat', $id)
-				->where('uniqid', $uniqid)
-				->first();
-    }
+  public function scopeFirstById($query, $id, $uniqid)
+  {
+    $this->whereRaw = "idpat = '$id' AND uniqid = '$uniqid'";
 
-    public static function FirstByUniqid($uniqid)
-    {
-        return DB::table('budgets_text')
-                ->where('uniqid', $uniqid)
-                ->first();
-    }
+    return $this->scopeFirstWhereRaw($query);
+  }
+
+  public function scopeFirstByUniqid($query, $uniqid)
+  {
+    $this->whereRaw = "uniqid = '$uniqid'";
+
+    return $this->scopeFirstWhereRaw($query);
+  }
 
 }

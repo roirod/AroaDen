@@ -53,7 +53,7 @@
 	    evt.stopPropagation();
 
 	    var obj = {  
-	      url  : '{!! url("/$company_route/$form_route") !!}',
+	      url  : '{!! url("/$routes['company']/$form_route") !!}',
 	      data : $(this).serialize(),
 	      method  : 'POST',
 	      popup: true          

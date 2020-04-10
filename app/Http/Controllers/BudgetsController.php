@@ -14,261 +14,258 @@ use DB;
 class BudgetsController extends BaseController
 {
 
-    public function __construct(Budgets $budgets, Patients $patients, Services $services)
-    {
-        parent::__construct();
+  public function __construct(Budgets $budgets, Patients $patients, Services $services)
+  {
+    parent::__construct();
 
-        $this->main_route = $this->config['routes']['budgets'];
-        $this->other_route = $this->config['routes']['patients'];      
-        $this->views_folder = 'budgets';
-        $this->model = $budgets;
-        $this->model2 = $patients;
-        $this->model3 = $services;
+    $this->main_route = $this->config['routes']['budgets'];
+    $this->other_route = $this->config['routes']['patients'];      
+    $this->views_folder = 'budgets';
+    $this->model = $budgets;
+    $this->model2 = $patients;
+    $this->model3 = $services;
+  }
+
+  public function create(Request $request, $id = false)
+  {
+    $id = $this->sanitizeData($id);
+    $this->redirectIfIdIsNull($id, $this->other_route);
+
+    $main_loop = $this->model3::AllOrderByName();        
+    $patient = $this->model2::FirstById($id);
+
+    $this->view_data['main_loop'] = $main_loop;
+    $this->view_data['idpat'] = $id;
+    $this->view_data['idnav'] = $id;        
+    $this->view_data['name'] = $patient->name;
+    $this->view_data['surname'] = $patient->surname;
+    $this->view_data['object'] = $patient;
+    $this->view_data['created_at'] = date('Y-m-d H:i:s'); 
+    $this->view_data['uniqid'] = uniqid();
+
+    $this->setPageTitle($patient->surname.', '.$patient->name);
+
+    return parent::create($request, $id);
+  }
+
+  public function store(Request $request)
+  {
+    $budgetArray = $request->budgetArray;
+    $onUpdate = $request->onUpdate;
+    $onUpdateDeleteAll = $request->onUpdateDeleteAll;
+    $uniqid = $request->uniqid;
+
+    $data = [];
+    $data['msg'] = Lang::get('aroaden.success_message');
+    $data['error'] = false;
+
+    try {
+
+      if (empty($budgetArray) && $onUpdate == false) {
+
+        throw new Exception(Lang::get('aroaden.no_add_treatments'));
+
+      } elseif (empty($budgetArray) && $onUpdate && $onUpdateDeleteAll) {
+
+        $this->delete($uniqid, true);
+
+      } elseif (is_array($budgetArray) && $onUpdate) {
+
+        $this->delete($uniqid);
+        $this->save($budgetArray);
+
+      } elseif (is_array($budgetArray) && $onUpdate == false) {
+
+        $this->save($budgetArray);
+
+      }
+
+    } catch (\Exception $e) {
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
     }
 
-    public function create(Request $request, $id = false)
-    {     
-        $this->redirectIfIdIsNull($id, $this->other_route);
-        $idpat = $this->sanitizeData($id);
+    return $this->echoJsonOuptut($data);
+  }
 
-        $main_loop = $this->model3::AllOrderByName();        
-        $patient = $this->model2::FirstById($idpat);
+  private function save($budgetArray)
+  {
+    $budgetsTextExists = false;
 
-        $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['idpat'] = $idpat;
-        $this->view_data['idnav'] = $idpat;        
-        $this->view_data['name'] = $patient->name;
-        $this->view_data['surname'] = $patient->surname;
-        $this->view_data['object'] = $patient;
-        $this->view_data['created_at'] = date('Y-m-d H:i:s'); 
-        $this->view_data['uniqid'] = uniqid();
+    DB::beginTransaction();
 
-        $this->setPageTitle($patient->surname.', '.$patient->name);
+    try {
 
-        return parent::create($request, $idpat);
-    }
+      foreach ($budgetArray as $key => $val) {
+        $this->model::create([
+          'idpat' => $val["idpat"],
+          'idser' => $val["idser"],
+          'price' => $val["price"],
+          'units' => $val["units"],
+          'uniqid' => $val["uniqid"],
+          'tax' => $val["tax"],
+          'created_at' => $val["created_at"]               
+        ]);
 
-    public function store(Request $request)
-    {
-        $budgetArray = $request->input('budgetArray');
-        $onUpdate = $request->input('onUpdate');
-        $onUpdateDeleteAll = $request->input('onUpdateDeleteAll');
-        $uniqid = $request->input('uniqid');
-        $data = [];
-        $data['msg'] = Lang::get('aroaden.success_message');
-        $data['error'] = false;
+        if (!$budgetsTextExists) {
+          $budgetstext = BudgetsText::FirstById($val["idpat"], $val["uniqid"]);
 
-        try {
+          if (is_null($budgetstext)) {          
+            BudgetsText::create([
+              'idpat' => $val["idpat"],
+              'uniqid' => $val["uniqid"],                
+              'created_at' => $val["created_at"]
+            ]);
 
-            if (empty($budgetArray) && $onUpdate == false) {
-
-                $data['msg'] = Lang::get('aroaden.no_add_treatments');
-                $data['error'] = true;
-
-            } elseif (empty($budgetArray) && $onUpdate && $onUpdateDeleteAll) {
-
-                $this->delete($uniqid, true);
-
-            } elseif (!empty($budgetArray) && $onUpdate) {
-
-                $this->delete($uniqid);
-                $this->save($budgetArray);
-
-            } elseif (!empty($budgetArray) && $onUpdate == false) {
-
-                $this->save($budgetArray);
-
-            }
-
-        } catch (\Exception $e) {
-
-            $data['msg'] = Lang::get('aroaden.db_query_error');
-            $data['error'] = true;
-
+            $budgetsTextExists = true;
+          }                    
         }
+      }
 
-        return $this->echoJsonOuptut($data);
+      DB::commit();
+
+    } catch (\Exception $e) {
+
+      DB::rollBack();
+      throw $e;
+
+    }
+  }
+
+  public function show(Request $request, $id = false)
+  {
+    $id = $this->sanitizeData($id);   
+    $this->redirectIfIdIsNull($id, $this->other_route);
+
+    $patient = $this->model2::FirstById($id);
+    $this->setPageTitle($patient->surname.', '.$patient->name);
+
+    $budgets = $this->model::AllById($id);
+    $budgets_group = $this->model::AllGroupByCode($id);
+
+    $this->view_data['budgets'] = $budgets;
+    $this->view_data['budgets_group'] = $budgets_group;
+    $this->view_data['idpat'] = $id;
+    $this->view_data['idnav'] = $id;        
+    $this->view_data['object'] = $patient;
+
+    return parent::show($request, $id);
+  }
+
+  public function edit(Request $request, $uniqid)
+  {
+    $uniqid = $this->sanitizeData($uniqid);     
+
+    $budgets = $this->model::AllByCode($uniqid);
+    $arr_budgets = $budgets->toArray();
+    $idpat = $arr_budgets[0]->idpat;
+    $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
+
+    $patient = $this->model2::FirstById($idpat);
+    $this->setPageTitle($patient->surname.', '.$patient->name);
+
+    $this->view_data['request'] = $request;
+    $this->view_data['budgets'] = $budgets;
+    $this->view_data['budgetstext'] = $budgetstext;
+    $this->view_data['uniqid'] = $uniqid;
+    $this->view_data['idpat'] = $idpat;
+    $this->view_data['idnav'] = $idpat;     
+    $this->view_data['object'] = $patient;
+    
+    $this->view_name = 'edit';
+
+    return $this->loadView();
+  }
+
+  public function mode(Request $request)
+  {
+    extract($this->sanitizeRequest($request->all()));
+
+    if ($mode == 'save_text') {
+      BudgetsText::where('uniqid', $uniqid)->update(['text' => $text]);
+
+      $data = [];
+      $data['msg'] = 'Texto guardado'; 
+
+      $this->echoJsonOuptut($data);
     }
 
-    private function save($budgetArray)
-    {
-        $budgetsTextExists = false;
+    $budgets = $this->model::AllByCode($uniqid);
+    $created_at = $budgets[0]->created_at;
 
-        DB::beginTransaction();
+    $taxtotal = $this->model::GetTaxTotal($uniqid);
+    $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
+    $total = $this->model::GetTotal($uniqid);
+    $company = $this->getSettings();
 
-        try {
+    $this->view_data['request'] = $request;
+    $this->view_data['text'] = $text;
+    $this->view_data['budgets'] = $budgets;
+    $this->view_data['uniqid'] = $uniqid;
+    $this->view_data['created_at'] = $created_at;
+    $this->view_data['mode'] = $mode;
+    $this->view_data['idpat'] = $idpat;
+    $this->view_data['idnav'] = $idpat;  
+    $this->view_data['taxtotal'] = $taxtotal[0]->total;
+    $this->view_data['notaxtotal'] = $notaxtotal[0]->total;
+    $this->view_data['total'] = $total[0]->total;
+    $this->view_data['company'] = $company;  
 
-            foreach ($budgetArray as $key => $val) {
-                $this->model::create([
-                    'idpat' => $val["idpat"],
-                    'idser' => $val["idser"],
-                    'price' => $val["price"],
-                    'units' => $val["units"],
-                    'uniqid' => $val["uniqid"],
-                    'tax' => $val["tax"],
-                    'created_at' => $val["created_at"]               
-                ]);
+    if ($mode == 'print') {
 
-                if (!$budgetsTextExists) {
-                    $budgetstext = BudgetsText::FirstById($val["idpat"], $val["uniqid"]);
+      $this->view_name = 'print';
 
-                    if (is_null($budgetstext)) {          
-                        BudgetsText::create([
-                            'idpat' => $val["idpat"],
-                            'uniqid' => $val["uniqid"],                
-                            'created_at' => $val["created_at"]
-                        ]);
+    } else {
 
-                        $budgetsTextExists = true;
-                    }                    
-                }
-            }
-
-            DB::commit();
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-            throw $e;
-
-        }
-    }
-
-    public function show(Request $request, $id = false)
-    {
-        $this->redirectIfIdIsNull($id, $this->other_route);
-        $idpat = $this->sanitizeData($id);
-
-        $patient = $this->model2::FirstById($idpat);
-        $this->setPageTitle($patient->surname.', '.$patient->name);
-
-        $budgets = $this->model::AllById($idpat);
-        $budgets_group = $this->model::AllGroupByCode($idpat);
-
-        $this->view_data['budgets'] = $budgets;
-        $this->view_data['budgets_group'] = $budgets_group;
-        $this->view_data['idpat'] = $idpat;
-        $this->view_data['idnav'] = $idpat;        
-        $this->view_data['object'] = $patient;
-
-        return parent::show($request, $id);
-    }
-
-    public function edit(Request $request, $uniqid)
-    {
-        $uniqid = $this->sanitizeData($uniqid);     
-
-        $budgets = $this->model::AllByCode($uniqid);
-        $arr_budgets = $budgets->toArray();
-        $idpat = $arr_budgets[0]->idpat;
-        $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
-
-        $patient = $this->model2::FirstById($idpat);
-        $this->setPageTitle($patient->surname.', '.$patient->name);
-
-        $this->view_data['request'] = $request;
-        $this->view_data['budgets'] = $budgets;
-        $this->view_data['budgetstext'] = $budgetstext;
-        $this->view_data['uniqid'] = $uniqid;
-        $this->view_data['idpat'] = $idpat;
-        $this->view_data['idnav'] = $idpat;     
-        $this->view_data['object'] = $patient;
+      $this->view_name = 'mode';
         
-        $this->view_name = 'edit';
-
-        return $this->loadView();
     }
 
-    public function mode(Request $request)
-    {
-        $uniqid = $this->sanitizeData($request->input('uniqid')); 
-        $mode = $this->sanitizeData($request->input('mode'));     
-        $text = $this->sanitizeData($request->input('text'));   
-        $idpat = $this->sanitizeData($request->input('idpat'));   
+    return $this->loadView();
+  } 
 
-        if ($mode == 'save_text') {
-            BudgetsText::where('uniqid', $uniqid)->update(['text' => $text]);
+  public function delBudget(Request $request)
+  {
+    $uniqid = $request->uniqid;
+    $idpat = $request->idpat;
 
-            $data = [];
-            $data['msg'] = 'Texto guardado'; 
+    try {
 
-            $this->echoJsonOuptut($data);
-        }
+      $this->delete($uniqid, true);
 
-        $budgets = $this->model::AllByCode($uniqid);
-        $created_at = $budgets[0]->created_at;
+    } catch (\Exception $e) {
 
-        $taxtotal = $this->model::GetTaxTotal($uniqid);
-        $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
-        $total = $this->model::GetTotal($uniqid);
-        $company = $this->getSettings();
+      $request->session()->flash($this->error_message_name, $e->getMessage()); 
 
-        $this->view_data['request'] = $request;
-        $this->view_data['text'] = $text;
-        $this->view_data['budgets'] = $budgets;
-        $this->view_data['uniqid'] = $uniqid;
-        $this->view_data['created_at'] = $created_at;
-        $this->view_data['mode'] = $mode;
-        $this->view_data['idpat'] = $idpat;
-        $this->view_data['idnav'] = $idpat;  
-        $this->view_data['taxtotal'] = $taxtotal[0]->total;
-        $this->view_data['notaxtotal'] = $notaxtotal[0]->total;
-        $this->view_data['total'] = $total[0]->total;
-        $this->view_data['company'] = $company;  
-
-        if ($mode == 'print') {
-
-            $this->view_name = 'print';
-
-        } else {
-  
-            $this->view_name = 'mode';
-            
-        }
-
-        return $this->loadView();
-    } 
-
-    public function delBudget(Request $request)
-    {
-        $uniqid = $request->input('uniqid');
-        $idpat = $request->input('idpat');
-
-        try {
-
-            $this->delete($uniqid, true);
-
-        } catch (\Exception $e) {
-
-            $request->session()->flash($this->error_message_name, $e->getMessage()); 
-
-        }
-        
-        $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
-
-        return redirect("/$this->main_route/$idpat");
     }
+    
+    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
 
-    private function delete($uniqid, $deleteAll = false)
-    {
-        DB::beginTransaction();
+    return redirect("/$this->main_route/$idpat");
+  }
 
-        try {
+  private function delete($uniqid, $deleteAll = false)
+  {
+    DB::beginTransaction();
 
-            $this->model::where('uniqid', $uniqid)->delete();
+    try {
 
-            if ($deleteAll)
-                BudgetsText::where('uniqid', $uniqid)->delete();
+      $this->model::where('uniqid', $uniqid)->delete();
 
-            DB::commit();
+      if ($deleteAll)
+        BudgetsText::where('uniqid', $uniqid)->delete();
 
-        } catch (\Exception $e) {
+      DB::commit();
 
-            DB::rollBack();
+    } catch (\Exception $e) {
 
-            throw $e;
+      DB::rollBack();
 
-        }
+      throw $e;
+
     }
+  }
 
 }

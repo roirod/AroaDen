@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-namespace App\Models;
-
-use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 
 class Appointments extends Model
 {

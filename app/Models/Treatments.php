@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 use App\Models\StaffWorks;
 
 class Treatments extends Model

@@ -9,7 +9,7 @@
           <span class="input-group-btn pad10"> <p>{!! @trans('aroaden.company_data') !!}</p> </span>
           <div class="btn-toolbar pad4" role="toolbar">
             <div class="btn-group">
-              <a href="{{ url("/$company_route/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
+              <a href="{{ url("/$routes['company']/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
                 <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
               </a>
             </div> 

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\GetTableNameTrait;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\GetTableNameTrait;
 
 class StaffWorks extends Model
 {

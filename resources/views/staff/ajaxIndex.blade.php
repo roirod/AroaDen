@@ -83,7 +83,7 @@
         "sPaginationType": "full_numbers",
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": '/' + "{!! $staff_route !!}/list",
+        "sAjaxSource": '/' + "{!! $routes['staff'] !!}/list",
         "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
           oSettings.jqXHR = $.ajax({
             "dataType": 'json',
@@ -108,7 +108,7 @@
           {
             "aTargets": [1],
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! $staff_route !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              var resultado = '<a href="{!! $routes['staff'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
               return resultado;
             }
           }

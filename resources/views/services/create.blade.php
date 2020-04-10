@@ -10,7 +10,7 @@
         {!! @trans('aroaden.create_service') !!}
       </legend>
 
-      <form id="form" class="createServiceForm form" action="{!! $services_route !!}" method="post">
+      <form id="form" class="createServiceForm form" action="{!! $routes['services'] !!}" method="post">
         @include('form_fields.common_alternative')
 
       @include('form_fields.fields.closeform')
@@ -32,7 +32,7 @@
         data : $(this).serialize(),
       };
 
-      lastRoute = routes.services_route + '/ajaxIndex';
+      lastRoute = routes.services + '/ajaxIndex';
 
       util.processAjaxReturnsJson(obj).done(function(response) {
         if (response.error) {

@@ -50,9 +50,7 @@ class StaffPositionsController extends BaseController
    * @return \Illuminate\Http\Response
    */
   public function create(Request $request, $id = false)
-  {   
-    $this->view_data['form_fields'] = $this->form_fields;
-
+  {
     return parent::create($request);
   }
 
@@ -104,7 +102,6 @@ class StaffPositionsController extends BaseController
 
     $this->view_data['id'] = $id;
     $this->view_data['object'] = $this->model::find($id);
-    $this->view_data['form_fields'] = $this->form_fields;
 
     return parent::edit($request, $id);  
   }

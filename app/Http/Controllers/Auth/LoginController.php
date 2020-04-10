@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Controllers\Traits\DefaultTrait;
-use App\Http\Controllers\Traits\BaseTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,7 +23,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers,DefaultTrait,BaseTrait;
+    use AuthenticatesUsers,DefaultTrait;
 
     protected $redirectTo = '/home';
     protected $redirectAfterLogout = '/login';

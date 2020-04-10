@@ -63,22 +63,22 @@
           <nav class="navbar navbar-default" role="navigation">   
             <ul class="nav nav-pills nav-stacked"> 
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
-                <a href="{!! url("/$company_route")!!}"><i class="fa fa-building-o fa-menusize"></i></a>
+                <a href="{!! url("/$routes['company']")!!}"><i class="fa fa-building-o fa-menusize"></i></a>
               </li>  
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.appointments") !!}</b>">
-                <a href="{!! url("/$appointments_route")!!}"><i class="fa fa-calendar fa-menusize"></i></a>
+                <a href="{!! url("/$routes['appointments']")!!}"><i class="fa fa-calendar fa-menusize"></i></a>
               </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.patients") !!}</b>">
-                <a href="{!! url("/$patients_route")!!}"><i class="fa fa-users fa-menusize"></i></a>
+                <a href="{!! url("/$routes['patients']")!!}"><i class="fa fa-users fa-menusize"></i></a>
               </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.staff") !!}</b>">
-                <a href="{!! url("/$staff_route")!!}"><i class="fa fa-user-md fa-menusize"></i></a>
+                <a href="{!! url("/$routes['staff']")!!}"><i class="fa fa-user-md fa-menusize"></i></a>
               </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.services") !!}</b>">
-                <a href="{!! url("/$services_route")!!}"><i class="fa fa-tasks fa-menusize"></i></a>
+                <a href="{!! url("/$routes['services']")!!}"><i class="fa fa-tasks fa-menusize"></i></a>
               </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.accounting") !!}</b>">
-                <a href="{!! url("/$accounting_route")!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
+                <a href="{!! url("/$routes['accounting']")!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
               </li>
             </ul>
           </nav>
@@ -96,7 +96,7 @@
           </div>
    	
           <div class="col-sm-2 text-right">
-            <a class="btn btn-default btn-sm" role="button" href="{!! url("/$settings_route") !!}" title="{!! @trans("aroaden.settings") !!}">
+            <a class="btn btn-default btn-sm" role="button" href="{!! url("/$routes['settings']") !!}" title="{!! @trans("aroaden.settings") !!}">
               <i class="fa fa-cogs"></i>
             </a>
             <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="{!! @trans("aroaden.manuals") !!}">

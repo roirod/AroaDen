@@ -10,16 +10,16 @@
   // datatables staff
 
   var routes = {
-    patients_route: "{{ $patients_route }}",
-    invoices_route: "{{ $invoices_route }}",
-    budgets_route: "{{ $budgets_route }}",
-    company_route: "{{ $company_route }}",
-    appointments_route: "{{ $appointments_route }}",
-    staff_route: "{{ $staff_route }}",
-    services_route: "{{ $services_route }}",
-    accounting_route: "{{ $accounting_route }}",
-    treatments_route: "{{ $treatments_route }}",      
-    settings_route: "{{ $settings_route }}"
+    patients: "{{ $routes['patients'] }}",
+    invoices: "{{ $routes['invoices'] }}",
+    budgets: "{{ $routes['budgets'] }}",
+    company: "{{ $routes['company'] }}",
+    appointments: "{{ $routes['appointments'] }}",
+    staff: "{{ $routes['staff'] }}",
+    services: "{{ $routes['services'] }}",
+    accounting: "{{ $routes['accounting'] }}",
+    treatments: "{{ $routes['treatments'] }}",
+    settings: "{{ $routes['settings'] }}"
   };
 
   var defaulId = 'ajax_content';
@@ -259,7 +259,7 @@
 
       var ajax_data = {
         method : "GET",
-        url  : "/" + routes.settings_route + "/jsonSettings"
+        url  : "/" + routes.settings + "/jsonSettings"
       };
 
       console.log('---------------- getSettings ajax_data  ----------------------------');

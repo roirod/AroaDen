@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Exceptions\NoAppointmentsFoundException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use Illuminate\Http\Request;
 use App\Models\Appointments;
@@ -180,16 +179,16 @@ class AppointmentsController extends BaseController implements BaseInterface
   }
 
   public function create(Request $request, $id = false)
-  {     
+  {
+    $id = $this->sanitizeData($id);
     $this->redirectIfIdIsNull($id, $this->other_route);
 
-    $object = $this->model2::FirstById($id);
+    $object = $this->model2->FirstById($id);
     $this->setPageTitle($object->surname.', '.$object->name);
 
     $this->view_data['id'] = $id;
     $this->view_data['idnav'] = $object->idpat;
     $this->view_data['object'] = $object;
-    $this->view_data['form_fields'] = $this->form_fields;
 
     return parent::create($request, $id);  
   }
@@ -231,22 +230,20 @@ class AppointmentsController extends BaseController implements BaseInterface
 
   public function edit(Request $request, $id)
   {
-      $this->redirectIfIdIsNull($id, $this->other_route);
-      $id = $this->sanitizeData($id);
-      $object = $this->model::FirstById($id);
+    $id = $this->sanitizeData($id);
+    $this->redirectIfIdIsNull($id, $this->other_route);
+    $object = $this->model::FirstById($id);
 
-      $this->autofocus = 'hour';
-      $this->view_data['object'] = $object;
-      $this->view_data['id'] = $id;
-      $this->view_data['idnav'] = $object->idpat;
-      $this->view_data['name'] = $object->name;
-      $this->view_data['surname'] = $object->surname;
-      $this->view_data['form_fields'] = $this->form_fields;
-      $this->view_data['autofocus'] = $this->autofocus;
+    $this->autofocus = 'hour';
+    $this->view_data['object'] = $object;
+    $this->view_data['id'] = $id;
+    $this->view_data['idnav'] = $object->idpat;
+    $this->view_data['name'] = $object->name;
+    $this->view_data['surname'] = $object->surname;
 
-      $this->setPageTitle($object->surname.', '.$object->name);
+    $this->setPageTitle($object->surname.', '.$object->name);
 
-      return parent::edit($request, $id);
+    return parent::edit($request, $id);
   }
 
   public function update(Request $request, $id)

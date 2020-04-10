@@ -77,7 +77,7 @@
         "sPaginationType": "full_numbers",
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": "{!! $patients_route !!}/list",
+        "sAjaxSource": "{!! $routes['patients'] !!}/list",
         "sServerMethod": "GET",
         "aLengthMenu": aLengthMenu,
         "aoColumnDefs": [
@@ -90,7 +90,7 @@
           {
             "aTargets": [1],
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! $patients_route !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              var resultado = '<a href="{!! $routes['patients'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
               return resultado;
             }
           }
