@@ -29,11 +29,13 @@
                 </div> 
               </div>
 
+              <div class="mar10"></div>
+
              	<div class="panel panel-default">
 
                 <table class="table table-striped table-bordered table-hover">
           		    <tr class="fonsi14">
-          				  <td class="wid140">Tratamiento</td>
+          				  <td class="wid180">Tratamiento</td>
           				  <td class="wid50 textcent">Cantidad</td>
           				  <td class="wid50"></td>
           				  <td class="wid70 textcent">Precio</td>
@@ -46,7 +48,7 @@
           		   		@foreach ($main_loop as $service)
 
             					<tr>			 	
-            					  <td class="wid140">{!! $service->name !!}</td>
+            					  <td class="wid180">{!! $service->name !!}</td>
             					  <td class="wid50 textcent">
             					  	 	<div class="form-group">
             					  			<input type="number" min="1" step="1" value="1" class="form-control" name="units" required>
@@ -70,16 +72,18 @@
 
 
            	<div class="col-sm-6">
-              {!! addText("Añadidos") !!}
+              <p class="fonsi16">
+                Añadidos
+              </p>
 
              	<div class="panel panel-default">
                 <table class="table table-striped table-bordered table-hover">
           		    <tr class="fonsi14">
-            				<td class="wid140">Tratamiento</td>
-            				<td class="wid95 textcent">Cantidad</td>
+            				<td class="wid180">Tratamiento</td>
+            				<td class="wid70 textcent">Cantidad</td>
             				<td class="wid70 textcent">Precio</td>				  
             				<td class="wid50"></td>
-                    <td class="wid95"></td>
+                    <td class="wid50"></td>
           		    </tr>
               	</table>
 

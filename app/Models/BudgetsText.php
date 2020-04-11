@@ -11,21 +11,13 @@ class BudgetsText extends BaseModel
   use GetTableNameTrait;
 
   protected $table = 'budgets_text';
-  protected $fillable = ['idpat','uniqid','text'];
-  protected $primaryKey = 'idbute';
+  protected $fillable = ['uniqid','text'];
+  protected $primaryKey = 'uniqid';
+  public $timestamps = false;
 
-  public function scopeFirstById($query, $id, $uniqid)
+  public function budgets()
   {
-    $this->whereRaw = "idpat = '$id' AND uniqid = '$uniqid'";
-
-    return $this->scopeFirstWhereRaw($query);
-  }
-
-  public function scopeFirstByUniqid($query, $uniqid)
-  {
-    $this->whereRaw = "uniqid = '$uniqid'";
-
-    return $this->scopeFirstWhereRaw($query);
+    return $this->belongsTo('App\Models\Budgets');
   }
 
 }

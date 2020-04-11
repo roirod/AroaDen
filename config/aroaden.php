@@ -277,6 +277,8 @@ return [
      'pattern'  => "",
      'rows'  => "4"
     ],
+
+/*
     [ 
      'name'  => "invoice_text",
      'settting_type'  => "company_data",
@@ -288,6 +290,8 @@ return [
      'pattern'  => "",
      'rows'  => "4"
     ],
+*/
+
     [ 
      'name'  => "budget_text",
      'settting_type'  => "company_data",           

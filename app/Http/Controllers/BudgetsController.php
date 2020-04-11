@@ -50,10 +50,9 @@ class BudgetsController extends BaseController
 
   public function store(Request $request)
   {
+    extract($this->sanitizeRequest($request->all()));
+
     $budgetArray = $request->budgetArray;
-    $onUpdate = $request->onUpdate;
-    $onUpdateDeleteAll = $request->onUpdateDeleteAll;
-    $uniqid = $request->uniqid;
 
     $data = [];
     $data['msg'] = Lang::get('aroaden.success_message');
@@ -73,6 +72,7 @@ class BudgetsController extends BaseController
 
         $this->delete($uniqid);
         $this->save($budgetArray);
+        BudgetsText::where('uniqid', $uniqid)->update(['text' => $budgettext]);
 
       } elseif (is_array($budgetArray) && $onUpdate == false) {
 
@@ -92,10 +92,6 @@ class BudgetsController extends BaseController
 
   private function save($budgetArray)
   {
-    $budgetsTextExists = false;
-
-    DB::beginTransaction();
-
     try {
 
       foreach ($budgetArray as $key => $val) {
@@ -108,27 +104,10 @@ class BudgetsController extends BaseController
           'tax' => $val["tax"],
           'created_at' => $val["created_at"]               
         ]);
-
-        if (!$budgetsTextExists) {
-          $budgetstext = BudgetsText::FirstById($val["idpat"], $val["uniqid"]);
-
-          if (is_null($budgetstext)) {          
-            BudgetsText::create([
-              'idpat' => $val["idpat"],
-              'uniqid' => $val["uniqid"],                
-              'created_at' => $val["created_at"]
-            ]);
-
-            $budgetsTextExists = true;
-          }                    
-        }
       }
-
-      DB::commit();
 
     } catch (\Exception $e) {
 
-      DB::rollBack();
       throw $e;
 
     }
@@ -156,14 +135,33 @@ class BudgetsController extends BaseController
 
   public function edit(Request $request, $uniqid)
   {
-    $uniqid = $this->sanitizeData($uniqid);     
+    $uniqid = $this->sanitizeData($uniqid);
 
-    $budgets = $this->model::AllByCode($uniqid);
-    $arr_budgets = $budgets->toArray();
-    $idpat = $arr_budgets[0]->idpat;
-    $budgetstext = BudgetsText::FirstById($idpat, $uniqid);
+    try {
 
-    $patient = $this->model2::FirstById($idpat);
+      $budgets = $this->model::AllByCode($uniqid);
+      $arr_budgets = $budgets->toArray();
+      $idpat = $arr_budgets[0]->idpat;
+
+      $budgetstext = BudgetsText::find($uniqid);
+
+      if (is_null($budgetstext)) {
+        BudgetsText::create([
+          'uniqid' => $uniqid
+        ]);
+
+        $budgetstext = BudgetsText::find($uniqid);
+      }
+
+      $patient = $this->model2::FirstById($idpat);
+
+    } catch (\Exception $e) {
+
+      $request->session()->flash($this->error_message_name, $e->getMessage()); 
+      return redirect("/$this->main_route/$idpat");
+
+    }
+    
     $this->setPageTitle($patient->surname.', '.$patient->name);
 
     $this->view_data['request'] = $request;
@@ -183,17 +181,10 @@ class BudgetsController extends BaseController
   {
     extract($this->sanitizeRequest($request->all()));
 
-    if ($mode == 'save_text') {
-      BudgetsText::where('uniqid', $uniqid)->update(['text' => $text]);
-
-      $data = [];
-      $data['msg'] = 'Texto guardado'; 
-
-      $this->echoJsonOuptut($data);
-    }
-
     $budgets = $this->model::AllByCode($uniqid);
+    $idpat = $budgets[0]->idpat;
     $created_at = $budgets[0]->created_at;
+    $budgetstext = BudgetsText::find($uniqid);
 
     $taxtotal = $this->model::GetTaxTotal($uniqid);
     $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
@@ -201,7 +192,7 @@ class BudgetsController extends BaseController
     $company = $this->getSettings();
 
     $this->view_data['request'] = $request;
-    $this->view_data['text'] = $text;
+    $this->view_data['text'] = $budgetstext->text;
     $this->view_data['budgets'] = $budgets;
     $this->view_data['uniqid'] = $uniqid;
     $this->view_data['created_at'] = $created_at;

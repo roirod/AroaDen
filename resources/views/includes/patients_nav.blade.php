@@ -11,7 +11,7 @@
   			<li><a href="{{ url($routes['budgets']."/$idnav") }}"> {{ Lang::get('aroaden.budgets') }} </a></li>
   			<!--
 
-  			<li><a href="{{ url("$routes['invoices']/$idnav") }}"> {{ Lang::get('aroaden.invoices') }} </a></li>
+  			<li><a href="{{ url($routes['invoices']."/$idnav") }}"> {{ Lang::get('aroaden.invoices') }} </a></li>
 
   			-->
   		@endif

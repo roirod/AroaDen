@@ -89,13 +89,14 @@ img.center {
   border: none !important;
 }
 
-.paging_full_numbers a.paginate_button, .paging_full_numbers a.paginate_active {
-  color:#777 !important;
+.paging_full_numbers a.paginate_button, .paging_full_numbers {
+  color: black !important;
+  background-color: white !important;
 }
 
 a.paginate_active {
-  color: black !important;
-  background-color: white !important;
+  color: white !important;
+  background-color: #7b7b7b !important;
 }
 
 .box500 { height: 500px; overflow: auto; border: 1px solid grey; }
@@ -207,6 +208,16 @@ table { table-layout:fixed !important; }
   line-height: 1.4;
   border-radius: 6px !important;
   padding: 10px 71px; 
+}
+
+.btnCustom {
+  color: #f4f2f2;
+  background-color: #9d339c;
+  border-color: #7e08b5;
+}
+
+.btn-group {
+  margin-left: 5px !important;
 }
 
 .border2px { border: 2px solid #0cedde; }

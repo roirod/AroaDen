@@ -9,16 +9,9 @@ class CreateBudgetsTextTable extends Migration
     {
         Schema::create('budgets_text', function (Blueprint $table) {
             $table->engine = 'InnoDB';            
-            $table->increments('idbute');
-            $table->Integer('idpat')->unsigned();
             $table->string('uniqid', 16);
             $table->text('text')->nullable();
-            $table->timestamps();
-            $table->unique('uniqid');
-
-            $table->foreign('idpat')
-                  ->references('idpat')->on('patients')
-                  ->onDelete('cascade');         
+            $table->primary('uniqid');     
         });
     }
 

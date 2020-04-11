@@ -9,75 +9,84 @@
 
   @include('budgets.commonJs')
 
-    <div class="col-sm-12 pad10">
-        @include('form_fields.show.name')
-    </div>
+  <div class="col-sm-12 pad10">
+    @include('form_fields.show.name')
+  </div>
 
-    <div class="row">
-      <div class="col-sm-12">
-        <fieldset>
-          <legend>
-            {!! @trans('aroaden.edit_budget') !!}
-          </legend>
+  <div class="row">
+    <div class="col-sm-12">
+      <fieldset>
 
-          <div class="row">
-
-        	  <div class="col-sm-3">
-        		 	<form class="form" action="{!! url("/$main_route/delBudget") !!}" method="POST">	
-        		 		{!! csrf_field() !!}
-
-        				<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-        				<input type="hidden" name="idpat" value="{!! $idpat !!}">	
-
-        				<div class="input-group"> 
-        					<span class="input-group-btn pad10">  
-        						<p> Eliminar todo </p> 
-        					</span>
-        					<div class="btn-toolbar pad4" role="toolbar">
-        						<div class="btn-group">
-        							<button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-        								<i class="fa fa-times"></i> Eliminar 
-        								<span class="caret"></span> 
-        							</button>
-        							<ul class="dropdown-menu" role="menu">
-        								<li><button type="submit"> <i class="fa fa-times"></i> Eliminar </button></li>
-        							</ul>
-        						</div>
-        					</div> 
-        				</div> 
-        			</form>
-        	 	</div> 
-
-        		<div class="col-sm-4">
-        	 	  @include('budgets.saveButton')
-        		</div> 
-
-	       </div>
+        <legend>
+          {!! @trans('aroaden.edit_budget') !!}
+        </legend>
 
       	<div class="row">
 
-          <div class="col-sm-7">
+          <div class="col-sm-5">
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="btn-toolbar pad4" role="toolbar">
+
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                      Eliminar todo
+                      <span class="caret"></span> 
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <form class="form" action="{!! url("/$main_route/delBudget") !!}" method="POST">  
+                        {!! csrf_field() !!}
+
+                        <input type="hidden" name="uniqid" value="{!! $uniqid !!}"> 
+                        <input type="hidden" name="idpat" value="{!! $idpat !!}"> 
+
+                        <li><button type="submit"> <i class="fa fa-times"></i> Eliminar </button></li>
+                      </form>
+                    </ul>
+                  </div>
+
+                  @include('budgets.saveButton')
+
+                  <form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">  
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="uniqid" value="{!! $uniqid !!}">
+
+                    <div class="btn-group">
+                      <button type="submit" formtarget="_blank" name="mode" value="print" class="btn btnCustom btn-sm">Imprimir</button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-success btn-sm">Ver</button>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="mar10"></div>
+
             <div class="panel panel-default">
               <table class="table table-striped table-bordered table-hover">
-                <tr class="fonsi15">
-                  <td class="wid140">Tratamiento</td>
-                  <td class="wid95 textcent">Cantidad</td>
+                <tr class="fonsi14">
+                  <td class="wid180">Tratamiento</td>
+                  <td class="wid70 textcent">Cantidad</td>
                   <td class="wid70 textcent">Precio</td>          
+                  <td class="wid50">Borrar</td>
                   <td class="wid50"></td>
-                  <td class="wid95"></td>
                 </tr>
               </table>
 
-      	   		<div class="box230">
+      	   		<div class="box300">
                 <table class="table table-striped table-bordered table-hover">
 
       		   			<tbody id="budgets_list">   	  	
 
       				   		@foreach ($budgets as $bud)
 
-        							<tr class="fonsi13" id="budgetId_{!! $bud->idser !!}">
-        							  <td class="wid140">{!! $bud->name !!}</td>
-        							  <td class="wid95 textcent">{!! $bud->units !!} </td>
+        							<tr class="fonsi12" id="budgetId_{!! $bud->idser !!}">
+        							  <td class="wid180">{!! $bud->name !!}</td>
+        							  <td class="wid70 textcent">{!! $bud->units !!} </td>
         							  <td class="wid70 textcent">{!! numformat($bud->price) !!} €</td>
         							  <td class="wid50">
         							    <div class="btn-group"> 
@@ -92,7 +101,7 @@
         							  		</ul>  
         							  	</div>	
         							   </td>
-        							  <td class="wid95"></td>
+        							  <td class="wid50"></td>
         							</tr>
 
                       <script type="text/javascript">
@@ -122,35 +131,30 @@
                     </script>
 
       						</tbody>
+
+                  <tr class="fonsi15">
+                    <td class="wid140"></td>
+                    <td class="wid140"></td>
+                  </tr>
+                  <tr class="fonsi15">
+                    <td class="wid140"></td>
+                    <td class="wid140"></td>
+                  </tr>
+
       					</table> 
 
               </div>
             </div> 
           </div>
 
+          <div class="col-sm-7">
+    				<div class="form-group"> 
+  				    <label class="control-label text-left mar10">Texto:</label>
+  				    <textarea class="form-control" name="budgettext" rows="16">{!! $budgetstext->text !!}</textarea> 
+    				</div>
+          </div>
+
         </div>
-
-      	<div class="row">
-      		<form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">	
-      		 	{!! csrf_field() !!}
-
-      			<div class="col-sm-7">
-      				<div class="form-group"> 
-      				    <label class="control-label text-left mar10">Texto:</label>
-      				    <textarea class="form-control" name="text" rows="4">{!! $budgetstext->text !!}</textarea> 
-      				</div>
-      			</div>
-
-      			<div class="col-sm-7 text-right">
-      				<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-      				<input type="hidden" name="idpat" value="{!! $idpat !!}">
-
-      				<button type="submit" formtarget="_blank" name="mode" value="print" class="btn btn-default btn-md">Imprimir</button>
-      				<button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-success btn-md">Ver</button>
-      				<button type="submit" name="mode" class="btn btn-primary btn-md save_text">Guardar texto</button>
-      			</div>
-      		</form>
-      	</div>
 
       </fieldset>
     </div>

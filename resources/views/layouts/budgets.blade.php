@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>{!! $app_name_text !!}</title>
     <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css" >
-    <link href="{!! asset('assets/css/start.css') !!}" rel="stylesheet" type="text/css" >
+    <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css" >
     <link href="{!! asset('assets/font-awe/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css" >
     <link href="{!! asset('assets/img/favicon.ico') !!}" rel="shortcut icon" > 
   @show

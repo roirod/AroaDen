@@ -2,6 +2,6 @@
 
 @section('content')
 
-@include('budgets.common')	
+  @include('budgets.common')	
 
 @endsection

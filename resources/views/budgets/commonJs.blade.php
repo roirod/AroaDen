@@ -5,13 +5,15 @@
 
   var onUpdate = false;
   var onUpdateDeleteAll = false;
+  var budgettext = false;
 
   $(document).ready(function() {
 
     $(document).on('click','.saveBudget',function(evt){
       evt.preventDefault();
 
-      var redirectUrl = $(this).attr('href');
+      if (onUpdate)
+        budgettext = $('textarea[name="budgettext"]').val();
 
       if (typeof budgetArray === 'undefined' || budgetArray.length === 0) {
         if (onUpdate) {
@@ -31,6 +33,7 @@
           'budgetArray' : budgetArray,
           'onUpdate': onUpdate,
           'onUpdateDeleteAll': onUpdateDeleteAll,
+          'budgettext': budgettext,
           'uniqid': '{!! $uniqid !!}'
         }
       };
@@ -43,7 +46,7 @@
         } else {
 
           util.showPopup(response.msg);
-          setTimeout(function(){ window.location.href = redirectUrl; }, 1300);
+          setTimeout(function(){ util.redirectTo("{!! url("/$main_route/$idpat") !!}"); }, 1300);
 
         }
       });
@@ -101,8 +104,8 @@
         budgetArray.push(obj);
 
         newRowContent = '  <tr class="fonsi13" id="budgetId_' + idser + '">';
-        newRowContent += '   <td class="wid140">' + name + '</td>';
-        newRowContent += '   <td class="wid95 textcent">' + units + '</td>';
+        newRowContent += '   <td class="wid180">' + name + '</td>';
+        newRowContent += '   <td class="wid70 textcent">' + units + '</td>';
         newRowContent += '   <td class="wid70 textcent">' + price + ' € </td>';
         newRowContent += '   <td class="wid50">';
         newRowContent += '     <div class="btn-group">';
@@ -114,7 +117,7 @@
         newRowContent += '       </ul>';
         newRowContent += '     </div>';
         newRowContent += '   </td>';
-        newRowContent += '   <td class="wid95"></td>';
+        newRowContent += '   <td class="wid50"></td>';
         newRowContent += ' </tr>';
 
         $("#budgets_list").append(newRowContent);
