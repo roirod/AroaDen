@@ -281,11 +281,8 @@ class AppointmentsController extends BaseController implements BaseInterface
   }
 
   public function destroy(Request $request, $id)
-  {
-      $id = $this->sanitizeData($id);
-      $object = $this->model::find($id);
-      
-      return parent::destroy($request, $id);        
+  {      
+    return parent::destroy($request, $id);        
   }
 
 }

@@ -1,3 +1,4 @@
+
 <script type="text/javascript">
 
   // datatables staff
@@ -9,18 +10,7 @@
   var iDisplayLength = 15;
   // datatables staff
 
-  var routes = {
-    patients: "{{ $routes['patients'] }}",
-    invoices: "{{ $routes['invoices'] }}",
-    budgets: "{{ $routes['budgets'] }}",
-    company: "{{ $routes['company'] }}",
-    appointments: "{{ $routes['appointments'] }}",
-    staff: "{{ $routes['staff'] }}",
-    services: "{{ $routes['services'] }}",
-    accounting: "{{ $routes['accounting'] }}",
-    treatments: "{{ $routes['treatments'] }}",
-    settings: "{{ $routes['settings'] }}"
-  };
+  var routes = <?php echo json_encode($routes); ?>;
 
   var defaulId = 'ajax_content';
   var defaulTableId = 'item_list';

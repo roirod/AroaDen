@@ -12,6 +12,7 @@ class Record extends Model
   protected $table = 'record';
   protected $fillable = ['idpat','medical_record','diseases','medicines','allergies','notes'];
   protected $primaryKey = 'idpat';
+  public $incrementing = false;
 
   public function patients()
   {

@@ -563,14 +563,4 @@ class PatientsController extends BaseController implements BaseInterface
     return $this->loadView();
   }    
 
-  /**
-   *  destroy
-   */
-  public function destroy(Request $request, $id)
-  {
-    $this->misc_array['checkDestroy'] = true;
-
-    return parent::destroy($request, $id);  
-  }
-
 }

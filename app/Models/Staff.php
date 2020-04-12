@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use App\Models\GetTableNameTrait;
 use App\Models\BaseModel;
+use Exception;
+use Lang;
 
 class Staff extends BaseModel
 {
@@ -38,6 +40,17 @@ class Staff extends BaseModel
     $this->whereRaw = "$this->primaryKey != '$id' AND dni = '$dni'";
 
     return $this->scopeFirstWhereRaw($query);
+  }
+
+  public static function checkDestroy($idsta)
+  {
+    $result = DB::table('staff_works')
+        ->select('staff_works.idtre')
+        ->where('idsta', $idsta)
+        ->first();
+
+    if ($result !== NULL)
+      throw new Exception(Lang::get('aroaden.staff_delete_warning'));
   }
 
   public function scopeAllOrderBySurname($query, $num_paginate)

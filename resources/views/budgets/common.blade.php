@@ -6,12 +6,20 @@
     </p> 
 
     <p class="fonsi14">
+
+      {!! $company->company_address !!}
+      <br>
+
+      {!! $company->company_city !!}
+      <br> 
+
       <i class="fa fa-phone-square" aria-hidden="true"></i>
       {!! $company->company_tel1 !!}
       <br> 
-      {!! $company->company_address !!}
-      <br> 
-      {!! $company->company_city !!}
+
+      <i class="fa fa-envelope-square" aria-hidden="true"></i>
+      {!! $company->company_email !!}
+    
       <br><br>
 
       Presupuesto: {!! DatTime($created_at) !!}
@@ -21,7 +29,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-9">
+  <div class="col-sm-12">
     <div class="panel panel-default fonsi14">
       <table class="table table-striped table-bordered table-hover">
         <tr>
@@ -76,11 +84,11 @@
 <div class="row">
   <div class="col-sm-12">
 
-   <p class="fonsi14">
+   <p>
     {!! nl2br(e($text)) !!}
-   </p>
 
-   <p class="fonsi14">
+    <br> <br>
+
     {!! nl2br(e($company->budget_text)) !!}
    </p>
 

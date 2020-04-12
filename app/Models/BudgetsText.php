@@ -11,8 +11,9 @@ class BudgetsText extends BaseModel
   use GetTableNameTrait;
 
   protected $table = 'budgets_text';
-  protected $fillable = ['uniqid','text'];
-  protected $primaryKey = 'uniqid';
+  protected $fillable = ['idpat', 'uniqid','text'];
+  protected $primaryKey = ['idpat', 'uniqid'];
+  public $incrementing = false;
   public $timestamps = false;
 
   public function budgets()

@@ -412,6 +412,8 @@ class BaseController extends Controller
    */
   public function destroy(Request $request, $id)
   {
+    $id = $this->sanitizeData($id);
+
     $data['error'] = false;
 
     try {

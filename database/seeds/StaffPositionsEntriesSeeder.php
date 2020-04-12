@@ -19,17 +19,25 @@ class StaffPositionsEntriesSeeder extends Seeder
       $staff = DB::table('staff')->pluck('idsta')->toArray();
       $staff_positions = DB::table('staff_positions')->pluck('idstpo')->toArray();
 
-      foreach (range(1, 1000) as $index) {
+      foreach (range(1, 300) as $index) {
 
         $staffkey = array_rand($staff);
-        $staffval = $staff[$staffkey];
+        $idsta = $staff[$staffkey];
 
         $key = array_rand($staff_positions);
-        $val = $staff_positions[$key];
+        $idstpo = $staff_positions[$key];
+
+        $exists = DB::table('staff_positions_entries')
+                          ->where('idsta', $idsta)
+                          ->where('idstpo', $idstpo)
+                          ->exists();
+
+        if ($exists)
+          continue;
 
         DB::table('staff_positions_entries')->insert([
-          'idsta' => $staffval,
-          'idstpo' => $val
+          'idsta' => $idsta,
+          'idstpo' => $idstpo
         ]);
       }
     }

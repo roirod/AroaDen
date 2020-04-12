@@ -23,12 +23,12 @@
 
       	<div class="row">
 
-          <div class="col-sm-5">
+          <div class="col-sm-6">
 
             <div class="row">
-              <div class="col-sm-12">
-                <div class="btn-toolbar pad4" role="toolbar">
 
+              <div class="col-sm-7">
+                <div class="btn-toolbar pad4" role="toolbar">
                   <div class="btn-group">
                     <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
                       Eliminar todo
@@ -48,20 +48,25 @@
 
                   @include('budgets.saveButton')
 
+                </div>
+              </div>
+
+              <div class="col-sm-5">
+                <div class="btn-toolbar pad4" role="toolbar">
                   <form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">  
                     {!! csrf_field() !!}
                     <input type="hidden" name="uniqid" value="{!! $uniqid !!}">
 
-                    <div class="btn-group">
+                    <div class="btn-group pull-right">
                       <button type="submit" formtarget="_blank" name="mode" value="print" class="btn btnCustom btn-sm">Imprimir</button>
                     </div>
-                    <div class="btn-group">
+                    <div class="btn-group pull-right">
                       <button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-success btn-sm">Ver</button>
                     </div>
                   </form>
-
                 </div>
               </div>
+
             </div>
 
             <div class="mar10"></div>
@@ -147,7 +152,7 @@
             </div> 
           </div>
 
-          <div class="col-sm-7">
+          <div class="col-sm-6">
     				<div class="form-group"> 
   				    <label class="control-label text-left mar10">Texto:</label>
   				    <textarea class="form-control" name="budgettext" rows="16">{!! $budgetstext->text !!}</textarea> 

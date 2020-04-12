@@ -172,16 +172,12 @@ return [
   'service_delete_warning' => 'Servicio añadido a tratamiento, no se puede eliminar',
 
 
-  'staff11' => 'Personal 1',
-  'staff22' => 'Personal 2',
-  'staff1' => '*Pe1',
-  'staff2' => '*Pe2',
   'staff' => 'Personal',
   'add_staff' => 'Añadir personal',
   'edit_staff' => 'Editar personal',
   'professionals' => 'Profesionales',
   'no_staff_on_db'   => 'No hay personal en la base de datos',
-  'staff_msg'   => '*Pe1 y Pe2: personal1 y personal2.',
+  'staff_delete_warning' => 'Profesional tiene trabajos hechos, no se puede eliminar',
 
 
   'create_patient' => 'Crear paciente',
@@ -196,6 +192,7 @@ return [
   'diseases' => 'Enfermedades',
   'medicines' => 'Medicamentos',
   'allergies' => 'Alergias',
+  'patient_delete_warning' => 'Paciente con tratamientos aplicados, no se puede eliminar',
 
   'treatments' => 'Tratamientos',
   'add_treatments' => 'Añadir tratamiento al paciente',

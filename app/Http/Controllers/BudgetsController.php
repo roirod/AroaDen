@@ -118,14 +118,11 @@ class BudgetsController extends BaseController
     $id = $this->sanitizeData($id);   
     $this->redirectIfIdIsNull($id, $this->other_route);
 
+    $budgets = $this->model::AllById($id);
     $patient = $this->model2::FirstById($id);
     $this->setPageTitle($patient->surname.', '.$patient->name);
 
-    $budgets = $this->model::AllById($id);
-    $budgets_group = $this->model::AllGroupByCode($id);
-
     $this->view_data['budgets'] = $budgets;
-    $this->view_data['budgets_group'] = $budgets_group;
     $this->view_data['idpat'] = $id;
     $this->view_data['idnav'] = $id;        
     $this->view_data['object'] = $patient;
@@ -143,14 +140,15 @@ class BudgetsController extends BaseController
       $arr_budgets = $budgets->toArray();
       $idpat = $arr_budgets[0]->idpat;
 
-      $budgetstext = BudgetsText::find($uniqid);
+      $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
 
       if (is_null($budgetstext)) {
         BudgetsText::create([
+          'idpat' => $idpat,
           'uniqid' => $uniqid
         ]);
 
-        $budgetstext = BudgetsText::find($uniqid);
+        $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
       }
 
       $patient = $this->model2::FirstById($idpat);
@@ -184,7 +182,7 @@ class BudgetsController extends BaseController
     $budgets = $this->model::AllByCode($uniqid);
     $idpat = $budgets[0]->idpat;
     $created_at = $budgets[0]->created_at;
-    $budgetstext = BudgetsText::find($uniqid);
+    $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
 
     $taxtotal = $this->model::GetTaxTotal($uniqid);
     $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
@@ -229,6 +227,7 @@ class BudgetsController extends BaseController
     } catch (\Exception $e) {
 
       $request->session()->flash($this->error_message_name, $e->getMessage()); 
+      return redirect("/$this->main_route/$idpat");
 
     }
     

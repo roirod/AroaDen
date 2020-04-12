@@ -343,7 +343,7 @@ class StaffController extends BaseController implements BaseInterface
         if (is_array($positions) && count($positions) > 0) {
           foreach ($positions as $idstpo) {
             StaffPositionsEntries::create([
-              'idsta' => (int)$idsta,
+              'idsta' => (int)$id,
               'idstpo' => (int)$idstpo
             ]);
           }
@@ -368,16 +368,6 @@ class StaffController extends BaseController implements BaseInterface
   public function file(Request $request, $id)
   {
     return $this->loadFileView($request, $id);
-  }
-
-  /**
-   *  destroy
-   */
-  public function destroy(Request $request, $id)
-  {
-    $this->misc_array['checkDestroy'] = true;
-
-    return parent::destroy($request, $id);  
   }
 
 }

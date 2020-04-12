@@ -19,6 +19,7 @@ class CreateTreatmentsTable extends Migration
             $table->tinyInteger('tax')->unsigned()->default(0);
             $table->timestamps();
             $table->index('day');
+            $table->index('idpat');
 
             $table->foreign('idpat')
         			->references('idpat')->on('patients')

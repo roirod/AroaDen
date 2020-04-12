@@ -68,6 +68,17 @@ class Patients extends BaseModel
                       ->paginate($num_paginate);
   }
 
+  public static function checkDestroy($id)
+  {
+    $result = DB::table('treatments')
+        ->select('treatments.idtre')
+        ->where('idpat', $id)
+        ->first();
+
+    if ($result !== NULL)
+      throw new Exception(Lang::get('aroaden.patient_delete_warning'));
+  }
+
   public static function FindStringOnField($sLimit, $sWhere, $sOrder)
   {
       $where = '';

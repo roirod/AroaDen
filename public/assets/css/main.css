@@ -309,10 +309,16 @@ legend{
   border-bottom:1px solid #f4b940
 }
 
-a {
+td a, li a {
   color: #333232 !important;
   text-decoration: none !important;
   background-color: #e2e2e2 !important;
+}
+
+td a:hover {
+  color: #e2e2e2 !important;
+  text-decoration: none !important;
+  background-color: #333232 !important;
 }
 
 .nav>li>a{
