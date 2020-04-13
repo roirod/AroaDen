@@ -375,7 +375,7 @@
                 $this.closest('tr').remove();
 
               if (redirect == 'true')
-                setTimeout(function(_this){  
+                setTimeout(function(){  
                   _this.redirectTo(); 
                 }, 1200);
 

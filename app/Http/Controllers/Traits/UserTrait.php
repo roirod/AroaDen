@@ -10,7 +10,7 @@ use Image;
 use Lang;
 use DB;
 
-trait DirFilesTrait {
+trait UserTrait {
 
   public function loadFileView($request, $id)
   {
@@ -19,7 +19,7 @@ trait DirFilesTrait {
     try {
 
       $this->createDir($id);
-      $files = Files::GetFilesByUserId($id);
+      $files = Files::GetFilesByUserId($id, $this->user_type);
       $object = $this->model::FirstById($id);
 
     } catch (Exception $e) {
@@ -155,7 +155,7 @@ trait DirFilesTrait {
         if ($extension == '')
           $fsFilename = $fsFilenameNoExt;
 
-        $file_exists = Files::CheckIfFileExist($id, $originalName);
+        $file_exists = Files::CheckIfFileExist($id, $this->user_type, $originalName);
 
         if ($file_exists) {
           throw new Exception("El archivo: - $originalName - existe ya en su carpeta");
@@ -193,6 +193,7 @@ trait DirFilesTrait {
 
         Files::create([
           'iduser' => $id,
+          'type' => $this->user_type,         
           'originalName' => $originalName,                    
           'info' => $info_arr
         ]);
@@ -236,26 +237,6 @@ trait DirFilesTrait {
   {
     if (!$file->isValid())
       throw new Exception(Lang::get('aroaden.file_not_valid'));
-  }
-
-  private function getFirstJpgOnDir($dir)
-  {
-    $jpg = glob($dir . "/*.jpg");
-
-    if ( isset($jpg[0]) )
-        return $jpg[0];
-
-    return false;        
-  }
-
-  private function deleteAllFilesOnDir($dir)
-  {
-    $files = glob($dir.'/*');
-
-    foreach($files as $file) {
-      if(is_file($file))
-        unlink($file);
-    }
   }
 
   public function download(Request $request, $id, $idfiles)
@@ -318,33 +299,10 @@ trait DirFilesTrait {
    */
   public function destroy(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);
+    $this->misc_array['checkDestroy'] = true;
+    $this->misc_array['deleteUserStaff'] = true;
 
-    $data['error'] = false;
-
-    DB::beginTransaction();
-
-    try {
-
-      $this->model::checkDestroy($id);
-      $this->model::destroy($id);
-      Files::where('iduser', $id)->delete();
-
-      $dir = "$this->files_dir/$id";
-      $this->deleteAllFilesOnDir(storage_path($dir));
-
-      DB::commit();
-
-    } catch (\Exception $e) {
-
-      DB::rollBack();
-
-      $data['error'] = true;
-      $data['msg'] = $e->getMessage();
-
-    }
-
-    $this->echoJsonOuptut($data);
+    return parent::destroy($request, $id);
   }
 
 }

@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\DefaultTrait;
 use App\Http\Controllers\Traits\BaseTrait;
+use App\Http\Controllers\Traits\DirTrait;
 use Illuminate\Http\Request;
+use App\Models\Files;
 use Exception;
 use Config;
 use View;
 use Lang;
+use DB;
 
 class BaseController extends Controller
 {
-  use DefaultTrait,BaseTrait;
+  use DefaultTrait, BaseTrait, DirTrait;
 
   const APP_NAME = 'Aroa<small>Den</small>';
   const APP_NAME_TEXT = 'AroaDen';
@@ -63,14 +66,9 @@ class BaseController extends Controller
   protected $other_route = '';
 
   /**
-   * @var string $redirect_to  redirect_to
+   * @var string $user_type  user_type
    */
-  protected $redirect_to = NULL;
-
-  /**
-   * @var bool $delete_item  delete_item
-   */
-  protected $delete_item = false;
+  protected $user_type = '';
 
   /**
    * @var string $views_folder  views_folder name
@@ -416,6 +414,8 @@ class BaseController extends Controller
 
     $data['error'] = false;
 
+    DB::beginTransaction();
+
     try {
 
       if (isset($this->misc_array['checkDestroy']) && $this->misc_array['checkDestroy'])
@@ -426,7 +426,18 @@ class BaseController extends Controller
       if (isset($this->misc_array['count']) && $this->misc_array['count'])
         $data['count'] = $this->model::CountAll();
 
-    } catch (Exception $e) {
+      if (isset($this->misc_array['deleteUserStaff']) && $this->misc_array['deleteUserStaff']) {
+        Files::where('iduser', $id)->delete();
+
+        $dir = storage_path("$this->files_dir/$id");
+        self::deleteDir($dir);
+      }
+
+      DB::commit();
+
+    } catch (\Exception $e) {
+
+      DB::rollBack();
 
       $data['error'] = true;
       $data['msg'] = $e->getMessage();

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use App\Models\GetTableNameTrait;
 use App\Models\BaseModel;
+use Exception;
+use Lang;
 
 class Patients extends BaseModel
 {

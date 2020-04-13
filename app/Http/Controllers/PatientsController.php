@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Interfaces\BaseInterface;
-use App\Http\Controllers\Traits\DirFilesTrait;
+use App\Http\Controllers\Traits\UserTrait;
 use Illuminate\Http\Request;
 use App\Models\Appointments;
 use App\Models\Treatments;
@@ -21,7 +21,7 @@ use DB;
 
 class PatientsController extends BaseController implements BaseInterface
 {
-  use DirFilesTrait;
+  use UserTrait;
 
   /**
    * @var string $odontogram_dir  odontogram_dir
@@ -47,6 +47,7 @@ class PatientsController extends BaseController implements BaseInterface
     $this->own_dir = 'patients_dir';
     $this->files_dir = "app/".$this->own_dir;
     $this->has_odontogram = true;
+    $this->user_type = $this->config['routes']['patients'];
 
     $fields = [
       'surname' => true,

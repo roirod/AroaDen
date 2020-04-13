@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
-use App\Http\Controllers\Traits\DirFilesTrait;
+use App\Http\Controllers\Traits\UserTrait;
 use App\Models\StaffPositionsEntries;
 use App\Models\StaffPositions;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ use DB;
 
 class StaffController extends BaseController implements BaseInterface
 {
-  use DirFilesTrait;
+  use UserTrait;
 
   public function __construct(Staff $staff)
   {
@@ -33,6 +33,7 @@ class StaffController extends BaseController implements BaseInterface
     $this->own_dir = 'staff_dir';
     $this->files_dir = "app/".$this->own_dir;
     $this->model = $staff;
+    $this->user_type = $this->config['routes']['staff'];
 
     $fields = [
       'surname' => true,
