@@ -38,6 +38,7 @@
     $(document).ready(function() {
       new SlimSelect({
         select: '#staff',
+        deselectLabel: '<span class="red fonsi18">✖</span>',        
         placeholder: "{{ Lang::get('aroaden.select_one_or_more') }}",
         searchText: "{{ Lang::get('aroaden.search') }}",
         searchPlaceholder: "{{ Lang::get('aroaden.search') }}",

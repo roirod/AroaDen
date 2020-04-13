@@ -1,7 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
      <ul class="nav nav-pills bgtra">
-  		<li><a href="{{ url($routes['patients']) }}"> {{ Lang::get('aroaden.patients') }} </a></li>
 
   		@if (isset($idnav))
   			<li><a href="{{ url($routes['patients']."/$idnav") }}"> {{ Lang::get('aroaden.profile') }} </a></li>
@@ -15,6 +14,14 @@
 
   			-->
   		@endif
+
+      <li>
+        <a href="{{ url($routes['patients']) }}"> 
+          <i class="fa fa-users fa-1x"></i>
+          {{ Lang::get('aroaden.patients') }}
+        </a>
+      </li>
+
      </ul>
   </div>
 </div>

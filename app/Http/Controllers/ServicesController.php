@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use Illuminate\Http\Request;
 use App\Models\Services;
@@ -111,7 +110,6 @@ class ServicesController extends BaseController implements BaseInterface
   public function create(Request $request, $id = false)
   {
     $this->autofocus = 'name';
-
     $this->view_data['tax_types'] = $this->tax_types;
 
     $this->setPageTitle(Lang::get('aroaden.create_service'));

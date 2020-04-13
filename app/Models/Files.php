@@ -17,38 +17,38 @@ class Files extends Model
 
   public static function GetFilesByUserId($iduser, $type)
   {
-      $files = DB::table('files')
-                  ->where('iduser', $iduser)
-                  ->where('type', $type)                  
-                  ->orderBy('originalName', 'ASC')
-                  ->get();
+    $files = DB::table('files')
+                ->where('iduser', $iduser)
+                ->where('type', $type)                  
+                ->orderBy('originalName', 'ASC')
+                ->get();
 
-      return $files;
+    return $files;
   }
 
   public static function CheckIfFileExist($iduser, $type, $originalName)
   {
-      $file = DB::table('files')
-                  ->where('iduser', $iduser)
-                  ->where('type', $type)                                   
-                  ->where('originalName', $originalName)
-                  ->first();
+    $file = DB::table('files')
+                ->where('iduser', $iduser)
+                ->where('type', $type)                                   
+                ->where('originalName', $originalName)
+                ->first();
 
-      if ($file !== NULL) {
-          if ($file->originalName == $originalName)
-              return true;
-      }
+    if ($file !== NULL) {
+        if ($file->originalName == $originalName)
+            return true;
+    }
 
-      return false;
+    return false;
   }
 
   public static function GetFileByUserId($iduser, $idfiles)
   {
-      $file = DB::table('files')
-                  ->where('iduser', $iduser)
-                  ->where('idfiles', $idfiles)
-                  ->first();
+    $file = DB::table('files')
+                ->where('iduser', $iduser)
+                ->where('idfiles', $idfiles)
+                ->first();
 
-      return $file;
+    return $file;
   }
 }
