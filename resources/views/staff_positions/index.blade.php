@@ -5,8 +5,7 @@
 	@include('includes.staff_nav')
 
 	@include('includes.messages')
-	@include('includes.errors')
-
+	
 	<div class="row"> 
 	  <div class="col-sm-12"> 
 	    <div class="input-group"> 
@@ -15,7 +14,7 @@
 	      </span>
 	      <div class="btn-toolbar pad4" role="toolbar"> 
 	        <div class="btn-group">
-	          <a href="{{ url("/$staff_positions_route/create") }}" role="button" class="btn btn-sm btn-primary">
+	          <a href="{{ url("/$main_route/create") }}" role="button" class="btn btn-sm btn-primary">
 	            <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
 	          </a>
 	        </div>

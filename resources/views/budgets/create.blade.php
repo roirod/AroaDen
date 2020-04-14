@@ -5,12 +5,11 @@
   @include('includes.patients_nav')
 
   @include('includes.messages')
-  @include('includes.errors')
 
   @include('budgets.commonJs')
 
     <div class="col-sm-12 pad10">
-        @include('form_fields.show.name')
+      @include('form_fields.show.name')
     </div>
 
     <div class="row">

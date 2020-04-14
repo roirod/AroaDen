@@ -95,8 +95,8 @@ img.center {
 }
 
 a.paginate_active {
-  color: white !important;
-  background-color: #7b7b7b !important;
+  color: #595757 !important;
+  background-color: #c6c5c6 !important;
 }
 
 .box500 { height: 500px; overflow: auto; border: 1px solid grey; }
@@ -331,7 +331,7 @@ td a:hover {
 .nav>li>a:focus,.nav>li>a:hover{
   text-decoration: none;
   border-bottom: 2px solid #06fbbe !important;
-  background-color: black !important;
+  background-color: #0000008c !important;
   color: #e7e7e7 !important;
 }
 
@@ -345,7 +345,7 @@ td a:hover {
 
 .navbar-default{
   background-color:#f8f8f8 !important;
-  border-color:#333 !important;
+  border-color:#8a8989 !important;
 }
 
 .navbar-default .navbar-brand{

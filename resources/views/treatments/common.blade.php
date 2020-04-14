@@ -35,6 +35,31 @@
       $('input[name="paid"]').val(paid);
     }
 
+    $('form.save_form').submit(function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+
+      saveData();
+    });
+
+    function saveData() {
+      var data = $("form.save_form").serialize();
+      var action = $("form.save_form").attr('action');
+
+      var ajax_data = {
+        url  : action,
+        data : data
+      };
+
+      util.processAjaxReturnsJson(ajax_data).done(function(response) {
+        if (response.error)
+          return util.showPopup(response.msg, false, 3500);
+
+        util.showPopup();
+        return util.redirectTo();
+      });
+    }
+
     $(document).ready(function() {
       new SlimSelect({
         select: '#staff',

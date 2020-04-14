@@ -5,8 +5,7 @@
   @include('includes.patients_nav')
 
   @include('includes.messages')
-  @include('includes.errors')
-
+  
   @include('budgets.commonJs')
 
   <div class="col-sm-12 pad10">
@@ -166,43 +165,5 @@
   </div>    
 
 @endsection
-	 
-@section('footer_script')
 
-  <script type="text/javascript">
-		$(document).ready(function() {
-			$('.save_text').click(function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-
-				Module.saveText();
-			});
-
-			var Module = (function( window, undefined ){
-				function saveText() {
-			    var data = $("form.mode").serialize();
-			    data += '&mode=save_text';
-
-          var ajax_data = {
-            url  : '/{{ $main_route }}/mode',
-            data : data
-          };
-
-          util.processAjaxReturnsJson(ajax_data).done(function(response) {
-            return util.showPopup(response.msg);
-          });
-				}
-
-        return {
-          saveText: function() {
-            saveText();
-          }
-        }
-
-	    })(window);
-  	});
-
-  </script>
-
-@endsection
 

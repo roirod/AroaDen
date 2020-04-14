@@ -18,7 +18,6 @@
   @include('includes.patients_nav')
 
   @include('includes.messages')
-  @include('includes.errors')
 
   <div class="col-sm-12 pad10">
       @include('form_fields.show.name')

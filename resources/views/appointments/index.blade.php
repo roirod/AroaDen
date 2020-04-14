@@ -3,8 +3,7 @@
 @section('content')
 
   @include('includes.messages')
-  @include('includes.errors')
-
+  
   <div class="row pad4">
 
     <div class="col-sm-3">

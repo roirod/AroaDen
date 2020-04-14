@@ -5,8 +5,7 @@
   @include('includes.staff_nav')
 
   @include('includes.messages')
-  @include('includes.errors')
-
+  
   <div class="row">
     <div class="col-sm-12">
       <fieldset>

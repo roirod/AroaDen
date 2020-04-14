@@ -5,7 +5,6 @@
 	@include('includes.users_nav')
 
 	@include('includes.messages')
-	@include('includes.errors')
 
 	<div class="col-sm-5">
         <fieldset>
@@ -17,8 +16,4 @@
 		</fieldset>
 	</div>
 
-
- <br> <br> <br> <br> <br> <br> <br> <br>
-
-
- @endsection
+@endsection

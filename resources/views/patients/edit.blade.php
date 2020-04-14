@@ -5,20 +5,19 @@
 	@include('includes.patients_nav')
 
 	@include('includes.messages')
-	@include('includes.errors')
+	
+  <div class="row">
+    <div class="col-sm-12">
+      <fieldset>
+        <legend>
+          {!! @trans('aroaden.edit_patient') !!}
+        </legend>
 
-    <div class="row">
-      <div class="col-sm-12">
-        <fieldset>
-          <legend>
-            {!! @trans('aroaden.edit_patient') !!}
-          </legend>
+          @include('form_fields.common')
 
-            @include('form_fields.common')
-
-        </fieldset>
-      </div>
+      </fieldset>
     </div>
+  </div>
 
 @endsection
 

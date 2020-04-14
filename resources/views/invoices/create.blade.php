@@ -5,7 +5,7 @@
 	@include('includes.patients_nav')
 
 	@include('includes.messages')
-	@include('includes.errors')
+	
 
 	{!! addText("Crear factura") !!}
 

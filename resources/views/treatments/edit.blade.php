@@ -5,8 +5,7 @@
   @include('includes.patients_nav')
 
   @include('includes.messages')
-  @include('includes.errors')
-
+  
   <div class="col-sm-12 pad10">
     @include('form_fields.show.name')
   </div>  
@@ -55,20 +54,22 @@
         }}
         @endphp
 
-        @include('form_fields.fields.openform')
+        <form class="form save_form" action="/{{ $main_route.'/'.$id }}">
+          <input type="hidden" name="_method" value="PUT">
 
           <input type="hidden" name="price" value="{{ $object->price }}">
 
           @include('form_fields.common_alternative')
-
-        @include('form_fields.fields.closeform')
+        </form>
 
       </fieldset>
     </div>
   </div>
 
-
   <script type="text/javascript">
+
+    redirectRoute = '/{{ $routes['patients'].'/'.$idnav }}';
+    
     $(document).ready(function() {
       $('#multiply_units_price').click(function (evt) {
         var price = {{ $treatment->price }};
@@ -78,9 +79,7 @@
     });
   </script>
 
-
   @include('treatments.common')
-
 
 @endsection
 

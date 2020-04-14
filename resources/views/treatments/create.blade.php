@@ -5,7 +5,7 @@
 	@include('includes.patients_nav')
 
 	@include('includes.messages')
-	@include('includes.errors')
+	
 
   <div class="col-sm-12 pad10">
     @include('form_fields.show.name')
@@ -48,15 +48,14 @@
             <div class="mar10"></div>
             <br>
 
-  			    @include('form_fields.fields.openform')
-
+            <form class="form save_form" action="/{{ $main_route }}">
 			        <input type="hidden" name="idpat" value="{{ $id }}">
 			        <input type="hidden" name="idser" value="">
 			        <input type="hidden" name="price" value="">
 
 			        @include('form_fields.common_alternative')
+            </form>
 
-  				  @include('form_fields.fields.closeform')
   		    </div>
     		</div>
 
@@ -70,6 +69,8 @@
 
   <script type="text/javascript">
     
+    redirectRoute = '/{{ $routes['patients'].'/'.$id }}';
+
     $('input[name="units"]').on('change', function(evt) {
       var price = $('input[name="price"]').val();
       
@@ -107,15 +108,12 @@
         function processSelect() {
           var data = $("#select_form").serialize();
 
-          $.ajax({
-
-            type: "POST",
+          var ajax_data = {
             url  : '/{{ $main_route }}/{{ $form_route }}',
-            dataType: "json",
             data : data
+          };
 
-          }).done(function(response) {
-
+          util.processAjaxReturnsJson(ajax_data).done(function(response) {
             $('input[name="units"]').val(1);
             $('input[name="paid"]').val("");
             $('input[name="idser"]').attr('value', response.idser);
@@ -130,11 +128,6 @@
 
             $('#loading').empty();
             $("#ajax_content").hide().fadeIn(300).show(0);
-       
-          }).fail(function() {
-
-            $('#ajax_content').hide().html('<h3>{{ Lang::get('aroaden.error_message') }}</h3>').fadeIn('slow');
-
           });
         }
 
@@ -145,6 +138,7 @@
         }
 
       })(window);
+
     });
 
   </script>

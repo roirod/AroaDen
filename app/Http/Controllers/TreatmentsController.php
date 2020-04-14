@@ -74,20 +74,17 @@ class TreatmentsController extends BaseController
   {
     extract($this->sanitizeRequest($request->all()));
 
-    $route = "$this->main_route/$idpat/create";
-
-    $this->redirectIfIdIsNull($idpat, $route);
-    $this->redirectIfIdIsNull($idser, $route);
-
     $staff = $request->staff;
-    $service = Services::FirstById($idser);     
-    $price = $service->price;
-    $tax = $service->tax;
-    $day = $this->convertDmYToYmd($day);
+    $data['error'] = false;
 
     DB::beginTransaction();
 
     try {
+
+      $service = Services::FirstById($idser);     
+      $price = $service->price;
+      $tax = $service->tax;
+      $day = $this->convertDmYToYmd($day);
 
       if ($this->checkIfPaidIsHigher($units, $price, $paid))
         throw new Exception(Lang::get('aroaden.paid_is_higher'));
@@ -118,12 +115,12 @@ class TreatmentsController extends BaseController
 
       DB::rollBack();
 
-      $request->session()->flash($this->error_message_name, $e->getMessage());  
-      return redirect($route)->withInput();
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
     }
 
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
-    return redirect("/$this->other_route/$idpat");
+    $this->echoJsonOuptut($data);
   }
 
   public function edit(Request $request, $id)
@@ -150,67 +147,52 @@ class TreatmentsController extends BaseController
 
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);  
-    $route = "$this->main_route/$id/edit";
+    $id = $this->sanitizeData($id);
+    $data['error'] = false;
 
-    $validator = Validator::make($request->all(), [
-      'units' => 'required',            
-      'paid' => 'required',
-      'price' => 'required',
-      'day' => 'required|date'
-    ]);
-        
-    if ($validator->fails()) {
-      return redirect($route)
-                   ->withErrors($validator)
-                   ->withInput();
-    } else {
+    extract($this->sanitizeRequest($request->all()));
 
-      extract($this->sanitizeRequest($request->all()));
+    $day = $this->convertDmYToYmd($day);
+    $staff = $request->staff;
 
-      $day = $this->convertDmYToYmd($day);
-      $staff = $request->staff;
+    DB::beginTransaction();
 
-      DB::beginTransaction();
+    try {
 
-      try {
+      $treatment = Treatments::find($id);
 
-        $treatment = Treatments::find($id);
+      if ($this->checkIfPaidIsHigher($units, $price, $paid))
+        throw new Exception(Lang::get('aroaden.paid_is_higher'));
 
-        if ($this->checkIfPaidIsHigher($units, $price, $paid))
-          throw new Exception(Lang::get('aroaden.paid_is_higher'));
+      $treatment->units = $units;
+      $treatment->paid = $paid;
+      $treatment->day = $day;
+      $treatment->updated_at = date('Y-m-d H:i:s');
+      $treatment->save();
 
-        $treatment->units = $units;
-        $treatment->paid = $paid;
-        $treatment->day = $day;
-        $treatment->updated_at = date('Y-m-d H:i:s');
-        $treatment->save();
+      StaffWorks::where('idtre', $id)->delete();
 
-        StaffWorks::where('idtre', $id)->delete();
-
-        if (is_array($staff) && count($staff) > 0) {
-          foreach ($staff as $idsta) {
-            StaffWorks::create([
-              'idsta' => $idsta,
-              'idtre' => $id
-            ]);
-          }
+      if (is_array($staff) && count($staff) > 0) {
+        foreach ($staff as $idsta) {
+          StaffWorks::create([
+            'idsta' => $idsta,
+            'idtre' => $id
+          ]);
         }
-
-        DB::commit();
-
-      } catch (\Exception $e) {
-
-        DB::rollBack();
-
-        $request->session()->flash($this->error_message_name, $e->getMessage());  
-        return redirect($route);
-
       }
-       
-      $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );  
-      return redirect("/$this->other_route/$treatment->idpat");
-    }     
+
+      DB::commit();
+
+    } catch (\Exception $e) {
+
+      DB::rollBack();
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
+    }
+
+    $this->echoJsonOuptut($data);  
   }
 
   public function renderPaymentsTable($idpat)

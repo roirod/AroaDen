@@ -53,7 +53,10 @@
       console.dir(string);
       console.log('--------------------------------------------');
 
-      return window.location.href = string;
+      setTimeout(function(){  
+        return window.location.href = string;
+      }, 1200);
+      
     },
 
     processAjaxReturnsHtml: function(obj) {
@@ -375,9 +378,7 @@
                 $this.closest('tr').remove();
 
               if (redirect == 'true')
-                setTimeout(function(){  
-                  _this.redirectTo(); 
-                }, 1200);
+                _this.redirectTo(); 
 
               return _this.showPopup();
             });
