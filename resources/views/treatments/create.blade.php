@@ -6,7 +6,6 @@
 
 	@include('includes.messages')
 	
-
   <div class="col-sm-12 pad10">
     @include('form_fields.show.name')
   </div>	
@@ -39,10 +38,10 @@
 
     		<div id="loading"></div>
 
-    		<hr>
+    		<div class="row" id="ajax_content">
+          <hr class="pad4 mar10">
 
-    		<div class="row">
-  		    <div class="col-sm-12 mar10" id="ajax_content">
+          <div class="col-sm-12 mar10">
             <p class="label label-info fonsi15 pad10 mar10" id="name_price"></p>
 
             <div class="mar10"></div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Traits\DefaultTrait;
 use App\Http\Controllers\Traits\BaseTrait;
 use App\Http\Controllers\Traits\DirTrait;
 use Illuminate\Http\Request;
+use App\Models\Settings;
 use App\Models\Files;
 use Exception;
 use Config;
@@ -211,9 +212,6 @@ class BaseController extends Controller
     if (env('CREATE_SYMLINKS'))
       $this->createSymlinks();
 
-    if (env('CREATE_DEFAULT_COMPANY_DATA'))
-      $this->createDefaultCompanyData();
-
     $this->form_fields = $this->config['form_fields'];
   }
 
@@ -400,6 +398,21 @@ class BaseController extends Controller
     $data['msg'] = $count;
 
     return $data;
+  }
+
+  /**
+   *  get Settings, company info, etc.
+   *
+   *  @return object   
+   */
+  protected function getSettings()
+  {
+    $this->createDefaultCompanyData();
+
+    if (env('REDIS_SERVER_IS_ON')) 
+        return json_decode(Redis::get('settings'));
+
+    return Settings::getObject();
   }
 
   /**

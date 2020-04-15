@@ -40,11 +40,6 @@
 				    <label class="control-label text-left mar10">{!! @trans('aroaden.allergies') !!}</label>
 				    <textarea class="form-control" name="allergies" rows="4">{!! $record->allergies !!}</textarea>
 				</div>
-
-				<div class="form-group col-sm-12">
-				    <label class="control-label text-left mar10">{!! @trans('aroaden.notes') !!}</label>
-				    <textarea class="form-control" name="notes" rows="4">{!! $record->notes !!}</textarea>
-				</div>
 				
 				@include('includes.submit_button')
 
@@ -60,8 +55,6 @@
     @parent
     
 	  <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/minified/polyfiller.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/webshims.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/areyousure.js') !!}"></script>
 	  <script type="text/javascript" src="{!! asset('assets/js/forgetChanges.js') !!}"></script>
 	 	  

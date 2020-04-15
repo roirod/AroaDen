@@ -73,12 +73,12 @@ class CompanyController extends BaseController
 
     if ($this->view_name == 'edit') {
 
-      $this->view_data['form_route'] = 'saveData';
+      $this->form_route = 'saveData';
       $this->setPageTitle(Lang::get('aroaden.company_edit_data'));
 
     } else {
 
-      $this->view_data['form_route'] = 'editData';
+      $this->form_route = 'editData';
       $this->setPageTitle(Lang::get('aroaden.company_data'));
 
     }

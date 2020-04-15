@@ -295,71 +295,45 @@ class PatientsController extends BaseController implements BaseInterface
   {
     $id = $this->sanitizeData($id);
     $this->redirectIfIdIsNull($id, $this->main_route);
+    $route = "$this->main_route/$id/edit";
 
     extract($this->sanitizeRequest($request->all()));
 
-    $route = "$this->main_route/$id/edit";
+    try {
 
-    $patient = $this->model::FirstById($id);
-    $exists = $this->model::CheckIfDniExistsOnUpdate($id, $dni);
+      $patient = $this->model::FirstById($id);
+      $exists = $this->model::CheckIfDniExistsOnUpdate($id, $dni);
 
-    if ( isset($exists->dni) ) {
-      $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
-      $request->session()->flash($this->error_message_name, $msg);
-      return redirect($route)->withInput();
-    }
-
-    $validator = Validator::make($request->all(),[
-      'name' => 'required|max:111',
-      'surname' => 'required|max:111',
-      'address' => 'max:111',
-      'city' => 'max:111',
-      'dni' => 'unique:'. $this->model->getTableName() .'|max:12',
-      'tel1' => 'max:11',
-      'tel2' => 'max:11',
-      'tel3' => 'max:11',
-      'sex' => 'max:12',
-      'birth' => 'date',
-      'notes' => ''
-    ]);
-        
-    if ($validator->fails()) {
-
-      return redirect($route)->withErrors($validator)
-                   ->withInput();
-
-    } else {
-
-      try {
-
-        $birth = $this->convertDmYToYmd($birth);
-
-        $patient->name = $name;
-        $patient->surname = $surname;
-        $patient->birth = $birth;
-        $patient->dni = $dni;
-        $patient->tel1 = $tel1;
-        $patient->tel2 = $tel2;
-        $patient->tel3 = $tel3;
-        $patient->sex = $sex;
-        $patient->address = $address;
-        $patient->city = $city;
-        $patient->notes = $notes;
-        $patient->updated_at = date('Y-m-d H:i:s');
-        $patient->save();
-
-      } catch (\Exception $e) {
-
-        $request->session()->flash($this->error_message_name, $e->getMessage());  
-        return redirect($route);
-
+      if ( isset($exists->dni) ) {
+        $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+        throw new Exception($msg);
       }
 
-      $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-      return redirect("$this->main_route/$id");
+      $birth = $this->convertDmYToYmd($birth);
+
+      $patient->name = $name;
+      $patient->surname = $surname;
+      $patient->birth = $birth;
+      $patient->dni = $dni;
+      $patient->tel1 = $tel1;
+      $patient->tel2 = $tel2;
+      $patient->tel3 = $tel3;
+      $patient->sex = $sex;
+      $patient->address = $address;
+      $patient->city = $city;
+      $patient->notes = $notes;
+      $patient->updated_at = date('Y-m-d H:i:s');
+      $patient->save();
+
+    } catch (\Exception $e) {
+
+      $request->session()->flash($this->error_message_name, $e->getMessage());  
+      return redirect($route)->withInput();
 
     }
 
+    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+    return redirect("$this->main_route/$id");
   }
 
   public function record(Request $request, $id)
@@ -428,7 +402,6 @@ class PatientsController extends BaseController implements BaseInterface
     $record->diseases = $this->sanitizeData($request->input('diseases'));   
     $record->medicines = $this->sanitizeData($request->input('medicines'));   
     $record->allergies = $this->sanitizeData($request->input('allergies'));   
-    $record->notes = $this->sanitizeData($request->input('notes'));   
     
     $record->save();
 

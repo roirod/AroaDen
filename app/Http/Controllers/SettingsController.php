@@ -18,9 +18,7 @@ class SettingsController extends BaseController
   }   
 
   public function index(Request $request)
-  {         
-    $this->view_data['username'] = Auth::user()->username;
-
+  {
     $this->setPageTitle(Lang::get('aroaden.settings'));
 
     return parent::index($request);

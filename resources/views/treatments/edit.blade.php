@@ -18,28 +18,28 @@
         </legend>
 
         <div class="row pad4">
-          <div class="col-sm-12">
+          <div class="col-sm-9">
             <table class="table table-striped table-bordered table-hover">
               <thead>
-                 <tr class="fonsi15">
+                 <tr class="fonsi14 bggrey">
                    <td class="wid140">{{ @trans('aroaden.name') }}</td>
                    <td class="wid95">{{ @trans('aroaden.price') }}</td>
-                   <td class="wid95">{{ @trans('aroaden.units') }}</td>             
-                   <td class="wid95">{{ @trans('aroaden.tax') }}</td>
-                   <td class="wid95">{{ @trans('aroaden.total') }}</td>
-                   <td class="wid95">{{ @trans('aroaden.paid') }}</td>
-                   <td class="wid140">{{ @trans('aroaden.day') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.units') }}</td>             
+                   <td class="wid70">{{ @trans('aroaden.tax') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.total') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.paid') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.day') }}</td>
                  </tr>
                 </thead>
                 <tbody>
-                 <tr class="fonsi15">
+                 <tr class="fonsi13">
                    <td class="wid140">{{ $treatment->name }}</td>
                    <td class="wid95">{{ $treatment->price }} €</td>
-                   <td class="wid95">{{ $treatment->units }}</td>             
-                   <td class="wid95">{{ $treatment->tax }} %</td>
-                   <td class="wid95">{{ numformat($treatment->units * $treatment->price) }} €</td>
-                   <td class="wid95">{{ $treatment->paid }} €</td>
-                   <td class="wid140">{{ date('d-m-Y', strtotime ($treatment->day) ) }}</td>
+                   <td class="wid70">{{ $treatment->units }}</td>             
+                   <td class="wid70">{{ $treatment->tax }} %</td>
+                   <td class="wid70">{{ numformat($treatment->units * $treatment->price) }} €</td>
+                   <td class="wid70">{{ $treatment->paid }} €</td>
+                   <td class="wid70">{{ date('d-m-Y', strtotime ($treatment->day) ) }}</td>
                  </tr>
                 </tbody>
              </table>
@@ -49,9 +49,7 @@
         <hr>
 
         @php
-        {{
-          $object = $treatment;
-        }}
+          {{ $object = $treatment; }}
         @endphp
 
         <form class="form save_form" action="/{{ $main_route.'/'.$id }}">

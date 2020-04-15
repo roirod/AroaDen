@@ -10,7 +10,7 @@ class Record extends Model
   use GetTableNameTrait;
 
   protected $table = 'record';
-  protected $fillable = ['idpat','medical_record','diseases','medicines','allergies','notes'];
+  protected $fillable = ['idpat','medical_record','diseases','medicines','allergies'];
   protected $primaryKey = 'idpat';
   public $incrementing = false;
 

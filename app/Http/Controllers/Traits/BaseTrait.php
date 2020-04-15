@@ -2,12 +2,6 @@
 
 namespace App\Http\Controllers\Traits;
 
-use Illuminate\Http\Request;
-use App\Models\Settings;
-use Exception;
-use Redis;
-use Lang;
-
 trait BaseTrait {
 
   /**
@@ -145,19 +139,6 @@ trait BaseTrait {
           return true;
 
       return false;
-  }
-
-  /**
-   *  get Settings, company info, etc.
-   *
-   *  @return object   
-   */
-  protected function getSettings()
-  {
-      if (env('REDIS_SERVER_IS_ON')) 
-          return json_decode(Redis::get('settings'));
-
-      return Settings::getObject();
   }
 
   /**

@@ -58,13 +58,6 @@
               <div class="box200">{!! nl2br(e($record->allergies)) !!}</div>
             </div>
 
-            <div class="col-sm-12">
-              <br> <br>
-              <i class="fa fa-minus-square"></i> {!! @trans('aroaden.notes') !!}
-              <br> 
-              <div class="box200">{!! nl2br(e($record->notes)) !!}</div>
-            </div>   
-
          </div>
         </div>
 

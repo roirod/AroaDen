@@ -27,15 +27,15 @@
 
 
     <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
      <div class="panel panel-default">
       <table class="table table-striped table-bordered table-hover">
-        <tr class="fonsi15">
-       	  <td class="wid110">Fecha</td>
-    		  <td class="wid180">Tratamiento</td>
-    		  <td class="wid95 textcent">Cantidad</td>
-    		  <td class="wid95 textcent">Precio</td>
-    		  <td class="wid95"></td>
+        <tr class="fonsi14">
+          <td class="wid110">{{ @trans('aroaden.date') }}</td>
+          <td class="wid180">{{ @trans('aroaden.treatment') }}</td>
+          <td class="wid95 textcent">{{ @trans('aroaden.units') }}</td>             
+          <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
+          <td class="wid95 textcent">{{ @trans('aroaden.price') }}</td>
         </tr>
       </table>
 
@@ -50,14 +50,14 @@
     		     	  <td class="wid110"></td>
     					  <td class="wid180"></td>
     					  <td class="wid95 textcent"></td>
-    					  <td class="wid95 textcent"></td>
+    					  <td class="wid70 textcent"></td>
     					  <td class="wid95"></td>
        				</tr>
     	    		<tr class="info">
     		     	  <td class="wid110"></td>
     					  <td class="wid180"></td>
     					  <td class="wid95 textcent"></td>
-    					  <td class="wid95 textcent"></td>
+    					  <td class="wid70 textcent"></td>
     					  <td class="wid95"></td>
     	    		</tr>
 
@@ -65,7 +65,7 @@
     			 		  <td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
     					  <td class="wid180"></td>
     					  <td class="wid95 textcent"></td>
-    					  <td class="wid95 textcent"></td>
+    					  <td class="wid70 textcent"></td>
     					  <td class="wid95"></td>
     					</tr>
 
@@ -77,7 +77,7 @@
                 </td>
                 <td class="wid180"></td>
                 <td class="wid95 textcent"></td>
-                <td class="wid95 textcent"></td>
+                <td class="wid70 textcent"></td>
                 <td class="wid95"></td>
               </tr>
 
@@ -87,8 +87,8 @@
     	 			<td class="wid110"></td>
     	 			<td class="wid180">{!! $bud->name !!}</td>
     	 			<td class="wid95 textcent">{!! $bud->units !!}</td>
-    	 			<td class="wid95 textcent">{!! $bud->price !!} €</td>
-    	 			<td class="wid95"></td>
+    	 			<td class="wid70 textcent">{!! $bud->tax !!} %</td>
+            <td class="wid95 textcent">{!! $bud->price !!} €</td>
     			</tr>
 
     	    <?php $created_at = $bud->created_at; ?>
@@ -99,12 +99,12 @@
     </div>
 
     <table class="table table-striped table-bordered table-hover">
-      <tr class="fonsi15">
-        <td class="wid110">Fecha</td>
-        <td class="wid180">Tratamiento</td>
-        <td class="wid95 textcent">Cantidad</td>
-        <td class="wid95 textcent">Precio</td>
-        <td class="wid95"></td>
+      <tr class="fonsi14">
+        <td class="wid110">{{ @trans('aroaden.date') }}</td>
+        <td class="wid180">{{ @trans('aroaden.treatment') }}</td>
+        <td class="wid95 textcent">{{ @trans('aroaden.units') }}</td>             
+        <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
+        <td class="wid95 textcent">{{ @trans('aroaden.price') }}</td>
       </tr>
     </table>
 

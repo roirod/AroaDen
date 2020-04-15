@@ -14,12 +14,11 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('id');
             $table->string('key', 33);
             $table->text('value')->nullable();
             $table->string('type', 33)->nullable();
-            $table->timestamps();
-            $table->unique('key');  
+            $table->primary(['key', 'type']);
+            $table->unique('key');
         });
     }
 

@@ -34,7 +34,7 @@
 									<td class="wid140">{!! $obj->username !!}</td>
 
 			            <td class="wid60 textcent">
-			              <a class="btn btn-xs btn-success" type="button" href="/{{ "$main_route/$obj->uid/edit" }}">
+			              <a class="btn btn-sm btn-success" type="button" href="/{{ "$main_route/$obj->uid/edit" }}">
 			                <i class="fa fa-edit"></i>
 			              </a>
 						      </td>

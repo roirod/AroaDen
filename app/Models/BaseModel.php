@@ -9,12 +9,24 @@ class BaseModel extends Model
 {
 
   protected $whereRaw;  
+  protected $selectRaw;
+  protected $type;
+  protected $query;
 
   public function scopeFirstWhereRaw($query)
   {
-    return $query->whereRaw($this->whereRaw)
-                      ->first();
+    $res = $query->whereRaw($this->whereRaw);
+    //$sql = $res->toSql();
+
+    return $res->first();
   }
+
+  private function queryRaw($res)
+  {
+
+    return $query->count();
+  }
+
 
   public function scopeCountAll($query)
   {

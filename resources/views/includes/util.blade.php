@@ -56,7 +56,6 @@
       setTimeout(function(){  
         return window.location.href = string;
       }, 1200);
-      
     },
 
     processAjaxReturnsHtml: function(obj) {

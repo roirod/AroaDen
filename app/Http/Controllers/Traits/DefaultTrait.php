@@ -69,8 +69,6 @@ trait DefaultTrait {
         Redis::set('settings', json_encode($settings));
       }
     }
-
-    return redirect()->back();
   }
 
   /**

@@ -16,9 +16,9 @@ class BudgetsText extends BaseModel
   public $incrementing = false;
   public $timestamps = false;
 
-  public function budgets()
+  public function patients()
   {
-    return $this->belongsTo('App\Models\Budgets');
-  }
+    return $this->belongsTo('App\Models\Patients');
+  }    
 
 }

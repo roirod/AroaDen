@@ -14,7 +14,6 @@ class CreateRecordTable extends Migration
             $table->text('diseases')->nullable();
             $table->text('medicines')->nullable();
             $table->text('allergies')->nullable();
-            $table->text('notes')->nullable();
             $table->timestamps();
             $table->primary('idpat');  
 

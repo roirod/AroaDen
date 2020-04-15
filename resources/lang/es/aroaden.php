@@ -194,6 +194,7 @@ return [
   'allergies' => 'Alergias',
   'patient_delete_warning' => 'Paciente con tratamientos aplicados, no se puede eliminar',
 
+  'treatment' => 'Tratamiento',
   'treatments' => 'Tratamientos',
   'add_treatments' => 'Añadir tratamiento al paciente',
   'edit_treatments' => 'Editar tratamiento',

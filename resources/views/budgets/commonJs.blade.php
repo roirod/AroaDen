@@ -41,12 +41,12 @@
       util.processAjaxReturnsJson(ajax_data).done(function(response) {
         if (response.error) {
 
-          util.showPopup(response.msg, false, 5000);
+          return util.showPopup(response.msg, false, 5000);
 
         } else {
 
           util.showPopup(response.msg);
-          setTimeout(function(){ util.redirectTo("{!! url("/$main_route/$idpat") !!}"); }, 1300);
+          return util.redirectTo('{!! url("/$main_route/$idpat") !!}');
 
         }
       });
