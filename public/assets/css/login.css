@@ -124,3 +124,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .bgwi { background-color: white; }
 
 .textshadow { text-shadow:5px 5px 5px #000000; }
+
+h1 small, h5 small {
+ color: #f04f4f !important; 
+}

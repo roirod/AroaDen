@@ -259,7 +259,7 @@ class StaffController extends BaseController implements BaseInterface
       }
 
       $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
-      return redirect("/$this->main_route");
+      return redirect("/$this->main_route/$idsta");
     } 
   }
 

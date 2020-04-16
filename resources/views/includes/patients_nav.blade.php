@@ -13,13 +13,6 @@
   			-->
   		@endif
 
-      <li>
-        <a href="{{ url($routes['patients']) }}"> 
-          <i class="fa fa-users fa-1x"></i>
-          {{ Lang::get('aroaden.patients') }}
-        </a>
-      </li>
-
      </ul>
   </div>
 </div>

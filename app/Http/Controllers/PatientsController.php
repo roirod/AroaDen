@@ -208,72 +208,49 @@ class PatientsController extends BaseController implements BaseInterface
 
     $route = "$this->main_route/create";
 
-    $exists = $this->model::FirstByDni($dni);
+    DB::beginTransaction();
 
-    if ( isset($exists->dni) ) {
-      $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
-      $request->session()->flash($this->error_message_name, $msg);
-      return redirect($route)->withInput();
-    }
+    try {
 
-    $validator = Validator::make($request->all(),[
-      'name' => 'required|max:111',
-      'surname' => 'required|max:111',
-      'address' => 'max:111',
-      'city' => 'max:111',
-      'dni' => 'unique:'. $this->model->getTableName() .'|max:12',
-      'tel1' => 'max:11',
-      'tel2' => 'max:11',
-      'tel3' => 'max:11',
-      'sex' => 'max:12',
-      'birth' => 'date',
-      'notes' => ''
-    ]);
-        
-    if ($validator->fails()) {
+      $exists = $this->model::FirstByDni($dni);
 
-      return redirect($route)->withErrors($validator)
-                   ->withInput();
-
-    } else {
-
-      DB::beginTransaction();
-
-      try {
-
-        $birth = $this->convertDmYToYmd($birth);
-
-        $insertedId = $this->model::insertGetId([
-          'name' => $name,
-          'surname' => $surname,
-          'dni' => $dni,
-          'tel1' => $tel1,
-          'tel2' => $tel2,
-          'tel3' => $tel3,
-          'sex' => $sex,
-          'address' => $address,
-          'city' => $city,
-          'birth' => $birth,
-          'notes' => $notes,
-          'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        Record::create(['idpat' => $insertedId]);
-
-        DB::commit();
-
-      } catch (\Exception $e) {
-
-        DB::rollBack();
-
-        $request->session()->flash($this->error_message_name, $e->getMessage()); 
-        return redirect($route)->withInput();
-
+      if ( isset($exists->dni) ) {
+        $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+        throw new Exception($msg);
       }
 
-      $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-      return redirect("$this->main_route");
-    }      
+      $birth = $this->convertDmYToYmd($birth);
+
+      $insertedId = $this->model::insertGetId([
+        'name' => $name,
+        'surname' => $surname,
+        'dni' => $dni,
+        'tel1' => $tel1,
+        'tel2' => $tel2,
+        'tel3' => $tel3,
+        'sex' => $sex,
+        'address' => $address,
+        'city' => $city,
+        'birth' => $birth,
+        'notes' => $notes,
+        'created_at' => date('Y-m-d H:i:s')
+      ]);
+
+      Record::create(['idpat' => $insertedId]);
+
+      DB::commit();
+
+    } catch (\Exception $e) {
+
+      DB::rollBack();
+
+      $request->session()->flash($this->error_message_name, $e->getMessage()); 
+      return redirect($route)->withInput();
+
+    }
+
+    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+    return redirect("$this->main_route/$insertedId"); 
   }
 
   public function edit(Request $request, $id)

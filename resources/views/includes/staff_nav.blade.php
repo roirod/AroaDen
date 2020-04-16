@@ -8,12 +8,6 @@
   		@endif
 
       <li>
-        <a href="{{ url($routes['staff']) }}"> 
-          <i class="fa fa-user-md fa-1x"></i>
-          {{ Lang::get('aroaden.staff') }}
-        </a>
-      </li>
-      <li>
         <a href="{{ url($routes['staff_positions']) }}"> 
           <i class="fa fa-stethoscope fa-1x"></i>
           {{ Lang::get('aroaden.positions') }}

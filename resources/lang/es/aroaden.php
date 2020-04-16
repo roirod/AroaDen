@@ -70,6 +70,7 @@ return [
   'select'   => 'Selecciona',
   'select_date_range'   => 'Selecciona rango de fechas',
   'select_one_or_more'   => 'Selecciona uno o varios',
+  'profile_photo'   => 'Foto de perfil ',
 
   'age'   => 'Edad',
   'years'   => 'Años',
