@@ -29,7 +29,7 @@
 		</div> 
 	</div>
 
-	@include('form_fields.show.upload_photo')
+	@include('form_fields.fields.upload_photo')
 
 	<hr>
 

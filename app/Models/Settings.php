@@ -16,7 +16,7 @@ class Settings extends Model
   protected $primaryKey = ['key', 'type'];
   public $incrementing = false;
   public $timestamps = false;
-  protected $keyType = '';
+  protected $keyType = 'string';
 
   public static function getValueByKey($field)
   {

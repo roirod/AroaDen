@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use Exception;
 use Redis;
 use Lang;
 
@@ -93,21 +94,29 @@ class CompanyController extends BaseController
    */
   public function saveData(Request $request)
   {
-    $company_data = $this->model::select('key', 'value')->get()->toArray();
+    try {
 
-    foreach ($company_data as $arr => $value) {
-      foreach ($request->input() as $request_key => $request_value) {
-        $request_value = $this->sanitizeData($request_value);
+      $company_data = $this->model::select('key', 'value')->get()->toArray();
 
-        if ($value["key"] == $request_key)
-          $this->model::where('key', $request_key)->update(['value' => $request_value]);
+      foreach ($company_data as $arr => $value) {
+        foreach ($request->input() as $request_key => $request_value) {
+          $request_value = $this->sanitizeData($request_value);
+
+          if ($value["key"] == $request_key)
+            $this->model::where('key', $request_key)->update(['value' => $request_value]);
+        }
       }
-    }
 
-    if (env('REDIS_SERVER_IS_ON')) {
-      $settings = Settings::getArray();
+      if (env('REDIS_SERVER_IS_ON')) {
+        $settings = Settings::getArray();
 
-      Redis::set('settings', json_encode($settings));               
+        Redis::set('settings', json_encode($settings));               
+      }
+
+    } catch (Exception $e) {
+
+      $request->session()->flash($this->error_message_name, $e->getMessage()); 
+
     }
 
     return $this->ajaxIndex($request);

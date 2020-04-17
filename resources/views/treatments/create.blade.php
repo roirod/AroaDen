@@ -21,10 +21,10 @@
   	      <div class="col-sm-11">
     				<form id="select_form" class="form">
     					<div class="form-group col-lg-4">
-                <label class="control-label text-left mar10">{{ Lang::get('aroaden.select') }}</label>
+                <label class="control-label text-left mar10">{{ Lang::get('aroaden.select_service') }}</label>
 
     						<select name="idser_select" id="idser_select" class="form-control" required>
-    							<option value="none" selected disabled="">{{ Lang::get('aroaden.select_service') }}</option>
+    							<option value="none" selected disabled></option>
 
     							@foreach($services as $servi)
     								<option value="{{ $servi->idser }}">{{ $servi->name }}({{ $servi->price }} €)</option>

@@ -64,7 +64,13 @@
             <ul class="nav nav-pills nav-stacked"> 
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
                 <a href="{!! url($routes['company'])!!}"><i class="fa fa-building-o fa-menusize"></i></a>
-              </li>  
+              </li>
+              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.accounting") !!}</b>">
+                <a href="{!! url($routes['accounting'])!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
+              </li>
+              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.services") !!}</b>">
+                <a href="{!! url($routes['services'])!!}"><i class="fa fa-tasks fa-menusize"></i></a>
+              </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.appointments") !!}</b>">
                 <a href="{!! url($routes['appointments'])!!}"><i class="fa fa-calendar fa-menusize"></i></a>
               </li>
@@ -74,11 +80,8 @@
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.staff") !!}</b>">
                 <a href="{!! url($routes['staff'])!!}"><i class="fa fa-user-md fa-menusize"></i></a>
               </li>
-              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.services") !!}</b>">
-                <a href="{!! url($routes['services'])!!}"><i class="fa fa-tasks fa-menusize"></i></a>
-              </li>
-              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.accounting") !!}</b>">
-                <a href="{!! url($routes['accounting'])!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
+              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.staff_positions") !!}</b>">
+                <a href="{!! url($routes['staff_positions'])!!}"><i class="fa fa-stethoscope fa-menusize"></i></a>
               </li>
             </ul>
           </nav>
@@ -96,10 +99,10 @@
           </div>
    	
           <div class="col-sm-2 text-right">
-            <a class="btn btn-default btn-sm" role="button" href="{!! url($routes['settings']) !!}" title="{!! @trans("aroaden.settings") !!}">
+            <a class="btn btn-default btn-sm" href="{!! url($routes['settings']) !!}" title="{!! @trans("aroaden.settings") !!}">
               <i class="fa fa-cogs"></i>
             </a>
-            <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" role="button" class="btn btn-sm btn-info" title="{!! @trans("aroaden.manuals") !!}">
+            <a href="https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ" target="_blank" class="btn btn-sm btn-info" title="{!! @trans("aroaden.manuals") !!}">
               <i class="fa fa-question"></i>
             </a>
             <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" title="{!! @trans("aroaden.logout") !!}">

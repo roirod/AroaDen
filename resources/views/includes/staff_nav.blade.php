@@ -7,13 +7,6 @@
   			<li><a href="{{ url($routes['staff']."/$idnav/file") }}"> {{ Lang::get('aroaden.files') }} </a></li>
   		@endif
 
-      <li>
-        <a href="{{ url($routes['staff_positions']) }}"> 
-          <i class="fa fa-stethoscope fa-1x"></i>
-          {{ Lang::get('aroaden.positions') }}
-        </a>
-      </li>
-
      </ul>
      <hr>
   </div>

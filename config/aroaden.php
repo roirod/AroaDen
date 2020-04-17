@@ -182,7 +182,7 @@ return [
      'settting_type'  => "company_data",
      'type'  => "text",
      'maxlength'  => "111",
-     'col'  => "col-sm-4",
+     'col'  => "col-sm-3",
      'autofocus'  => "autofocus",
      'required'  => "required",
      'pattern'  => "",
@@ -215,7 +215,7 @@ return [
      'settting_type'  => "company_data",           
      'type'  => "text",
      'maxlength'  => "111",
-     'col'  => "col-sm-4",
+     'col'  => "col-sm-3",
      'autofocus'  => "",
      'required'  => "",
      'pattern'  => "",
@@ -226,7 +226,7 @@ return [
      'settting_type'  => "company_data",           
      'type'  => "text",
      'maxlength'  => "111",
-     'col'  => "col-sm-4",
+     'col'  => "col-sm-3",
      'autofocus'  => "",
      'required'  => "",
      'pattern'  => "",
@@ -238,7 +238,7 @@ return [
      'settting_type'  => "company_data",           
      'type'  => "text",
      'maxlength'  => "11",
-     'col'  => "col-sm-3",
+     'col'  => "col-sm-2",
      'autofocus'  => "",
      'required'  => "",
      'pattern'  => "[0-9 -]{0,11}",
@@ -249,7 +249,7 @@ return [
      'settting_type'  => "company_data",           
      'type'  => "text",
      'maxlength'  => "11",
-     'col'  => "col-sm-3",
+     'col'  => "col-sm-2",
      'autofocus'  => "",
      'required'  => "",
      'pattern'  => "[0-9 -]{0,11}",
@@ -260,7 +260,7 @@ return [
      'settting_type'  => "company_data",           
      'type'  => "text",
      'maxlength'  => "11",
-     'col'  => "col-sm-3",
+     'col'  => "col-sm-2",
      'autofocus'  => "",
      'required'  => "",
      'pattern'  => "[0-9 -]{0,11}",
@@ -268,6 +268,17 @@ return [
     ],
     [ 
      'name'  => "company_notes",
+     'settting_type'  => "company_data",           
+     'type'  => "textarea",
+     'maxlength'  => "",
+     'col'  => "col-sm-12",
+     'autofocus'  => "",
+     'required'  => "",
+     'pattern'  => "",
+     'rows'  => "4"
+    ],
+    [ 
+     'name'  => "budget_text",
      'settting_type'  => "company_data",           
      'type'  => "textarea",
      'maxlength'  => "",
@@ -292,16 +303,5 @@ return [
     ],
 */
 
-    [ 
-     'name'  => "budget_text",
-     'settting_type'  => "company_data",           
-     'type'  => "textarea",
-     'maxlength'  => "",
-     'col'  => "col-sm-12",
-     'autofocus'  => "",
-     'required'  => "",
-     'pattern'  => "",
-     'rows'  => "4"
-    ]
   ]
 ];

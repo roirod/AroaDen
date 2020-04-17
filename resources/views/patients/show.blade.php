@@ -31,7 +31,7 @@
     </div> 
   </div>
 
-	@include('form_fields.show.upload_photo')
+	@include('form_fields.fields.upload_photo')
 
 	<hr>
 
@@ -40,7 +40,7 @@
 	    <div class="row fonsi15">
 
 	    	<div id="profile_photo">
-	    	    @include('form_fields.show.profile_photo')
+	    	  @include('form_fields.show.profile_photo')
 	    	</div>
 
 				<div class="col-sm-10">
@@ -180,16 +180,17 @@
 
 				<table class="table table-striped table-bordered table-hover">				  	
 				  <tr class="fonsi14">
-					  <td class="wid180">{!! @trans("aroaden.service") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.tax") !!}</td>			  
+					  <td class="wid160">{!! @trans("aroaden.service") !!}</td>
+					  <td class="wid40 textcent">{!! @trans("aroaden.tax") !!}</td>			  
 					  <td class="wid50 textcent">{!! @trans("aroaden.price") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
-					  <td class="wid70 textcent">{!! @trans("aroaden.date") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.edit") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.delete") !!}</td>
-					  <td class="wid95">{!! @trans("aroaden.staff") !!}</td>
+					  <td class="wid50 textcent">{!! @trans("aroaden.rest") !!}</td>					 
+					  <td class="wid60 textcent">{!! @trans("aroaden.date") !!}</td>
+					  <td class="wid40 textcent">{!! @trans("aroaden.edit") !!}</td>
+					  <td class="wid40 textcent">{!! @trans("aroaden.delete") !!}</td>
+					  <td class="wid95 textcent">{!! @trans("aroaden.staff") !!}</td>
 				  </tr> 
 			  </table>
 
@@ -199,21 +200,22 @@
 				    @foreach($treatments["treatments"] as $treat)
 
 				  		<tr class="fonsi13">
-				    		<td class="wid180">{!! $treat->service_name !!}</td> 
-								<td class="wid50 textcent">{!! $treat->tax !!} %</td>
+				    		<td class="wid160">{!! $treat->service_name !!}</td> 
+								<td class="wid40 textcent">{!! $treat->tax !!} %</td>
 								<td class="wid50 textcent">{!! numformat($treat->price) !!} €</td>
 								<td class="wid50 textcent">{!! $treat->units !!}</td>
 								<td class="wid50 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
 								<td class="wid50 textcent">{!! numformat($treat->paid) !!} €</td>
-								<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
+								<td class="wid50 textcent">{!! numformat(($treat->units * $treat->price) - $treat->paid) !!} €</td>								
+								<td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
-								<td class="wid50 textcent">
+								<td class="wid40 textcent">
 									<a href="{!! url($routes['treatments']."/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 										<i class="fa fa-edit"></i>
 									</a>
 								</td>
 
-								<td class="wid50 textcent"> 	
+								<td class="wid40 textcent"> 	
 									<div class="btn-group">
 									 	<form class="form" action="{!! url($routes['treatments']."/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
 											<input type="hidden" name="_method" value="DELETE">
@@ -272,7 +274,7 @@
 			{!! addText(@trans("aroaden.payments")) !!}
 
 			<div id="paymentsTable">
-				@include('patients.paymentsTable')
+				@include('patients.includes.paymentsTable')
 			</div>
 	  </div>
 	</div>

@@ -197,7 +197,7 @@ class TreatmentsController extends BaseController
 
   public function renderPaymentsTable($idpat)
   {
-    $this->views_folder = 'patients';
+    $this->views_folder = 'patients.includes';
     $this->view_name = 'paymentsTable';
 
     $this->view_data['treatments_sum'] = $this->model::SumByPatientId($idpat);

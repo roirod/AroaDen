@@ -55,7 +55,6 @@ class BudgetsController extends BaseController
     $budgetArray = $request->budgetArray;
 
     $data = [];
-    $data['msg'] = Lang::get('aroaden.success_message');
     $data['error'] = false;
 
     try {

@@ -113,12 +113,14 @@ a.paginate_active {
 .wid230 { width: 230px !important; }
 .wid200 { width: 200px !important; }
 .wid180 { width: 180px !important; }
+.wid160 { width: 160px !important; }
 .wid140 { width: 140px !important; }
 .wid110 { width: 110px !important; }
 .wid95 { width: 95px !important; }
 .wid70 { width: 70px !important; }
 .wid60 { width: 60px !important; }
 .wid50 { width: 50px !important; }
+.wid40 { width: 40px !important; }
 
 .max150 { 
   max-width: 150px !important;
