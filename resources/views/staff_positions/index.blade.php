@@ -2,8 +2,6 @@
 
 @section('content')
 
-	@include('includes.staff_nav')
-
 	@include('includes.messages')
 	
 	<div class="row"> 
@@ -37,9 +35,9 @@
 				<table class="table table-striped table-bordered table-hover">
 		       <tr class="fonsi15">
 			        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
-			        <td class="wid70 textcent">{{ @trans('aroaden.edit') }}</td>
-			        <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
-			        <td class="wid70 textcent"></td>
+			        <td class="wid50 textcent">{{ @trans('aroaden.edit') }}</td>
+			        <td class="wid50 textcent">{{ Lang::get('aroaden.delete') }}</td>
+			        <td class="wid50 textcent"></td>
 		       </tr>
 		    </table>
 
@@ -51,13 +49,13 @@
 		         <tr>
 		            <td class="wid180">{{ $obj->name }}</td>
 
-		            <td class="wid70 textcent">
+		            <td class="wid50 textcent">
 		              <a class="btn btn-sm btn-success" type="button" href="/{{ "$main_route/$obj->idstpo/edit" }}">
 		                <i class="fa fa-edit"></i>
 		              </a>
 		            </td>
 
-		            <td class="wid70 textcent">  
+		            <td class="wid50 textcent">  
 		              <div class="btn-group">
 		                <form class="form" action="{!! url("/$main_route/$obj->idstpo") !!}" data-removeTr="true" data-count="true" method="POST">
 		                  <input type="hidden" name="_method" value="DELETE">
@@ -73,7 +71,7 @@
 		                </form>
 		              </div> 
 		            </td>
-			        	<td class="wid70 textcent"></td>
+			        	<td class="wid50 textcent"></td>
 		         </tr>
 		          
 		        @endforeach
@@ -95,9 +93,9 @@
 				<table class="table table-striped table-bordered table-hover">
 		       <tr class="fonsi15">
 		        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
-		        <td class="wid70 textcent">{{ @trans('aroaden.edit') }}</td>
-		        <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
-		        <td class="wid70 textcent"></td>
+		        <td class="wid50 textcent">{{ @trans('aroaden.edit') }}</td>
+		        <td class="wid50 textcent">{{ Lang::get('aroaden.delete') }}</td>
+		        <td class="wid50 textcent"></td>
 		       </tr>
 		    </table>
 		    

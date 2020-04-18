@@ -30,28 +30,23 @@
 
         var obj = {
           url  : $(this).attr('action'),
-          data : $(this).serialize(),
-          method  : $(this).attr('method')
+          data : $(this).serialize()
         };
 
         lastRoute = routes.services + '/ajaxIndex';
 
         util.processAjaxReturnsJson(obj).done(function(response) {
-          if (response.error) {
+          if (response.error)
+            return util.showPopup(response.msg, false);
 
-            return util.showPopup(response.content, false);
+          var obj = {
+            url  : lastRoute
+          };
 
-          } else {
-
-            var obj = {
-              url  : lastRoute
-            };
-
-            util.processAjaxReturnsHtml(obj);
-            return util.showPopup("{{ Lang::get('aroaden.success_message') }}");
-
-          }
+          util.processAjaxReturnsHtml(obj);
+          return util.showPopup();
         });
+
       });
     });
   </script>

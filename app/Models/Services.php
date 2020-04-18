@@ -34,7 +34,7 @@ class Services extends BaseModel
     return $this->scopeFirstWhereRaw($query);
   }
 
-  public function scopeFirstByNameDeleted($query, $name)
+  public function scopeFirstByName($query, $name)
   {
     $this->whereRaw = "name = '$name'";
 

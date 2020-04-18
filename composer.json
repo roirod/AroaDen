@@ -11,7 +11,8 @@
         "laravelcollective/html": "5.5.*",
         "intervention/image": "^2.3",
         "predis/predis": "^1.1",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "^2.5",
+        "barryvdh/laravel-dompdf": "^0.8.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

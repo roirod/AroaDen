@@ -158,6 +158,8 @@
 
       } else {
 
+        time = 4000;
+       
         swal({
           text: msg,
           type: 'error',

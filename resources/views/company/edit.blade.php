@@ -1,65 +1,78 @@
-<fieldset>
-  <legend>
-  	{!! @trans('aroaden.company_edit_data') !!}
-  </legend>
 
-	<div class="row">
-		<div class="col-sm-12">
-		  <form id="save_form">
+  @include('includes.messages')
 
-				@foreach ($main_loop as $item)
+	<fieldset>
+	  <legend>
+	  	{!! @trans('aroaden.company_edit_data') !!}
+	  </legend>
 
-					<?php
-						$aroaden_item_name = "aroaden.".$item['name'];
-						$item_name = $item['name'];
-						$item_type = $item['type'];
-					?>
+		<div class="row">
+			<div class="col-sm-12">
+			  <form id="save_form">
 
-					@if ($item['type'] == 'text' || $item['type'] == 'email')
+					@foreach ($main_loop as $item)
 
-						<div class="form-group {{ $item['col'] }}">
-						  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}</label>
-						  <input type="{!!  $item_type !!}" class="form-control" name="{{ $item_name }}" value="{!! $obj->$item_name !!}" 
-							  @if ($item['maxlength'] != '') maxlength="{!! $item['maxlength'] !!}" @endif
-							  @if ($item['pattern'] != '') pattern="{!! $item['pattern'] !!}" @endif				  
-							  @if ($item['autofocus'] != '') {!! $item['autofocus'] !!} @endif
-							  @if ($item['required'] != '') {!! $item['required'] !!} @endif
-						  >
-						</div>
+						<?php
+							$aroaden_item_name = "aroaden.".$item['name'];
+							$item_name = $item['name'];
+							$item_type = $item['type'];
+						?>
 
-					@elseif ($item['type'] == 'textarea')
+						@if ($item['type'] == 'text' || $item['type'] == 'email')
 
-						<div class="form-group {{ $item['col'] }}">
-						  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}</label>
-						  <textarea class="form-control" name="{!! $item_name !!}" rows="{{ $item['rows'] }}">{!! $obj->$item_name !!}</textarea>
-						</div>
-						<br>
+							<div class="form-group {{ $item['col'] }}">
+							  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}</label>
+							  <input type="{!!  $item_type !!}" class="form-control" name="{{ $item_name }}" value="{!! $obj->$item_name !!}" 
+								  @if ($item['maxlength'] != '') maxlength="{!! $item['maxlength'] !!}" @endif
+								  @if ($item['pattern'] != '') pattern="{!! $item['pattern'] !!}" @endif				  
+								  @if ($item['autofocus'] != '') {!! $item['autofocus'] !!} @endif
+								  @if ($item['required'] != '') {!! $item['required'] !!} @endif
+							  >
+							</div>
 
-					@endif
+						@elseif ($item['type'] == 'textarea')
 
-				@endforeach
-				
-				@include('includes.submit_button')
+							<div class="form-group {{ $item['col'] }}">
+							  <label class="control-label text-left mar10">{!! @trans($aroaden_item_name) !!}</label>
+							  <textarea class="form-control" name="{!! $item_name !!}" rows="{{ $item['rows'] }}">{!! $obj->$item_name !!}</textarea>
+							</div>
+							<br>
 
-			</form>
-		</div> 
-	</div>
-</fieldset>
+						@endif
 
-<script type="text/javascript">    
-	$(document).ready(function() {
-	  $("#save_form").on('submit', function(evt) {
-	    evt.preventDefault();
-	    evt.stopPropagation();
+					@endforeach
+					
+					@include('includes.submit_button')
 
-	    var obj = {  
-	      url  : '{!! url($routes['company']."/$form_route") !!}',
-	      data : $(this).serialize(),
-	      method  : 'POST',
-	      popup: true          
-	    };
+				</form>
+			</div> 
+		</div>
+	</fieldset>
 
-	    return util.processAjaxReturnsHtml(obj);
-	  }); 
-	});
-</script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		  $("#save_form").on('submit', function(evt) {
+		    evt.preventDefault();
+		    evt.stopPropagation();
+
+		    var ajax_data = {  
+		      url  : '{!! url($routes['company']."/$form_route") !!}',
+		      data : $(this).serialize()
+		    };
+
+	      util.processAjaxReturnsJson(ajax_data).done(function(response) {
+	        if (response.error)
+	          return util.showPopup(response.msg, false);
+
+	        var obj = {
+	          url  : routes.company + '/ajaxIndex'
+	        };
+
+	        util.processAjaxReturnsHtml(obj);
+	        return util.showPopup();
+
+	      });
+
+		  }); 
+		});
+	</script>

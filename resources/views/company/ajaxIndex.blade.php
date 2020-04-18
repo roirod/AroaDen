@@ -1,4 +1,2 @@
 
-    @include('includes.messages')
-
-    @include('company.indexInclude')
+    @include('company.includes.indexInclude')

@@ -1,28 +1,8 @@
+
 @extends('layouts.main')
 
 @section('content')
 
-	@include('includes.staff_nav')
+  @include('staff_positions.common')
 
-	@include('includes.messages')
-	
-  <div class="row">
-    <div class="col-sm-9">
-      <fieldset>
-        <legend>
-          {!! @trans('aroaden.create_position') !!}
-        </legend>
-
-          @include('form_fields.common')
-
-      </fieldset>
-    </div>
-  </div>
-    
-@endsection
-
-@section('js')
-    @parent   
-	  <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-	  <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
 @endsection

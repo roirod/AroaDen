@@ -1,7 +1,8 @@
-@extends('layouts.budgets')
+
+@extends('budgets.includes.layout')
 
 @section('content')
 
-  @include('budgets.common')	
+  @include('budgets.includes.common')
 
 @endsection

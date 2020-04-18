@@ -1,17 +1,18 @@
-@extends('layouts.budgets')
+
+@extends('includes.layout')
 
 @section('content')
 
-@include('budgets.common')
+  @include('budgets.includes.common')
 
-<?php
-	if ( isset($mode) && $mode == 'print' ) {
-		?>
-			<script>
-				window.print();
-			</script>
-		<?php
-	}
-?>
+  <?php
+  	if ( isset($mode) && $mode == 'print' ) {
+  		?>
+  			<script>
+  				window.print();
+  			</script>
+  		<?php
+  	}
+  ?>
 
 @endsection

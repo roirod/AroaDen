@@ -9,6 +9,7 @@ use App\Models\Services;
 use App\Models\Budgets;
 use Validator;
 use Lang;
+use PDF;
 use DB;
 
 class BudgetsController extends BaseController
@@ -174,45 +175,58 @@ class BudgetsController extends BaseController
     return $this->loadView();
   }
 
-  public function mode(Request $request)
+  public function viewMode(Request $request, $uniqid)
   {
-    extract($this->sanitizeRequest($request->all()));
+    $uniqid = $this->sanitizeData($uniqid);
 
+    $this->commonMode($uniqid);
+
+    $this->view_name = 'mode';
+
+    return $this->loadView();
+  }
+
+
+  public function downloadPdf(Request $request, $uniqid)
+  {
+    $uniqid = $this->sanitizeData($uniqid);
+
+    $this->commonMode($uniqid);
+
+    $this->views_folder .= '.includes';
+    $this->view_name = 'pdf';
+
+    $viewString = $this->returnViewString();
+    $pdf = PDF::loadHTML($viewString, 'UTF-8');
+    $pdf->render();
+
+    $patient = $this->view_data['patient'];
+    $pdfName = $patient->name.'_'.$patient->surname.'_'.$created_at.'.pdf';
+    return $pdf->download($pdfName);
+  }
+
+  private function commonMode($uniqid)
+  {  
     $budgets = $this->model::AllByCode($uniqid);
     $idpat = $budgets[0]->idpat;
+    $patient = $this->model2::FirstById($idpat);
     $created_at = $budgets[0]->created_at;
     $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
-
     $taxtotal = $this->model::GetTaxTotal($uniqid);
     $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
     $total = $this->model::GetTotal($uniqid);
     $company = $this->getSettings();
 
-    $this->view_data['request'] = $request;
+    $this->view_data['patient'] = $patient;
     $this->view_data['text'] = $budgetstext->text;
     $this->view_data['budgets'] = $budgets;
     $this->view_data['uniqid'] = $uniqid;
     $this->view_data['created_at'] = $created_at;
-    $this->view_data['mode'] = $mode;
-    $this->view_data['idpat'] = $idpat;
-    $this->view_data['idnav'] = $idpat;  
     $this->view_data['taxtotal'] = $taxtotal[0]->total;
     $this->view_data['notaxtotal'] = $notaxtotal[0]->total;
     $this->view_data['total'] = $total[0]->total;
-    $this->view_data['company'] = $company;  
-
-    if ($mode == 'print') {
-
-      $this->view_name = 'print';
-
-    } else {
-
-      $this->view_name = 'mode';
-        
-    }
-
-    return $this->loadView();
-  } 
+    $this->view_data['company'] = $company;
+  }
 
   public function delBudget(Request $request)
   {

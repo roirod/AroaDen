@@ -133,7 +133,7 @@ class ServicesController extends BaseController implements BaseInterface
 
     try {
 
-      $exists = $this->model::FirstByNameDeleted($name);         
+      $exists = $this->model::FirstByName($name);         
 
       if ( isset($exists->name) )
         throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
@@ -147,7 +147,7 @@ class ServicesController extends BaseController implements BaseInterface
     } catch (Exception $e) {
 
       $data['error'] = true; 
-      $data['content'] = $e->getMessage();
+      $data['msg'] = $e->getMessage();
 
     }
 
@@ -191,6 +191,7 @@ class ServicesController extends BaseController implements BaseInterface
     extract($this->sanitizeRequest($request->all()));
 
     $data = [];
+    $data['error'] = false; 
 
     try {
 
@@ -205,12 +206,10 @@ class ServicesController extends BaseController implements BaseInterface
       $object->tax = $tax;            
       $object->save();
 
-      $data['content'] = Lang::get('aroaden.success_message');
-
     } catch (Exception $e) {
 
       $data['error'] = true; 
-      $data['content'] = $e->getMessage();
+      $data['msg'] = $e->getMessage();
 
     }
 

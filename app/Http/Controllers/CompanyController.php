@@ -94,9 +94,12 @@ class CompanyController extends BaseController
    */
   public function saveData(Request $request)
   {
+    $data = [];
+    $data['error'] = false;
+
     try {
 
-      $company_data = $this->model::select('key', 'value')->get()->toArray();
+      $company_data = $this->model::GetCompanyData()->toArray();
 
       foreach ($company_data as $arr => $value) {
         foreach ($request->input() as $request_key => $request_value) {
@@ -115,11 +118,12 @@ class CompanyController extends BaseController
 
     } catch (Exception $e) {
 
-      $request->session()->flash($this->error_message_name, $e->getMessage()); 
+      $data['error'] = false;
+      $data['msg'] = $e->getMessage();
 
     }
 
-    return $this->ajaxIndex($request);
+    $this->echoJsonOuptut($data);
   }
 
 }

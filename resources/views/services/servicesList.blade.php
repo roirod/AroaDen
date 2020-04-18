@@ -25,7 +25,7 @@
 
   <div class="panel panel-default">
     <table class="table table-striped table-bordered table-hover">
-      <tr class="fonsi15">
+      <tr class="fonsi14">
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
         <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
@@ -86,7 +86,7 @@
     </div>
 
     <table class="table table-striped table-bordered table-hover">
-      <tr class="fonsi15">
+      <tr class="fonsi14">
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
         <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          

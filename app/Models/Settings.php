@@ -61,4 +61,11 @@ class Settings extends Model
     return $obj;
   }
 
+  public function scopeGetCompanyData($query)
+  {
+    return $query->select('key', 'value', 'type')
+                ->where('type', 'company_data')
+                ->get();
+  }
+
 }

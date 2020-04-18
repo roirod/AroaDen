@@ -70,7 +70,8 @@ return [
   'select'   => 'Selecciona',
   'select_date_range'   => 'Selecciona rango de fechas',
   'select_one_or_more'   => 'Selecciona uno o varios',
-  'profile_photo'   => 'Foto de perfil ',
+  'profile_photo'   => 'Foto de perfil',
+  'download_pdf'   => 'Descargar pdf ',
 
   'age'   => 'Edad',
   'years'   => 'Años',

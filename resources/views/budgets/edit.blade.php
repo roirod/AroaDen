@@ -6,7 +6,7 @@
 
   @include('includes.messages')
   
-  @include('budgets.commonJs')
+  @include('budgets.includes.commonJs')
 
   <div class="col-sm-12 pad10">
     @include('form_fields.show.name')
@@ -45,24 +45,26 @@
                     </ul>
                   </div>
 
-                  @include('budgets.saveButton')
+                  @include('budgets.includes.saveButton')
 
                 </div>
               </div>
 
               <div class="col-sm-5">
                 <div class="btn-toolbar pad4" role="toolbar">
-                  <form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">  
-                    {!! csrf_field() !!}
-                    <input type="hidden" name="uniqid" value="{!! $uniqid !!}">
 
-                    <div class="btn-group pull-right">
-                      <button type="submit" formtarget="_blank" name="mode" value="print" class="btn btnCustom btn-sm">Imprimir</button>
-                    </div>
-                    <div class="btn-group pull-right">
-                      <button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-success btn-sm">Ver</button>
-                    </div>
-                  </form>
+                  <div class="btn-group pull-right">
+                    <a href="{!! url("/$main_route/downloadPdf/$uniqid") !!}" class="btn btnCustom btn-sm">
+                      {!! @trans('aroaden.download_pdf') !!}
+                    </a>
+                  </div>
+
+                  <div class="btn-group pull-right">
+                    <a href="{!! url("/$main_route/viewMode/$uniqid") !!}" target="_blank" class="btn success btn-sm">
+                      {!! @trans('aroaden.view') !!}
+                    </a>
+                  </div>
+
                 </div>
               </div>
 
