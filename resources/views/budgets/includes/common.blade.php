@@ -22,7 +22,7 @@
     
       <br><br>
 
-      Presupuesto: {!! DatTime($created_at) !!} para {!! $patient->name.' '.$patient->surname !!}
+      Presupuesto: {!! DatTime($created_at) !!} para {!! $patient->name.' '.$patient->surname.'('.$patient->dni.')' !!}
     </p>
     <br>
   </div>

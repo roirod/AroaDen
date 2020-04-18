@@ -6,7 +6,7 @@ html,body { height:100%; padding:0; margin:0; }
 
 @font-face {
 	font-family: 'Ubuntu';
-	src: url('Ubuntu.ttf');
+	src: url('../../assets/fonts/Ubuntu.ttf');
 	font-weight: normal;
 	font-style: normal;
 }

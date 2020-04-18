@@ -198,9 +198,10 @@ class BudgetsController extends BaseController
 
     $viewString = $this->returnViewString();
     $pdf = PDF::loadHTML($viewString, 'UTF-8');
-    $pdf->render();
+    //$pdf->render();
 
     $patient = $this->view_data['patient'];
+    $created_at = $this->view_data['created_at'];   
     $pdfName = $patient->name.'_'.$patient->surname.'_'.$created_at.'.pdf';
     return $pdf->download($pdfName);
   }
