@@ -2,206 +2,164 @@
 
 @section('content')
 
-@include('includes.patients_nav')
+  @include('includes.patients_nav')
 
-@include('includes.messages')
-@include('includes.errors')
+  @include('includes.messages')
+  
+  @include('budgets.includes.commonJs')
 
+  <div class="col-sm-12 pad10">
+    @include('form_fields.show.name')
+  </div>
 
-<div id="del_url" value="{!! $del_url !!}"> </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <fieldset>
 
-<meta name="_token" content="{!! csrf_token() !!}"/>
+        <legend>
+          {!! @trans('aroaden.edit_budget') !!}
+        </legend>
 
-	<div class="row">
+      	<div class="row">
 
-		<div class="col-sm-12 pad10">
-		    @include('form_fields.show.name')
-		</div>
+          <div class="col-sm-6">
 
-	  	<div class="col-sm-3"> 
+            <div class="row">
 
-		 	<form class="form" action="{!! url("/$main_route/delCode") !!}" method="POST">	
-		 		{!! csrf_field() !!}
+              <div class="col-sm-7">
+                <div class="btn-toolbar pad4" role="toolbar">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                      Eliminar todo
+                      <span class="caret"></span> 
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <form class="form" action="{!! url("/$main_route/delBudget") !!}" method="POST">  
+                        {!! csrf_field() !!}
 
-				<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-				<input type="hidden" name="idpat" value="{!! $idpat !!}">	
+                        <input type="hidden" name="uniqid" value="{!! $uniqid !!}"> 
+                        <input type="hidden" name="idpat" value="{!! $idpat !!}"> 
 
-				<div class="input-group"> 
-					<span class="input-group-btn pad10">  <p> Eliminar todo </p> </span>
-					<div class="btn-toolbar pad4" role="toolbar">
+                        <li><button type="submit"> <i class="fa fa-times"></i> Eliminar </button></li>
+                      </form>
+                    </ul>
+                  </div>
 
-						<div class="btn-group">
-							<button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-times"></i> Eliminar 
-								<span class="caret"></span> 
-							</button>
-							<ul class="dropdown-menu" role="menu">
-								<li><button type="submit"> <i class="fa fa-times"></i> Eliminar </button></li>
-							</ul>
-						</div>
-					</div> 
-				</div> 
+                  @include('budgets.includes.saveButton')
 
-			</form>
+                </div>
+              </div>
 
-	 	</div> 
+              <div class="col-sm-5">
+                <div class="btn-toolbar pad4" role="toolbar">
 
-		<div class="col-sm-4"> 
-		 	 <div class="input-group">
-		   		<span class="input-group-btn pad10"> <p> Finalizar </p> </span>
-		  		<div class="btn-toolbar pad4" role="toolbar"> 
-		    		<div class="btn-group">
-			      		<a href="{!! url("/$main_route/$idpat") !!}" role="button" class="btn btn-sm btn-primary">
-			          		Finalizar
-			       		</a>
-		       		</div>
-		       	</div>
-		     </div>
-		</div> 
+                  <div class="btn-group pull-right">
+                    <a href="{!! url("/$main_route/downloadPdf/$uniqid") !!}" class="btn btn-info btn-sm">
+                      {!! @trans('aroaden.download_pdf') !!}
+                    </a>
+                  </div>
 
-	</div>
+                </div>
+              </div>
 
+            </div>
 
-	<div class="row">
-	 	<div class="col-sm-12">
-	   	<div class="panel panel-default">
+            <div class="mar10"></div>
 
-	    	<table class="table">
-			     <tr class="fonsi15 success">
-					  <td class="wid140">Tratamiento</td>
-					  <td class="wid95 textcent"> Cantidad </td>
-					  <td class="wid95 textcent"> Precio </td>
-					  <td class="wid50"></td>
-					  <td class="wid230"></td>
-					  <td class="wid230"></td>				  
-			     </tr>
-	    	</table>
+            <div class="panel panel-default">
+              <table class="table table-striped table-bordered table-hover">
+                <tr class="fonsi14">
+                  <td class="wid180">Tratamiento</td>
+                  <td class="wid70 textcent">Cantidad</td>
+                  <td class="wid70 textcent">Precio</td>          
+                  <td class="wid50">Borrar</td>
+                  <td class="wid50"></td>
+                </tr>
+              </table>
 
-	   		<div class="box230">
-		   		<table class="table table-striped">
+      	   		<div class="box300">
+                <table class="table table-striped table-bordered table-hover">
 
-		   			<tbody id="budgets_list">   	  	
+      		   			<tbody id="budgets_list">   	  	
 
-				   		@foreach ($budgets as $bud)
+      				   		@foreach ($budgets as $bud)
 
-							<tr>
-							 	<form id="del_budgets_form">
-									<input type="hidden" name="idbud" value="{!! $bud->idbud !!}">
-									<input type="hidden" name="uniqid" value="{!! $uniqid !!}">
+        							<tr class="fonsi12" id="budgetId_{!! $bud->idser !!}">
+        							  <td class="wid180">{!! $bud->name !!}</td>
+        							  <td class="wid70 textcent">{!! $bud->units !!} </td>
+        							  <td class="wid70 textcent">{!! numformat($bud->price) !!} €</td>
+        							  <td class="wid50">
+        							    <div class="btn-group"> 
+        							    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+        							    	  <i class="fa fa-times"></i> 
+        							    	  <span class="caret"></span>
+        							    	</button>
+        							    	<ul class="dropdown-menu" role="menu">
+        							  			<li>
+        							  				<button type="button" class="delBudgetLine"> <i class="fa fa-times"></i> Borrar</button>
+        							  			</li>
+        							  		</ul>  
+        							  	</div>	
+        							   </td>
+        							  <td class="wid50"></td>
+        							</tr>
 
-									  <td class="wid140">{!! $bud->name !!}</td>
-									  <td class="wid95 textcent">{!! $bud->units !!} </td>
-									  <td class="wid95 textcent">{!! numformat($bud->price) !!} €</td>
-									  <td class="wid50">
-									    <div class="btn-group"> 
-									    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-									    	  <i class="fa fa-times"></i> 
-									    	  <span class="caret"></span>
-									    	</button>
-									    	<ul class="dropdown-menu" role="menu">
-									  			<li>
-									  				<button type="submit">
-									  					<i class="fa fa-times"></i> Borrar
-									  				</button>
-									  			</li>
-									  		</ul>  
-									  	</div>	
-									   </td>
-									  <td class="wid230"></td>
-									  <td class="wid230"></td>
-								</form>  
-							</tr>	
+                      <script type="text/javascript">
+                        if (typeof budgetArr == 'undefined')
+                          var budgetArr = [];
 
-						  	@endforeach
+                        var obj = {
+                          'idpat' : '{!! $bud->idpat !!}',
+                          'uniqid' : '{!! $bud->uniqid !!}',
+                          'idser' : '{!! $bud->idser !!}',
+                          'units' : '{!! $bud->units !!}',
+                          'price' : '{!! $bud->price !!}',
+                          'tax' : '{!! $bud->tax !!}',
+                          'created_at' : '{!! $bud->created_at !!}'
+                        };
 
-						</tbody>
-	  	  
-					</table> 
+                        budgetArr.push(obj);
+                      </script>
 
-	</div> </div> </div> </div>
+      						  @endforeach
 
+                    <script type="text/javascript">
 
+                      onUpdate = true;
+                      budgetArray = budgetArr.slice(0);
 
+                    </script>
 
-	<form class="form mode" action="{!! url("/$main_route/mode") !!}" method="POST">	
-	 	{!! csrf_field() !!}
+      						</tbody>
 
-		<div class="col-sm-12">
-			<div class="form-group"> 
-			    <label class="control-label text-left mar10">Texto:</label>
-			    <textarea class="form-control" name="text" rows="4">{!! $budgetstext->text !!}</textarea> 
-			</div>
-		</div>
+                  <tr class="fonsi15">
+                    <td class="wid140"></td>
+                    <td class="wid140"></td>
+                  </tr>
+                  <tr class="fonsi15">
+                    <td class="wid140"></td>
+                    <td class="wid140"></td>
+                  </tr>
 
-		<div class="col-sm-12 text-right">
-			<input type="hidden" name="uniqid" value="{!! $uniqid !!}">	
-			<input type="hidden" name="idpat" value="{!! $idpat !!}">
+      					</table> 
 
-			<button type="submit" formtarget="_blank" name="mode" value="print" class="btn btn-default btn-md">Imprimir</button>
-			<button type="submit" formtarget="_blank" name="mode" value="create" class="btn btn-primary btn-md">Ver</button>
-			<button type="submit" name="mode" value="save_text" class="btn btn-success btn-md save_text">Guardar texto</button>
-		</div>
-	</form>
+              </div>
+            </div> 
+          </div>
 
-@endsection
-	 
-@section('footer_script')
+          <div class="col-sm-6">
+    				<div class="form-group"> 
+  				    <label class="control-label text-left mar10">Texto:</label>
+  				    <textarea class="form-control" name="budgettext" rows="16">{!! $budgetstext->text !!}</textarea> 
+    				</div>
+          </div>
 
-	<script>
-		
-		$(document).ready(function() {
-			$.ajaxSetup({
-			   	headers: { 
-			   		'X-CSRF-Token' : $('meta[name=_token]').attr('content')
-			   	}
-			}); 
+        </div>
 
-			$('.save_text').click(function (evt) {
-		        evt.preventDefault();
-		        evt.stopPropagation();
-
-				Module.saveText();
-			});
-
-			var Module = (function( window, undefined ){
-				function saveText() {
-				    var data = $("form.mode").serialize();
-				    data += '&mode=save_text';
-
-				    $.ajax({
-
-				        type : 'POST',
-				        url  : '/{{ $main_route }}/mode',
-				        dataType: "json",
-				        data : data,
-
-				    }).done(function(response) {
-
-						util.showPopup(response.msg);
-	          
-				    }).fail(function() {
-
-						util.showPopup('{{ Lang::get('aroaden.error_message') }}', false);
-
-				    });
-				}
-
-		        return {
-		          saveText: function() {
-		            saveText();
-		          }
-		        }
-
-		    })(window);
-
-    	});
-
-  	</script>
+      </fieldset>
+    </div>
+  </div>    
 
 @endsection
 
-@section('js')
-    @parent
 
-	  	<script type="text/javascript" src="{!! asset('assets/js/del_budgets.js') !!}"></script>
-@endsection

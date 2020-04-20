@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\GetTableNameTrait;
 
 class StaffWorks extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'staff_works';
     protected $fillable = ['idsta','idtre'];
     protected $primaryKey = 'idstwo';

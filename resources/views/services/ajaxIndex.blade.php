@@ -5,32 +5,36 @@
       <span class="input-group-btn pad10">  <p> {{ Lang::get('aroaden.service') }} </p> </span>
       <div class="btn-toolbar pad4" role="toolbar"> 
         <div class="btn-group">
-          <a href="{{ url("/$services_route/create") }}" role="button" class="btn btn-sm btn-primary">
+          <a href="{{ url($routes['services']."/create") }}" role="button" class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> {{ Lang::get('aroaden.new') }}
           </a>
         </div>
 </div> </div> </div> </div>
 
-<div class="row">
-  <form class="form" id="searchService">
-    {!! csrf_field() !!}   
-    
-    <div class="input-group">
-      <span class="input-group-btn pad10"> <p> &nbsp; {{ Lang::get('aroaden.search_service') }}</p> </span>
-      <div class="col-sm-4">
-        <input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus required>
+<div class="row"> 
+  <div class="col-sm-12">
+
+    <form class="form" id="searchService">     
+      <div class="input-group">
+        <span class="input-group-btn pad10"> 
+          <p> {{ Lang::get('aroaden.search_service') }}</p> 
+        </span>
+        <div class="col-sm-4">
+          <input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus>
+        </div>
+        <div class="col-sm-3">
+          <a href="{{ url($routes['services']) }}" role="button" class="btn btn-md btn-danger">
+            <i class="fa fa-trash"></i> {{ Lang::get('aroaden.remove_text') }}
+          </a>
+        </div>
       </div>
-      <div class="col-sm-3">
-        <a href="{{ url("/$services_route") }}" role="button" class="btn btn-md btn-danger">
-          <i class="fa fa-trash"></i> {{ Lang::get('aroaden.remove_text') }}
-        </a>
-      </div>
-    </div>
-  </form>
+    </form>
+
+  </div>
 </div>
 
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-8">
     <div id="item_list">
 
       @include('services.servicesList')
@@ -41,7 +45,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $('a[href="{{ url("/$services_route/create") }}"]').on('click', function(evt) {
+    $('a[href="{{ url($routes['services']."/create") }}"]').on('click', function(evt) {
       evt.preventDefault();
       evt.stopPropagation();
 
@@ -51,30 +55,21 @@
     });
 
     function onCreate(_this) {
-      lastRoute = routes.services_route + '/ajaxIndex';
+      lastRoute = routes.services + '/ajaxIndex';
       var url_href = _this.attr('href');
 
-      util.checkPermissions('services.create').done(function(response) {
-        if (response.permission) {
-          var obj = {      
-            url  : url_href
-          };
+      var obj = {      
+        url  : url_href
+      };
 
-          return util.processAjaxReturnsHtml(obj);
-
-        } else {
-
-          return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
-
-        }
-      });
+      return util.processAjaxReturnsHtml(obj);
     }
 
     $("#string").on('keyup change', function(event) {
       event.preventDefault();
       event.stopPropagation();
 
-      var string_val = $(this).val();
+      var string_val = $(this).val().trim();
       var string_val_length = string_val.length;
 
       if (string_val != '' && string_val_length > 1) {
@@ -83,7 +78,7 @@
 
           var obj = {
             data  : data,
-            url  : '{!! $services_route !!}/search',
+            url  : '{!! $routes['services'] !!}/search',
             id  : 'item_list'
           };
 

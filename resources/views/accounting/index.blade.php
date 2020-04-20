@@ -2,10 +2,9 @@
 
 @section('content')
 
-@include('includes.accounting_nav')
+  @include('includes.accounting_nav')
 
-@include('includes.messages')
-@include('includes.errors')
+  @include('includes.messages')
 
 @endsection
 

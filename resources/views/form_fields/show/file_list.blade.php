@@ -20,7 +20,7 @@
 
           <div class="img_container">
             <a class="img_popup<?php echo $inc; ?>" href="{!! $user_dir.'/'.$fsFilename !!}">
-              <img class="img_file_view" src="{!! $thumb_file !!}">
+              <img class="img_file_view" src="{!! $thumb_file !!}" title="{!! $originalName !!}">
             </a>
             <script>
               $(document).ready(function() {
@@ -36,11 +36,11 @@
 
         @else
 
-          <i class="fa fa-file-o fa-3x"></i>
+          <i class="fa fa-file-o fa-3x" title="{!! $originalName !!}"></i>
 
         @endif
              
-  	    <p class="filena wrap fonsi12">
+  	    <p class="filena wrap fonsi12" title="{!! $originalName !!}">
           {!! $originalName !!} 
   	    </p>
 
@@ -50,7 +50,7 @@
   	    </button> 
   	    <ul class="dropdown-menu" role="menu">
           <li>
-            <a class="fonbla" href="{!! url("$main_route/$id").'/'.$idfiles.'/download' !!}"> 
+            <a href="{!! url("$main_route/$id").'/'.$idfiles.'/download' !!}"> 
               <i class="fa fa-download" aria-hidden="true"></i> {{ @trans('aroaden.download') }}
             </a>
           </li>

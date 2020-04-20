@@ -2,7 +2,7 @@
 
 function addText($text) {  
 	echo ' 
-		<div class="row"> 
+		<div class="row mar4"> 
 		  <div class="col-sm-12">
 		    <p class="pad4 text_underline"></i>
 		      '.htmlentities(trim($text), ENT_QUOTES, "UTF-8").'

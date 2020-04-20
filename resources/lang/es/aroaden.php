@@ -3,15 +3,19 @@
 return [
 
   'aroaden_full_name'   => 'AroaDen | dental clinic software',
+  'aroaden_desc'   => 'Dental clinic software',
+
+  'login'   => 'Iniciar sesión',
 
   'are_you_sure'   => 'Estás seguro?',
   'yes'   => 'Sí',
   'no'   => 'No',
   'user'   => 'Usuario',
   'users'   => 'Usuarios',
+  'create_user'   => 'Crear usuario',
+  'edit_user'   => 'Editar usuario',
   'del_user'   => 'Eliminar usuario',
-
-
+  'form_field_required'   => 'Dato/s de formulario no introducidos',
   'new_pass'   => 'Contraseña nueva',
   'change_pass'   => 'Cambiar contraseña',
   'password'   => 'Contraseña',
@@ -64,6 +68,13 @@ return [
   'birth' => 'F. nacimiento',
   'today'   => 'hoy',
   'select'   => 'Selecciona',
+  'select_date_range'   => 'Selecciona rango de fechas',
+  'select_one_or_more'   => 'Selecciona uno o varios',
+  'profile_photo'   => 'Foto de perfil',
+  'download_pdf'   => 'Descargar pdf ',
+
+  'age'   => 'Edad',
+  'years'   => 'Años',
   'hour' => 'Hora',
   'day' => 'Día',
   'date'   => 'Fecha',
@@ -80,7 +91,7 @@ return [
   'manuals' => 'Manuales',
   'data' => 'Datos',
   'settings' => 'Ajustes',
-  'deny_access' => 'No tienes permisos para hacer esto',
+  'deny_access' => 'Permiso denegado',
   'accounting' => 'Contable',
   'empty_db' => 'No hay registros en la base de datos',
   'rest' => 'Resto',
@@ -95,17 +106,20 @@ return [
   'date_format_fail'   => 'Fecha/s incorrecta, introduzca fechas válidas. ejemplo: 14-04-2017',
   'date_from_is_older'   => 'La fecha :date_to es anterior a :date_from',
   'date_time_fail'   => 'Fecha o hora incorrecta',
-  'appointments_range'   => 'Citas entre :date_from y :date_to',
+  'appointments_range'   => 'Citas entre el :date_from y el :date_to',
   'date_from'   => 'Fecha de',
   'date_to'   => 'Hasta',
-  'date_out_range'   => 'La diferencia entre las dos fechas es superior a :date_max_days días, esto puede causar un mal funcionamiento del programa, introduce dos fechas que no superen :date_max_days días de diferencia entre ellas',
+  'date_out_range'   => 'La diferencia entre las dos fechas es superior a :date_max_days días, esto puede causar un problema.',
   'db_query_error'   => 'Error en la consulta a la base de datos',
   'name_in_use' => 'Nombre - :name - ya en uso, use cualquier otro',
   'dni_in_use' => 'Repetido. El dni: :dni, pertenece a: :surname, :name',
+  'page_from_to' => 'Pag. :from de :to',
+  'session_expired' => 'La sessión ha caducado.',
+
 
   'company' => 'Empresa',
-  'company_data' => 'Datos Empresa',
-  'company_edit_data' => 'Editar datos Empresa',
+  'company_data' => 'Datos empresa',
+  'company_edit_data' => 'Editar datos empresa',
   'company_name' => 'Nombre',
   'company_city' => 'Poblaci&#xF3;n',
   'company_address' => 'Direcci&#xF3;n',
@@ -122,8 +136,9 @@ return [
   'staff_positions'   => 'Cargos de personal',
   'position' => 'Cargo',
   'positions' => 'Cargos',
-  'create_position' => 'Crear Cargo',
-  'edit_position' => 'Editar Cargo',
+  'create_position' => 'Crear cargo',
+  'edit_position' => 'Editar cargo',
+  'staff_positions_delete_warning' => 'Cargo añadido a personal, no se puede eliminar',
 
 
   'invoices' => 'Facturas',
@@ -138,8 +153,10 @@ return [
 
 
   'appointments' => 'Citas',
+  'create_appointment' => 'Crear cita',
+  'edit_appointment' => 'Editar cita',
   'no_appointments_on_db'   => 'No hay citas en la base de datos',
-  'no_appointments_today'   => 'No hay citas para',
+  'no_appointments_today'   => 'No hay citas para hoy',
   'appointments_of'   => 'Citas de',
   'today_appointments' => 'Citas de hoy',
   '1week_appointments' => 'Citas de +1 semana',
@@ -155,18 +172,15 @@ return [
   'service' => 'Servicio',
   'no_services_on_db'   => 'No hay servicios en la base de datos',
   'select_service' => 'Selecciona servicio',   
+  'service_delete_warning' => 'Servicio añadido a tratamiento, no se puede eliminar',
 
 
-  'staff11' => 'Personal 1',
-  'staff22' => 'Personal 2',
-  'staff1' => '*Pe1',
-  'staff2' => '*Pe2',
   'staff' => 'Personal',
   'add_staff' => 'Añadir personal',
   'edit_staff' => 'Editar personal',
   'professionals' => 'Profesionales',
   'no_staff_on_db'   => 'No hay personal en la base de datos',
-  'staff_msg'   => '*Pe1 y Pe2: personal1 y personal2.',
+  'staff_delete_warning' => 'Profesional tiene trabajos hechos, no se puede eliminar',
 
 
   'create_patient' => 'Crear paciente',
@@ -181,9 +195,16 @@ return [
   'diseases' => 'Enfermedades',
   'medicines' => 'Medicamentos',
   'allergies' => 'Alergias',
+  'patient_delete_warning' => 'Paciente con tratamientos aplicados, no se puede eliminar',
 
+  'treatment' => 'Tratamiento',
   'treatments' => 'Tratamientos',
-  'add_treatments' => 'Añadir tratamientos al paciente',    
+  'add_treatments' => 'Añadir tratamiento al paciente',
+  'edit_treatments' => 'Editar tratamiento',
+  'no_add_treatments' => 'No has añadido ningún tratamiento.',
 
   'budgets' => 'Presupuestos',
+  'create_budget' => 'Crear presupuesto',
+  'edit_budget' => 'Editar presupuesto',
+
 ];

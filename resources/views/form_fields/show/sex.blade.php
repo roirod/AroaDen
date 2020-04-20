@@ -1,19 +1,15 @@
 	<div class="col-sm-3 pad4">
-		<i class="fa fa-circle-o fa-min"></i> {{ @trans('aroaden.sex') }}: 
+		<i class="fa fa-circle-o fa-min"></i> 
+    {{ @trans('aroaden.sex') }}: 
+     <span class="bggrey pad4">
+  		@if( $object->sex == 'male' )
 
-		@if( $object->sex == 'male' )
+  			{{ @trans('aroaden.male') }}
 
-			{{ @trans('aroaden.male') }}
+  		@else
 
-		@else
+  			{{ @trans('aroaden.female') }}
 
-			{{ @trans('aroaden.female') }}
-
-		@endif	  
-
-	</div>
-
-
-
-
- 
+  		@endif
+    </span>
+  </div> 

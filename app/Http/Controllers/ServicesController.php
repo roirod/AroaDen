@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Exceptions\NoQueryResultException;
 use App\Http\Controllers\Interfaces\BaseInterface;
 use Illuminate\Http\Request;
 use App\Models\Services;
@@ -14,239 +13,218 @@ use DB;
 
 class ServicesController extends BaseController implements BaseInterface
 {
-    /**
-     *  construct method
-     */
-    public function __construct(Services $services)
-    {
-        parent::__construct();
+  /**
+   *  construct method
+   */
+  public function __construct(Services $services)
+  {
+    parent::__construct();
 
-        $this->middleware('auth');
+    $this->main_route = $this->config['routes']['services'];
+    $this->views_folder = $this->config['routes']['services'];
+    $this->tax_types = $this->config['tax_types'];
+    $this->form_route = 'list';
+    $this->table_name = 'services';
+    $this->model = $services;     
 
-        $this->main_route = $this->config['routes']['services'];
-        $this->views_folder = $this->config['routes']['services'];
-        $this->tax_types = $this->config['tax_types'];
-        $this->form_route = 'list';
-        $this->table_name = 'services';
-        $this->model = $services;     
+    $fields = [
+      'name' => true,
+      'price' => true,
+      'tax' => true,
+      'save' => true
+    ];
 
-        $fields = [
-            'name' => true,
-            'price' => true,
-            'tax' => true,
-            'save' => true,
-        ];
+    $this->form_fields = array_replace($this->form_fields, $fields);
+  }
 
-        $this->form_fields = array_replace($this->form_fields, $fields);
-    }
+  /**
+   *  get the index page
+   *      
+   *  @return view
+   */
+  public function index(Request $request)
+  {
+    $this->view_name = 'index';
 
-    /**
-     *  get the index page
-     *      
-     *  @return view
-     */
-    public function index(Request $request)
-    {
-        $this->view_name = 'index';
+    return $this->commonProcess($request);
+  }
 
-        return $this->commonProcess($request);
-    }
+  /**
+   *  get index page, show the company data
+   * 
+   *  @return view       
+   */
+  public function ajaxIndex(Request $request)
+  {
+    $this->view_name = 'ajaxIndex';
 
-    /**
-     *  get index page, show the company data
-     * 
-     *  @return view       
-     */
-    public function ajaxIndex(Request $request)
-    {
-        $this->view_name = 'ajaxIndex';
+    return $this->commonProcess($request);
+  }
 
-        return $this->commonProcess($request);
-    }
+  /**
+   *  commonProcess
+   * 
+   *  @return object $obj get object          
+   */
+  private function commonProcess($request)
+  {
+    $this->view_data['request'] = $request;
+    $this->view_data['main_loop'] = $this->model::AllOrderByName();
+    $this->view_data['count'] = $this->model::CountAll();
 
-    /**
-     *  commonProcess
-     * 
-     *  @return object $obj get object          
-     */
-    private function commonProcess($request)
-    {
-        $this->view_data['request'] = $request;
-        $this->view_data['main_loop'] = $this->model::AllOrderByName();
-        $this->view_data['count'] = $this->model::CountAll();
+    $this->setPageTitle(Lang::get('aroaden.services'));
 
-        $this->setPageTitle(Lang::get('aroaden.services'));
+    return $this->loadView();
+  }
 
-        return $this->loadView();
-    }
+  /**
+   *  get query result, using ajax
+   * 
+   *  @param Request $request request object.
+   * 
+   *  @return string JSON
+   */
+  public function search(Request $request)
+  {
+    $string = $this->sanitizeData($request->input('string'));
+    $main_loop = $this->model::FindStringOnField($string);
+    $count = $this->model::CountFindStringOnField($string);
 
-    /**
-     *  get query result, using ajax
-     * 
-     *  @param Request $request request object.
-     * 
-     *  @return string JSON
-     */
-    public function search(Request $request)
-    {
-        $string = $this->sanitizeData($request->input('string'));
-        $main_loop = $this->model::FindStringOnField($string);
-        $count = $this->model::CountFindStringOnField($string);
+    $this->view_data['main_loop'] = $main_loop;
+    $this->view_data['request'] = $request;
+    $this->view_data['count'] = $count;
+    $this->view_data['searched_text'] = $string;
 
-        $this->view_data['main_loop'] = $main_loop;
-        $this->view_data['request'] = $request;
-        $this->view_data['count'] = $count;
-        $this->view_data['searched_text'] = $string;
+    $this->view_name = 'servicesList';
 
-        $this->view_name = 'servicesList';
+    return $this->loadView();
+  }  
 
-        return $this->loadView();
-    }  
+  /**
+   *  create an item
+   * 
+   *  @param Request $request request object.
+   * 
+   *  @return view
+   */
+  public function create(Request $request, $id = false)
+  {
+    $this->autofocus = 'name';
+    $this->view_data['tax_types'] = $this->tax_types;
 
-    /**
-     *  create an item
-     * 
-     *  @param Request $request request object.
-     * 
-     *  @return view
-     */
-    public function create(Request $request, $id = false)
-    {
-        $this->autofocus = 'name';
+    $this->setPageTitle(Lang::get('aroaden.create_service'));
 
-        $this->view_data['tax_types'] = $this->tax_types;
-        $this->view_data['form_fields'] = $this->form_fields;
-
-        $this->setPageTitle(Lang::get('aroaden.create_service'));
-
-        return parent::create($request);
-    }
-   
-    /**
-     *  store an item
-     * 
-     *  @param Request $request request object.
-     * 
-     *  @return redirect
-     */
-    public function store(Request $request)
-    {
-        $name = $this->sanitizeData($request->input('name'));
-        $price = $this->sanitizeData($request->input('price'));
-        $tax = $this->sanitizeData($request->input('tax'));  
-
-        $data = [];
-        $data['error'] = false; 
-
-        try {
-
-            $exists = $this->model::FirstByNameDeleted($name);         
-
-            if ( isset($exists->name) )
-                throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
-
-            $validator = Validator::make($request->all(), [
-                'name' => "required|unique:$this->table_name|max:111",
-                'price' => 'required',
-                'tax' => ''
-            ]);
-                
-            if ($validator->fails()) {
-
-                throw new Exception($validator);
-
-            } else {        
-                
-                $this->model::create([
-                    'name' => $name,
-                    'price' => $price,
-                    'tax' => $tax
-                ]);
-
-            }   
-
-        } catch (Exception $e) {
-
-            $data['error'] = true; 
-            $data['content'] = $e->getMessage();
-
-        }
-
-        $this->echoJsonOuptut($data);
-    }
+    return parent::create($request);
+  }
  
-    /**
-     *  get query result, using an ajax request
-     * 
-     *  @param Request $request request object.
-     *  @param int $idser The ID.
-     * 
-     *  @return json
-     */
-    public function edit(Request $request, $id)
-    {
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $id = $this->sanitizeData($id);
+  /**
+   *  store an item
+   * 
+   *  @param Request $request request object.
+   * 
+   *  @return redirect
+   */
+  public function store(Request $request)
+  {
+    extract($this->sanitizeRequest($request->all()));
 
-        $object = $this->model::find($id);
-        $this->autofocus = 'name';
+    $data = [];
+    $data['error'] = false; 
 
-        $this->view_data['id'] = $id;
-        $this->view_data['object'] = $object;
-        $this->view_data['tax_types'] = $this->tax_types;
-        $this->view_data['form_fields'] = $this->form_fields;
+    try {
 
-        $this->setPageTitle(Lang::get('aroaden.edit_service'));
+      $exists = $this->model::FirstByName($name);         
 
-        return parent::edit($request, $id);  
+      if ( isset($exists->name) )
+        throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
+
+      $this->model::create([
+        'name' => $name,
+        'price' => $price,
+        'tax' => $tax
+      ]);
+
+    } catch (Exception $e) {
+
+      $data['error'] = true; 
+      $data['msg'] = $e->getMessage();
+
     }
 
-    /**
-     *  get query result, using ajax
-     *  @return json
-     */
-    public function update(Request $request, $id)
-    {
-        $this->redirectIfIdIsNull($id, $this->main_route);
-        $id = $this->sanitizeData($id);
+    $this->echoJsonOuptut($data);
+  }
 
-        $name = $this->sanitizeData($request->input('name'));        
-        $price = $this->sanitizeData($request->input('price'));
-        $tax = $this->sanitizeData($request->input('tax'));
+  /**
+   *  get query result, using an ajax request
+   * 
+   *  @param Request $request request object.
+   *  @param int $idser The ID.
+   * 
+   *  @return json
+   */
+  public function edit(Request $request, $id)
+  {
+    $id = $this->sanitizeData($id);
+    $this->redirectIfIdIsNull($id, $this->main_route);
 
-        $data = [];
+    $object = $this->model::find($id);
+    $this->autofocus = 'name';
 
-        try {
+    $this->view_data['id'] = $id;
+    $this->view_data['object'] = $object;
+    $this->view_data['tax_types'] = $this->tax_types;
 
-            $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
+    $this->setPageTitle(Lang::get('aroaden.edit_service'));
 
-            if ( isset($exists->name) )
-                throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
+    return parent::edit($request, $id);  
+  }
 
-            $object = $this->model::find($id);
-            $object->name = $name;
-            $object->price = $price;
-            $object->tax = $tax;            
-            $object->save();
+  /**
+   *  get query result, using ajax
+   *  @return json
+   */
+  public function update(Request $request, $id)
+  {
+    $id = $this->sanitizeData($id);
+    $this->redirectIfIdIsNull($id, $this->main_route);
 
-            $data['content'] = Lang::get('aroaden.success_message');
+    extract($this->sanitizeRequest($request->all()));
 
-        } catch (Exception $e) {
+    $data = [];
+    $data['error'] = false; 
 
-            $data['error'] = true; 
-            $data['content'] = $e->getMessage();
+    try {
 
-        }
+      $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
 
-        $this->echoJsonOuptut($data);
+      if ( isset($exists->name) )
+        throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
+
+      $object = $this->model::find($id);
+      $object->name = $name;
+      $object->price = $price;
+      $object->tax = $tax;            
+      $object->save();
+
+    } catch (Exception $e) {
+
+      $data['error'] = true; 
+      $data['msg'] = $e->getMessage();
+
     }
 
-    /**
-     *  destroy
-     */
-    public function destroy(Request $request, $id)
-    {
-        return parent::destroy($request, $id);  
-    }
+    $this->echoJsonOuptut($data);
+  }
+
+  /**
+   *  destroy
+   */
+  public function destroy(Request $request, $id)
+  {
+    $this->misc_array['checkDestroy'] = true;
+    $this->misc_array['count'] = true;
+
+    return parent::destroy($request, $id);  
+  }
 
 }

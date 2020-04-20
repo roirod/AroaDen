@@ -2,28 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
+use App\Models\BaseModel;
 
-class BudgetsText extends Model
+class BudgetsText extends BaseModel
 {
-	protected $table = 'budgets_text';
-    protected $fillable = ['idpat','uniqid','text'];
-    protected $primaryKey = 'idbute';
+  use GetTableNameTrait;
 
-    public static function FirstById($id, $uniqid)
-    {
-        return DB::table('budgets_text')
-				->where('idpat', $id)
-				->where('uniqid', $uniqid)
-				->first();
-    }
+  protected $table = 'budgets_text';
+  protected $fillable = ['idpat', 'uniqid','text'];
+  protected $primaryKey = ['idpat', 'uniqid'];
+  public $incrementing = false;
+  public $timestamps = false;
 
-    public static function FirstByUniqid($uniqid)
-    {
-        return DB::table('budgets_text')
-                ->where('uniqid', $uniqid)
-                ->first();
-    }
+  public function patients()
+  {
+    return $this->belongsTo('App\Models\Patients');
+  }    
 
 }

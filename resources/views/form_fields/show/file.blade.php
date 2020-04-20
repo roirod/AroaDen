@@ -13,10 +13,10 @@
               </span>
            </div>
            <div class="btn-group">
-              <input type="file" class="btn btn-default btn-sm" name="files[]" multiple />
+              <input type="file" class="btn btn-default btn-sm" name="files[]" multiple required />
            </div>
-          <div class="btn-group pad4"> 
-            <button type="submit" class="btn btn-info btn-sm">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
+          <div class="btn-group"> 
+            <button type="submit" class="btn btn-info btn-md">&nbsp;<i class="fa fa-upload"></i>&nbsp;</button>
           </div>
         </div>
       </form>

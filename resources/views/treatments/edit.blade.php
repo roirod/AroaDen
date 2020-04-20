@@ -2,94 +2,84 @@
 
 @section('content')
 
-    @include('includes.patients_nav')
+  @include('includes.patients_nav')
 
-    @include('includes.messages')
-    @include('includes.errors')
+  @include('includes.messages')
+  
+  <div class="col-sm-12 pad10">
+    @include('form_fields.show.name')
+  </div>  
 
-    {{ addText("Editar Tratamiento") }}
+  <div class="row">
+    <div class="col-sm-12">
+      <fieldset>
+        <legend>
+          {!! @trans('aroaden.edit_treatments') !!}
+        </legend>
 
-    <div class="row">
-     <div class="col-sm-12 mar10">
+        <div class="row pad4">
+          <div class="col-sm-9">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                 <tr class="fonsi14 bggrey">
+                   <td class="wid140">{{ @trans('aroaden.name') }}</td>
+                   <td class="wid95">{{ @trans('aroaden.price') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.units') }}</td>             
+                   <td class="wid70">{{ @trans('aroaden.tax') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.total') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.paid') }}</td>
+                   <td class="wid70">{{ @trans('aroaden.day') }}</td>
+                 </tr>
+                </thead>
+                <tbody>
+                 <tr class="fonsi13">
+                   <td class="wid140">{{ $treatment->name }}</td>
+                   <td class="wid95">{{ $treatment->price }} €</td>
+                   <td class="wid70">{{ $treatment->units }}</td>             
+                   <td class="wid70">{{ $treatment->tax }} %</td>
+                   <td class="wid70">{{ numformat($treatment->units * $treatment->price) }} €</td>
+                   <td class="wid70">{{ $treatment->paid }} €</td>
+                   <td class="wid70">{{ date('d-m-Y', strtotime ($treatment->day) ) }}</td>
+                 </tr>
+                </tbody>
+             </table>
+          </div>
+        </div>
 
-        <p class="pad4 fonsi15"> {{ $surname }}, {{ $name }} </p>
         <hr>
 
-        <p class="pad4 fonsi15">
-            {{ $object->name }}:
-            <br>
-            <br>
-            Precio: {{ $object->price }} €.
-            <br>
-            Cantidad: {{ $object->units }}.
-            <br>
-            IVA: {{ $object->tax }} %.
-            <br>
-            Total: {{ numformat($object->units * $object->price) }} €.      
-            <br>
-            Pagado: {{ $object->paid }} €.
-            <br>
-            Fecha: {{ date('d-m-Y', strtotime ($object->day) ) }}.        
-        </p>
+        @php
+          {{ $object = $treatment; }}
+        @endphp
 
-        <hr>
+        <form class="form save_form" action="/{{ $main_route.'/'.$id }}">
+          <input type="hidden" name="_method" value="PUT">
 
-        @include('form_fields.fields.openform')
+          <input type="hidden" name="price" value="{{ $object->price }}">
 
-            <input type="hidden" name="price" value="{{ $object->price }}">
+          @include('form_fields.common_alternative')
+        </form>
 
-            @include('form_fields.common_alternative')
+      </fieldset>
+    </div>
+  </div>
 
-        @include('form_fields.fields.closeform')
+  <script type="text/javascript">
 
-    @include('form_fields.fields.closediv')
-
-@endsection
-
-
-@section('footer_script')
-
-    <script type="text/javascript">
+    redirectRoute = '/{{ $routes['patients'].'/'.$idnav }}';
+    
+    $(document).ready(function() {
+      $('#multiply_units_price').click(function (evt) {
+        var price = {{ $treatment->price }};
         
-        $(document).ready(function() {
-            var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.multiply_units_price') }}"><i class="fa fa-lg fa-close"></i></a>';
-            $('input[name="paid"]').parent().find('label').append(append);
+        return getPaid(price);
+      });
+    });
+  </script>
 
-            var append = ' <a id="put_zero" class="pad4 bgwi fuengrisoscu" title="{{ Lang::get('aroaden.put_zero') }}"><i class="fa fa-close fa-lg text-danger"></i></a>';
-            $('input[name="paid"]').parent().find('label').append(append);
-
-            $('#multiply_units_price').click(function (evt) {
-                var price = {{ $object->price }};
-                var units = $('input[name="units"]').val();
-                var paid = util.multiply(units, price);    
-
-                $('input[name="paid"]').val(paid);
-
-                evt.preventDefault();
-                evt.stopPropagation();              
-            });
-
-            $('#put_zero').click(function (evt) {
-                $('input[name="paid"]').val(0);
-
-                evt.preventDefault();
-                evt.stopPropagation();              
-            });
-        });
-
-    </script>
+  @include('treatments.common')
 
 @endsection
 
-@section('js')
-    @parent   
-    <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
 
-    <script type="text/javascript" src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/moment-es.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('assets/datetimepicker/css/datetimepicker.min.css') }}" />
-    <script type="text/javascript" src="{{ asset('assets/datetimepicker/js/datetimepicker.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/datetimepicker/datepicker1.js') }}"></script>
-@endsection
+

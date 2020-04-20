@@ -1,57 +1,45 @@
 @extends('layouts.main')
 
-<div id="ajax_content">
+@section('content')
 
-	@section('content')
+	@include('includes.staff_nav')
 
-		@include('includes.staff_nav')
+	@include('includes.messages')
+	
+	<div class="row"> 
+    <div class="col-sm-12"> 
+			<div class="input-group"> 
+				<span class="input-group-btn pad10">  
+					<p> {!! @trans("aroaden.staff") !!} </p>
+				</span>
 
-		@include('includes.messages')
-		@include('includes.errors')
-
-		<div class="row"> 
-		  <div class="col-sm-12"> 
-				<div class="input-group"> 
-					<span class="input-group-btn pad10">  
-            <p> Personal </p>
-          </span>
-					<div class="btn-toolbar pad4" role="toolbar"> 
-						<div class="btn-group">
-							<a href="{{ url("/$main_route/$id/edit") }}" data-checkpermissions="staff.edit" role="button" class="btn btn-sm btn-success onEdit">
-								<i class="fa fa-edit"></i> Editar
-							</a>
-						</div>	
+				<div class="btn-toolbar pad4" role="toolbar"> 
 					<div class="btn-group">
-					 	<form class="form" action="{!! url("/$main_route/$id") !!}" data-checkpermissions="staff.delete">	
-					  		{!! csrf_field() !!}
+						<a href="{{ url("/$main_route/$id/edit") }}" role="button" class="btn btn-sm btn-success">
+							<i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
+						</a>
+					</div>
 
-							<input type="hidden" name="_method" value="DELETE">
+					<div class="btn-group">
+						@include('includes.delete_dropdown')
+				 	</div>
 
-							<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-times"></i> Eliminar <span class="caret"></span>  
-							</button>
-							<ul class="dropdown-menu" role="menu"> 
-								<li>
-									@include('includes.delete_button')
-								</li>
-							</ul>
-				 		</form>
+				</div> 
+			</div> 
+		</div> 
+	</div>
 
-		</div> </div> </div> </div> </div>
+	@include('form_fields.fields.upload_photo')
 
+	<hr>
 
-		@include('form_fields.show.upload_photo')
+	<div class="row mar10"> 
+	  <div class="col-sm-12"> 
+	    <div class="row fonsi15">
 
-
-		<hr>
-
-		<div class="row mar10"> 
-		  <div class="col-sm-12"> 
-		    <div class="row fonsi15">
-
-		    	<div id="profile_photo">
-		    	    @include('form_fields.show.profile_photo')
-		    	</div>
+	    	<div id="profile_photo">
+	    	    @include('form_fields.show.profile_photo')
+	    	</div>
 
 				<div class="col-sm-10">
 
@@ -75,68 +63,76 @@
 
 				@include('form_fields.show.notes')
 
-		 </div> </div> </div>
+	 		</div> 
+		</div> 
+	</div>
 
-		<hr>
-		<br>
+	<hr>
+	<br>
 
-		<div class="row">
-		  <div class="col-sm-12"> 
-		 	<p> Trabajos realizados: </p> 
-		</div> </div>
+	<div class="row">
+	  <div class="col-sm-12"> 
+	 		<p> Trabajos realizados: </p> 
+		</div> 
+	</div>
 
-		<div class="row">
-		 <div class="col-sm-12">
-		  <div class="panel panel-default">
-		   <table class="table fonsi14">
-		   	 <tr class="success">
-			   	 	<td class="wid180">Paciente</td>
-			   	 	<td class="wid180">Tratamiento</td>
-			   	 	<td class="wid95 textcent">Cantidad</td>
-			   	 	<td class="wid95">Fecha</td>
-			   	 	<td class="wid180"> </td>
-		   	 </tr>
-		   </table>
-		   <div class="box500">
-		     <table class="table table-striped fonsi13">
+	<div class="row">
+		<div class="col-sm-12">
+	  	<div class="panel panel-default">
+				<table class="table table-striped table-bordered table-hover">
+			       <tr class="fonsi15">
+				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
+				   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+				   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
+				   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
+				   	 	<td class="wid180"> </td>
+			   	 	</tr>
+			   </table>
 
-				@foreach ($treatments as $treat)
-					<tr>
-						<td class="wid180">
-							<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
-								{{ $treat->surname }}, {{ $treat->name }}
-							</a>
-						</td>
-					   	<td class="wid180">{{ $treat->service_name }}</td>
-					   	<td class="wid95 textcent">{{ $treat->units }}</td>
-					   	<td class="wid95">{{ date('d-m-Y',strtotime ($treat->day)) }}</td>
-					   	<td class="wid180"></td>
-			   		</tr>						
-				@endforeach
+			   <div class="box400">
+					 <table class="table table-striped table-bordered table-hover">
 
-			 </table>
-			</div>
+						@foreach ($treatments as $treat)
+				       		<tr class="fonsi13">
+								<td class="wid180">
+									<a href="{{ url("/$other_route/$treat->idpat") }}" class="pad4" target="_blank">
+										{{ $treat->surname }}, {{ $treat->name }}
+									</a>
+								</td>
+							   	<td class="wid180">{{ $treat->service_name }}</td>
+							   	<td class="wid95 textcent">{{ $treat->units }}</td>
+							   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
+							   	<td class="wid180"></td>
+					   		</tr>						
+						@endforeach
 
-		 </div> </div> </div>
-   
-  @endsection
+					 </table>
+				</div>
 
-  @section('footer_script')
+				<table class="table table-striped table-bordered table-hover">
+			       <tr class="fonsi15">
+				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
+				   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+				   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
+				   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
+				   	 	<td class="wid180"> </td>
+			   	 	</tr>
+			   </table>
 
-    <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
+			</div> 
+		</div>
+	</div>
+ 
+@endsection
 
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $('a.onEdit').on('click', function(evt) {
-          evt.preventDefault();
-          evt.stopPropagation();
+@section('footer_script')
 
-          var _this = $(this);
-          return util.onEditResource(_this);
-        });
-      });
-    </script>
-    
-  @endsection
+  <script type="text/javascript" src="{{ asset('assets/js/confirmDelete.js') }}"></script>
+  
+	<script type="text/javascript">
 
-</div>
+		redirectRoute = '{!! url("/$main_route") !!}';				
+
+	</script>
+
+@endsection

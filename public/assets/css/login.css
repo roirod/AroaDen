@@ -109,6 +109,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 
 .pad4 { padding: 4px; }
 .pad10 { padding: 10px; }
+.pad15 { padding: 15px; }
 .pad20 { padding: 20px; }
 .pad30 { padding: 30px; }
 .pad40 { padding: 40px; }
@@ -123,3 +124,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#520e0e0e', e
 .bgwi { background-color: white; }
 
 .textshadow { text-shadow:5px 5px 5px #000000; }
+
+h1 small, h5 small {
+ color: #f04f4f !important; 
+}

@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 
 class StaffPositionsEntries extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'staff_positions_entries';
     protected $fillable = ['idsta','idstpo'];
     protected $primaryKey = 'id';

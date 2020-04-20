@@ -1,13 +1,21 @@
 @include('includes.services_nav')
 
-{!! addText(@trans('aroaden.create_service')) !!}
+@include('includes.messages')
 
-<form id="form" class="createServiceForm form" action="{!! $services_route !!}" method="post">
-	{!! csrf_field() !!}
+<div class="row">
+  <div class="col-sm-10">
+    <fieldset>
+      <legend>
+        {!! @trans('aroaden.create_service') !!}
+      </legend>
 
-  @include('form_fields.common_alternative')
+      <form id="form" class="createServiceForm form" action="{!! $routes['services'] !!}" method="post">
+        @include('form_fields.common_alternative')
 
-@include('form_fields.fields.closeform')
+      @include('form_fields.fields.closeform')
+    </fieldset>
+  </div>
+</div>
 
 <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
@@ -23,23 +31,18 @@
         data : $(this).serialize(),
       };
 
-      lastRoute = routes.services_route + '/ajaxIndex';
+      lastRoute = routes.services + '/ajaxIndex';
 
       util.processAjaxReturnsJson(obj).done(function(response) {
-        if (response.error) {
+        if (response.error)
+          return util.showPopup(response.msg, false);
 
-          return util.showPopup(response.content, false);
+        var obj = {
+          url  : lastRoute
+        };
 
-        } else {
-
-          var obj = {
-            url  : lastRoute
-          };
-
-          util.processAjaxReturnsHtml(obj);
-          return util.showPopup("{{ Lang::get('aroaden.success_message') }}");
-
-        }
+        util.processAjaxReturnsHtml(obj);
+        return util.showPopup();
       });
     });
   });

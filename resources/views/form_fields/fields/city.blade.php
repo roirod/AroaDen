@@ -1,4 +1,4 @@
-<div class="form-group col-sm-5">  
+<div class="form-group col-sm-3">  
 	<label class="control-label text-left mar10">{{ @trans('aroaden.city') }}</label>
 	@if ($is_create_view)
 

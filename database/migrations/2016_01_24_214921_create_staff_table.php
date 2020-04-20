@@ -20,7 +20,6 @@ class CreateStaffTable extends Migration
             $table->date('birth')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
-            $table->softDeletes();
             $table->index('surname');
             $table->index('name');
             $table->unique('dni');

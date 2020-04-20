@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 use App\Models\StaffWorks;
 
 class Treatments extends Model
 {
+    use GetTableNameTrait;
+
 	protected $table = 'treatments';
     protected $fillable = ['idpat','idser','price','units','paid','day','tax'];
     protected $primaryKey = 'idtre';
@@ -47,7 +50,6 @@ class Treatments extends Model
 
         $data['staff_works'] = StaffWorks::join('staff','staff_works.idsta','=','staff.idsta')
                         ->select('staff_works.*','staff.surname','staff.name')
-                        ->whereNull('staff.deleted_at')
                         ->whereIn('staff_works.idtre', $idtre_array)
                         ->orderBy('staff_works.idtre' , 'ASC')
                         ->get();

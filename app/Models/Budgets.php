@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 
 class Budgets extends Model
 {
+    use GetTableNameTrait;
+    
 	protected $table = 'budgets';
     protected $fillable = ['idpat','idser','price','units','uniqid','tax','created_at'];
-    protected $primaryKey = 'idbud';
+    protected $primaryKey = ['idpat', 'idser', 'uniqid'];
+    public $incrementing = false;
+
 
     public function patients()
     {
@@ -22,7 +27,9 @@ class Budgets extends Model
                     ->join('services','budgets.idser','=','services.idser')
                     ->select('budgets.*','services.name')
                     ->where('budgets.idpat', $id)
-                    ->orderBy('created_at','DESC')
+                    ->orderBy('budgets.created_at','DESC')
+                    ->orderBy('uniqid','DESC')
+                    ->orderBy('services.name','ASC')
                     ->get(); 
     }
 
@@ -46,16 +53,6 @@ class Budgets extends Model
                     ->orderBy('services.name' , 'ASC')
                     ->get();  
     }
-
-    public static function AllGroupByCode($id)
-    {
-        return DB::table('budgets')
-                ->groupBy('uniqid')
-                ->having('idpat','=', $id)
-                ->orderBy('created_at' , 'DESC')
-                ->get(); 
-    }
-
 
     public static function GetTaxTotal($uniqid)
     {

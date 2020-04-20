@@ -14,30 +14,28 @@
   	
   <div class="row">
   	<div class="col-sm-12">
-      <fieldset>
-    	  <div class="panel panel-default">
-          <table class="table table-hover stripe" id="PatientsTable">
-            <thead>
-          	  <tr class="fonsi15 bgtra fonbla">
-                <td class="wid290"></td>
-          			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-          			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-          			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-          			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-          		</tr>
-            </thead>
-            <tfoot>
-              <tr class="fonsi15 bgtra fonbla">
-                <td class="wid290"></td>
-                <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
-                <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
-                <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
-                <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
-               </tr>
-            </tfoot>  
-          </table>
-  		  </div>
-      </fieldset>
+  	  <div class="panel panel-default">
+        <table class="table table-striped table-bordered table-hover" id="PatientsTable">
+          <thead>
+        	  <tr class="fonsi15">
+              <td class="wid290"></td>
+        			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+        			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+        			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+        		</tr>
+          </thead>
+          <tfoot>
+            <tr class="fonsi15">
+              <td class="wid290"></td>
+              <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
+              <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
+              <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
+             </tr>
+          </tfoot>  
+        </table>
+		  </div>
     </div> 
   </div>
 
@@ -48,6 +46,7 @@
       }, 180);
 
       var PatientsTable = {
+        "aaSorting": [[ 1, "asc" ]],
         'oLanguage': {
           'sProcessing': 'Procesando...',
           'sLengthMenu': 'Selecciona _MENU_',
@@ -71,34 +70,16 @@
           "<br>" +
           "<'row'<'col-sm-7'i><'col-sm-5'p>>",
         "iDisplayStart": 0,
-        "iDisplayLength": 25,
+        "iDisplayLength": iDisplayLength,
         "bAutoWidth": false,
         'bPaginate': true,
         'bLengthChange': true,
         "sPaginationType": "full_numbers",
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": '/' + "{!! $patients_route !!}/list",
-        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-          oSettings.jqXHR = $.ajax({
-            "dataType": 'json',
-            "method": "GET",
-            'headers': {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            "url": sSource,
-            "data": aoData,
-            "success": fnCallback,
-            "error": function (e) {
-              console.dir(e);
-              console.log(e.message);
-            }
-          });
-        },
-        "aLengthMenu": [
-          [25, 50, 100, 500, 1000, 10000, -1],
-          [25, 50, 100, 500, 1000, 10000, "Todos"],
-        ],
+        "sAjaxSource": "{!! $routes['patients'] !!}/list",
+        "sServerMethod": "GET",
+        "aLengthMenu": aLengthMenu,
         "aoColumnDefs": [
           {
             "aTargets": [0],
@@ -109,7 +90,7 @@
           {
             "aTargets": [1],
             "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! $patients_route !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+              var resultado = '<a href="{!! $routes['patients'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
               return resultado;
             }
           }

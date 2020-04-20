@@ -16,6 +16,12 @@ class StaffPositionsSeeder extends Seeder
 	        'Auxiliar',
 	        'Higienista',
 	        'Endodoncista',
+          'Periodoncista',
+          'Odontopediatra',
+          'Prostodoncista',
+          'Medicina Bucal',
+          'Especialista en ATM',
+          'Cirujano Maxilofacial',
 	        'Cirujano',
 	        'Ortodoncista'
 	    ];

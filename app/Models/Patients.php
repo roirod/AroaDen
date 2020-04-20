@@ -2,181 +2,226 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Models\BaseModelInterface;
+use App\Models\GetTableNameTrait;
+use App\Models\BaseModel;
+use Exception;
+use Lang;
 
-class Patients extends Model implements BaseModelInterface
+class Patients extends BaseModel
 {
-    use SoftDeletes;
-    
-	protected $table = 'patients';
-    protected $dates = ['deleted_at'];
-    protected $fillable = ['surname','name','dni','tel1','tel2','tel3','sex','address','city','birth','notes'];
-    protected $primaryKey = 'idpat';
+  use GetTableNameTrait;
 
-    public function record()
-    {
-        return $this->hasOne('App\Models\Record', 'idpat', 'idpat');
-    }
+  protected $table = 'patients';
+  protected $fillable = ['surname','name','dni','tel1','tel2','tel3','sex','address','city','birth','notes'];
+  protected $primaryKey = 'idpat';
 
-    public function treatments()
-    {
-        return $this->hasMany('App\Models\Treatments', 'idpat', 'idpat');
-    }
+  public function record()
+  {
+    return $this->hasOne('App\Models\Record', 'idpat', 'idpat');
+  }
 
-    public function appointments()
-    {
-        return $this->hasMany('App\Models\Appointments', 'idpat', 'idpat');
-    }
+  public function treatments()
+  {
+    return $this->hasMany('App\Models\Treatments', 'idpat', 'idpat');
+  }
 
-    public function invoices()
-    {
-        return $this->hasMany('App\Models\Invoices', 'idpat', 'idpat');
-    }
+  public function appointments()
+  {
+    return $this->hasMany('App\Models\Appointments', 'idpat', 'idpat');
+  }
 
-    public function budgets()
-    {
-        return $this->hasMany('App\Models\Budgets', 'idpat', 'idpat');
-    }
+  public function invoices()
+  {
+    return $this->hasMany('App\Models\Invoices', 'idpat', 'idpat');
+  }
 
-    public function scopeAllOrderBySurname($query, $num_paginate)
-    {
-        return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
-                        ->whereNull('deleted_at')
-                        ->orderBy('surname', 'ASC')
-                        ->orderBy('name', 'ASC')
-                        ->paginate($num_paginate);
-    }
+  public function budgets()
+  {
+    return $this->hasMany('App\Models\Budgets', 'idpat', 'idpat');
+  }
 
-    public function scopeFirstById($query, $id)
-    {
-        return $query->where('idpat', $id)
-                        ->whereNull('deleted_at')
-                        ->first();
-    }
+  public function scopeFirstById($query, $id)
+  {
+    $this->whereRaw = "$this->primaryKey = '$id'";
 
-    public function scopeFirstByDniDeleted($query, $dni)
-    {
-        return $query->where('dni', $dni)
-                        ->first();
-    }
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-    public static function CheckIfExistsOnUpdate($id, $dni)
-    {
-        $exists = DB::table('patients')
-                        ->where('idpat', '!=', $id)
-                        ->where('dni', $dni)
-                        ->first();
+  public function scopeFirstByDni($query, $dni)
+  {
+    $this->whereRaw = "dni = '$dni'";
 
-        if ( is_null($exists) ) {
-            return true;
-        }
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-        return $exists;
-    }
+  public function scopeCheckIfDniExistsOnUpdate($query, $id, $dni)
+  {
+    $this->whereRaw = "$this->primaryKey != '$id' AND dni = '$dni'";
 
-    public static function FindStringOnField($sLimit, $sWhere, $sOrder)
-    {
-        $where = '';
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-        if ($sWhere != '')
-          $where = "
-            AND (
-                surname LIKE '%". $sWhere ."%' 
-                OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
-                OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
-            ) 
-          ";
+  public function scopeAllOrderBySurname($query, $num_paginate)
+  {
+    return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
+                    ->orderBy('surname', 'ASC')
+                    ->orderBy('name', 'ASC')
+                    ->paginate($num_paginate);
+  }
 
-        if ($sOrder != '') {
-          $order = "ORDER BY " . $sOrder;
-        } else {
-          $order = 'ORDER BY surname ASC';
-        }
+  public static function checkDestroy($id)
+  {
+    $result = DB::table('treatments')
+        ->select('treatments.idtre')
+        ->where('idpat', $id)
+        ->first();
 
-        $query = "
-            SELECT idpat, CONCAT(surname, ', ', name) AS surname_name, dni, tel1, city
-            FROM patients
-            WHERE deleted_at IS NULL 
-            " . $where . " 
-            " . $order . " 
-            " . $sLimit . "
-        ;";
+    if ($result !== NULL)
+      throw new Exception(Lang::get('aroaden.patient_delete_warning'));
+  }
 
-        return DB::select($query);
-    }
+  public static function FindStringOnField($sLimit, $sWhere, $sOrder)
+  {
+    $where = '';
 
-    public static function CountFindStringOnField($sWhere = '')
-    {
-        $where = '';
-                
-        if ($sWhere != '')
-          $where = "
-            AND (surname LIKE '%". $sWhere ."%' 
+    if ($sWhere != '')
+      $where = "
+        WHERE 
+            surname LIKE '%". $sWhere ."%' 
             OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
-            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%') 
-          ";
+            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
+      ";
 
-        $query = "
-            SELECT count(*) AS total
-            FROM patients
-            WHERE deleted_at IS NULL 
-            " . $where . "
-        ;";
-
-        return DB::select($query);
+    if ($sOrder != '') {
+      $order = "ORDER BY " . $sOrder;
+    } else {
+      $order = 'ORDER BY surname ASC';
     }
 
-    public static function GetTotalPayments($sLimit)
-    {
-        $query = "
-            SELECT pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-            SUM(tre.units*tre.price) as total, 
-            SUM(tre.paid) as paid, 
-            SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
-            FROM treatments tre
-            INNER JOIN patients pa
-            ON tre.idpat=pa.idpat 
-            WHERE pa.deleted_at IS NULL
-            GROUP BY tre.idpat 
-            HAVING 
-                tre.idpat=tre.idpat  AND rest > 0
-            ORDER BY rest DESC
-            " . $sLimit . "
-        ";
+    $query = "
+      SELECT idpat, CONCAT(surname, ', ', name) AS surname_name, dni, tel1, city
+      FROM patients
+      " . $where . " 
+      " . $order . " 
+      " . $sLimit . "
+    ;";
 
-        return DB::select($query);
+    return DB::select($query);
+  }
+
+  public static function CountFindStringOnField($sWhere = '')
+  {
+    $where = '';
+            
+    if ($sWhere != '')
+      $where = "
+        WHERE 
+          surname LIKE '%". $sWhere ."%' 
+          OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+          OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
+      ";
+
+    $query = "
+      SELECT count(*) AS total
+      FROM patients
+      " . $where . "
+    ;";
+
+    return DB::select($query);
+  }
+
+  public static function GetPayments($sLimit, $sWhere, $sOrder)
+  {
+    $having = '';
+            
+    if ($sWhere != '')
+      $having = "
+        AND (
+            surname_name LIKE '%". $sWhere ."%'
+        ) 
+      ";
+
+    if ($sOrder != '') {
+      $order = "ORDER BY " . $sOrder;
+    } else {
+      $order = 'ORDER BY rest DESC';
     }
 
-    public static function countTotalPatientsPayments()
-    {
-        $query = "
-            SELECT count(*) AS total
-            FROM (
-                SELECT 
-                    pa.idpat, SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
-                FROM treatments tre
-                INNER JOIN patients pa
-                ON tre.idpat=pa.idpat 
-                WHERE pa.deleted_at IS NULL
-                GROUP BY tre.idpat 
-                HAVING 
-                    tre.idpat=tre.idpat  AND rest > 0
-            ) AS table1
-        ;";
+    $query = "
+      SELECT 
+        pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
+        SUM(tre.units*tre.price) as total, 
+        SUM(tre.paid) as paid, 
+        SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+      FROM 
+        treatments tre
+      INNER JOIN 
+        patients pa ON tre.idpat=pa.idpat 
+      GROUP BY 
+        tre.idpat 
+      HAVING 
+        tre.idpat=tre.idpat AND rest > 0 
+        " . $having . "
+      " . $order . " 
+      " . $sLimit . "
+    ";
 
-        return DB::select($query);
-    }
+    return DB::select($query);
+  }
 
-    public static function CountAll()
-    {
-        $result = DB::table('patients')
-                    ->whereNull('deleted_at')
-                    ->get();
+  public static function countPayments()
+  {
+    $query = "
+      SELECT count(*) AS total
+      FROM (
+        SELECT 
+          pa.idpat, SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+        FROM 
+          treatments tre
+        INNER JOIN 
+          patients pa ON tre.idpat=pa.idpat 
+        GROUP BY 
+          tre.idpat 
+        HAVING 
+          tre.idpat=tre.idpat  AND rest > 0
+      ) AS table1
+    ;";
 
-        return (int)count($result);
-    }
+    return DB::select($query);
+  }
+
+  public static function countFilteredPayments($sWhere = '')
+  {
+    $having = '';
+            
+    if ($sWhere != '')
+      $having = "
+        AND (
+          surname_name LIKE '%". $sWhere ."%'
+        ) 
+      ";
+
+    $query = "
+      SELECT 
+        count(*) AS total
+      FROM (
+        SELECT 
+          CONCAT(pa.surname, ', ', pa.name) AS surname_name,
+          SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+        FROM 
+          treatments tre
+        INNER JOIN 
+          patients pa ON tre.idpat=pa.idpat 
+        GROUP BY 
+          tre.idpat 
+        HAVING 
+          tre.idpat=tre.idpat AND rest > 0 
+          " . $having . "
+      ) AS table1
+    ;";
+
+    return DB::select($query);
+  }
 
 }

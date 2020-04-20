@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 
 class Appointments extends Model
 {
+    use GetTableNameTrait;
+
     protected $table = 'appointments';
     protected $fillable = ['idpat','day','hour','notes'];
     protected $primaryKey = 'idapp';
@@ -20,7 +23,6 @@ class Appointments extends Model
     {
         return $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
-                        ->whereNull('patients.deleted_at')
                         ->orderBy('appointments.day' , 'DESC')
                         ->orderBy('appointments.hour' , 'ASC')
                         ->get();
@@ -31,7 +33,6 @@ class Appointments extends Model
         $count = DB::table('appointments')
             ->join('patients','appointments.idpat','=','patients.idpat')
             ->select('appointments.*','patients.surname','patients.name')
-            ->whereNull('patients.deleted_at')
             ->count();
 
         return (int)$count;
@@ -39,13 +40,14 @@ class Appointments extends Model
 
     public function scopeAllBetweenRangeOrderByDay($query, $date1, $date2)
     {
-        return $query->join('patients','appointments.idpat','=','patients.idpat')
+        $result = $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
                         ->whereBetween('day', [$date1, $date2])
-                        ->whereNull('patients.deleted_at')
                         ->orderBy('day' , 'DESC')
                         ->orderBy('hour' , 'ASC')
-                        ->get(); 
+                        ->get();
+
+        return $result;
     }
 
     public function scopeAllTodayOrderByDay($query)
@@ -55,7 +57,6 @@ class Appointments extends Model
         return $query->join('patients','appointments.idpat','=','patients.idpat')
                         ->select('appointments.*','patients.surname','patients.name')
                         ->where('appointments.day', $today)
-                        ->whereNull('patients.deleted_at')
                         ->orderBy('appointments.day' , 'DESC')
                         ->orderBy('appointments.hour' , 'ASC')
                         ->get();
@@ -65,13 +66,10 @@ class Appointments extends Model
     {
         $today = date('Y-m-d');
 
-        $result = DB::table('appointments')
+        $count = DB::table('appointments')
                         ->join('patients','appointments.idpat','=','patients.idpat')
                         ->where('appointments.day', $today)
-                        ->whereNull('patients.deleted_at')
-                        ->get();
-
-        $count = count($result);
+                        ->count();
 
         return (int)$count;
     }
@@ -85,7 +83,7 @@ class Appointments extends Model
                     ->get();
     }
 
-    public function scopeFirstById($query, $id)
+    public static function FirstById($id)
     {
         return DB::table('appointments')
             ->join('patients','appointments.idpat','=','patients.idpat')
@@ -96,8 +94,7 @@ class Appointments extends Model
 
     public function scopeCheckIfIdExists($query, $id)
     {
-        return $query->where('idapp', $id)
-                        ->exists();
+        return $query->where('idapp', $id)->exists();
     }
 
 }

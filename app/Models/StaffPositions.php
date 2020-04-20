@@ -2,54 +2,56 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Models\BaseModelInterface;
+use App\Models\GetTableNameTrait;
+use App\Models\BaseModel;
+use Exception;
+use Lang;
 
-class StaffPositions extends Model implements BaseModelInterface
+class StaffPositions extends BaseModel
 {
-	protected $table = 'staff_positions';
-    protected $fillable = ['name'];
-    protected $primaryKey = 'idstpo';
+  use GetTableNameTrait;
 
-    public function scopeAllOrderByName($query)
-    {
-        return $query->orderBy('name', 'ASC')
-                        ->get();
-    }
+  protected $table = 'staff_positions';
+  protected $fillable = ['name'];
+  protected $primaryKey = 'idstpo';
 
-    public function scopeFirstById($query, $id)
-    {
-        return $query->where('idstpo', $id)
-                        ->first();
-    }
+  public function scopeAllOrderByName($query)
+  {
+      return $query->orderBy('name', 'ASC')
+                      ->get();
+  }
 
-    public function scopeFirstByName($query, $name)
-    {
-        return $query->where('name', $name)
-                        ->first();
-    }
+  public function scopeFirstById($query, $id)
+  {
+    $this->whereRaw = "$this->primaryKey = '$id'";
 
-    public static function CheckIfExistsOnUpdate($id, $name)
-    {
-        $exists = DB::table('staff_positions')
-                        ->where('name', $name)
-                        ->where('idstpo', '!=', $id)
-                        ->first();
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-        if ( is_null($exists) ) {
-            return true;
-        }
+  public function scopeFirstByName($query, $name)
+  {
+    $this->whereRaw = "name = '$name'";
 
-        return $exists;
-    }
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-    public static function CountAll()
-    {
-        $result = DB::table('staff_positions')
-                    ->get();
+  public function scopeCheckIfExistsOnUpdate($query, $id, $name)
+  {
+    $this->whereRaw = "$this->primaryKey != '$id' AND name = '$name'";
 
-        return (int)count($result);
-    }
+    return $this->scopeFirstWhereRaw($query);
+  }
+
+  public static function checkDestroy($idstpo)
+  {
+      $result = DB::table('staff_positions_entries')
+          ->select('staff_positions_entries.idsta')
+          ->where('idstpo', $idstpo)
+          ->first();
+
+      if ($result !== NULL)
+          throw new Exception(Lang::get('aroaden.staff_positions_delete_warning'));
+  }
 
 }

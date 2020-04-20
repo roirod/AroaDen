@@ -10,16 +10,15 @@ class CreateBudgetsTable extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->bigIncrements('idbud');
             $table->Integer('idpat')->unsigned();
             $table->Integer('idser')->unsigned();
             $table->smallInteger('price')->unsigned();
             $table->tinyInteger('tax')->unsigned()->default(0);
             $table->tinyInteger('units')->unsigned()->default(1);   
             $table->string('uniqid', 16);
-            $table->boolean('applied')->default(0);
+            //$table->boolean('applied')->default(0);
             $table->timestamps();
-            $table->index('uniqid');
+            $table->primary(['uniqid', 'idpat', 'idser']);
 
             $table->foreign('idpat')
 				      ->references('idpat')->on('patients')

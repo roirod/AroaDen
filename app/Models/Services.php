@@ -2,85 +2,77 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Models\BaseModelInterface;
+use App\Models\GetTableNameTrait;
+use App\Models\BaseModel;
+use Exception;
+use Lang;
 
-class Services extends Model implements BaseModelInterface
+class Services extends BaseModel
 {
-	use SoftDeletes;
+  use GetTableNameTrait;
 
-	protected $table = 'services';
-	protected $dates = ['deleted_at'];
-    protected $fillable = ['name','price','tax'];
-    protected $primaryKey = 'idser';
+  protected $table = 'services';
+  protected $fillable = ['name','price','tax'];
+  protected $primaryKey = 'idser';
 
-    public function treatments()
-    {
-        return $this->hasMany('App\Models\Treatments', 'idser', 'idser');
-    }
+  public function treatments()
+  {
+    return $this->hasMany('App\Models\Treatments', 'idser', 'idser');
+  }
 
-    public function scopeAllOrderByName($query)
-    {
-        return $query->whereNull('deleted_at')
-                        ->orderBy('name', 'ASC')
-                        ->get();
+  public function scopeAllOrderByName($query)
+  {
+    return $query->orderBy('name', 'ASC')
+                      ->get();
+  }
 
-    }
+  public function scopeFirstById($query, $id)
+  {
+    $this->whereRaw = "$this->primaryKey = '$id'";
 
-    public function scopeFirstById($query, $id)
-    {
-        return $query->where('idser', $id)
-                        ->whereNull('deleted_at')
-                        ->first();
-    }
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-    public static function CountAll()
-    {
-        $result = DB::table('services')
-                    ->whereNull('deleted_at')
-                    ->get();
+  public function scopeFirstByName($query, $name)
+  {
+    $this->whereRaw = "name = '$name'";
 
-        return (int)count($result);
-    }
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-    public function scopeFirstByNameDeleted($query, $name)
-    {
-        return $query->where('name', $name)
-                        ->first();
-    }
+  public function scopeCheckIfExistsOnUpdate($query, $id, $name)
+  {
+    $this->whereRaw = "$this->primaryKey != '$id' AND name = '$name'";
 
-    public static function CheckIfExistsOnUpdate($id, $name)
-    {
-        $exists = DB::table('services')
-                        ->where('name', $name)
-                        ->where('idser', '!=', $id)
-                        ->first();
+    return $this->scopeFirstWhereRaw($query);
+  }
 
-        if ( is_null($exists) ) {
-            return true;
-        }
+  public static function checkDestroy($idser)
+  {
+    $result = DB::table('treatments')
+        ->select('treatments.idtre')
+        ->where('idser', $idser)
+        ->first();
 
-        return $exists;
-    }
+    if ($result !== NULL)
+      throw new Exception(Lang::get('aroaden.service_delete_warning'));
+  }
 
-    public function scopeFindStringOnField($query, $string)
-    {
-        return $query->whereNull('deleted_at')
-                        ->where('name', 'LIKE', '%'.$string.'%')
-                        ->orderBy('name','ASC')
-                        ->get();
-    }
+  public function scopeFindStringOnField($query, $string)
+  {
+    return $query->where('name', 'LIKE', '%'.$string.'%')
+                      ->orderBy('name','ASC')
+                      ->get();
+  }
 
-    public static function CountFindStringOnField($string)
-    {
-        $result = DB::table('services')
-                    ->whereNull('deleted_at')
-                    ->where('name', 'LIKE', '%'.$string.'%')
-                    ->get();
+  public static function CountFindStringOnField($string)
+  {
+    $result = DB::table('services')
+                  ->where('name', 'LIKE', '%'.$string.'%')
+                  ->count();
 
-        return count($result);
-    }
+    return $result;
+  }
 
 }

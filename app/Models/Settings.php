@@ -4,55 +4,68 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\GetTableNameTrait;
 use StdClass;
 
 class Settings extends Model
 {
-	protected $table = 'settings';
-    protected $fillable = ['key','value', 'type'];
-    protected $primaryKey = 'id';
+  use GetTableNameTrait;
 
-    public static function getValueByKey($field)
-    {
-        return DB::table('settings')
-                ->where('key', $field)
-                ->first();
+  protected $table = 'settings';
+  protected $fillable = ['key','value', 'type'];
+  protected $primaryKey = ['key', 'type'];
+  public $incrementing = false;
+  public $timestamps = false;
+  protected $keyType = 'string';
+
+  public static function getValueByKey($field)
+  {
+    return DB::table('settings')
+            ->where('key', $field)
+            ->first();
+  }
+
+  public static function getArray()
+  {
+    $settings = DB::table('settings')
+                ->select('key', 'value')
+                ->get();
+
+    $array = [];
+
+    foreach ($settings as $value) {
+      $array_key = $value->key;
+      $array_val = $value->value;
+
+      $array[$array_key] = $array_val;
     }
 
-    public static function getArray()
-    {
-        $settings = DB::table('settings')
-                    ->select('key', 'value')
-                    ->get();
+    return $array;
+  }    
 
-        $array = [];
+  public static function getObject()
+  {
+    $settings = DB::table('settings')
+                ->select('key', 'value')
+                ->get();
 
-        foreach ($settings as $value) {
-            $array_key = $value->key;
-            $array_val = $value->value;
+    $obj = new StdClass;
 
-            $array[$array_key] = $array_val;
-        }
+    foreach ($settings as $setting) {
+      $key = $setting->key;
+      $value = $setting->value;
 
-        return $array;
-    }    
-
-    public static function getObject()
-    {
-        $settings = DB::table('settings')
-                    ->select('key', 'value')
-                    ->get();
-
-        $obj = new StdClass;
-
-        foreach ($settings as $setting) {
-            $key = $setting->key;
-            $value = $setting->value;
-
-            $obj->$key = $value;
-        }
-
-        return $obj;
+      $obj->$key = $value;
     }
+
+    return $obj;
+  }
+
+  public function scopeGetCompanyData($query)
+  {
+    return $query->select('key', 'value', 'type')
+                ->where('type', 'company_data')
+                ->get();
+  }
 
 }

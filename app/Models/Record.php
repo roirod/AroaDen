@@ -3,15 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\GetTableNameTrait;
 
 class Record extends Model
 {
-	protected $table = 'record';
-    protected $fillable = ['idpat','medical_record','diseases','medicines','allergies','notes'];
-    protected $primaryKey = 'idpat';
+  use GetTableNameTrait;
 
-    public function patients()
-    {
-        return $this->belongsTo('App\Models\Patients');
-    }    
+  protected $table = 'record';
+  protected $fillable = ['idpat','medical_record','diseases','medicines','allergies'];
+  protected $primaryKey = 'idpat';
+  public $incrementing = false;
+
+  public function patients()
+  {
+    return $this->belongsTo('App\Models\Patients');
+  }
+
 }

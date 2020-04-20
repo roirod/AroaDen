@@ -12,6 +12,42 @@ class servicesSeeder extends Seeder
     			'name' => 'Empaste',
     			'price' => '44',
     		],
+            [
+                'name' => 'Empaste grande',
+                'price' => '55',
+            ],
+            [
+                'name' => 'Empaste pequeño',
+                'price' => '33',
+            ],
+            [
+                'name' => 'Cirugía',
+                'price' => '622',
+            ],
+            [
+                'name' => 'Extracción de pieza',
+                'price' => '111',
+            ],
+            [
+                'name' => 'Implante',
+                'price' => '1222',
+            ],
+            [
+                'name' => 'Odontopediatría',
+                'price' => '233',
+            ],
+            [
+                'name' => 'Periodoncia',
+                'price' => '244',
+            ],
+            [
+                'name' => 'Prótesis',
+                'price' => '543',
+            ],
+            [
+                'name' => 'Bruxismo',
+                'price' => '123',
+            ],
     		[
     			'name' => 'Endodoncia',
     			'price' => '333',
