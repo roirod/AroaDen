@@ -15,8 +15,8 @@ class PdfLib
     'charset' => 'UTF-8',
     'font' => "Helvetica",
     'fontSize' => 8,
-    'fontColor' => array(.30, .30, .30),
-    'co_x' => 40,
+    'fontColor' => array(.25, .25, .25),
+    'co_x' => 50,
     'co_y' => '',
     'msg' => ''
   ];
@@ -31,6 +31,7 @@ class PdfLib
 
     $this->pdfData = $pdfData;
     $this->pdfName = $pdfName;
+    $this->options['msg'] = Lang::get('aroaden.page_from_to', ['from' => "{PAGE_NUM}", 'to' => "{PAGE_COUNT}"]);
   }
 
   public function downloadPdf()
@@ -49,7 +50,6 @@ class PdfLib
     $canvas = $dom_pdf->get_canvas();
 
     $this->options['co_y'] = $canvas->get_height() - 35;
-    $this->options['msg'] = Lang::get('aroaden.page_from_to', ['from' => "{PAGE_NUM}", 'to' => "{PAGE_COUNT}"]);
 
     $canvas->page_text(
       $this->options['co_x'],
