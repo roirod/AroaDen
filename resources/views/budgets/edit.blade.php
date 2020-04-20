@@ -54,14 +54,8 @@
                 <div class="btn-toolbar pad4" role="toolbar">
 
                   <div class="btn-group pull-right">
-                    <a href="{!! url("/$main_route/downloadPdf/$uniqid") !!}" class="btn btn-default btn-sm">
+                    <a href="{!! url("/$main_route/downloadPdf/$uniqid") !!}" class="btn btn-info btn-sm">
                       {!! @trans('aroaden.download_pdf') !!}
-                    </a>
-                  </div>
-
-                  <div class="btn-group pull-right">
-                    <a href="{!! url("/$main_route/viewMode/$uniqid") !!}" target="_blank" class="btn btn-success btn-sm">
-                      {!! @trans('aroaden.view') !!}
                     </a>
                   </div>
 

@@ -113,8 +113,9 @@ return [
   'db_query_error'   => 'Error en la consulta a la base de datos',
   'name_in_use' => 'Nombre - :name - ya en uso, use cualquier otro',
   'dni_in_use' => 'Repetido. El dni: :dni, pertenece a: :surname, :name',
-
+  'page_from_to' => 'Pag. :from de :to',
   'session_expired' => 'La sessión ha caducado.',
+
 
   'company' => 'Empresa',
   'company_data' => 'Datos empresa',

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Libs\PdfLib;
 use Illuminate\Http\Request;
 use App\Models\BudgetsText;
 use App\Models\Patients;
 use App\Models\Services;
 use App\Models\Budgets;
-use Validator;
 use Lang;
-use PDF;
 use DB;
 
 class BudgetsController extends BaseController
@@ -175,35 +174,20 @@ class BudgetsController extends BaseController
     return $this->loadView();
   }
 
-  public function viewMode(Request $request, $uniqid)
-  {
-    $uniqid = $this->sanitizeData($uniqid);
-
-    $this->commonMode($uniqid);
-
-    $this->view_name = 'mode';
-
-    return $this->loadView();
-  }
-
-
   public function downloadPdf(Request $request, $uniqid)
   {
     $uniqid = $this->sanitizeData($uniqid);
 
     $this->commonMode($uniqid);
 
-    $this->views_folder .= '.includes';
-    $this->view_name = 'pdf';
-
-    $viewString = $this->returnViewString();
-    $pdf = PDF::loadHTML($viewString, 'UTF-8');
-    //$pdf->render();
-
     $patient = $this->view_data['patient'];
     $created_at = $this->view_data['created_at'];   
     $pdfName = $patient->name.'_'.$patient->surname.'_'.$created_at.'.pdf';
-    return $pdf->download($pdfName);
+    $pdfData = $this->returnViewString();
+
+    $pdfObj = new PdfLib($pdfData, $pdfName);
+
+    return $pdfObj->downloadPdf();
   }
 
   private function commonMode($uniqid)
@@ -217,6 +201,9 @@ class BudgetsController extends BaseController
     $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
     $total = $this->model::GetTotal($uniqid);
     $company = $this->getSettings();
+
+    $this->views_folder .= '.includes';
+    $this->view_name = 'pdf';
 
     $this->view_data['patient'] = $patient;
     $this->view_data['text'] = $budgetstext->text;

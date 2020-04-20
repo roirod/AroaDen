@@ -1,27 +1,39 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <p class="fonsi16">
+
+    <p class="fonsi14">
       {!! $company->company_name !!}
-    </p> 
-
-    <p class="fonsi12">
-
-      {!! $company->company_address !!}
-      <br>
-
-      {!! $company->company_city !!}
-      <br> 
-
-      Telf: {!! $company->company_tel1 !!}
-      <br> 
-
-      Email: {!! $company->company_email !!}
-      <br><br>
-
-      Presupuesto: {!! DatTime($created_at) !!} para {!! $patient->name.' '.$patient->surname.'('.$patient->dni.')' !!}
     </p>
+
     <br>
+
+    <table class="table">
+      <tr>
+        <td class="wid180">
+          {!! $company->company_address !!}
+          <br>
+
+          {!! $company->company_city !!}
+          <br> 
+
+          Telf: {!! $company->company_tel1 !!}
+          <br> 
+
+          Email: {!! $company->company_email !!}
+        </td>
+
+        <td class="wid180">
+          Presupuesto: {!! DatTime($created_at) !!}
+          <br>
+          {!! $patient->name.' '.$patient->surname !!}
+          <br>
+          {!! $patient->dni !!}
+        </td>
+
+      </tr>
+    </table>
+
   </div>
 </div>
 
@@ -73,17 +85,17 @@
       </tr>
     </table>
 
-   <br> <br>
+   <br>
 
 </div> </div> 
 
 <div class="row">
-  <div class="col-sm-12 fonsi11">
+  <div class="col-sm-12">
 
    <p>
     {!! nl2br(e($text)) !!}
 
-    <br> <br>
+    <br>
 
     {!! nl2br(e($company->budget_text)) !!}
    </p>

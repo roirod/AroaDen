@@ -83,4 +83,7 @@
   'ubuntu' => array(
     'normal' => $fontDir . '/ubuntu-normal_47e00ddc85b6f98db1ca671885f51a0f',
   ),
+  'fontawesome' => array(
+    'normal' => $fontDir . '/fontawesome-normal_dd8072b6608ca7d01cd87acd38d44ae9',
+  ),
 ) ?>

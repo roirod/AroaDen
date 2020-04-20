@@ -1,5 +1,5 @@
 
-@extends('budgets.includes.pdf_layout')
+@extends('layouts.pdf_layout')
 
 @section('content')
 

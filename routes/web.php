@@ -97,7 +97,6 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::get($route["pays"].'/list', 'PaysController@list');
 		Route::get($route["pays"], 'PaysController@index');
 
-		Route::get($route["budgets"].'/viewMode/{uniqid}', 'BudgetsController@viewMode');
 		Route::get($route["budgets"].'/downloadPdf/{uniqid}', 'BudgetsController@downloadPdf');
 		Route::get($route["budgets"].'/{idpat}/create', 'BudgetsController@create');
 		Route::get($route["budgets"].'/{uniqid}/edit', 'BudgetsController@edit');		
