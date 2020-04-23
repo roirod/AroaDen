@@ -140,7 +140,7 @@ return [
   'edit_position' => 'Editar cargo',
   'staff_positions_delete_warning' => 'Cargo añadido a personal, no se puede eliminar',
 
-
+  'create_invoice'   => 'Crear factura',
   'invoices' => 'Facturas',
   'complete' => 'Completa',
   'rectification' => 'Rectificativa',

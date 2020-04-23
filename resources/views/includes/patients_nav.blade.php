@@ -8,9 +8,7 @@
   			<li><a href="{{ url($routes['patients']."/$idnav/file") }}"> {{ Lang::get('aroaden.files') }} </a></li>
   			<li><a href="{{ url($routes['patients']."/$idnav/odontogram") }}"> {{ Lang::get('aroaden.odontogram') }} </a></li>
   			<li><a href="{{ url($routes['budgets']."/$idnav") }}"> {{ Lang::get('aroaden.budgets') }} </a></li>
-  			<!--
   			<li><a href="{{ url($routes['invoices']."/$idnav") }}"> {{ Lang::get('aroaden.invoices') }} </a></li>
-  			-->
   		@endif
 
      </ul>
