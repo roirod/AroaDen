@@ -1,9 +1,9 @@
-##Donations 
+### Donate
 
 https://www.patreon.com/RoiRodrigo
 
 
-## AroaDen
+### AroaDen
 
 Dental clinic software
 
