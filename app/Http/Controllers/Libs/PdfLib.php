@@ -7,6 +7,7 @@ use PDF;
 
 class PdfLib
 {
+  const A4_HEIGHT = 841.89;
 
   private $pdfObj;
   public $pdfName;
@@ -30,8 +31,9 @@ class PdfLib
       throw new Exception("Error pdfName");
 
     $this->pdfData = $pdfData;
-    $this->pdfName = $pdfName;
+    $this->pdfName = html_entity_decode($pdfName);
     $this->options['msg'] = Lang::get('aroaden.page_from_to', ['from' => "{PAGE_NUM}", 'to' => "{PAGE_COUNT}"]);
+    $this->options['co_y'] = self::A4_HEIGHT - 35;
   }
 
   public function downloadPdf()
@@ -44,12 +46,8 @@ class PdfLib
   private function renderPdf()
   {
     $this->pdfObj = PDF::loadHTML($this->pdfData, $this->options['charset']);
-
-    $this->pdfObj->output();
     $dom_pdf = $this->pdfObj->getDomPDF();
     $canvas = $dom_pdf->get_canvas();
-
-    $this->options['co_y'] = $canvas->get_height() - 35;
 
     $canvas->page_text(
       $this->options['co_x'],

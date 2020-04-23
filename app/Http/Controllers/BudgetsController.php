@@ -181,10 +181,10 @@ class BudgetsController extends BaseController
     $this->commonMode($uniqid);
 
     $patient = $this->view_data['patient'];
-    $created_at = $this->view_data['created_at'];   
-    $pdfName = $patient->name.'_'.$patient->surname.'_'.$created_at.'.pdf';
+    $created_at = $this->view_data['created_at'];
+    $created_at = $this->convertYmdToDmY($created_at);
+    $pdfName = "$patient->name $patient->surname $created_at.pdf";
     $pdfData = $this->returnViewString();
-
     $pdfObj = new PdfLib($pdfData, $pdfName);
 
     return $pdfObj->downloadPdf();
