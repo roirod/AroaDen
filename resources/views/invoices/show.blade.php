@@ -7,62 +7,90 @@
   @include('includes.messages')
 
   <div class="row">
-
     <div class="col-sm-12 pad10">
       @include('form_fields.show.name')
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col-sm-5">
-        <fieldset>
+  <div class="row">
 
-          <legend>
-            {!! @trans('aroaden.create_invoice') !!}
-          </legend>
+    <div class="col-sm-3">
+      <fieldset>
 
-          <form class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
-          	{!! csrf_field() !!}
+        <legend>
+          {!! @trans('aroaden.create_invoice') !!}
+        </legend>
 
-          	<input type="hidden" name="id" value="{{ $idpat }}">
-          	
-            <label class="control-label text-left pad10">
-              {{ @trans('aroaden.select_invoice_type') }}
-            </label>
+        <form class="form" action="{{ url("/$main_route/$form_route") }}" method="post">
+        	{!! csrf_field() !!}
 
-            <div class="col-sm-7 pad10">
-      				<select name="type" class="form-control" required>
-                @foreach ($invoice_types as $key => $val)
+        	<input type="hidden" name="id" value="{{ $idpat }}">
+        	
+          <label class="control-label text-left pad4">
+            {{ @trans('aroaden.select_invoice_type') }}
+          </label>
 
-                  @if($val == $default_type)
+          <div class="col-sm-10 pad4">
+    				<select name="type" class="form-control" required>
+              @foreach ($invoice_types as $key => $val)
 
-                    <option value="{{ $val }}" selected>
+                @if($val == $default_type)
 
-                  @else
+                  <option value="{{ $val }}" selected>
 
-      							<option value="{{ $val }}">
+                @else
 
-                  @endif
+    							<option value="{{ $val }}">
 
-                      {!! @trans("aroaden.".$val) !!}
-                    </option>
+                @endif
 
-      					@endforeach
-      				</select>
-            </div>
+                    {!! @trans("aroaden.".$val) !!}
+                  </option>
 
-            <br>
+    					@endforeach
+    				</select>
+          </div>
 
-            <div class="col-sm-12 pad10">
-      				<button type="submit" class="text-left btn btn-primary btn-md">
-                {{ Lang::get('aroaden.create') }}
-      					<i class="fa fa-chevron-circle-right"></i>
-      				</button>
-            </div>
+          <br>
 
-          </form>
+          <div class="col-sm-12 pad4">
+    				<button type="submit" class="text-left btn btn-primary btn-md">
+              {{ Lang::get('aroaden.create') }}
+    					<i class="fa fa-chevron-circle-right"></i>
+    				</button>
+          </div>
 
-        </fieldset>
-      </div> 
+        </form>
+
+      </fieldset>
+    </div>
+
+    <div class="col-sm-9">
+      <p>
+        {!! @trans('aroaden.invoices') !!}
+      </p>
+
+      <div class="mar4"></div>
+
+      <div class="panel panel-default">
+
+        <table class="table table-striped table-bordered table-hover">
+          <tr class="fonsi14">
+            <td class="wid180">Tratamiento</td>
+            <td class="wid50 textcent">Cantidad</td>
+            <td class="wid50"></td>
+            <td class="wid70 textcent">Precio</td>
+          </tr>
+        </table>
+
+        <div class="box400">
+          <table class="table table-striped table-bordered table-hover">
+
+
+        
+          </table> 
+        </div> 
+      </div>
     </div>
 
   </div>

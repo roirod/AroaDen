@@ -17,7 +17,7 @@ class InvoicesController extends BaseController
 {
   private $invoice_types = [
     'Complete' => 'complete',
-    'Rectification' => 'rectification',
+    'Rectification' => 'rectification'
   ];
 
   public function __construct(Invoices $invoices)
@@ -31,7 +31,7 @@ class InvoicesController extends BaseController
 
     $fields = [      
       'date2' => true,
-      'no_tax_msg' => true,
+      'no_tax_msg' => true
     ];
 
     $this->form_fields = array_replace($this->form_fields, $fields);

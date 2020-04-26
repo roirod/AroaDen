@@ -6,5 +6,5 @@ use Illuminate\Http\Request;
 
 interface InvoiceInterface
 {	
-    public function createInvoice($request, $id);
+  public function createInvoice(Request $request, $id);
 }
