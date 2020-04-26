@@ -51,9 +51,9 @@
     				</select>
           </div>
 
-          <br>
-
           <div class="col-sm-12 pad4">
+            <div class="mar10"></div>
+
     				<button type="submit" class="text-left btn btn-primary btn-md">
               {{ Lang::get('aroaden.create') }}
     					<i class="fa fa-chevron-circle-right"></i>
