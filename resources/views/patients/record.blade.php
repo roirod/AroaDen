@@ -10,8 +10,6 @@
     @include('form_fields.show.name')
   </div>
 
-
-
   <div class="row">
     <div class="col-sm-12">
       <div class="mar10"></div>
