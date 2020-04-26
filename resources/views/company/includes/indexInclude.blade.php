@@ -8,19 +8,15 @@
 
       <fieldset>
         <legend>
-          <div class="input-group"> 
-            <span class="input-group-btn pad10"> <p>{!! @trans('aroaden.company_data') !!}</p> </span>
-            <div class="btn-toolbar pad4" role="toolbar">
-              <div class="btn-group">
-                <a href="{{ url($routes['company']."/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
-                  <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
-                </a>
-              </div> 
-            </div> 
-          </div> 
+          <div>
+            {!! @trans('aroaden.company_data') !!}
+            <span class="mar4">
+              <a href="{{ url($routes['company']."/$form_route") }}" role="button" id="edit_button" class="btn btn-sm btn-success">
+                <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
+              </a>
+            </span>
+          </div>
         </legend>
-
-        <br>
 
         <div class="row">
           <div class="col-sm-12 fonsi15">

@@ -298,7 +298,7 @@ h1 small, h5 small {
 fieldset{
   min-width:0;
   margin:0;
-  padding: 12px !important;
+  padding: 10px !important;
   border: 1px groove #f4b940 !important;
   border-radius: 8px 8px 8px 8px;
   -moz-border-radius: 8px 8px 8px 8px;
@@ -310,8 +310,8 @@ legend{
   display:block;
   width:100%;
   padding: 5px !important;
-  margin-bottom:20px;
-  font-size:16px;
+  margin-bottom:10px;
+  font-size:15px;
   line-height:inherit;
   color:#333;
   border:0;

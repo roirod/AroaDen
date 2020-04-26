@@ -3,6 +3,6 @@
 
 @section('content')
 
-  @include('staff_positions.common')
+  @include('patients.includes.create_edit')
 
 @endsection
