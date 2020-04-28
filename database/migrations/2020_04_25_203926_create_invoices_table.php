@@ -14,8 +14,20 @@ class CreateInvoicesTable extends Migration
     public function up()
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            $table->increments('number');
+            $table->Integer('idpat')->unsigned();
+            $table->year('serial');
+            $table->char('type', 16);
+            $table->Integer('parent_num')->unsigned();
+            $table->date('exp_date');
+            $table->string('no_tax_msg', 5);
+            $table->text('notes')->nullable();
+            $table->index('idpat');
+
+            $table->foreign('idpat')
+                    ->references('idpat')->on('patients')
+                    ->onDelete('cascade');
         });
     }
 

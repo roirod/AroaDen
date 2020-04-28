@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceLines extends Model
 {
-  protected $table = 'invoiceLines';
-  protected $fillable = ['idtre','idser','price','units','tax'];
+  protected $table = 'invoice_lines';
+  protected $fillable = ['number','idtre'];
   protected $primaryKey = 'idinli';
 }

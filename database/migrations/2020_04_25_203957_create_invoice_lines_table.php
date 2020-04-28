@@ -14,8 +14,15 @@ class CreateInvoiceLinesTable extends Migration
     public function up()
     {
         Schema::create('invoice_lines', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->engine = 'InnoDB';
+            $table->bigIncrements('idinli');
+            $table->Integer('number')->unsigned();
+            $table->bigInteger('idtre')->unsigned();
+            $table->index('number');
+
+            $table->foreign('number')
+                    ->references('number')->on('invoices')
+                    ->onDelete('cascade');
         });
     }
 

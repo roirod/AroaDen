@@ -27,7 +27,7 @@
         	<input type="hidden" name="id" value="{{ $idpat }}">
         	
           <label class="control-label text-left pad4">
-            {{ @trans('aroaden.select_invoice_type') }}
+            {{ @trans('aroaden.select_type') }}
           </label>
 
           <div class="col-sm-10 pad4">

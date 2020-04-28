@@ -117,6 +117,7 @@ return [
   'dni_in_use' => 'Repetido. El dni: :dni, pertenece a: :surname, :name',
   'page_from_to' => 'Pag. :from de :to',
   'session_expired' => 'La sessión ha caducado.',
+  'select_type' => 'Selecciona el tipo',
 
 
   'company' => 'Empresa',
@@ -143,12 +144,11 @@ return [
   'staff_positions_delete_warning' => 'Cargo añadido a personal, no se puede eliminar',
 
   'create_invoice'   => 'Crear factura',
+  'invoice' => 'Factura',
   'invoices' => 'Facturas',
   'complete' => 'Completa',
   'rectification' => 'Rectificativa',
-  'select_invoice_type' => 'Selecciona el tipo de factura',
-  'no_tax_msg' => 'Mensaje de factura exenta de IVA',
-  'no_tax_msg_text' => ' "Factura exenta de I.V.A. (artículo 20. Uno. 5º- Ley 37/1992)"',
+  'no_tax_msg' => ' "Factura exenta de IVA (artículo 20. Uno. 5º- Ley 37/1992)"',
 
   'appointments' => 'Citas',
   'create_appointment' => 'Crear cita',
