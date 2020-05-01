@@ -16,8 +16,8 @@ class CreateStaffPositionsEntriesTable extends Migration
         Schema::create('staff_positions_entries', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->integer('idsta')->unsigned();
-            $table->integer('idstpo')->unsigned();
+            $table->smallInteger('idsta')->unsigned();
+            $table->smallInteger('idstpo')->unsigned();
             $table->index('idsta');     
             $table->index('idstpo'); 
 

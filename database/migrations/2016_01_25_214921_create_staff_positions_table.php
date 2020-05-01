@@ -15,8 +15,8 @@ class CreateStaffPositionsTable extends Migration
     {
         Schema::create('staff_positions', function (Blueprint $table) {
             $table->engine = 'InnoDB';            
-            $table->increments('idstpo');
-            $table->string('name', 44);
+            $table->smallIncrements('idstpo');
+            $table->string('name', 88);
             $table->timestamps();
             $table->unique('name');
         });

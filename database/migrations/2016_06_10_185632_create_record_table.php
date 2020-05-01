@@ -9,7 +9,7 @@ class CreateRecordTable extends Migration
     {
         Schema::create('record', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->Integer('idpat')->unsigned();
+            $table->mediumInteger('idpat')->unsigned();
             $table->text('medical_record')->nullable();
             $table->text('diseases')->nullable();
             $table->text('medicines')->nullable();
