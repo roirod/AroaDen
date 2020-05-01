@@ -24,11 +24,11 @@ img.center {
 }
 
 .fa-menusize {
-    font-size: 2.1rem !important;
+  font-size: 1.8rem !important;
 }
 
 .fa-min {
-    font-size: 1.1rem !important;
+  font-size: 1.1rem !important;
 }
 
 .borderradius { 
@@ -44,15 +44,15 @@ img.center {
 }
 
 .widCol1 { 
-  width: 100px !important; 
-  max-width: 100px !important; 
-  min-width: 100px !important; 
+  width: 80px !important; 
+  max-width: 80px !important; 
+  min-width: 80px !important; 
 }
 
 .widCol2 { 
-  width: 1180px !important; 
-  max-width: 1180px !important; 
-  min-width: 1180px !important; 
+  width: 1200px !important; 
+  max-width: 1200px !important; 
+  min-width: 1200px !important; 
 }
 
 .minHeight { min-height: 700px !important; }
