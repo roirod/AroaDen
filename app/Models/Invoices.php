@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Invoices extends Model
 {
 	protected $table = 'invoices';
-  protected $fillable = ['serial','type','parent_num','exp_date','no_tax_msg','notes'];
+  protected $fillable = ['serial','idpat','type','parent_num','parent_serial','exp_date','no_tax','notes'];
   protected $primaryKey = 'number';
 }

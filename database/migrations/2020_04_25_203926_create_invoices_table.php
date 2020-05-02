@@ -16,10 +16,11 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('number');
-            $table->mediumInteger('idpat')->unsigned();
             $table->year('serial');
+            $table->mediumInteger('idpat')->unsigned();
             $table->char('type', 16);
             $table->Integer('parent_num')->unsigned()->nullable();
+            $table->year('parent_serial')->nullable();
             $table->date('exp_date');
             $table->string('no_tax', 5);
             $table->text('notes')->nullable();
