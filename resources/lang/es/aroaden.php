@@ -39,7 +39,9 @@ return [
   'no_files_for_upload'   => 'No has seleccinado ningún archivo',
   'no_file'   => 'No existe el archivo',
   'add'   => 'Añadir',
-  'remove' => 'Borrar',
+  'added'   => 'Añadidos',
+  'remove' => 'Quitar',
+  'required' => 'requirido',
   'male'   => 'Masculino',
   'female'   => 'Femenino',
   'permissions'   => 'Permisos',
@@ -55,6 +57,7 @@ return [
   'units' => 'Cantidad',
   'new'   => 'Nuevo/a',
   'save'   => 'Guardar',
+  'save_all'   => 'Guardar todo',
   'create'   => 'Crear',
   'edit'   => 'Editar',
   'delete' => 'Eliminar',
@@ -73,7 +76,7 @@ return [
   'profile_photo'   => 'Foto de perfil',
   'download_pdf'   => 'Descargar pdf ',
 
-
+  'text' => 'Texto',
   'place'   => 'Lugar',
   'age'   => 'Edad',
   'years'   => 'Años',
@@ -118,6 +121,7 @@ return [
   'page_from_to' => 'Pag. :from de :to',
   'session_expired' => 'La sessión ha caducado.',
   'select_type' => 'Selecciona el tipo',
+  'type' => 'Tipo',
 
 
   'company' => 'Empresa',
@@ -149,6 +153,8 @@ return [
   'complete' => 'Completa',
   'rectification' => 'Rectificativa',
   'no_tax_msg' => ' "Factura exenta de IVA (artículo 20. Uno. 5º- Ley 37/1992)"',
+  'serial' => 'Serie',
+  'exp_date' => 'Fecha expedición',
 
   'appointments' => 'Citas',
   'create_appointment' => 'Crear cita',
@@ -200,6 +206,8 @@ return [
   'add_treatments' => 'Añadir tratamiento al paciente',
   'edit_treatments' => 'Editar tratamiento',
   'no_add_treatments' => 'No has añadido ningún tratamiento.',
+  'treatments_added'   => 'Tratamientos añadidos',
+  'treatments_paid'   => 'Tratamientos pagados',
 
   'budgets' => 'Presupuestos',
   'create_budget' => 'Crear presupuesto',

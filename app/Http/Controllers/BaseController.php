@@ -201,8 +201,8 @@ class BaseController extends Controller
    */
   public function __construct()
   {
-    //setlocale(LC_ALL, env('APP_LOCALE'));
-    //date_default_timezone_set(env('APP_TIMEZONE'));
+    setlocale(LC_ALL, env('APP_LOCALE'));
+    date_default_timezone_set(env('APP_TIMEZONE'));
 
     $this->config = Config::get('aroaden');
 
