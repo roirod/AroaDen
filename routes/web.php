@@ -40,6 +40,9 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 		Route::get($route["services"].'/{id}/edit', 'ServicesController@edit');
 		Route::post($route["services"].'/{id}', 'ServicesController@update');
+
+		Route::get($route["invoices"].'/{number}/edit', 'InvoicesController@edit');
+		Route::delete($route["invoices"].'/{number}', 'InvoicesController@destroy');
 	});
 
 	Route::group(['middleware' => ['auth']], function () use ($route) {
@@ -109,9 +112,11 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		Route::resource($route["treatments"], 'TreatmentsController', ['except' => ['index', 'create', 'show']]);
 
-		Route::get($route["invoices"].'/{id}/create', 'InvoicesController@create');
-		Route::post($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');
-		Route::resource($route["invoices"], 'InvoicesController', ['except' => ['index', 'update', 'edit', 'destroy']]);
+		Route::get($route["invoices"].'/{idpat}/create', 'InvoicesController@create');
+		Route::get($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');
+		Route::post($route["invoices"].'/preview', 'InvoicesController@preview');
+		Route::get($route["invoices"].'/downloadPdf/{number}', 'InvoicesController@downloadPdf');
+		Route::resource($route["invoices"], 'InvoicesController', ['except' => ['index']]);
 	});
 
 });

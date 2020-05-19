@@ -192,6 +192,11 @@ class BaseController extends Controller
   protected $date_max_days = 90;
 
   /**
+   * @var int $date_max_days
+   */
+  protected $downloadPdf = true;
+
+  /**
    * @var array $misc_array  miscelaneus array
    */
   protected $misc_array = [];

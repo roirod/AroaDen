@@ -13,7 +13,7 @@ function addText($text) {
 }
 
 function numformat($num) {
-	$num = number_format($num, 0, '', '.');
+	$num = number_format($num, 2, ',', '.');
 	return $num;
 };
 

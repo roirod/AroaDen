@@ -268,7 +268,10 @@ h1 small, h5 small {
 .mar60 { margin: 60px; }
 .mar70 { margin: 70px; }
 
+.pad2 { padding: 2px; }
 .pad4 { padding: 4px; }
+.pad6 { padding: 6px; }
+.pad8 { padding: 8px; }
 .pad10 { padding: 10px; }
 .pad20 { padding: 20px; }
 .pad30 { padding: 30px; }

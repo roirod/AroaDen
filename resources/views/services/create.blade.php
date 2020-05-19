@@ -11,8 +11,8 @@
 
       <form id="form" class="createServiceForm form" action="{!! $routes['services'] !!}" method="post">
         @include('form_fields.common_alternative')
+      </form>
 
-      @include('form_fields.fields.closeform')
     </fieldset>
   </div>
 </div>
@@ -22,23 +22,56 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+
+
+
+    $('input[name="price"]').on('change', function(evt) {
+      var tax = $('input[name="tax"]').val();
+      var price = $(this).val();
+
+
+
+console.log('----------------  tax  ----------------------------');
+console.dir(tax);
+console.log('--------------------------------------------');
+
+
+console.log('----------------  price  ----------------------------');
+console.dir(price);
+console.log('--------------------------------------------');
+
+      
+
+
+    });
+
+
+    $('input[name="tax"]').on('change', function(evt) {
+      var tax = this.val();
+
+
+
+    });
+
+
+
+
+
     $('form.createServiceForm').on('submit', function(evt) {
       evt.preventDefault();
       evt.stopPropagation();
 
       var obj = {
         url  : $(this).attr('action'),
-        data : $(this).serialize(),
+        data : $(this).serialize()
       };
-
-      lastRoute = routes.services + '/ajaxIndex';
 
       util.processAjaxReturnsJson(obj).done(function(response) {
         if (response.error)
           return util.showPopup(response.msg, false);
 
         var obj = {
-          url  : lastRoute
+          url  : routes.services + '/ajaxIndex'
         };
 
         util.processAjaxReturnsHtml(obj);

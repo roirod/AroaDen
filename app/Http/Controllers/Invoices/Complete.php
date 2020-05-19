@@ -14,12 +14,7 @@ class Complete extends InvoicesController implements InvoiceInterface
   }
 
   public function createInvoice(Request $request, $id)
-  {
-
-
-
-
-    
+  {   
     return parent::create($request, $id);  
   }
   

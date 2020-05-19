@@ -46,6 +46,12 @@
 
   var util = {
 
+    reload: function() {
+      setTimeout(function(){  
+        return window.location.reload();
+      }, 1600);
+    },
+
     redirectTo: function(string) {
       var string = (string == undefined) ? redirectRoute : string;
 

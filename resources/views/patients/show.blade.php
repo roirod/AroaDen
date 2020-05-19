@@ -112,7 +112,7 @@
 
 							<tr class="fonsi13">
 					 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
-					 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
+					 			<td class="wid95">{!! date('d-m-Y', strtotime($appo->day)) !!}</td>
 					 			<td class="wid50">	
 									<a href="{!! url($routes['appointments']."/$appo->idapp/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 										<i class="fa fa-edit"></i>

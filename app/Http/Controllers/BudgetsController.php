@@ -23,7 +23,7 @@ class BudgetsController extends BaseController
     $this->views_folder = 'budgets';
     $this->model = $budgets;
     $this->model2 = $patients;
-    $this->model3 = $services;
+    $this->model3 = $services;    
   }
 
   public function create(Request $request, $id = false)
@@ -214,6 +214,7 @@ class BudgetsController extends BaseController
     $this->view_data['notaxtotal'] = $notaxtotal[0]->total;
     $this->view_data['total'] = $total[0]->total;
     $this->view_data['company'] = $company;
+    $this->view_data['downloadPdf'] = $this->downloadPdf;    
   }
 
   public function delBudget(Request $request)

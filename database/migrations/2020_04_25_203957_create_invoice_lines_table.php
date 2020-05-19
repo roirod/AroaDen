@@ -28,7 +28,8 @@ class CreateInvoiceLinesTable extends Migration
 
             $table->foreign('number')
                     ->references('number')->on('invoices')
-                    ->onDelete('cascade');
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
         });
     }
 

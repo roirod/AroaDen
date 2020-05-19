@@ -9,7 +9,7 @@ class BaseModel extends Model
 {
   
   protected $query;
-  protected $var;  
+  protected $var;
   protected $toSql = false;
   protected $selectRaw;
   protected $whereRaw;  

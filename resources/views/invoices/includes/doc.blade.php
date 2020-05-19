@@ -3,6 +3,6 @@
 
 @section('content')
 
-  @include('budgets.includes.pdf_common')
+  @include('invoices.includes.content')
 
 @endsection

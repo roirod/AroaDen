@@ -31,7 +31,7 @@
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
         <td class="wid70 textcent">{{ Lang::get('aroaden.edit') }}</td>
         <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
-        <td class="wid70 textcent"></td>        
+        <td class="wid40"></td>        
       </tr>
     </table>
 
@@ -51,7 +51,7 @@
               </a>
             </td>
 
-            <td class="wid70">  
+            <td class="wid70 textcent">  
               <div class="btn-group">
                 <form class="form" action="{!! url($routes['services']."/$obj->idser") !!}" data-removeTr="true" data-count="true" method="POST">
                   <input type="hidden" name="_method" value="DELETE">
@@ -68,7 +68,7 @@
               </div> 
             </td>
 
-            <td class="wid70 textcent"></td>
+            <td class="wid40"></td>
           </tr>
           
         @endforeach
@@ -92,7 +92,7 @@
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
         <td class="wid70 textcent">{{ Lang::get('aroaden.edit') }}</td>
         <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
-        <td class="wid70 textcent"></td>        
+        <td class="wid40"></td>        
       </tr>
     </table>
 

@@ -267,17 +267,6 @@ return [
      'rows'  => ""
     ],
     [ 
-     'name'  => "company_notes",
-     'settting_type'  => "company_data",           
-     'type'  => "textarea",
-     'maxlength'  => "",
-     'col'  => "col-sm-12",
-     'autofocus'  => "",
-     'required'  => "",
-     'pattern'  => "",
-     'rows'  => "4"
-    ],
-    [ 
      'name'  => "budget_text",
      'settting_type'  => "company_data",           
      'type'  => "textarea",
@@ -288,8 +277,6 @@ return [
      'pattern'  => "",
      'rows'  => "4"
     ],
-
-/*
     [ 
      'name'  => "invoice_text",
      'settting_type'  => "company_data",
@@ -300,8 +287,6 @@ return [
      'required'  => "",
      'pattern'  => "",
      'rows'  => "4"
-    ],
-*/
-
+    ]
   ]
 ];
