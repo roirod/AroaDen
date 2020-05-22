@@ -29,8 +29,9 @@ class ServicesController extends BaseController implements BaseInterface
 
     $fields = [
       'name' => true,
-      'price' => true,
       'tax' => true,
+      'price' => true,
+      'pricetax' => true,
       'save' => true
     ];
 

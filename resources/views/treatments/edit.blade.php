@@ -34,11 +34,11 @@
                 <tbody>
                  <tr class="fonsi13">
                    <td class="wid140">{{ $treatment->name }}</td>
-                   <td class="wid95">{{ $treatment->price }} €</td>
+                   <td class="wid95">{{ numformat(calcTotal($treatment->price, $treatment->tax, false)) }} €</td>
                    <td class="wid70">{{ $treatment->units }}</td>             
                    <td class="wid70">{{ $treatment->tax }} %</td>
-                   <td class="wid70">{{ numformat($treatment->units * $treatment->price) }} €</td>
-                   <td class="wid70">{{ $treatment->paid }} €</td>
+                   <td class="wid70">{{ numformat(calcTotal($treatment->price, $treatment->tax, false) * $treatment->units) }} €</td>
+                   <td class="wid70">{{ numformat($treatment->paid) }} €</td>
                    <td class="wid70">{{ date('d-m-Y', strtotime ($treatment->day) ) }}</td>
                  </tr>
                 </tbody>
@@ -55,8 +55,6 @@
         <form class="form save_form" action="/{{ $main_route.'/'.$id }}">
           <input type="hidden" name="_method" value="PUT">
 
-          <input type="hidden" name="price" value="{{ $object->price }}">
-
           @include('form_fields.common_alternative')
         </form>
 
@@ -64,20 +62,22 @@
     </div>
   </div>
 
+  @include('treatments.common')
+
   <script type="text/javascript">
 
     redirectRoute = '/{{ $routes['patients'].'/'.$idnav }}';
     
     $(document).ready(function() {
       $('#multiply_units_price').click(function (evt) {
-        var price = {{ $treatment->price }};
-        
-        return getPaid(price);
+        price = '{{ $treatment->price }}';
+        tax = '{{ $treatment->tax }}';
+
+        return getPaid();
       });
     });
-  </script>
 
-  @include('treatments.common')
+  </script>
 
 @endsection
 

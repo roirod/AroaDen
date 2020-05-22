@@ -43,8 +43,7 @@
           <tr>
             <td class="wid200">{{ $obj->name }}</td>
             <td class="wid70 textcent">{{ $obj->tax }} %</td>             
-            <td class="wid110 textcent">{{ $obj->price }} €</td>
-
+            <td class="wid110 textcent">{{ calcTotal($obj->price, $obj->tax) }} €</td>
             <td class="wid70 textcent">
               <a class="btn btn-sm btn-success editService" type="button" href="{{ $routes['services']."/$obj->idser/edit" }}">
                 <i class="fa fa-edit"></i>

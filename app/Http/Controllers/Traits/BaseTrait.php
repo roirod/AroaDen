@@ -74,7 +74,7 @@ trait BaseTrait {
    */
   protected function formatNumber($num)
   {   
-      return number_format($num, 0, '', '.');
+      return number_format($num, 2, '.', '.');
   }
 
   /**
@@ -151,10 +151,15 @@ trait BaseTrait {
    */
   protected function checkIfPaidIsHigher($units, $price, $paid)
   {   
-      $total = (int)$units * (int)$price;
+      $total = $units * $price;
 
-      if ( (int)$paid > (int)$total )
+      if ( $paid > $total )
           return true;
+  }
+
+  protected function calcTotalTax($price, $tax)
+  {   
+    return (($price * $tax) / 100) + $price;
   }
 
 }

@@ -34,7 +34,7 @@
 
               @else
                 
-                00___
+                00__
 
               @endif
             </span>
@@ -46,7 +46,7 @@
               {{ $serial }}
             </span>
 
-           &nbsp; &nbsp; 
+            <br>
 
             {!! @trans("aroaden.type") !!}: 
             <span class="pad2">

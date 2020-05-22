@@ -11,7 +11,7 @@ class CreateServicesTable extends Migration
             $table->engine = 'InnoDB';            
             $table->smallIncrements('idser');
             $table->string('name',111);
-            $table->mediumInteger('price')->unsigned();
+            $table->decimal('price', 11, 2);
             $table->tinyInteger('tax')->unsigned();
             $table->timestamps();
             $table->unique('name');       

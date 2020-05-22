@@ -1,5 +1,4 @@
 
-
   <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
   <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
   <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
@@ -28,9 +27,13 @@
       $('input[name="paid"]').val(0);
     });
 
-    function getPaid(price) {
+    var price;
+    var tax;
+
+    function getPaid() {
       var units = $('input[name="units"]').val();
-      var paid = util.multiply(units, price);    
+      var total_amount = util.calcTotal(price, tax, false);
+      var paid = util.multiply(units, total_amount, false);    
 
       $('input[name="paid"]').val(paid);
     }

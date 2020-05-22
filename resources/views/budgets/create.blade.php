@@ -46,6 +46,10 @@
 
           		   		@foreach ($main_loop as $service)
 
+                      @php
+                        $price = calcTotal($service->price, $service->tax);                          
+                      @endphp
+
             					<tr>			 	
             					  <td class="wid180">{!! $service->name !!}</td>
             					  <td class="wid50 textcent">
@@ -58,7 +62,7 @@
             						  		<i class="fa fa-plus"></i>
             						  	</button>
             					  </td>
-            					  <td class="wid70 textcent">{!! $service->price !!} €</td>
+            					  <td class="wid70 textcent">{{ $price }} €</td>
             					</tr>	
 
           				  @endforeach

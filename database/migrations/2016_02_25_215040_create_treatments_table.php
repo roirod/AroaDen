@@ -13,8 +13,8 @@ class CreateTreatmentsTable extends Migration
             $table->mediumInteger('idpat')->unsigned();
             $table->smallInteger('idser')->unsigned();
             $table->tinyInteger('units')->unsigned();            
-            $table->mediumInteger('price')->unsigned();
-            $table->mediumInteger('paid')->unsigned();
+            $table->decimal('price', 11, 2);
+            $table->decimal('paid', 11, 2);
             $table->tinyInteger('tax')->unsigned();
             $table->date('day');
             $table->timestamps();

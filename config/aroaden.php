@@ -43,6 +43,7 @@ return [
     'tel3' => false,
     'units' => false,
     'price' => false,
+    'pricetax' => false,
     'paid' => false,            
     'tax' => false,
     'hour' => false,

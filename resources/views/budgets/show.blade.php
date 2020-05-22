@@ -14,7 +14,9 @@
     </div>
 
     	<div class="input-group">
-     		<span class="input-group-btn pad10"> <p> Presupuesto </p> </span>
+     		<span class="input-group-btn pad10"> 
+          <p> Presupuesto </p> 
+        </span>
     		<div class="btn-toolbar pad4" role="toolbar"> 
       		<div class="btn-group">
           		<a href="{!! url("/$main_route/$idpat/create") !!}" role="button" class="btn btn-sm btn-primary">
@@ -88,7 +90,12 @@
     	 			<td class="wid180">{!! $bud->name !!}</td>
     	 			<td class="wid95 textcent">{!! $bud->units !!}</td>
     	 			<td class="wid70 textcent">{!! $bud->tax !!} %</td>
-            <td class="wid95 textcent">{!! $bud->price !!} €</td>
+
+            @php
+              $price = calcTotal($bud->price, $bud->tax);                          
+            @endphp
+
+            <td class="wid95 textcent">{!! $price !!} €</td>
     			</tr>
 
     	    <?php $created_at = $bud->created_at; ?>

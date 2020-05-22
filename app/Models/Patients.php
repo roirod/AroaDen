@@ -88,9 +88,9 @@ class Patients extends BaseModel
     if ($sWhere != '')
       $where = "
         WHERE 
-            surname LIKE '%". $sWhere ."%' 
-            OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
-            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
+          surname LIKE '%". $sWhere ."%' 
+          OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+          OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
       ";
 
     if ($sOrder != '') {
@@ -138,7 +138,7 @@ class Patients extends BaseModel
     if ($sWhere != '')
       $having = "
         AND (
-            surname_name LIKE '%". $sWhere ."%'
+          surname_name LIKE '%". $sWhere ."%'
         ) 
       ";
 
@@ -151,9 +151,9 @@ class Patients extends BaseModel
     $query = "
       SELECT 
         pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-        SUM(tre.units*tre.price) as total, 
-        SUM(tre.paid) as paid, 
-        SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+        ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)), 2) AS total,
+        ROUND(SUM(tre.paid), 2) AS paid,
+        ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)) - SUM(tre.paid), 2) AS rest
       FROM 
         treatments tre
       INNER JOIN 
@@ -176,7 +176,8 @@ class Patients extends BaseModel
       SELECT count(*) AS total
       FROM (
         SELECT 
-          pa.idpat, SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+          pa.idpat, 
+          ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)) - SUM(tre.paid), 2) AS rest
         FROM 
           treatments tre
         INNER JOIN 
@@ -208,7 +209,7 @@ class Patients extends BaseModel
       FROM (
         SELECT 
           CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-          SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+          ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)) - SUM(tre.paid), 2) AS rest
         FROM 
           treatments tre
         INNER JOIN 

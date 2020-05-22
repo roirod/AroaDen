@@ -12,8 +12,17 @@ function addText($text) {
 	';
 }
 
+function calcTotal($price, $tax, $numformat = true) {
+  $total_amount = (($price * $tax) / 100) + $price;
+
+  if ($numformat)
+  	return numformat($total_amount);
+
+  return $total_amount;
+};
+
 function numformat($num) {
-	$num = number_format($num, 2, ',', '.');
+	$num = number_format($num, 2, '.', '.');
 	return $num;
 };
 

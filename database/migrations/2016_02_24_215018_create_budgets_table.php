@@ -12,7 +12,7 @@ class CreateBudgetsTable extends Migration
             $table->engine = 'InnoDB';
             $table->mediumInteger('idpat')->unsigned();
             $table->smallInteger('idser')->unsigned();
-            $table->mediumInteger('price')->unsigned();
+            $table->decimal('price', 11, 2);
             $table->tinyInteger('tax')->unsigned()->default(0);
             $table->tinyInteger('units')->unsigned()->default(1);   
             $table->string('uniqid', 16);

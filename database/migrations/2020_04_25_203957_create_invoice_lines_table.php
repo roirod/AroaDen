@@ -19,9 +19,9 @@ class CreateInvoiceLinesTable extends Migration
             $table->Integer('number')->unsigned();
             $table->bigInteger('idtre')->unsigned();
             $table->smallInteger('idser')->unsigned();
-            $table->tinyInteger('units')->unsigned();            
-            $table->mediumInteger('price')->unsigned();
-            $table->mediumInteger('paid')->unsigned();
+            $table->tinyInteger('units')->unsigned();
+            $table->decimal('price', 11, 2);
+            $table->decimal('paid', 11, 2);
             $table->tinyInteger('tax')->unsigned();
             $table->date('day');
             $table->index('number');

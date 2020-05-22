@@ -235,7 +235,7 @@
       console.log('--------------------------------------------');
 
       if (error)
-        return util.showPopup("{{ Lang::get('aroaden.error_message') }}", false, 2500);
+        return _this.showPopup("{{ Lang::get('aroaden.error_message') }}", false, 2500);
 
       window.setTimeout(function () {
         $('#'+id).text(content);
@@ -299,12 +299,68 @@
       return today;
     },
 
-    multiply: function(num1, num2) {
-      var num1 = parseInt(num1, 10);
-      var num2 = parseInt(num2, 10);
+    multiply: function(num1, num2, euroFormat) {
+      var _this = this;
+
+      var euroFormat = (euroFormat == undefined) ? true : false;
+
+      var num1 = parseFloat(num1);
+      var num2 = parseFloat(num2);
       var total = num1 * num2;
 
+      if (euroFormat)
+        total = _this.euroFormat(total);
+
       return total;
+    },
+
+    calcTotal: function(price, tax, euroFormat) {
+      var _this = this;
+
+      var euroFormat = (euroFormat == undefined) ? true : false;
+
+      tax = parseFloat(tax);
+      price = parseFloat(price);
+      var total_amount = ((price * tax) / 100) + price;
+
+      if (euroFormat)
+        total_amount = _this.euroFormat(total_amount);
+
+      console.log('----------------  tax  ----------------------------');
+      console.dir(tax);
+      console.log('--------------------------------------------');
+
+      console.log('----------------  price  ----------------------------');
+      console.dir(price);
+      console.log('--------------------------------------------');
+
+      console.log('----------------  total_amount  ----------------------------');
+      console.dir(total_amount);
+      console.log('--------------------------------------------');
+
+      return total_amount;
+    },
+
+    euroFormat: function(number) {
+      var _this = this;
+
+      return _this.numberFormat(number, 2, ".", '.');
+    },
+
+    numberFormat: function(number, decimals, dec_point, thousands_sep) {
+      number = number.toFixed(decimals);
+
+      var nstr = number.toString();
+      nstr += '';
+      x = nstr.split('.');
+      x1 = x[0];
+      x2 = x.length > 1 ? dec_point + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1))
+          x1 = x1.replace(rgx, '$1' + thousands_sep + '$2');
+
+      return x1 + x2;
     },
 
     onEditResource: function($this) {
