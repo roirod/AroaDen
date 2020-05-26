@@ -40,50 +40,7 @@
 <div class="row">
   <div class="col-sm-12">
 
-    <table class="table table-striped table-bordered">
-      <tr>
-        <td class="wid180">Tratamiento</td>
-        <td class="wid70 textcent">IVA</td>
-        <td class="wid70 textcent">Cantidad</td>
-        <td class="wid70 textcent">Precio</td>      
-      </tr>
-
-      @foreach ($budgets as $bud)
-          
-        <tr> 
-          <td class="wid180"> {!! $bud->name !!} </td>
-          <td class="wid70 textcent"> {!! $bud->tax !!} % </td>
-          <td class="wid70 textcent"> {!! $bud->units !!} </td>
-          <td class="wid70 textcent"> {!! numformat($bud->price) !!} € </td>
-        </tr>
-              
-      @endforeach
-
-      <tr>
-        <td class="wid180">&nbsp;</td>
-        <td class="wid70">&nbsp;</td>
-        <td class="wid70">&nbsp;</td>
-        <td class="wid70">&nbsp;</td>
-      </tr>
-      <tr>
-        <td class="wid180"></td>
-        <td class="wid70">&nbsp;</td>
-        <td class="wid70 textder">Total IVA</td>
-        <td class="wid70 textcent"> {!! numformat($taxtotal) !!} € </td> 
-      </tr>
-      <tr>
-        <td class="wid180"></td>
-        <td class="wid70">&nbsp;</td>
-        <td class="wid70 textder">Total sin IVA</td>
-        <td class="wid70 textcent"> {!! numformat($notaxtotal) !!} € </td> 
-      </tr>
-      <tr>
-        <td class="wid180"></td>
-        <td class="wid70">&nbsp;</td>
-        <td class="wid70 textder">Total</td>
-        <td class="wid70 textcent"> {!! numformat($total) !!} € </td> 
-      </tr>
-    </table>
+   @include('includes.tables.table_items')
 
    <br>
 
@@ -94,9 +51,9 @@
 
    <p>
     {!! nl2br(e($text)) !!}
+   </p>
 
-    <br>
-
+   <p>
     {!! nl2br(e($company->budget_text)) !!}
    </p>
 

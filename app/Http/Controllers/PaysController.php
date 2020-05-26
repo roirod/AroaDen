@@ -14,7 +14,6 @@ class PaysController extends BaseController
 
     $this->main_route = $this->config['routes']['pays'];
     $this->other_route = $this->config['routes']['patients'];
-    $this->view_data['pays_route'] = $this->config['routes']['pays'];
     $this->views_folder = $this->config['routes']['pays'];
     $this->form_route = 'list';        
     $this->model = $patients;      

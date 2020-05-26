@@ -166,7 +166,7 @@ return [
   'no_tax_msg' => '* Factura exenta de IVA (artículo 20. Uno. 5º- Ley 37/1992)',
   'serial' => 'Serie',
   'exp_date' => 'Fecha expedición',
-  'error_invoice_data_change' => 'Es necesario recargar los datos',
+  'error_data_change' => 'Es necesario recargar los datos',
 
   'appointments' => 'Citas',
   'create_appointment' => 'Crear cita',

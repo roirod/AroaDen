@@ -44,9 +44,9 @@
      	<div class="box300">
         <table class="table table-striped table-bordered table-hover">
 
-    	    @foreach($budgets as $bud)
+    	    @foreach($items as $item)
 
-    	    	@if( (isset($created_at) && $created_at != $bud->created_at) || !isset($created_at) )
+    	    	@if( (isset($created_at) && $created_at != $item->created_at) || !isset($created_at) )
 
     	    		<tr class="danger">
     		     	  <td class="wid110"></td>
@@ -64,7 +64,7 @@
     	    		</tr>
 
     					<tr>
-    			 		  <td class="wid110"> {!! DatTime($bud->created_at) !!} </td>
+    			 		  <td class="wid110"> {!! DatTime($item->created_at) !!} </td>
     					  <td class="wid180"></td>
     					  <td class="wid95 textcent"></td>
     					  <td class="wid70 textcent"></td>
@@ -73,9 +73,31 @@
 
               <tr>
                 <td class="wid110">
-                  <a href="{!! url($routes['budgets']."/$bud->uniqid/edit") !!}" role="button" class="btn btn-sm btn-success">
-                     <i class="fa fa-edit"></i> {!! @trans("aroaden.edit") !!}
-                  </a>
+                  <div class="btn-toolbar pad4" role="toolbar">
+
+                    <div class="btn-group">
+                      <a href="{!! url($routes['budgets']."/$item->uniqid/edit") !!}" title="{!! @trans("aroaden.edit") !!}" class="btn btn-sm btn-success">
+                         <i class="fa fa-edit"></i> 
+                      </a>
+                    </div>
+
+                    <div class="btn-group">
+                      <button title="{!! @trans("aroaden.delete") !!}" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-times"></i> <span class="caret"></span> 
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <form class="form" action="{!! url("/$main_route/delBudget") !!}" method="POST">  
+                          {!! csrf_field() !!}
+
+                          <input type="hidden" name="uniqid" value="{!! $item->uniqid !!}"> 
+                          <input type="hidden" name="idpat" value="{!! $idpat !!}"> 
+
+                          <li><button type="submit"> <i class="fa fa-times"></i> Eliminar </button></li>
+                        </form>
+                      </ul>
+                    </div>
+
+                  </div>
                 </td>
                 <td class="wid180"></td>
                 <td class="wid95 textcent"></td>
@@ -87,18 +109,18 @@
 
     			<tr>
     	 			<td class="wid110"></td>
-    	 			<td class="wid180">{!! $bud->name !!}</td>
-    	 			<td class="wid95 textcent">{!! $bud->units !!}</td>
-    	 			<td class="wid70 textcent">{!! $bud->tax !!} %</td>
+    	 			<td class="wid180">{!! $item->name !!}</td>
+    	 			<td class="wid95 textcent">{!! $item->units !!}</td>
+    	 			<td class="wid70 textcent">{!! $item->tax !!} %</td>
 
             @php
-              $price = calcTotal($bud->price, $bud->tax);                          
+              $price = calcTotal($item->price, $item->tax);                          
             @endphp
 
             <td class="wid95 textcent">{!! $price !!} €</td>
     			</tr>
 
-    	    <?php $created_at = $bud->created_at; ?>
+    	    <?php $created_at = $item->created_at; ?>
     			
     	  @endforeach
         

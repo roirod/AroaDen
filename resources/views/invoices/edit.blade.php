@@ -67,12 +67,12 @@
                 <div class="box260">
                   <table class="table table-striped table-bordered table-hover">
 
-                    @foreach($treatments as $treat)
+                    @foreach($items as $item)
                       <tr>
-                        <td class="wid120">{!! $treat->name !!}</td>
-                        <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
-                        <td class="wid60 textcent">{!! $treat->units !!}</td>
-                        <td class="wid40 textcent">{!! $treat->tax !!} %</td>       
+                        <td class="wid120">{!! $item->name !!}</td>
+                        <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($item->day) ) !!}</td>
+                        <td class="wid60 textcent">{!! $item->units !!}</td>
+                        <td class="wid40 textcent">{!! $item->tax !!} %</td>       
                       </tr>   
                     @endforeach
 

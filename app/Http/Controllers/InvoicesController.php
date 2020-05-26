@@ -31,19 +31,92 @@ class InvoicesController extends BaseController
     $this->model = $invoices;
   }
 
+  public function index(Request $request)
+  {   
+    $this->setPageTitle(Lang::get('aroaden.invoices'));
+
+    return parent::index($request);
+  }
+
+  public function list(Request $request)
+  {
+    $aColumns = [ 
+      0 =>'pat.idpat', 
+      1 =>'surname_name',
+      2 => 'inv.number',
+      3 => 'inv.serial',
+      4 => 'inv.type',
+      5 => 'inv.exp_date'
+    ];
+
+    $iDisplayLength = $this->sanitizeData($request->input('iDisplayLength'));
+    $iDisplayStart = $this->sanitizeData($request->input('iDisplayStart'));
+    $sEcho = $this->sanitizeData($request->input('sEcho'));
+
+    $sLimit = "";
+
+    if (isset( $iDisplayStart ) && $iDisplayLength != '-1')
+      $sLimit = "LIMIT ".$iDisplayStart.",". $iDisplayLength;
+
+    $iSortCol_0 = (int)$this->sanitizeData($request->input('iSortCol_0'));
+
+    if (isset($iSortCol_0)) {
+      $sOrder = " ";
+      $bSortable = $this->sanitizeData($request->input('bSortable_'.$iSortCol_0));
+      $sSortDir_0 = $this->sanitizeData($request->input('sSortDir_0'));
+
+      if ($bSortable == "true")
+        $sOrder = $aColumns[$iSortCol_0] ." ". $sSortDir_0;
+
+      if ($sOrder == " ")
+        $sOrder = "";
+    }
+
+    $sWhere = "";
+    $sSearch = $this->sanitizeData($request->input('sSearch'));
+
+    if ($sSearch != "")
+      $sWhere = $sSearch;
+
+    $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
+    $countTotal = $this->model->CountAll();
+    $countFiltered = $this->model::CountFindStringOnField($sWhere);
+    $countFiltered = (int)$countFiltered[0]->total;
+
+    $resultArray = [];
+
+    foreach ($data as $key => $value) {
+      $resultArray[$key][] = "$this->main_route/$value->idpat";
+      $resultArray[$key][] = $value->surname_name;
+      $resultArray[$key][] = $value->number;
+      $resultArray[$key][] = $value->serial;
+      $resultArray[$key][] = Lang::get('aroaden.'.$value->type);
+      $resultArray[$key][] = $this->convertYmdToDmY($value->exp_date);
+    }
+
+    $output = [
+      "sEcho" => intval($sEcho),
+      "iTotalRecords" => $countTotal,
+      "iTotalDisplayRecords" => $countFiltered,
+      "aaData" => $resultArray
+    ];
+
+    $this->echoJsonOuptut($output);  
+  }
+
   public function show(Request $request, $idpat = false)
   {     
     $idpat = $this->sanitizeData($idpat); 
     $this->redirectIfIdIsNull($idpat, $this->other_route);
 
     $object = Patients::FirstById($idpat);
-    $invoices = $this->model->AllByPatient($idpat);   
+    $items = $this->model->AllByPatient($idpat);   
 
     $this->setPageTitle($object->surname.', '.$object->name);
 
     $this->view_data['request'] = $request;
     $this->view_data['object'] = $object;
-    $this->view_data['invoices'] = $invoices;
+    $this->view_data['items'] = $items;
     $this->view_data['invoice_types'] = $this->invoice_types;
     $this->view_data['default_type'] = $this->invoice_types['Complete'];
     $this->view_data['idpat'] = $idpat;
@@ -82,7 +155,7 @@ class InvoicesController extends BaseController
 
     $object = Patients::FirstById($idpat);
     $company = $this->getSettings();
-    $treatments = Treatments::PaidByPatientId($idpat);
+    $items = Treatments::PaidByPatientId($idpat);
     $updatedA = Treatments::getUpdatedPaidByPatientId($idpat);
 
     $this->setPageTitle($object->surname.', '.$object->name);
@@ -90,7 +163,7 @@ class InvoicesController extends BaseController
     $this->view_data['request'] = $request;
     $this->view_data['object'] = $object;
     $this->view_data['company'] = $company;
-    $this->view_data['treatments'] = $treatments;
+    $this->view_data['items'] = $items;
     $this->view_data['type'] = $type;
     $this->view_data['updatedA'] = $updatedA;
     $this->view_data['idpat'] = $idpat;
@@ -175,7 +248,7 @@ class InvoicesController extends BaseController
     $arraysNotEqual = ($updatedA != $updatedNowA);
 
     if ($arraysNotEqual)
-      throw new Exception(Lang::get('aroaden.error_invoice_data_change'));
+      throw new Exception(Lang::get('aroaden.error_data_change'));
   }
 
   private function prepareData()
@@ -184,7 +257,7 @@ class InvoicesController extends BaseController
 
       $number = $this->view_data['number'];
       $invoice = $this->model->FirstById($number);
-      $treatments = InvoiceLines::GetByNumber($number);
+      $items = InvoiceLines::GetByNumber($number);
       $object = Patients::FirstById($invoice->idpat);
 
       $type = $invoice->type;
@@ -205,10 +278,10 @@ class InvoicesController extends BaseController
       $object = Patients::FirstById($idpat);
       $number = $this->model->GetNextNumber();
 
-      $treatments = [];
+      $items = [];
 
       foreach ($idtreArray as $key => $idtre) {
-        $treatments[] = Treatments::FirstById($idtre);
+        $items[] = Treatments::FirstById($idtre);
       }
 
       $this->view_data['number'] = $number;
@@ -219,6 +292,7 @@ class InvoicesController extends BaseController
     $this->view_name = 'doc';
     $this->views_folder .= '.includes';
 
+    $this->view_data['items'] = $items;
     $this->view_data['object'] = $object;
     $this->view_data['company'] = $company;
     $this->view_data['type'] = $type;
@@ -226,8 +300,8 @@ class InvoicesController extends BaseController
     $this->view_data['place'] = $place;
     $this->view_data['exp_date'] = $exp_date;
     $this->view_data['notes'] = $notes;
+    $this->view_data['has_date'] = true;
     $this->view_data['downloadPdf'] = $this->downloadPdf;
-    $this->view_data['treatments'] = $treatments;
   }
 
   private function saveData()
@@ -260,17 +334,17 @@ class InvoicesController extends BaseController
       $this->model::create($dataA);
 
       foreach ($idtreArray as $key => $idtre) {
-        $treat = Treatments::FirstById($idtre);
+        $item = Treatments::FirstById($idtre);
 
         InvoiceLines::create([
           'number' => $number,
-          'idtre' => $treat->idtre,
-          'idser' => $treat->idser,
-          'price' => $treat->price,
-          'units' => $treat->units,
-          'paid' => $treat->paid,
-          'tax' => $treat->tax,
-          'day' => $treat->day
+          'idtre' => $item->idtre,
+          'idser' => $item->idser,
+          'price' => $item->price,
+          'units' => $item->units,
+          'paid' => $item->paid,
+          'tax' => $item->tax,
+          'day' => $item->day
         ]);
       }
 

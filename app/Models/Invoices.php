@@ -56,4 +56,76 @@ class Invoices extends BaseModel
     return $res->MaxValue + 1;
   }
 
+  public function scopeCountAll($query)
+  {
+    $this->query = $query;    
+    $this->type = 'count';   
+
+    return $this->queryRaw();
+  }
+
+  public static function FindStringOnField($sLimit, $sWhere, $sOrder)
+  {
+    $where = '';
+
+    if ($sWhere != '')
+      $where = "
+        WHERE 
+          pat.surname LIKE '%". $sWhere ."%' OR pat.name LIKE '%". $sWhere ."%' 
+          OR inv.number LIKE '%". $sWhere ."%' OR inv.serial LIKE '%". $sWhere ."%'
+          OR inv.type LIKE '%". $sWhere ."%' OR inv.exp_date LIKE '%". $sWhere ."%'
+      ";
+
+    if ($sOrder != '') {
+      $order = "ORDER BY " . $sOrder;
+    } else {
+      $order = 'ORDER BY inv.surname ASC';
+    }
+
+    $query = "
+      SELECT 
+        inv.number, inv.serial, inv.type, inv.exp_date, 
+        pat.idpat, CONCAT(pat.surname, ', ', pat.name) AS surname_name 
+      FROM 
+        invoices inv  
+      INNER JOIN 
+        patients pat ON inv.idpat=pat.idpat
+      " . $where . " 
+      " . $order . " 
+      " . $sLimit . "
+    ;";
+
+    return DB::select($query);
+  }
+
+  public static function CountFindStringOnField($sWhere = '')
+  {
+    $where = '';
+
+    if ($sWhere != '')
+      $where = "
+        WHERE 
+          pat.surname LIKE '%". $sWhere ."%' OR pat.name LIKE '%". $sWhere ."%' 
+          OR inv.number LIKE '%". $sWhere ."%' OR inv.serial LIKE '%". $sWhere ."%'
+          OR inv.type LIKE '%". $sWhere ."%' OR inv.exp_date LIKE '%". $sWhere ."%'
+      ";
+
+    $query = "
+      SELECT 
+        count(*) AS total
+      FROM (
+        SELECT 
+          inv.number, inv.serial, inv.type, inv.exp_date, 
+          pat.idpat, CONCAT(pat.surname, ', ', pat.name) AS surname_name 
+        FROM 
+          invoices inv  
+        INNER JOIN 
+          patients pat ON inv.idpat=pat.idpat
+        " . $where . " 
+      ) AS table1
+    ;";
+
+    return DB::select($query);
+  }
+
 }

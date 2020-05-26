@@ -95,13 +95,22 @@ class Treatments extends Model
     $array_data = [];
 
     foreach ($collection as $collect) {
-      if ($collect->paid === $collect->total)
-        if ($collect->updated_at != NULL)
-          $array_data[] = $collect->updated_at;
+      if ($collect->paid === $collect->total) {
+        if ($collect->updated_at != NULL) {
+
+          $updated_at = $collect->updated_at;
+
+        } else {
+
+          $updated_at = 'false';
+
+        }
+
+        $array_data[] = $updated_at;
+      }
     }
 
     return $array_data;
   }
-
 
 }

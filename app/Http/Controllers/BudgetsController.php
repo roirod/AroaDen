@@ -8,6 +8,7 @@ use App\Models\BudgetsText;
 use App\Models\Patients;
 use App\Models\Services;
 use App\Models\Budgets;
+use Exception;
 use Lang;
 use DB;
 
@@ -31,17 +32,17 @@ class BudgetsController extends BaseController
     $id = $this->sanitizeData($id);
     $this->redirectIfIdIsNull($id, $this->other_route);
 
-    $main_loop = $this->model3::AllOrderByName();        
+    $items = $this->model3::AllOrderByName();        
     $patient = $this->model2::FirstById($id);
+    $updatedA = $this->model3::getUpdated();        
 
-    $this->view_data['main_loop'] = $main_loop;
+    $this->view_data['items'] = $items;
     $this->view_data['idpat'] = $id;
     $this->view_data['idnav'] = $id;        
-    $this->view_data['name'] = $patient->name;
-    $this->view_data['surname'] = $patient->surname;
     $this->view_data['object'] = $patient;
     $this->view_data['created_at'] = date('Y-m-d H:i:s'); 
     $this->view_data['uniqid'] = uniqid();
+    $this->view_data['updatedA'] = $updatedA;
 
     $this->setPageTitle($patient->surname.', '.$patient->name);
 
@@ -52,34 +53,37 @@ class BudgetsController extends BaseController
   {
     extract($this->sanitizeRequest($request->all()));
 
-    $budgetArray = $request->budgetArray;
+    $this->request = $request;
 
     $data = [];
     $data['error'] = false;
 
     try {
 
-      if (empty($budgetArray) && $onUpdate == false) {
+      if (!(bool)$onUpdate)
+        $this->checkData();
+
+      if (empty($itemsArray) && (bool)$onUpdate == false) {
 
         throw new Exception(Lang::get('aroaden.no_add_treatments'));
 
-      } elseif (empty($budgetArray) && $onUpdate && $onUpdateDeleteAll) {
+      } elseif (empty($itemsArray) && (bool)$onUpdate && (bool)$onUpdateDeleteAll) {
 
         $this->delete($uniqid, true);
 
-      } elseif (is_array($budgetArray) && $onUpdate) {
+      } elseif (is_array($itemsArray) && (bool)$onUpdate) {
 
         $this->delete($uniqid);
-        $this->save($budgetArray);
-        BudgetsText::where('uniqid', $uniqid)->update(['text' => $budgettext]);
+        $this->save();
+        BudgetsText::where('uniqid', $uniqid)->update(['text' => $notes]);
 
-      } elseif (is_array($budgetArray) && $onUpdate == false) {
+      } elseif (is_array($itemsArray) && (bool)$onUpdate == false) {
 
-        $this->save($budgetArray);
+        $this->save();
 
       }
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
 
       $data['error'] = true;
       $data['msg'] = $e->getMessage();
@@ -89,23 +93,38 @@ class BudgetsController extends BaseController
     return $this->echoJsonOuptut($data);
   }
 
-  private function save($budgetArray)
+  private function checkData()
+  {
+    $updatedA = $this->request->updatedA;
+    $updatedNowA = $this->model3::getUpdated();        
+    $arraysNotEqual = ($updatedA != $updatedNowA);
+
+    if ($arraysNotEqual)
+      throw new Exception(Lang::get('aroaden.error_data_change'));
+  }
+
+  private function save()
   {
     try {
 
-      foreach ($budgetArray as $key => $val) {
+      extract($this->sanitizeRequest($this->request->all()));
+
+      foreach ($itemsArray as $key => $val) {
+
+        $service = $this->model3::FirstById($val["idser"]);        
+
         $this->model::create([
-          'idpat' => $val["idpat"],
+          'idpat' => $idpat,
           'idser' => $val["idser"],
-          'price' => $val["price"],
           'units' => $val["units"],
-          'uniqid' => $val["uniqid"],
-          'tax' => $val["tax"],
-          'created_at' => $val["created_at"]               
+          'uniqid' => $uniqid,
+          'price' => $service->price,
+          'tax' => $service->tax,
+          'created_at' => $created_at           
         ]);
       }
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
 
       throw $e;
 
@@ -117,11 +136,11 @@ class BudgetsController extends BaseController
     $id = $this->sanitizeData($id);   
     $this->redirectIfIdIsNull($id, $this->other_route);
 
-    $budgets = $this->model::AllById($id);
+    $items = $this->model::AllById($id);
     $patient = $this->model2::FirstById($id);
     $this->setPageTitle($patient->surname.', '.$patient->name);
 
-    $this->view_data['budgets'] = $budgets;
+    $this->view_data['items'] = $items;
     $this->view_data['idpat'] = $id;
     $this->view_data['idnav'] = $id;        
     $this->view_data['object'] = $patient;
@@ -135,9 +154,9 @@ class BudgetsController extends BaseController
 
     try {
 
-      $budgets = $this->model::AllByCode($uniqid);
-      $arr_budgets = $budgets->toArray();
-      $idpat = $arr_budgets[0]->idpat;
+      $items = $this->model::AllByCode($uniqid);
+      $arr_items = $items->toArray();
+      $idpat = $arr_items[0]->idpat;
 
       $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
 
@@ -147,12 +166,12 @@ class BudgetsController extends BaseController
           'uniqid' => $uniqid
         ]);
 
-        $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
+        return redirect("/$this->main_route/$uniqid/edit");
       }
 
       $patient = $this->model2::FirstById($idpat);
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
 
       $request->session()->flash($this->error_message_name, $e->getMessage()); 
       return redirect("/$this->main_route/$idpat");
@@ -162,9 +181,10 @@ class BudgetsController extends BaseController
     $this->setPageTitle($patient->surname.', '.$patient->name);
 
     $this->view_data['request'] = $request;
-    $this->view_data['budgets'] = $budgets;
+    $this->view_data['items'] = $items;
     $this->view_data['budgetstext'] = $budgetstext;
     $this->view_data['uniqid'] = $uniqid;
+    $this->view_data['created_at'] = $arr_items[0]->created_at;
     $this->view_data['idpat'] = $idpat;
     $this->view_data['idnav'] = $idpat;     
     $this->view_data['object'] = $patient;
@@ -192,14 +212,11 @@ class BudgetsController extends BaseController
 
   private function commonMode($uniqid)
   {  
-    $budgets = $this->model::AllByCode($uniqid);
-    $idpat = $budgets[0]->idpat;
+    $items = $this->model::AllByCode($uniqid);
+    $idpat = $items[0]->idpat;
     $patient = $this->model2::FirstById($idpat);
-    $created_at = $budgets[0]->created_at;
+    $created_at = $items[0]->created_at;
     $budgetstext = BudgetsText::where('uniqid', $uniqid)->first();
-    $taxtotal = $this->model::GetTaxTotal($uniqid);
-    $notaxtotal = $this->model::GetNoTaxTotal($uniqid);
-    $total = $this->model::GetTotal($uniqid);
     $company = $this->getSettings();
 
     $this->views_folder .= '.includes';
@@ -207,12 +224,9 @@ class BudgetsController extends BaseController
 
     $this->view_data['patient'] = $patient;
     $this->view_data['text'] = $budgetstext->text;
-    $this->view_data['budgets'] = $budgets;
+    $this->view_data['items'] = $items;
     $this->view_data['uniqid'] = $uniqid;
     $this->view_data['created_at'] = $created_at;
-    $this->view_data['taxtotal'] = $taxtotal[0]->total;
-    $this->view_data['notaxtotal'] = $notaxtotal[0]->total;
-    $this->view_data['total'] = $total[0]->total;
     $this->view_data['company'] = $company;
     $this->view_data['downloadPdf'] = $this->downloadPdf;    
   }

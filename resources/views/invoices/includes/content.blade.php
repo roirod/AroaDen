@@ -150,59 +150,7 @@
 
   <div class="col-sm-12">
 
-    <table class="table table-striped table-bordered">
-      <tr>
-        <td class="wid140">{!! @trans("aroaden.treatment") !!}</td>
-        <td class="wid60 textcent">{!! @trans("aroaden.date") !!}</td>
-        <td class="wid60 textcent">{!! @trans("aroaden.units") !!}</td>
-        <td class="wid70 textcent">{!! @trans("aroaden.price_no_tax") !!}</td>
-        <td class="wid50 textcent">{!! @trans("aroaden.tax") !!}</td>
-        <td class="wid70 textcent">{!! @trans("aroaden.amount") !!}</td>
-      </tr>
-
-      @foreach ($treatments as $treat)
-          
-        <tr> 
-          <td class="wid140"> {!! $treat->name !!} </td>
-          <td class="wid60 textcent"> {!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
-          <td class="wid60 textcent"> {!! $treat->units !!} </td>
-          <td class="wid70 textcent"> {!! numformat($treat->price) !!} € </td>
-          <td class="wid50 textcent"> {!! $treat->tax !!} % </td>
-
-          @php
-            $price = $treat->price + (($treat->price * $treat->tax) / 100);
-            $total = $treat->units * $price;
-
-            if (empty($total_amount))
-              $total_amount = 0;
-
-            $total_amount = $total_amount + $total;
-          @endphp
-
-          <td class="wid70 textcent"> {!! numformat($total) !!} € </td>
-        </tr>
-              
-      @endforeach
-
-      <tr>
-        <td class="wid140">&nbsp;</td>
-        <td class="wid60">&nbsp;</td>
-        <td class="wid60">&nbsp;</td>        
-        <td class="wid60">&nbsp;</td>
-        <td class="wid60">&nbsp;</td>       
-        <td class="wid70">&nbsp;</td>
-      </tr>
-
-      <tr>
-        <td class="wid140"></td>
-        <td class="wid60">&nbsp;</td>
-        <td class="wid60">&nbsp;</td>
-        <td class="wid60">&nbsp;</td>       
-        <td class="wid60 textder">{!! @trans("aroaden.total_amount") !!}</td>
-        <td class="wid70 textcent">{{ numformat($total_amount) }} € </td> 
-      </tr>
-
-    </table>
+   @include('includes.tables.table_items')
 
    <br>
 
@@ -213,8 +161,8 @@
     @php
       $no_tax_msg = true;
 
-      foreach ($treatments as $treat) {
-        if ($treat->tax != 0) {
+      foreach ($items as $item) {
+        if ($item->tax != 0) {
           $no_tax_msg = false;
           break;
         }

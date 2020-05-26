@@ -326,18 +326,6 @@
       if (euroFormat)
         total_amount = _this.euroFormat(total_amount);
 
-      console.log('----------------  tax  ----------------------------');
-      console.dir(tax);
-      console.log('--------------------------------------------');
-
-      console.log('----------------  price  ----------------------------');
-      console.dir(price);
-      console.log('--------------------------------------------');
-
-      console.log('----------------  total_amount  ----------------------------');
-      console.dir(total_amount);
-      console.log('--------------------------------------------');
-
       return total_amount;
     },
 

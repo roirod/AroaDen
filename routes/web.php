@@ -112,11 +112,12 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		Route::resource($route["treatments"], 'TreatmentsController', ['except' => ['index', 'create', 'show']]);
 
+		Route::get($route["invoices"].'/list', 'InvoicesController@list');
 		Route::get($route["invoices"].'/{idpat}/create', 'InvoicesController@create');
 		Route::get($route["invoices"].'/invoicesFactory', 'InvoicesController@invoicesFactory');
 		Route::post($route["invoices"].'/preview', 'InvoicesController@preview');
 		Route::get($route["invoices"].'/downloadPdf/{number}', 'InvoicesController@downloadPdf');
-		Route::resource($route["invoices"], 'InvoicesController', ['except' => ['index']]);
+		Route::resource($route["invoices"], 'InvoicesController');
 	});
 
 });

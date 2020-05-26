@@ -88,23 +88,23 @@
         <div class="box300">
           <table class="table table-striped table-bordered table-hover">
 
-            @foreach ($invoices as $invo)
+            @foreach ($items as $item)
                 
               <tr> 
-                <td class="wid95 textcent"> {!! $invo->number !!} </td>
-                <td class="wid60 textcent"> {!! $invo->serial !!} </td>
-                <td class="wid110 textcent"> {!! date('d-m-Y', strtotime($invo->exp_date)) !!} </td>
-                <td class="wid110 textcent"> {!! @trans("aroaden.".$invo->type) !!} </td>
+                <td class="wid95 textcent"> {!! $item->number !!} </td>
+                <td class="wid60 textcent"> {!! $item->serial !!} </td>
+                <td class="wid110 textcent"> {!! date('d-m-Y', strtotime($item->exp_date)) !!} </td>
+                <td class="wid110 textcent"> {!! @trans("aroaden.".$item->type) !!} </td>
 
                 <td class="wid50 textcent">
-                  <a title="{!! @trans('aroaden.edit') !!}" href="{!! url("/$main_route/$invo->number/edit") !!}" class="btn btn-success btn-sm">
+                  <a title="{!! @trans('aroaden.edit') !!}" href="{!! url("/$main_route/$item->number/edit") !!}" class="btn btn-success btn-sm">
                     <i class="fa fa-edit"></i>
                   </a>
                 </td>
 
                 <td class="wid50 textcent">  
                   <div class="btn-group">
-                    <form class="form" action="{!! url("/$main_route/$invo->number") !!}" data-removeTr="true" method="POST">
+                    <form class="form" action="{!! url("/$main_route/$item->number") !!}" data-removeTr="true" method="POST">
                       <input type="hidden" name="_method" value="DELETE">
 
                       <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -120,7 +120,7 @@
                 </td>
 
                 <td class="wid50 textcent">
-                  <a title="{!! @trans('aroaden.download_pdf') !!}" href="{!! url("/$main_route/downloadPdf/$invo->number") !!}" class="btn btn-info btn-sm">
+                  <a title="{!! @trans('aroaden.download_pdf') !!}" href="{!! url("/$main_route/downloadPdf/$item->number") !!}" class="btn btn-info btn-sm">
                     <i class="fa fa-download"></i>
                   </a>
                 </td>

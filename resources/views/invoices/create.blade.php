@@ -60,13 +60,13 @@
 							<div class="box260">
 								<table class="table table-striped table-bordered table-hover">
 
-								  @foreach($treatments as $treat)
+								  @foreach($items as $item)
 								  	<tr>
-								  		<td class="wid120">{!! $treat->service_name !!}</td>
-                      <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>                      
-											<td class="wid40 textcent">{!! $treat->units !!}</td>				
+								  		<td class="wid120">{!! $item->service_name !!}</td>
+                      <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($item->day) ) !!}</td>                      
+											<td class="wid40 textcent">{!! $item->units !!}</td>				
 											<td class="wid40 textcent">
-        						  	<button type="button" class="btn btn-sm btn-info addLine" data-idtre="{!! $treat->idtre !!}" data-name="{!! $treat->service_name !!}" data-units="{!! $treat->units !!}" data-day="{!! date('d-m-Y', strtotime($treat->day)) !!}">
+        						  	<button type="button" class="btn btn-sm btn-info addLine" data-idtre="{!! $item->idtre !!}" data-name="{!! $item->service_name !!}" data-units="{!! $item->units !!}" data-day="{!! date('d-m-Y', strtotime($item->day)) !!}">
         						  		<i class="fa fa-plus"></i>
         						  	</button>
 											</td>
