@@ -36,6 +36,11 @@ class Patients extends BaseModel
     return $this->hasMany('App\Models\Invoices', 'idpat', 'idpat');
   }
 
+  public function invoiceLines()
+  {
+    return $this->hasManyThrough('App\Models\InvoiceLines', 'App\Models\Invoices', 'idpat', 'number', 'idpat', 'number');
+  }
+
   public function budgets()
   {
     return $this->hasMany('App\Models\Budgets', 'idpat', 'idpat');

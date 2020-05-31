@@ -73,7 +73,7 @@ class Invoices extends BaseModel
         WHERE 
           pat.surname LIKE '%". $sWhere ."%' OR pat.name LIKE '%". $sWhere ."%' 
           OR inv.number LIKE '%". $sWhere ."%' OR inv.serial LIKE '%". $sWhere ."%'
-          OR inv.type LIKE '%". $sWhere ."%' OR inv.exp_date LIKE '%". $sWhere ."%'
+          OR inv.exp_date LIKE '%". $sWhere ."%'
       ";
 
     if ($sOrder != '') {
@@ -107,7 +107,7 @@ class Invoices extends BaseModel
         WHERE 
           pat.surname LIKE '%". $sWhere ."%' OR pat.name LIKE '%". $sWhere ."%' 
           OR inv.number LIKE '%". $sWhere ."%' OR inv.serial LIKE '%". $sWhere ."%'
-          OR inv.type LIKE '%". $sWhere ."%' OR inv.exp_date LIKE '%". $sWhere ."%'
+          OR inv.exp_date LIKE '%". $sWhere ."%'
       ";
 
     $query = "

@@ -83,7 +83,6 @@ return [
   'download_pdf'   => 'Descargar pdf ',
   'pdf'   => 'pdf ',
 
-
   'amount' => 'Importe',
   'text' => 'Texto',
   'place'   => 'Lugar',
@@ -164,8 +163,11 @@ return [
   'complete' => 'Completa',
   'rectification' => 'Rectificativa',
   'no_tax_msg' => '* Factura exenta de IVA (artículo 20. Uno. 5º- Ley 37/1992)',
+  'no_action_allow_invoice'   => '(*F) - En factura, no puedes editar ni eliminar.',
+
   'serial' => 'Serie',
   'exp_date' => 'Fecha expedición',
+
   'error_data_change' => 'Es necesario recargar los datos',
 
   'appointments' => 'Citas',

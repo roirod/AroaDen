@@ -24,7 +24,7 @@
                 <label class="control-label text-left mar10">{{ Lang::get('aroaden.select_service') }}</label>
 
     						<select name="idser_select" id="idser_select" class="form-control" required>
-    							<option value="none" selected disabled></option>
+    							<option value="none" selected disabled>{{ Lang::get('aroaden.none') }}</option>
 
     							@foreach($services as $servi)
     								<option value="{{ $servi->idser }}">{{ $servi->name }}({{ calcTotal($servi->price, $servi->tax) }} €)</option>
@@ -111,7 +111,7 @@
             $('input[name="units"]').val(1);
             $('input[name="paid"]').val("");
             $('input[name="idser"]').attr('value', response.idser);
-            var total = util.calcTotal(response.price, response.tax, false);
+            var total = util.calcTotal(response.price, response.tax);
             $('input[name="paid"]').val(total);
 
             price = response.price;

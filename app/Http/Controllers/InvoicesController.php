@@ -153,19 +153,21 @@ class InvoicesController extends BaseController
     $idpat = $request->idpat;
     $type = $request->type;
 
-    $object = Patients::FirstById($idpat);
-    $company = $this->getSettings();
+    $patient = Patients::FirstById($idpat);
+    $invoiceLines = $patient->invoiceLines->pluck('idtre')->toArray();
     $items = Treatments::PaidByPatientId($idpat);
     $updatedA = Treatments::getUpdatedPaidByPatientId($idpat);
+    $company = $this->getSettings();
 
-    $this->setPageTitle($object->surname.', '.$object->name);
+    $this->setPageTitle($patient->surname.', '.$patient->name);
 
     $this->view_data['request'] = $request;
-    $this->view_data['object'] = $object;
-    $this->view_data['company'] = $company;
+    $this->view_data['object'] = $patient;
+    $this->view_data['invoiceLines'] = $invoiceLines;
     $this->view_data['items'] = $items;
     $this->view_data['type'] = $type;
     $this->view_data['updatedA'] = $updatedA;
+    $this->view_data['company'] = $company;   
     $this->view_data['idpat'] = $idpat;
     $this->view_data['idnav'] = $idpat;        
 

@@ -128,7 +128,9 @@
           },
           {
             "aTargets": [4],
-            "sClass": "wid110 textcent"
+            "sClass": "wid110 textcent",
+            "bSortable": false,
+            "bSearchable": false
           },
           {
             "aTargets": [5],

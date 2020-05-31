@@ -159,7 +159,7 @@
 	<br>
 
 	<div class="row">
-	  <div class="col-sm-12"> 
+	  <div class="col-sm-4"> 
 		  <div class="input-group">
 		  	<span class="input-group-btn pad10">  <p> {!! @trans("aroaden.treatments") !!} </p> </span>
 
@@ -171,7 +171,14 @@
 					</div> 
 				</div> 
 			</div> 
-		</div> 
+		</div>
+
+	  <div class="col-sm-6"> 
+			<p class="text-info pad10"> 
+				{!! @trans("aroaden.no_action_allow_invoice") !!}
+			</p>
+		</div>
+
 	</div>
 
 	<div class="row">
@@ -200,7 +207,15 @@
 				    @foreach($treatments["treatments"] as $treat)
 
 				  		<tr class="fonsi13">
-				    		<td class="wid160">{!! $treat->service_name !!}</td> 
+				    		<td class="wid160">
+				    			{!! $treat->service_name !!}
+
+									@if (in_array($treat->idtre, $invoiceLines))
+										<span class="text-info">
+											(*F)
+										</span>
+									@endif
+				    		</td> 
 								<td class="wid40 textcent">{!! $treat->tax !!} %</td>
                 <td class="wid50 textcent">{{ calcTotal($treat->price, $treat->tax) }} €</td>
 								<td class="wid50 textcent">{!! $treat->units !!}</td>
@@ -210,26 +225,46 @@
 								<td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 								<td class="wid40 textcent">
-									<a href="{!! url($routes['treatments']."/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
-										<i class="fa fa-edit"></i>
-									</a>
+									@if (in_array($treat->idtre, $invoiceLines))
+
+										<button class="btn btn-sm btn-default disabled">
+											<i class="fa fa-ban"></i>
+										</button>
+
+									@else
+
+										<a href="{!! url($routes['treatments']."/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+											<i class="fa fa-edit"></i>
+										</a>
+
+									@endif
 								</td>
 
-								<td class="wid40 textcent"> 	
-									<div class="btn-group">
-									 	<form class="form" action="{!! url($routes['treatments']."/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
-											<input type="hidden" name="_method" value="DELETE">
+								<td class="wid40 textcent">
+									@if (in_array($treat->idtre, $invoiceLines))
 
-											<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-												<i class="fa fa-times"></i> <span class="caret"></span>  
-											</button>
-											<ul class="dropdown-menu" role="menu"> 
-												<li>
-													@include('includes.delete_button')
-												</li>
-											</ul>			
-								 		</form>
-									</div> 
+										<button class="btn btn-sm btn-default disabled">
+											<i class="fa fa-ban"></i>
+										</button>
+
+									@else
+
+										<div class="btn-group">
+										 	<form action="{!! url($routes['treatments']."/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
+												<input type="hidden" name="_method" value="DELETE">
+
+												<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+													<i class="fa fa-times"></i> <span class="caret"></span>  
+												</button>
+												<ul class="dropdown-menu" role="menu"> 
+													<li>
+														@include('includes.delete_button')
+													</li>
+												</ul>			
+									 		</form>
+										</div>
+
+									@endif
 								</td>
 
 								<td class="wid95">		
@@ -262,9 +297,8 @@
 
 	    		</table>
 				</div>
-
-			</div> 
-		</div> 
+			</div>
+		</div>
 	</div>		
 
 	<hr> <br>			

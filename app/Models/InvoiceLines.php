@@ -15,6 +15,11 @@ class InvoiceLines extends BaseModel
   protected $primaryKey = 'idinli';
   public $timestamps = false;
 
+  public function invoices()
+  {
+    return $this->belongsTo('App\Models\Invoices');
+  }    
+
   public function scopeGetByNumber($query, $number)
   {
     $this->query = $query->join('services','invoice_lines.idser','=','services.idser')

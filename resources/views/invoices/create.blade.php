@@ -61,16 +61,22 @@
 								<table class="table table-striped table-bordered table-hover">
 
 								  @foreach($items as $item)
-								  	<tr>
-								  		<td class="wid120">{!! $item->service_name !!}</td>
-                      <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($item->day) ) !!}</td>                      
-											<td class="wid40 textcent">{!! $item->units !!}</td>				
-											<td class="wid40 textcent">
-        						  	<button type="button" class="btn btn-sm btn-info addLine" data-idtre="{!! $item->idtre !!}" data-name="{!! $item->service_name !!}" data-units="{!! $item->units !!}" data-day="{!! date('d-m-Y', strtotime($item->day)) !!}">
-        						  		<i class="fa fa-plus"></i>
-        						  	</button>
-											</td>
-										</tr>		
+
+                    @if (!in_array($item->idtre, $invoiceLines))
+
+  								  	<tr>
+  								  		<td class="wid120">{!! $item->service_name !!}</td>
+                        <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($item->day) ) !!}</td>                      
+  											<td class="wid40 textcent">{!! $item->units !!}</td>				
+  											<td class="wid40 textcent">
+          						  	<button type="button" class="btn btn-sm btn-info addLine" data-idtre="{!! $item->idtre !!}" data-name="{!! $item->service_name !!}" data-units="{!! $item->units !!}" data-day="{!! date('d-m-Y', strtotime($item->day)) !!}">
+          						  		<i class="fa fa-plus"></i>
+          						  	</button>
+  											</td>
+  										</tr>
+
+                    @endif
+
 									@endforeach
 
 				    		</table>

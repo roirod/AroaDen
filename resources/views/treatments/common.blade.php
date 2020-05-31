@@ -33,7 +33,7 @@
     function getPaid() {
       var units = $('input[name="units"]').val();
       var total_amount = util.calcTotal(price, tax, false);
-      var paid = util.multiply(units, total_amount, false);    
+      var paid = util.multiply(units, total_amount);    
 
       $('input[name="paid"]').val(paid);
     }

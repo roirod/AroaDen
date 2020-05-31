@@ -108,8 +108,6 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 
 		Route::get($route["treatments"].'/{idpat}/create','TreatmentsController@create');
 		Route::post($route["treatments"].'/select', 'TreatmentsController@select');  
-		Route::get($route["treatments"].'/{id}/edit', 'TreatmentsController@edit');
-		Route::delete($route["treatments"].'/{id}', 'TreatmentsController@destroy');
 		Route::resource($route["treatments"], 'TreatmentsController', ['except' => ['index', 'create', 'show']]);
 
 		Route::get($route["invoices"].'/list', 'InvoicesController@list');
