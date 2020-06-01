@@ -56,9 +56,6 @@
 
           <nav class="navbar navbar-default" role="navigation">   
             <ul class="nav nav-pills nav-stacked"> 
-              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
-                <a href="{!! url($routes['company'])!!}"><i class="fa fa-building-o fa-menusize"></i></a>
-              </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.accounting") !!}</b>">
                 <a href="{!! url($routes['accounting'])!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
               </li>
