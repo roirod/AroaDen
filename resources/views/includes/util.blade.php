@@ -309,9 +309,13 @@
       var total = num1 * num2;
 
       if (euroFormat)
-        total = _this.euroFormat(total);
+        return _this.euroFormat(total);
 
-      return total;
+      return _this.round2Dec(total);
+    },
+
+    round2Dec: function(num) {
+      return Math.round((num + Number.EPSILON) * 100) / 100;
     },
 
     calcTotal: function(price, tax, euroFormat) {

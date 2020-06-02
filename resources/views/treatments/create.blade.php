@@ -111,7 +111,7 @@
             $('input[name="units"]').val(1);
             $('input[name="paid"]').val("");
             $('input[name="idser"]').attr('value', response.idser);
-            var total = util.calcTotal(response.price, response.tax);
+            var total = util.calcTotal(response.price, response.tax, false);
             $('input[name="paid"]').val(total);
 
             price = response.price;
