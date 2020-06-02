@@ -47,8 +47,8 @@
             <thead>
                <tr class="fonsi15">
                    <td class="wid290">{{ @trans('aroaden.patient') }}</td>
-                   <td class="wid95">{{ @trans('aroaden.day') }}</td>
-                   <td class="wid95">{{ @trans('aroaden.hour') }}</td>             
+                   <td class="wid95 textcent">{{ @trans('aroaden.date') }}</td>
+                   <td class="wid95 textcent">{{ @trans('aroaden.hour') }}</td>             
                    <td class="wid450">{{ @trans('aroaden.notes') }}</td>
                </tr>
               </thead>
@@ -65,8 +65,8 @@
                             {{ $obj->surname }}, {{ $obj->name }} 
                         </a>
                       </td>
-                      <td class="wid95">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
-                      <td class="wid95">{{ substr( $obj->hour, 0, -3 ) }}</td>
+                      <td class="wid95 textcent">{{ date( 'd-m-Y', strtotime($obj->day) ) }}</td>
+                      <td class="wid95 textcent">{{ substr( $obj->hour, 0, -3 ) }}</td>
                       <td class="wid450">{{ $obj->notes }}</td>
                   </tr>
                 @endforeach
@@ -79,8 +79,8 @@
             <tfoot>
               <tr class="fonsi15">
                  <td class="wid290">{{ @trans('aroaden.patient') }}</td>
-                 <td class="wid95">{{ @trans('aroaden.day') }}</td>
-                 <td class="wid95">{{ @trans('aroaden.hour') }}</td>             
+                 <td class="wid95 textcent">{{ @trans('aroaden.date') }}</td>
+                 <td class="wid95 textcent">{{ @trans('aroaden.hour') }}</td>             
                  <td class="wid450">{{ @trans('aroaden.notes') }}</td>
               </tr>
             </tfoot>
