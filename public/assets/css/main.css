@@ -280,13 +280,13 @@ h1 small, h5 small {
 .pad80 { padding: 80px; }
 .pad110 { padding: 110px; }
 
+.padleft5 { padding-left: 5px; }
+.padleft11 { padding-left: 11px; }
+
 .fonbla { color: white !important; }
 .fuengrisoscu { color: rgb(20, 20, 20); }
 
-
-.textshadow { 
-  text-shadow:  2px 2px 0px #000;
-}
+.textshadow { text-shadow:  2px 2px 0px #000; }
 
 .rowcentered {
     text-align:center;
