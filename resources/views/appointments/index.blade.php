@@ -59,9 +59,9 @@
                 </span>
               </div>
 
-              <div class="input-group-btn padleft11">
+              <div class="input-group-btn padleft5">
                 <button class="btn btn-md btn-primary searchButton pad6">
-                  &nbsp; <i class="fa fa-chevron-circle-right"></i> &nbsp;
+                  &nbsp; <i class="fa fa-search"></i> &nbsp;
                 </button>
               </div>                
             </div>
