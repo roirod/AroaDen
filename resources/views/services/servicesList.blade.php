@@ -10,7 +10,7 @@
   <div>
     @if (isset($searched_text))
       <p class="label label-primary fonsi15">
-        {{ Lang::get('aroaden.searched_text') }} {!! $searched_text !!}
+        {{ @trans('aroaden.searched_text') }} {!! $searched_text !!}
       </p>
       &nbsp;
     @endif
@@ -29,8 +29,8 @@
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
         <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
-        <td class="wid70 textcent">{{ Lang::get('aroaden.edit') }}</td>
-        <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
+        <td class="wid70 textcent">{{ @trans('aroaden.edit') }}</td>
+        <td class="wid70 textcent">{{ @trans('aroaden.delete') }}</td>
         <td class="wid40"></td>        
       </tr>
     </table>
@@ -43,7 +43,7 @@
           <tr>
             <td class="wid200">{{ $obj->name }}</td>
             <td class="wid70 textcent">{{ $obj->tax }} %</td>             
-            <td class="wid110 textcent">{{ calcTotal($obj->price, $obj->tax) }} €</td>
+            <td class="wid110 textcent">{{ calcTotal($obj->price, $obj->tax) }} {{ $Alocale["currency_symbol"] }}</td>
             <td class="wid70 textcent">
               <a class="btn btn-sm btn-success editService" type="button" href="{{ $routes['services']."/$obj->idser/edit" }}">
                 <i class="fa fa-edit"></i>
@@ -89,8 +89,8 @@
         <td class="wid200">{{ @trans('aroaden.service') }}</td>
         <td class="wid70 textcent">{{ @trans('aroaden.tax') }}</td>
         <td class="wid110 textcent">{{ @trans('aroaden.price') }}</td>          
-        <td class="wid70 textcent">{{ Lang::get('aroaden.edit') }}</td>
-        <td class="wid70 textcent">{{ Lang::get('aroaden.delete') }}</td>
+        <td class="wid70 textcent">{{ @trans('aroaden.edit') }}</td>
+        <td class="wid70 textcent">{{ @trans('aroaden.delete') }}</td>
         <td class="wid40"></td>        
       </tr>
     </table>

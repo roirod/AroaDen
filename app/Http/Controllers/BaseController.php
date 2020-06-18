@@ -201,18 +201,27 @@ class BaseController extends Controller
    */
   protected $misc_array = [];
 
+  protected $Alocale;
+
   /**
    *  construct method
    */
   public function __construct()
   {
-    setlocale(LC_ALL, env('APP_LOCALE'));
+    $this->config = Config::get('aroaden');
+    $locale_code = $this->config['currency']['locale_code'];
+
+    setlocale(LC_ALL, $locale_code);
     date_default_timezone_set(env('APP_TIMEZONE'));
 
-    $this->config = Config::get('aroaden');
+    $this->Alocale = localeconv();
+    $_SESSION["Alocale"] = $this->Alocale;
+    $_SESSION["Acurrency"] = $this->config['currency'];
 
     $file_max_size = (int)$this->config['files']['file_max_size'];
     $this->file_max_size = 1024 * 1024 * $file_max_size;
+
+    $this->view_data["load_js"]["datatables"] = false;
 
     if (env('CREATE_SYMLINKS'))
       $this->createSymlinks();
@@ -349,6 +358,7 @@ class BaseController extends Controller
     View::share('other_route', $this->other_route);
     View::share('form_route', $this->form_route);        
     View::share('form_fields', $this->form_fields);        
+    View::share('Alocale', $this->Alocale);
 
     View::share('routes', $this->config['routes']);
   }

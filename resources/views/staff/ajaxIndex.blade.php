@@ -46,73 +46,45 @@
  
   <script type="text/javascript">
     $(document).ready(function() {
+
       setTimeout(function(){
-        $("#staffTable").dataTable(staffTable);
+        $("#staffTable").dataTable(tableObj);
       }, 180);
 
-      var staffTable = {
-        "aaSorting": [[ 1, "asc" ]],
-        'oLanguage': {
-          'sProcessing': 'Procesando...',
-          'sLengthMenu': 'Selecciona _MENU_',
-          'sZeroRecords': '{{ @trans('aroaden.no_query_results') }}',
-          'sInfo': 'De _START_ hasta _END_ de _TOTAL_ profesionales',
-          'sInfoEmpty': '{{ @trans('aroaden.empty_db') }}',
-          'sInfoFiltered': '(filtrados de _MAX_ total de profesionales)',
-          'sSearch': 'Buscar:',
-          "oPaginate": {
-            "sFirst":    "❮❮",
-            "sLast":     "❯❯",
-            "sNext":     "❯",
-            "sPrevious": "❮"
-          },
-        },
-        "sDom": 
-          "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
-          "<'row'<'col-sm-12'r>>" +
-          "<'row'<'col-sm-7'i><'col-sm-5'p>>" +
-          "<'row'<'col-sm-12't>>" +
-          "<br>" +
-          "<'row'<'col-sm-7'i><'col-sm-5'p>>",
-        "iDisplayStart": 0,
-        "iDisplayLength": iDisplayLength,
-        "bAutoWidth": false,
-        'bPaginate': true,
-        'bLengthChange': true,
-        "sPaginationType": "full_numbers",
-        "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": '/' + "{!! $routes['staff'] !!}/list",
-        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-          oSettings.jqXHR = $.ajax({
-            "dataType": 'json',
-            "method": "GET",
-            "url": sSource,
-            "data": aoData,
-            "success": fnCallback,
-            "error": function (e) {
-              console.dir(e);
-              console.log(e.message);
-            }
-          });
-        },
-        "aLengthMenu": aLengthMenu,
-        "aoColumnDefs": [
-          {
-            "aTargets": [0],
-            "bSortable": false,
-            "bSearchable": false,
-            "bVisible": false
-          },
-          {
-            "aTargets": [1],
-            "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! $routes['staff'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
-              return resultado;
-            }
-          }
-        ],
+      tableObj.aaSorting = [[1, "asc"]];
+
+      tableObj.oLanguage = {
+        'sProcessing': 'Procesando...',
+        'sLengthMenu': 'Selecciona _MENU_',
+        'sZeroRecords': '{{ @trans('aroaden.no_query_results') }}',
+        'sInfo': 'De _START_ hasta _END_ de _TOTAL_ profesionales',
+        'sInfoEmpty': '{{ @trans('aroaden.empty_db') }}',
+        'sInfoFiltered': '(filtrados de _MAX_ total de profesionales)',
+        'sSearch': 'Buscar:',
+        "oPaginate": {
+          "sFirst":    "❮❮",
+          "sLast":     "❯❯",
+          "sNext":     "❯",
+          "sPrevious": "❮"
+        }
       };
+
+      tableObj.aoColumnDefs = [
+        {
+          "aTargets": [0],
+          "bSortable": false,
+          "bSearchable": false,
+          "bVisible": false
+        },
+        {
+          "aTargets": [1],
+          "mRender": function (data, type, full) {
+            var resultado = '<a href="{!! $routes['staff'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+            return resultado;
+          }
+        }
+      ];
+
     });
 
   </script>

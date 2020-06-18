@@ -1,16 +1,9 @@
 
 <script type="text/javascript">
 
-  // datatables staff
-  var aLengthMenu = [
-    [15, 25, 50, 100],
-    [15, 25, 50, 100]
-  ];
-
-  var iDisplayLength = 15;
-  // datatables staff
-
   var routes = <?php echo json_encode($routes); ?>;
+  var Alocale = <?php echo json_encode($Alocale); ?>;
+  var Acurrency = <?php echo json_encode($_SESSION["Acurrency"]); ?>;
 
   var defaulId = 'ajax_content';
   var defaulTableId = 'item_list';
@@ -20,6 +13,7 @@
   var mainUrlAjax = mainUrl + '/ajaxIndex';
   var lastRoute = '';
   var redirectRoute = '';
+  var onEdit = false;
   var error = false;
 
   $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
@@ -299,17 +293,17 @@
       return today;
     },
 
-    multiply: function(num1, num2, euroFormat) {
+    multiply: function(num1, num2, printFormat) {
       var _this = this;
 
-      var euroFormat = (euroFormat == undefined) ? true : false;
+      var printFormat = (printFormat == undefined) ? true : false;
 
       var num1 = parseFloat(num1);
       var num2 = parseFloat(num2);
       var total = num1 * num2;
 
-      if (euroFormat)
-        return _this.euroFormat(total);
+      if (printFormat)
+        return _this.printFormat(total);
 
       return _this.round2Dec(total);
     },
@@ -318,41 +312,86 @@
       return Math.round((num + Number.EPSILON) * 100) / 100;
     },
 
-    calcTotal: function(price, tax, euroFormat) {
+    calcTotal: function(price, tax, printFormat) {
       var _this = this;
 
-      var euroFormat = (euroFormat == undefined) ? true : false;
+      var printFormat = (printFormat == undefined) ? true : false;
 
       tax = parseFloat(tax);
       price = parseFloat(price);
       var total_amount = ((price * tax) / 100) + price;
 
-      if (euroFormat)
-        total_amount = _this.euroFormat(total_amount);
+      if (printFormat)
+        total_amount = _this.printFormat(total_amount);
 
       return total_amount;
     },
 
-    euroFormat: function(number) {
+    printFormat: function(number) {
       var _this = this;
 
-      return _this.numberFormat(number, 2, ".", '.');
+      number = parseFloat(number);
+
+      return _this.numberFormat(number, Alocale.frac_digits, Alocale.decimal_point, Alocale.thousands_sep);
+    },
+
+    convertToOperate: function(number) {
+      var str = number.toString();
+      var res = str.split(Alocale.thousands_sep).join("");
+      res = res.replace(Alocale.decimal_point, ".");
+
+      return res;
+    },
+
+    convertToShow: function(number) {
+      if (Alocale.decimal_point != Acurrency.db_dec_point) {
+        var nstr = number.toString();
+        nstr += '';
+        x = nstr.split(Acurrency.db_dec_point);
+
+        x1 = x[0];
+        x2 = x.length > 1 ? Alocale.decimal_point + x[1] : '';
+        var result = x1 + x2;
+
+        return result;
+
+      } else {
+
+        return number;
+
+      }      
     },
 
     numberFormat: function(number, decimals, dec_point, thousands_sep) {
       number = number.toFixed(decimals);
-
       var nstr = number.toString();
       nstr += '';
       x = nstr.split('.');
+
       x1 = x[0];
       x2 = x.length > 1 ? dec_point + x[1] : '';
       var rgx = /(\d+)(\d{3})/;
 
       while (rgx.test(x1))
-          x1 = x1.replace(rgx, '$1' + thousands_sep + '$2');
+        x1 = x1.replace(rgx, '$1' + thousands_sep + '$2');
 
       return x1 + x2;
+    },
+
+    validateCurrency: function(currency) {
+      var _this = this;
+      var regexp = RegExp(Acurrency.regexp);
+
+      try {
+
+        if (!regexp.test(currency))
+          throw "{{ Lang::get('aroaden.currency_format_error') }}";
+
+      } catch (err) {
+
+        return _this.showPopup(err, false);
+
+      }
     },
 
     onEditResource: function($this) {

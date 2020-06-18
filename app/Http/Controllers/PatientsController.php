@@ -72,6 +72,8 @@ class PatientsController extends BaseController implements BaseInterface
   {   
     $this->setPageTitle(Lang::get('aroaden.patients'));
 
+    $this->view_data["load_js"]["datatables"] = true;
+
     return parent::index($request);
   }
 

@@ -30,12 +30,10 @@ trait BaseTrait {
       unset($data["_token"]);
 
     foreach ($data as $key => $val) {
-
       if (is_array($data[$key]))
         continue;
 
       $data[$key] = $this->sanitizeData($data[$key]);
-
     }
 
     return $data;
@@ -50,8 +48,8 @@ trait BaseTrait {
    */
   protected function redirectIfIdIsNull($id, $route)
   {   
-      if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
-          return redirect($route);
+    if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
+        return redirect($route);
   }
 
   /**
@@ -61,9 +59,24 @@ trait BaseTrait {
    */
   protected function echoJsonOuptut($data)
   {   
-      header('Content-type: application/json; charset=utf-8');
-      echo json_encode($data);
-      exit();    
+    header('Content-type: application/json; charset=utf-8');
+    echo json_encode($data);
+    exit();
+  }
+
+  protected function formatCurrency($num)
+  {
+    return number_format($num, $this->Alocale["frac_digits"], $this->Alocale["decimal_point"], $this->Alocale["thousands_sep"]);
+  }
+
+  protected function formatCurrencyDB($num)
+  {
+    $currency = $this->config['currency'];
+
+    $str = str_replace($this->Alocale["thousands_sep"], $currency["db_thousands_sep"], $num);
+    $res = str_replace($this->Alocale["decimal_point"], $currency["db_dec_point"], $str);
+    
+    return $res;
   }
 
   /**
@@ -74,7 +87,7 @@ trait BaseTrait {
    */
   protected function formatNumber($num)
   {   
-      return number_format($num, 2, '.', '.');
+    return number_format($num, 2, '.', '.');
   }
 
   /**
@@ -85,9 +98,9 @@ trait BaseTrait {
    */
   protected function convertYmdToDmY($date)
   {   
-      $date = date('d-m-Y', strtotime($date));
+    $date = date('d-m-Y', strtotime($date));
 
-      return $date;
+    return $date;
   }
 
   /**
@@ -98,7 +111,7 @@ trait BaseTrait {
    */
   protected function convertDmYToYmd($date)
   {
-      return date('Y-m-d', strtotime($date));
+    return date('Y-m-d', strtotime($date));
   }
 
   /**
@@ -109,9 +122,9 @@ trait BaseTrait {
    */
   protected function validateDateDDMMYYYY($date)
   {   
-      list($d, $m, $y) = array_pad(explode('-', $date, 3), 3, 0);
+    list($d, $m, $y) = array_pad(explode('-', $date, 3), 3, 0);
 
-      return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
+    return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
   }
 
   /**
@@ -122,9 +135,9 @@ trait BaseTrait {
    */
   protected function validateDateYYYYMMDD($date)
   {   
-      list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
+    list($y, $m, $d) = array_pad(explode('-', $date, 3), 3, 0);
 
-      return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
+    return ctype_digit("$y$m$d") && checkdate($m, $d, $y);
   }
 
   /**
@@ -135,10 +148,10 @@ trait BaseTrait {
    */
   protected function validateTime($time)
   {   
-      if ( preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time) )
-          return true;
+    if ( preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time) )
+        return true;
 
-      return false;
+    return false;
   }
 
   /**
@@ -151,10 +164,10 @@ trait BaseTrait {
    */
   protected function checkIfPaidIsHigher($units, $price, $paid)
   {   
-      $total = $units * $price;
+    $total = $units * $price;
 
-      if ( $paid > $total )
-          return true;
+    if ( $paid > $total )
+        return true;
   }
 
   protected function calcTotalTax($price, $tax)

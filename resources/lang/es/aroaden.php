@@ -132,6 +132,7 @@ return [
   'select_type' => 'Selecciona el tipo',
   'type' => 'Tipo',
 
+  'currency_format_error' => 'Error en formato de moneda.',
 
   'company' => 'Empresa',
   'company_data' => 'Datos empresa',

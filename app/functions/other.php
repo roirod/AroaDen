@@ -22,8 +22,9 @@ function calcTotal($price, $tax, $numformat = true) {
 };
 
 function numformat($num) {
-	$num = number_format($num, 2, '.', '.');
-	return $num;
+  $Alocale = $_SESSION["Alocale"];
+
+	return number_format($num, $Alocale["frac_digits"], $Alocale["decimal_point"], $Alocale["thousands_sep"]);
 };
 
 function DatTime($DatTi) {

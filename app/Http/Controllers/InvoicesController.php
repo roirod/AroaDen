@@ -35,6 +35,8 @@ class InvoicesController extends BaseController
   {   
     $this->setPageTitle(Lang::get('aroaden.invoices'));
 
+    $this->view_data["load_js"]["datatables"] = true;
+
     return parent::index($request);
   }
 

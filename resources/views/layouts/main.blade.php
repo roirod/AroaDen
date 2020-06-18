@@ -24,6 +24,10 @@
 
     @include('includes.util')
 
+    @if ($load_js["datatables"])
+      @include('includes.js.datatables')
+    @endif
+
     <script type="text/javascript">
       $.ajaxSetup({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }

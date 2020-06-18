@@ -61,6 +61,8 @@ class StaffController extends BaseController implements BaseInterface
   {
     $this->setPageTitle(Lang::get('aroaden.staff'));
 
+    $this->view_data["load_js"]["datatables"] = true;
+
     return parent::index($request);
   }
 
