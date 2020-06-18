@@ -7,14 +7,15 @@
 
   var defaulId = 'ajax_content';
   var defaulTableId = 'item_list';
-  var currentId = '';  
+  var currentId = '';
+  var selector = '';
   var currentContent = '';
   var mainUrl = '/' + "{{ $main_route }}";
   var mainUrlAjax = mainUrl + '/ajaxIndex';
   var lastRoute = '';
   var redirectRoute = '';
-  var onEdit = false;
   var error = false;
+  var msg = false;
 
   $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
     event.preventDefault();
@@ -389,9 +390,20 @@
 
       } catch (err) {
 
-        return _this.showPopup(err, false);
+        msg = err;
+        _this.appendMsg();
+        throw "";
 
       }
+    },
+
+    appendMsg: function() {
+      var content = '';
+      content = '<div class="alert alert-danger absolute fonsi14">';
+      content +=   msg;
+      content += '</div>';
+
+      return $(content).insertAfter(selector).fadeOut(3000).queue(function() { $(this).remove(); });
     },
 
     onEditResource: function($this) {

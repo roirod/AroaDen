@@ -13,8 +13,7 @@
         	<input type="hidden" name="_method" value="PUT">
 
           @include('form_fields.common_alternative')
-
-        @include('form_fields.fields.closeform')
+        </form>
       </fieldset>
     </div>
   </div>    
@@ -27,6 +26,9 @@
       $('form.editServiceForm').on('submit', function(evt) {
         evt.preventDefault();
         evt.stopPropagation();
+
+        price = $(selector).val().trim();
+        util.validateCurrency(price);
 
         var obj = {
           url  : $(this).attr('action'),

@@ -15,6 +15,10 @@ html,body {
 	font-style: normal;
 }
 
+.absolute {
+  position: absolute !important;
+}
+
 img.center {
   display: block;
   margin: 0 auto;

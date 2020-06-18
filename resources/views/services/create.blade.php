@@ -14,7 +14,6 @@
         @include('form_fields.common_alternative')
 
       </form>
-
     </fieldset>
   </div>
 </div>
@@ -27,6 +26,9 @@
     $('form.createServiceForm').on('submit', function(evt) {
       evt.preventDefault();
       evt.stopPropagation();
+
+      price = $(selector).val().trim();
+      util.validateCurrency(price);
 
       var obj = {
         url  : $(this).attr('action'),
