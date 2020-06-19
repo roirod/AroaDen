@@ -217,11 +217,19 @@
 									@endif
 				    		</td> 
 								<td class="wid40 textcent">{!! $treat->tax !!} %</td>
-                <td class="wid50 textcent">{{ calcTotal($treat->price, $treat->tax) }} €</td>
+                <td class="wid50 textcent">
+                	{{ calcTotal($treat->price, $treat->tax) }} {{ $Alocale["currency_symbol"] }}
+                </td>
 								<td class="wid50 textcent">{!! $treat->units !!}</td>
-                <td class="wid50 textcent">{{ numformat(calcTotal($treat->price, $treat->tax, false) * $treat->units) }} €</td>
-								<td class="wid50 textcent">{!! numformat($treat->paid) !!} €</td>
-                <td class="wid50 textcent">{{ numformat((calcTotal($treat->price, $treat->tax, false) * $treat->units) - $treat->paid) }} €</td>
+                <td class="wid50 textcent">
+                	{{ numformat(calcTotal($treat->price, $treat->tax, false) * $treat->units) }} {{ $Alocale["currency_symbol"] }}
+                </td>
+								<td class="wid50 textcent">
+									{!! numformat($treat->paid) !!} {{ $Alocale["currency_symbol"] }}
+								</td>
+                <td class="wid50 textcent">
+                	{{ numformat((calcTotal($treat->price, $treat->tax, false) * $treat->units) - $treat->paid) }} {{ $Alocale["currency_symbol"] }}
+                </td>
 								<td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 								<td class="wid40 textcent">

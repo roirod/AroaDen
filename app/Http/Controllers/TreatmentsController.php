@@ -84,6 +84,7 @@ class TreatmentsController extends BaseController
       $service = Services::FirstById($idser);     
       $day = $this->convertDmYToYmd($day);
       $pricetax = $this->calcTotalTax($service->price, $service->tax);
+      $paid = $this->formatCurrencyDB($paid);
 
       if ($this->checkIfPaidIsHigher($units, $pricetax, $paid))
         throw new Exception(Lang::get('aroaden.paid_is_higher'));
@@ -160,6 +161,7 @@ class TreatmentsController extends BaseController
 
       $treatment = Treatments::find($id);
       $pricetax = $this->calcTotalTax($treatment->price, $treatment->tax);
+      $paid = $this->formatCurrencyDB($paid);
 
       if ($this->checkIfPaidIsHigher($units, $pricetax, $paid))
         throw new Exception(Lang::get('aroaden.paid_is_higher'));

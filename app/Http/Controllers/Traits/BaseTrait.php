@@ -165,14 +165,17 @@ trait BaseTrait {
   protected function checkIfPaidIsHigher($units, $price, $paid)
   {   
     $total = $units * $price;
+    $total = number_format($total, 2, '.', '');
 
     if ( $paid > $total )
-        return true;
+      return true;
   }
 
   protected function calcTotalTax($price, $tax)
-  {   
-    return (($price * $tax) / 100) + $price;
+  {
+    $total = (($price * $tax) / 100) + $price;
+
+    return $total;
   }
 
 }

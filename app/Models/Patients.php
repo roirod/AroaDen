@@ -156,9 +156,9 @@ class Patients extends BaseModel
     $query = "
       SELECT 
         pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-        ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)), 2) AS total,
-        ROUND(SUM(tre.paid), 2) AS paid,
-        ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)) - SUM(tre.paid), 2) AS rest
+        ROUND( SUM( ROUND(tre.units * (((tre.price * tre.tax) / 100) + tre.price), 2) ), 2) AS total,
+        ROUND( SUM(tre.paid), 2) AS paid,
+        ROUND( SUM( ROUND(tre.units * (((tre.price * tre.tax) / 100) + tre.price), 2) ) - ROUND(SUM(tre.paid), 2) , 2) AS rest
       FROM 
         treatments tre
       INNER JOIN 

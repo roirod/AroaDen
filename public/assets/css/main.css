@@ -17,6 +17,7 @@ html,body {
 
 .absolute {
   position: absolute !important;
+  z-index: 11111111 !important;
 }
 
 img.center {

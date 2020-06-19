@@ -34,11 +34,15 @@
                 <tbody>
                  <tr class="fonsi13">
                    <td class="wid140">{{ $treatment->name }}</td>
-                   <td class="wid95">{{ numformat(calcTotal($treatment->price, $treatment->tax, false)) }} €</td>
+                   <td class="wid95">
+                    {{ numformat(calcTotal($treatment->price, $treatment->tax, false)) }} {{ $Alocale["currency_symbol"] }}
+                   </td>
                    <td class="wid70">{{ $treatment->units }}</td>             
                    <td class="wid70">{{ $treatment->tax }} %</td>
-                   <td class="wid70">{{ numformat(calcTotal($treatment->price, $treatment->tax, false) * $treatment->units) }} €</td>
-                   <td class="wid70">{{ numformat($treatment->paid) }} €</td>
+                   <td class="wid70">
+                    {{ numformat(calcTotal($treatment->price, $treatment->tax, false) * $treatment->units) }} {{ $Alocale["currency_symbol"] }}
+                   </td>
+                   <td class="wid70">{{ numformat($treatment->paid) }} {{ $Alocale["currency_symbol"] }}</td>
                    <td class="wid70">{{ date('d-m-Y', strtotime ($treatment->day) ) }}</td>
                  </tr>
                 </tbody>

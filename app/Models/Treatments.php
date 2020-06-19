@@ -60,7 +60,7 @@ class Treatments extends Model
   public static function SumByPatientId($id)
   {
     return DB::table('treatments')
-                ->selectRaw('SUM( units * (((price * tax) / 100) + price) ) AS total_sum, SUM(paid) AS total_paid, SUM( units * (((price * tax) / 100) + price) ) - SUM(paid) AS rest')
+                ->selectRaw('ROUND(SUM( ROUND(units * (((price * tax) / 100) + price), 2) ), 2) AS total_sum, ROUND(SUM(paid), 2) AS total_paid, ROUND(SUM( ROUND(units * (((price * tax) / 100) + price), 2) ), 2) - ROUND(SUM(paid), 2) AS rest')
                 ->where('idpat', $id)
                 ->get();
   }

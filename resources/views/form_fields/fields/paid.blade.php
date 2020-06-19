@@ -6,7 +6,7 @@
 
 	@else
 
-		<input type="text" name="paid" value="{{ $object->paid }}" class="form-control" required> 
+		<input type="text" name="paid" value="{{ numformat($object->paid) }}" class="form-control" required>
 
 	@endif
  </div>

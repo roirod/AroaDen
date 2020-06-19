@@ -27,7 +27,9 @@
     							<option value="none" selected disabled>{{ Lang::get('aroaden.none') }}</option>
 
     							@foreach($services as $servi)
-    								<option value="{{ $servi->idser }}">{{ $servi->name }}({{ calcTotal($servi->price, $servi->tax) }} €)</option>
+    								<option value="{{ $servi->idser }}">
+                      {{ $servi->name }}({{ calcTotal($servi->price, $servi->tax) }} {{ $Alocale["currency_symbol"] }})
+                    </option>
     							@endforeach
 
     						</select>
@@ -111,7 +113,7 @@
             $('input[name="units"]').val(1);
             $('input[name="paid"]').val("");
             $('input[name="idser"]').attr('value', response.idser);
-            var total = util.calcTotal(response.price, response.tax, false);
+            var total = util.calcTotal(response.price, response.tax);
             $('input[name="paid"]').val(total);
 
             price = response.price;
@@ -119,7 +121,7 @@
 
             $('#name_price').empty();
             total = util.calcTotal(response.price, response.tax);            
-            var name_price = response.name + '(' + total + ' €)';
+            var name_price = response.name +'('+ total +' '+ Alocale.currency_symbol +')';
             $("#name_price").text(name_price);
 
             $('#loading').empty();
