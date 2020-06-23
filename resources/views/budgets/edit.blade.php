@@ -92,7 +92,7 @@
                           $price = calcTotal($item->price, $item->tax);                          
                         @endphp
 
-                        <td class="wid70 textcent">{!! $price !!} €</td>
+                        <td class="wid70 textcent">{!! $price !!} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
 
         							  <td class="wid50">
         							    <div class="btn-group"> 

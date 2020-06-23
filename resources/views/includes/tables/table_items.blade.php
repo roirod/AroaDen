@@ -23,7 +23,7 @@
           @endif
 
           <td class="wid60 textcent"> {!! $item->units !!} </td>
-          <td class="wid70 textcent"> {!! numformat($item->price) !!} € </td>
+          <td class="wid70 textcent"> {!! numformat($item->price) !!} {{ $_SESSION["Alocale"]["currency_symbol"] }} </td>
           <td class="wid50 textcent"> {!! $item->tax !!} % </td>
 
           @php
@@ -36,7 +36,7 @@
             $total_amount = $total_amount + $total;
           @endphp
 
-          <td class="wid70 textcent"> {!! numformat($total) !!} € </td>
+          <td class="wid70 textcent"> {!! numformat($total) !!} {{ $_SESSION["Alocale"]["currency_symbol"] }} </td>
         </tr>
               
       @endforeach
@@ -64,7 +64,7 @@
         <td class="wid60">&nbsp;</td>
         <td class="wid60">&nbsp;</td>       
         <td class="wid60 textder">{!! @trans("aroaden.total_amount") !!}</td>
-        <td class="wid70 textcent">{{ numformat($total_amount) }} € </td> 
+        <td class="wid70 textcent">{{ numformat($total_amount) }} {{ $_SESSION["Alocale"]["currency_symbol"] }} </td> 
       </tr>
 
     </table>

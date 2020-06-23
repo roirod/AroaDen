@@ -5,15 +5,15 @@
 			 	      <table class="table table-bordered fonsi15">
 			 	     	<tr class="text-info pad10">
 				 	     	 <td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.treatments_sum") !!}</td>
-				 	     	 <td class="wid95 textder"> {!! numformat($sum->total_sum) !!} {{ $Alocale["currency_symbol"] }}</td>
+				 	     	 <td class="wid110 textder"> {!! numformat($sum->total_sum) !!} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
 			 	     	</tr> 
 			 		    <tr class="text-success pad10">
 			 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.paid") !!}</td>
-			 		    	<td class="wid95 textder"> {!! numformat($sum->total_paid) !!} {{ $Alocale["currency_symbol"] }}</td>
+			 		    	<td class="wid110 textder"> {!! numformat($sum->total_paid) !!} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
 			 		    </tr>
 			 		    <tr class="text-danger danger pad10">
 			 		    	<td class="wid180"> <i class="fa fa-minus"></i> &nbsp; {!! @trans("aroaden.rest") !!}</td>
-			 		    	<td class="wid95 textder"> {!! numformat($sum->rest) !!} {{ $Alocale["currency_symbol"] }}</td>
+			 		    	<td class="wid110 textder"> {!! numformat($sum->rest) !!} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
 			 		    </tr>
 			 		  </table>
 

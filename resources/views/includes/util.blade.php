@@ -303,14 +303,18 @@
       var num2 = parseFloat(num2);
       var total = num1 * num2;
 
+      total = _this.round2Dec(total);
+
       if (printFormat)
         return _this.printFormat(total);
 
-      return _this.round2Dec(total);
+      return total;
     },
 
     round2Dec: function(num) {
-      return Math.round((num + Number.EPSILON) * 100) / 100;
+      num = Math.round((num + Number.EPSILON) * 100) / 100;
+
+      return num;
     },
 
     calcTotal: function(price, tax, printFormat) {
@@ -320,12 +324,14 @@
 
       tax = parseFloat(tax);
       price = parseFloat(price);
-      var total_amount = ((price * tax) / 100) + price;
+      var total = ((price * tax) / 100) + price;
+
+      total = _this.round2Dec(total);
 
       if (printFormat)
-        total_amount = _this.printFormat(total_amount);
+        total = _this.printFormat(total);
 
-      return total_amount;
+      return total;
     },
 
     printFormat: function(number) {
@@ -355,12 +361,9 @@
         var result = x1 + x2;
 
         return result;
+      }
 
-      } else {
-
-        return number;
-
-      }      
+      return number; 
     },
 
     numberFormat: function(number, decimals, dec_point, thousands_sep) {

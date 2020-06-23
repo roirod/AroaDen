@@ -13,18 +13,22 @@ function addText($text) {
 }
 
 function calcTotal($price, $tax, $numformat = true) {
-  $total_amount = (($price * $tax) / 100) + $price;
+  $total = (($price * $tax) / 100) + $price;
 
   if ($numformat)
-  	return numformat($total_amount);
+  	return numformat($total);
 
-  return $total_amount;
+  return convertToOperate($total);
 };
 
 function numformat($num) {
   $Alocale = $_SESSION["Alocale"];
 
 	return number_format($num, $Alocale["frac_digits"], $Alocale["decimal_point"], $Alocale["thousands_sep"]);
+};
+
+function convertToOperate($num) {
+  return number_format($num, 2, '.', '');
 };
 
 function DatTime($DatTi) {
@@ -54,7 +58,7 @@ function lenum($num) {
 
 function convertYmdToDmY($date)
 {   
-    return date('d-m-Y', strtotime($date));
+  return date('d-m-Y', strtotime($date));
 }
 
 ?>

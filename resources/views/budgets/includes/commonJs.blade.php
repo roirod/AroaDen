@@ -101,7 +101,7 @@
         newRowContent = '  <tr class="fonsi13" id="budgetId_' + idser + '">';
         newRowContent += '   <td class="wid180">' + name + '</td>';
         newRowContent += '   <td class="wid70 textcent">' + units + '</td>';
-        newRowContent += '   <td class="wid70 textcent">' + price + ' € </td>';
+        newRowContent += '   <td class="wid70 textcent">' + price +' '+ Alocale.currency_symbol +'</td>';
         newRowContent += '   <td class="wid50">';
         newRowContent += '     <div class="btn-group">';
         newRowContent += '       <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">';

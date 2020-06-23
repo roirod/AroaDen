@@ -117,7 +117,7 @@
               $price = calcTotal($item->price, $item->tax);                          
             @endphp
 
-            <td class="wid95 textcent">{!! $price !!} €</td>
+            <td class="wid95 textcent">{!! $price !!} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
     			</tr>
 
     	    <?php $created_at = $item->created_at; ?>

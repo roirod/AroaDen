@@ -155,10 +155,10 @@ class Patients extends BaseModel
 
     $query = "
       SELECT 
-        pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-        ROUND( SUM( ROUND(tre.units * (((tre.price * tre.tax) / 100) + tre.price), 2) ), 2) AS total,
-        ROUND( SUM(tre.paid), 2) AS paid,
-        ROUND( SUM( ROUND(tre.units * (((tre.price * tre.tax) / 100) + tre.price), 2) ) - ROUND(SUM(tre.paid), 2) , 2) AS rest
+        pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,        
+        SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price), 2) ) ) AS total,
+        SUM(tre.paid) AS paid,        
+        SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price), 2) ) ) - SUM(tre.paid) AS rest
       FROM 
         treatments tre
       INNER JOIN 
@@ -181,8 +181,8 @@ class Patients extends BaseModel
       SELECT count(*) AS total
       FROM (
         SELECT 
-          pa.idpat, 
-          ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)) - SUM(tre.paid), 2) AS rest
+          pa.idpat,          
+          SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price) , 2) ) ) - SUM(tre.paid) AS rest
         FROM 
           treatments tre
         INNER JOIN 
@@ -213,8 +213,8 @@ class Patients extends BaseModel
         count(*) AS total
       FROM (
         SELECT 
-          CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-          ROUND(SUM(tre.units * (((tre.price * tre.tax) / 100) + tre.price)) - SUM(tre.paid), 2) AS rest
+          CONCAT(pa.surname, ', ', pa.name) AS surname_name,          
+          SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price) , 2) ) ) - SUM(tre.paid) AS rest
         FROM 
           treatments tre
         INNER JOIN 

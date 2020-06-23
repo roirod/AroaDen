@@ -210,7 +210,7 @@ class TreatmentsController extends BaseController
   public function destroy(Request $request, $id)
   {               
     $id = $this->sanitizeData($id);
-    $object = $this->model::find($id);
+    $object = $this->model::FirstById($id);
     $data['error'] = false;
 
     DB::beginTransaction();

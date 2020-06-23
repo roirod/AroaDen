@@ -50,7 +50,7 @@
             <div class="input-group" id="datepicker2">
               <div class="input-group">
                 <p class="input-group-btn pad4"> 
-                  {{ @trans('aroaden.to') }} 
+                  {{ @trans('aroaden.to') }}
                 </p>
                 <input name="date_to" type="text" class="form-control" size="3" required>
 
@@ -60,7 +60,7 @@
               </div>
 
               <div class="input-group-btn padleft5">
-                <button class="btn btn-md btn-primary searchButton pad6">
+                <button title="{{ @trans('aroaden.search') }}" class="btn btn-md btn-primary searchButton pad6">
                   &nbsp; <i class="fa fa-search"></i> &nbsp;
                 </button>
               </div>                

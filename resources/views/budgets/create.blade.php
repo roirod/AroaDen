@@ -64,11 +64,11 @@
           					  		</div>
           					  </td>
           					  <td class="wid50">
-          						  	<button class="btn btn-sm btn-info addLine" data-idser="{!! $item->idser !!}" data-name="{!! $item->name !!}" data-price="{!! $price !!}">
+          						  <button class="btn btn-sm btn-info addLine" data-idser="{!! $item->idser !!}" data-name="{!! $item->name !!}" data-price="{!! $price !!}">
           						  		<i class="fa fa-plus"></i>
-          						  	</button>
+          						  </button>
           					  </td>
-          					  <td class="wid70 textcent">{{ $price }} €</td>
+          					  <td class="wid70 textcent">{{ $price }} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
           					</tr>	
 
         				  @endforeach

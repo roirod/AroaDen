@@ -98,9 +98,9 @@
 			 	<table class="table table-striped table-bordered table-hover">
 			     <tr class="fonsi14">
 					  <td class="wid95">{!! @trans("aroaden.hour") !!}</td>
-					  <td class="wid95">{!! @trans("aroaden.day") !!}</td>
-					  <td class="wid50">{!! @trans("aroaden.edit") !!}</td>
-					  <td class="wid50">{!! @trans("aroaden.delete") !!}</td>
+					  <td class="wid95">{!! @trans("aroaden.date") !!}</td>
+					  <td class="wid50 textcent">{!! @trans("aroaden.edit") !!}</td>
+					  <td class="wid50 textcent">{!! @trans("aroaden.delete") !!}</td>
 					  <td class="wid450">{!! @trans("aroaden.notes") !!}</td>
 			     </tr>
 		    </table>
@@ -113,12 +113,12 @@
 							<tr class="fonsi13">
 					 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
 					 			<td class="wid95">{!! date('d-m-Y', strtotime($appo->day)) !!}</td>
-					 			<td class="wid50">	
+					 			<td class="wid50 textcent">	
 									<a href="{!! url($routes['appointments']."/$appo->idapp/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 										<i class="fa fa-edit"></i>
 									</a>
 								</td>
-								<td class="wid50"> 	
+								<td class="wid50 textcent"> 	
 									<div class="btn-group">
 									 	<form class="form" action="{!! url($routes['appointments']."/$appo->idapp") !!}" data-removeTr="true" method="POST">
 											<input type="hidden" name="_method" value="DELETE">
@@ -194,7 +194,7 @@
 					  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.rest") !!}</td>					 
-					  <td class="wid60 textcent">{!! @trans("aroaden.date") !!}</td>
+					  <td class="wid50 textcent">{!! @trans("aroaden.date") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.edit") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.delete") !!}</td>
 					  <td class="wid95 textcent">{!! @trans("aroaden.staff") !!}</td>
@@ -230,7 +230,7 @@
                 <td class="wid50 textcent">
                 	{{ numformat((calcTotal($treat->price, $treat->tax, false) * $treat->units) - $treat->paid) }} {{ $Alocale["currency_symbol"] }}
                 </td>
-								<td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
+								<td class="wid50 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 								<td class="wid40 textcent">
 									@if (in_array($treat->idtre, $invoiceLines))

@@ -60,9 +60,12 @@ class Treatments extends Model
   public static function SumByPatientId($id)
   {
     return DB::table('treatments')
-                ->selectRaw('ROUND(SUM( ROUND(units * (((price * tax) / 100) + price), 2) ), 2) AS total_sum, ROUND(SUM(paid), 2) AS total_paid, ROUND(SUM( ROUND(units * (((price * tax) / 100) + price), 2) ), 2) - ROUND(SUM(paid), 2) AS rest')
-                ->where('idpat', $id)
-                ->get();
+        ->selectRaw('
+          SUM( units * ( ROUND( (((price * tax) / 100) + price), 2) ) ) AS total_sum, SUM(paid) AS total_paid, 
+          SUM( units * ( ROUND( (((price * tax) / 100) + price), 2) ) ) - SUM(paid) AS rest
+        ')
+        ->where('idpat', $id)
+        ->get();
   }
 
   public static function PaidByPatientId($id)
@@ -70,7 +73,8 @@ class Treatments extends Model
     $collection = DB::table('treatments')
       ->join('services','treatments.idser','=','services.idser')
       ->select('treatments.*','services.name as service_name', 
-        DB::raw('ROUND(treatments.units * (((treatments.price * treatments.tax) / 100) + treatments.price), 2) AS total'))
+        DB::raw('treatments.units * ( ROUND( ((treatments.price * treatments.tax) / 100) + treatments.price , 2) ) AS total')
+      )
       ->where('idpat', $id)
       ->orderBy('day','DESC')
       ->get();
@@ -88,9 +92,9 @@ class Treatments extends Model
   public static function getUpdatedPaidByPatientId($id)
   {
     $collection = DB::table('treatments')
-                    ->select('treatments.*', DB::raw('ROUND(units * (((price * tax) / 100) + price), 2) AS total'))
-                    ->where('idpat', $id)
-                    ->get();
+                ->select('treatments.*', DB::raw('units * ( ROUND( (((price * tax) / 100) + price), 2) ) AS total'))
+                ->where('idpat', $id)
+                ->get();
 
     $array_data = [];
 

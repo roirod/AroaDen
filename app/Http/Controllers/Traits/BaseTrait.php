@@ -49,7 +49,7 @@ trait BaseTrait {
   protected function redirectIfIdIsNull($id, $route)
   {   
     if ( is_null($id) || (is_numeric($id) && $id > 0 && $id == round($id)) )
-        return redirect($route);
+      return redirect($route);
   }
 
   /**
@@ -149,7 +149,7 @@ trait BaseTrait {
   protected function validateTime($time)
   {   
     if ( preg_match("/(2[0-3]|[01][0-9]):([0-5][0-9])/", $time) )
-        return true;
+      return true;
 
     return false;
   }
@@ -174,6 +174,7 @@ trait BaseTrait {
   protected function calcTotalTax($price, $tax)
   {
     $total = (($price * $tax) / 100) + $price;
+    $total = number_format($total, 2, '.', '');
 
     return $total;
   }
