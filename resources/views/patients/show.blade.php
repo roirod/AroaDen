@@ -193,7 +193,7 @@
 					  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.rest") !!}</td>					 
+					  <td class="wid50 textcent text-danger">{!! @trans("aroaden.rest") !!}</td>					 
 					  <td class="wid50 textcent">{!! @trans("aroaden.date") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.edit") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.delete") !!}</td>
@@ -227,7 +227,7 @@
 								<td class="wid50 textcent">
 									{!! numformat($treat->paid) !!} {{ $Alocale["currency_symbol"] }}
 								</td>
-                <td class="wid50 textcent">
+                <td class="wid50 textcent text-danger">
                 	{{ numformat((calcTotal($treat->price, $treat->tax, false) * $treat->units) - $treat->paid) }} {{ $Alocale["currency_symbol"] }}
                 </td>
 								<td class="wid50 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
