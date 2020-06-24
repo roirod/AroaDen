@@ -45,7 +45,7 @@
         <div class="panel panel-default"> 
           <table class="table table-striped table-bordered table-hover">
             <thead>
-               <tr class="fonsi15">
+               <tr class="fonsi14">
                    <td class="wid290">{{ @trans('aroaden.patient') }}</td>
                    <td class="wid95 textcent">{{ @trans('aroaden.date') }}</td>
                    <td class="wid95 textcent">{{ @trans('aroaden.hour') }}</td>             

@@ -1,7 +1,7 @@
 
-<div class="form-group col-sm-2">  
+<div class="form-group col-sm-2">
   <label class="control-label text-left mar10">{{ @trans('aroaden.price') }}</label>
-  <p class="pad6 bggrey" id="total_amount"></p>
+  <input type="text" id="total_amount" class="form-control bggrey" readonly="">
 </div>
 
 <script type="text/javascript">
@@ -17,9 +17,10 @@
       util.validateCurrency(price);
 
       price = util.convertToOperate(price);
-      var total_amount = util.calcTotal(price, tax);
+      var total = util.calcTotal(price, tax);
+      total = total + " " + Alocale.currency_symbol;
 
-      $("#total_amount").text(total_amount + " " + Alocale.currency_symbol);
+      $("#total_amount").val(total);
     }
 
     $(selector).on('change keyup', calcTotal);

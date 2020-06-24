@@ -115,26 +115,6 @@
       return $.ajax(ajax_data);
     },
 
-    loadMainUrlContent: function(url) {
-      var _this = this;
-
-      var urlToLoad = (url != undefined) ? url : mainUrlAjax;
-
-      var obj = {
-        url  : urlToLoad,
-      };
-
-      window.history.replaceState('Object', 'Title', mainUrl);
-
-      _this.processAjaxReturnsHtml(obj);
-    },
-
-    restoreMainContent: function() {
-      var _this = this;
-
-      return _this.showContentOnPage(defaulId, currentContent);
-    },
-
     showPopup: function(msg, success, time) {
       var msg = (msg == undefined) ? "{{ Lang::get('aroaden.success_message') }}" : msg;
       var success = (success == undefined) ? true : success;
@@ -142,10 +122,6 @@
 
       console.log('---------------- showPopup msg  ----------------------------');
       console.dir(msg);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- showPopup success  ----------------------------');
-      console.dir(success);
       console.log('--------------------------------------------');
 
       if (success) {
@@ -326,22 +302,6 @@
       return res;
     },
 
-    convertToShow: function(number) {
-      if (Alocale.decimal_point != Acurrency.db_dec_point) {
-        var nstr = number.toString();
-        nstr += '';
-        x = nstr.split(Acurrency.db_dec_point);
-
-        x1 = x[0];
-        x2 = x.length > 1 ? Alocale.decimal_point + x[1] : '';
-        var result = x1 + x2;
-
-        return result;
-      }
-
-      return number; 
-    },
-
     numberFormat: function(number, decimals, dec_point, thousands_sep) {
       number = number.toFixed(decimals);
       var nstr = number.toString();
@@ -382,7 +342,7 @@
       content +=   msg;
       content += '</div>';
 
-      return $(content).insertAfter(selector).fadeOut(3000).queue(function() { $(this).remove(); });
+      return $(content).insertAfter(selector).fadeOut(2600).queue(function() { $(this).remove(); });
     },
 
     onEditResource: function($this) {
