@@ -312,7 +312,7 @@ h1 small, h5 small {
 fieldset{
   min-width:0;
   margin:0;
-  padding: 10px !important;
+  padding: 10px 10px 15px 10px !important;
   border: 1px groove #f4b940 !important;
   border-radius: 8px 8px 8px 8px;
   -moz-border-radius: 8px 8px 8px 8px;

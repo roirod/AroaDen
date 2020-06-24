@@ -80,11 +80,11 @@
 		<div class="col-sm-12">
 	  	<div class="panel panel-default">
 				<table class="table table-striped table-bordered table-hover">
-			       <tr class="fonsi15">
-				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
-				   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+			       <tr class="fonsi14">
+				   	 	<td class="wid180">{!! @trans("aroaden.patient") !!}</td>
+				   	 	<td class="wid180">{!! @trans("aroaden.treatment") !!}</td>
 				   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
-				   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
+				   	 	<td class="wid95 textcent">{!! @trans("aroaden.date") !!}</td>
 				   	 	<td class="wid180"> </td>
 			   	 	</tr>
 			   </table>
@@ -101,7 +101,7 @@
 								</td>
 							   	<td class="wid180">{{ $treat->service_name }}</td>
 							   	<td class="wid95 textcent">{{ $treat->units }}</td>
-							   	<td class="wid95">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
+							   	<td class="wid95 textcent">{{ date('d-m-Y', strtotime($treat->day)) }}</td>
 							   	<td class="wid180"></td>
 					   		</tr>						
 						@endforeach
@@ -110,11 +110,11 @@
 				</div>
 
 				<table class="table table-striped table-bordered table-hover">
-			       <tr class="fonsi15">
-				   	 	<td class="wid180">{!! @trans("aroaden.patients") !!}</td>
-				   	 	<td class="wid180">{!! @trans("aroaden.treatments") !!}</td>
+			       <tr class="fonsi14">
+				   	 	<td class="wid180">{!! @trans("aroaden.patient") !!}</td>
+				   	 	<td class="wid180">{!! @trans("aroaden.treatment") !!}</td>
 				   	 	<td class="wid95 textcent">{!! @trans("aroaden.units") !!}</td>
-				   	 	<td class="wid95">{!! @trans("aroaden.date") !!}</td>
+				   	 	<td class="wid95 textcent">{!! @trans("aroaden.date") !!}</td>
 				   	 	<td class="wid180"> </td>
 			   	 	</tr>
 			   </table>

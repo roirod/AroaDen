@@ -33,10 +33,10 @@
       return util.redirectTo("/login");
           
     if (thrownError == "Forbidden") {
-      return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+      return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
     }
 
-    return util.showPopup("ajax Error", false, 2500);
+    return util.showPopup("ajax Error", false);
   });
 
   var util = {
@@ -159,7 +159,7 @@
 
       } else {
 
-        time = 4000;
+        time = 3500;
        
         swal({
           text: msg,
@@ -192,14 +192,6 @@
       console.dir(id);
       console.log('--------------------------------------------');
 
-      console.log('---------------- showContentOnPage error  ----------------------------');
-      console.dir(error);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- showContentOnPage content  ----------------------------');
-      console.dir(content);
-      console.log('--------------------------------------------');
-
       if (error)
         content = '<p class="text-danger">' + content + '</p>';
 
@@ -221,16 +213,8 @@
       console.dir(id);
       console.log('--------------------------------------------');
 
-      console.log('---------------- changeText error  ----------------------------');
-      console.dir(error);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- changeText content  ----------------------------');
-      console.dir(content);
-      console.log('--------------------------------------------');
-
       if (error)
-        return _this.showPopup("{{ Lang::get('aroaden.error_message') }}", false, 2500);
+        return _this.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
 
       window.setTimeout(function () {
         $('#'+id).text(content);
@@ -257,10 +241,6 @@
         url  : "/" + routes.settings + "/jsonSettings"
       };
 
-      console.log('---------------- getSettings ajax_data  ----------------------------');
-      console.dir(error);
-      console.log('--------------------------------------------');
-
       _this.processAjaxReturnsJson(ajax_data).done(function(response) {
         document.title = response.page_title;
       });
@@ -270,10 +250,6 @@
       if (document.getElementById('searched')) {
         var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
         $('#searched').prepend(searched);
-
-        console.log('---------------- showSearchText searched  ----------------------------');
-        console.dir(searched);
-        console.log('--------------------------------------------');
       }
     },
 
@@ -475,7 +451,7 @@
               console.log('--------------------------------------------');
 
               if (response.error)
-                return _this.showPopup(response.msg, false, 3500);
+                return _this.showPopup(response.msg, false);
 
               if (count == 'true')
                 _this.changeText(undefined, response.count);
