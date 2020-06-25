@@ -17,9 +17,9 @@
     <form class="form" id="searchService">     
       <div class="input-group">
         <span class="input-group-btn pad10"> 
-          <p> {{ Lang::get('aroaden.search_service') }}</p> 
+          <p> {{ Lang::get('aroaden.search') }}</p> 
         </span>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <input type="search" name="string" id="string" class="form-control" placeholder="{{ Lang::get('aroaden.write_2_or_more') }}" autofocus>
         </div>
         <div class="col-sm-3">
@@ -34,7 +34,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-8">
+  <div class="col-sm-7">
     <div id="item_list">
 
       @include('services.servicesList')
