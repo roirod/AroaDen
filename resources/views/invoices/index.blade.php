@@ -7,31 +7,31 @@
   @include('includes.messages')
   
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-10">
       <div class="panel panel-default">
         <table class="table table-striped table-bordered table-hover" id="table">
           <thead>
             <tr class="fonsi14">
               <td class="wid50"></td>
-              <td class="wid290">{!! @trans("aroaden.patient") !!}</td>
-              <td class="wid110 textcent">{!! @trans("aroaden.number") !!}</td>
-              <td class="wid110 textcent">{!! @trans("aroaden.serial") !!}</td>
+              <td class="wid230">{!! @trans("aroaden.patient") !!}</td>
+              <td class="wid95 textcent">{!! @trans("aroaden.number") !!}</td>
+              <td class="wid70 textcent">{!! @trans("aroaden.serial") !!}</td>
               <td class="wid110 textcent">{!! @trans("aroaden.type") !!}</td>              
               <td class="wid110 textcent">{!! @trans("aroaden.exp_date") !!}</td>
-              <td class="wid60 textcent">{!! @trans("aroaden.edit") !!}</td>              
-              <td class="wid60 textcent">{!! @trans("aroaden.pdf") !!}</td>
+              <td class="wid50 textcent">{!! @trans("aroaden.edit") !!}</td>              
+              <td class="wid50 textcent">{!! @trans("aroaden.pdf") !!}</td>
             </tr>
           </thead>
           <tfoot>
             <tr class="fonsi14">
               <td class="wid50"></td>
-              <td class="wid290">{!! @trans("aroaden.patient") !!}</td>
-              <td class="wid110 textcent">{!! @trans("aroaden.number") !!}</td>
-              <td class="wid110 textcent">{!! @trans("aroaden.serial") !!}</td>
+              <td class="wid230">{!! @trans("aroaden.patient") !!}</td>
+              <td class="wid95 textcent">{!! @trans("aroaden.number") !!}</td>
+              <td class="wid70 textcent">{!! @trans("aroaden.serial") !!}</td>
               <td class="wid110 textcent">{!! @trans("aroaden.type") !!}</td>              
               <td class="wid110 textcent">{!! @trans("aroaden.exp_date") !!}</td>
-              <td class="wid60 textcent">{!! @trans("aroaden.edit") !!}</td>                            
-              <td class="wid60 textcent">{!! @trans("aroaden.pdf") !!}</td>              
+              <td class="wid50 textcent">{!! @trans("aroaden.edit") !!}</td>                            
+              <td class="wid50 textcent">{!! @trans("aroaden.pdf") !!}</td>              
             </tr>
           </tfoot>  
         </table>          

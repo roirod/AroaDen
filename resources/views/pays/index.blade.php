@@ -7,25 +7,25 @@
   @include('includes.messages')
   
   <div class="row">
-  	<div class="col-sm-9">
+  	<div class="col-sm-7">
   	  <div class="panel panel-default">
         <table class="table table-striped table-bordered table-hover" id="PaysTable">
           <thead>
-            <tr class="fonsi15">
+            <tr class="fonsi14">
   		        <td class="wid50"></td>
-  		        <td class="wid290">Paciente</td>
-  		        <td class="wid110 textcent">Total</td>
-  		        <td class="wid110 textcent">Pagado</td> 
-              <td class="wid110 textcent text-danger danger">Resto</td>
+  		        <td class="wid230">Paciente</td>
+  		        <td class="wid95 textcent">Total</td>
+  		        <td class="wid95 textcent">Pagado</td> 
+              <td class="wid95 textcent text-danger danger">Resto</td>
         		</tr>
           </thead>
           <tfoot>
-            <tr class="fonsi15">
+            <tr class="fonsi14">
   		        <td class="wid50"></td>
-  		        <td class="wid290">Paciente</td>
-  		        <td class="wid110 textcent">Total</td>
-  		        <td class="wid110 textcent">Pagado</td> 
-  		        <td class="wid110 textcent text-danger danger">Resto</td>
+  		        <td class="wid230">Paciente</td>
+  		        <td class="wid95 textcent">Total</td>
+  		        <td class="wid95 textcent">Pagado</td> 
+  		        <td class="wid95 textcent text-danger danger">Resto</td>
             </tr>
           </tfoot>  
         </table>					

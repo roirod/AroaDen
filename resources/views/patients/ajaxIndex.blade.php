@@ -13,22 +13,22 @@
   </div> </div> </div> </div>
   	
   <div class="row">
-  	<div class="col-sm-12">
+  	<div class="col-sm-10">
   	  <div class="panel panel-default">
         <table class="table table-striped table-bordered table-hover" id="PatientsTable">
           <thead>
-        	  <tr class="fonsi15">
-              <td class="wid290"></td>
-        			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+        	  <tr class="fonsi14">
+              <td class="wid230"></td>
+        			<td class="wid230">{{ Lang::get('aroaden.name') }}</td>
         			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
         			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
         			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
         		</tr>
           </thead>
           <tfoot>
-            <tr class="fonsi15">
-              <td class="wid290"></td>
-              <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+            <tr class="fonsi14">
+              <td class="wid230"></td>
+              <td class="wid230">{{ Lang::get('aroaden.name') }}</td>
               <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
               <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
               <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
