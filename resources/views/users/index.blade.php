@@ -8,7 +8,17 @@
 	
 	<div class="row">
 
-		<div class="col-sm-8">
+		<div class="col-sm-3">
+	    <fieldset>
+	      <legend>
+	        {!! @trans('aroaden.create_user') !!}
+	      </legend>
+
+				@include('form_fields.common')
+			</fieldset>
+		</div>
+
+		<div class="col-sm-9">
       <fieldset>
         <legend>
           {!! @trans('aroaden.users') !!}
@@ -73,16 +83,6 @@
 					</table>
 
 				</div>
-			</fieldset>
-		</div>
-
-		<div class="col-sm-4">
-	    <fieldset>
-	      <legend>
-	        {!! @trans('aroaden.create_user') !!}
-	      </legend>
-
-				@include('form_fields.common')
 			</fieldset>
 		</div>
 	 

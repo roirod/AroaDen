@@ -7,12 +7,12 @@
 	@include('includes.messages')
 
 	<div class="col-sm-5">
-        <fieldset>
-	          <legend>
-	            {!! @trans('aroaden.edit_user') !!}
-	          </legend>
+    <fieldset>
+			<legend>
+			  {!! @trans('aroaden.edit_user') !!}
+			</legend>
 
-				@include('form_fields.common')
+			@include('form_fields.common')
 		</fieldset>
 	</div>
 
