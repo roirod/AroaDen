@@ -7,7 +7,7 @@ https://www.patreon.com/RoiRodrigo
 
 Dental clinic software
 
-AroaDen-v1.4
+AroaDen-v1.5
 
 Working on lemp stack, ubuntu 18.10, nginx, mysql, php, firefox 65.
 
@@ -19,7 +19,7 @@ Software licensed under the GPL
 
 #### Install
 
-https://github.com/roirod/AroaDen/wiki/Install-AroaDen-v1.4.0
+https://github.com/roirod/AroaDen/wiki/Install-AroaDen-v1.5
 
 #### Videos
 
