@@ -4,71 +4,79 @@
 
   @include('includes.messages')
   
-  <div class="row pad4">
+  <div class="row">
+    <div class="col-xs-9">
 
-    <div class="col-sm-3">
-      <fieldset>
-        <legend>
-          <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}
-        </legend>
+      <div class="col-xs-3">
+        <fieldset>
+          <legend>
+            <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select') }}
+          </legend>
 
-        <form>
-          <select name="select" class="form-control select">
-            <option value="today" selected>{{ @trans('aroaden.today_appointments') }}</option> 
-            <option value="1week">{{ @trans('aroaden.1week_appointments') }}</option> 
-            <option value="1month">{{ @trans('aroaden.1month_appointments') }}</option>
-            <option value="minus1week">{{ @trans('aroaden.minus1week_appointments') }}</option>
-            <option value="minus1month">{{ @trans('aroaden.minus1month_appointments') }}</option>
-          </select> 
-        </form> 
-      </fieldset>
-    </div>
+          <form>
+            <select name="select" class="form-control select">
+              <option value="today" selected>{{ @trans('aroaden.today_appointments') }}</option> 
+              <option value="1week">{{ @trans('aroaden.1week_appointments') }}</option> 
+              <option value="1month">{{ @trans('aroaden.1month_appointments') }}</option>
+              <option value="minus1week">{{ @trans('aroaden.minus1week_appointments') }}</option>
+              <option value="minus1month">{{ @trans('aroaden.minus1month_appointments') }}</option>
+            </select> 
+          </form> 
+        </fieldset>
+      </div>
 
-    <div class="col-sm-5">
-      <fieldset>
-        <legend>
-          <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select_date_range') }}
-        </legend>
+      <div class="col-xs-4">
+        <fieldset>
+          <legend>
+            <i class="fa fa-clock-o"></i> {{ @trans('aroaden.select_date_range') }}
+          </legend>
 
-        <div class="col-sm-5">
           <form>
             <input type="hidden" name="select" value="date_range">
 
-            <div class="input-group date pad4" id="datepicker1">
+            <div class="input-group date col-xs-10" id="datepicker1">
               <p class="input-group-btn pad4"> 
-                {{ @trans('aroaden.date_from') }} 
+                {{ @trans('aroaden.from') }} 
               </p>
-              <input name="date_from" type="text" autofocus required>
+              <input name="date_from" type="text" class="form-control"required>
+
               <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </span>
             </div>
 
-            <div class="input-group date pad4" id="datepicker2">
-              <p class="input-group-btn pad4"> 
-                {{ @trans('aroaden.date_to') }} 
-              </p>
-              <input name="date_to" type="text" required>
-              <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-              </span>
-            </div>
-            
-            <div class="pad10">
-              <input type="button" class="btn btn-sm btn-primary searchButton" value="{{ Lang::get('aroaden.search') }}">
+            <div class="mar4"></div>
+
+            <div class="input-group" id="datepicker2">
+              <div class="input-group">
+                <p class="input-group-btn pad4"> 
+                  {{ @trans('aroaden.to') }}
+                </p>
+                <input name="date_to" type="text" class="form-control" size="3" required>
+
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+
+              <div class="input-group-btn padleft5">
+                <button title="{{ @trans('aroaden.search') }}" class="btn btn-md btn-primary searchButton pad6">
+                  &nbsp; <i class="fa fa-search"></i> &nbsp;
+                </button>
+              </div>                
             </div>
           </form>
-        </div>
 
-      </fieldset>
+        </fieldset>
+      </div>
+
     </div>
-
   </div>
 
   <hr>
 
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-xs-12">
       <div id="item_list">
 
         @include('appointments.tableStaff')
@@ -95,7 +103,8 @@
         return Module.findAppointments(_this);
       });
 
-      $(".searchButton").click(function() {
+      $(".searchButton").click(function(evt) {
+        evt.preventDefault();
         var _this = $(this);
 
         return Module.findAppointments(_this);

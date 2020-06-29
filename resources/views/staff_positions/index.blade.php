@@ -33,7 +33,7 @@
 	  <div class="col-sm-6">
 		  <div class="panel panel-default">
 				<table class="table table-striped table-bordered table-hover">
-		       <tr class="fonsi15">
+		       <tr class="fonsi14">
 			        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
 			        <td class="wid50 textcent">{{ @trans('aroaden.edit') }}</td>
 			        <td class="wid50 textcent">{{ Lang::get('aroaden.delete') }}</td>
@@ -76,7 +76,7 @@
 		          
 		        @endforeach
 
-						<tr class="fonsi15">
+						<tr class="fonsi14">
 						  <td class="wid70 textcent"></td>
 						  <td class="wid70 textcent"></td>
 						  <td class="wid70 textcent"></td>
@@ -91,7 +91,7 @@
 		    </div>
 
 				<table class="table table-striped table-bordered table-hover">
-		       <tr class="fonsi15">
+		       <tr class="fonsi14">
 		        <td class="wid180">{{ @trans('aroaden.position') }}</td>    
 		        <td class="wid50 textcent">{{ @trans('aroaden.edit') }}</td>
 		        <td class="wid50 textcent">{{ Lang::get('aroaden.delete') }}</td>

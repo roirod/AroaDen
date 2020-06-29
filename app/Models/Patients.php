@@ -36,6 +36,11 @@ class Patients extends BaseModel
     return $this->hasMany('App\Models\Invoices', 'idpat', 'idpat');
   }
 
+  public function invoiceLines()
+  {
+    return $this->hasManyThrough('App\Models\InvoiceLines', 'App\Models\Invoices', 'idpat', 'number', 'idpat', 'number');
+  }
+
   public function budgets()
   {
     return $this->hasMany('App\Models\Budgets', 'idpat', 'idpat');
@@ -88,9 +93,9 @@ class Patients extends BaseModel
     if ($sWhere != '')
       $where = "
         WHERE 
-            surname LIKE '%". $sWhere ."%' 
-            OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
-            OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
+          surname LIKE '%". $sWhere ."%' 
+          OR name LIKE '%". $sWhere ."%' OR dni LIKE '%". $sWhere ."%'
+          OR tel1 LIKE '%". $sWhere ."%' OR city LIKE '%". $sWhere ."%'
       ";
 
     if ($sOrder != '') {
@@ -138,7 +143,7 @@ class Patients extends BaseModel
     if ($sWhere != '')
       $having = "
         AND (
-            surname_name LIKE '%". $sWhere ."%'
+          surname_name LIKE '%". $sWhere ."%'
         ) 
       ";
 
@@ -150,10 +155,10 @@ class Patients extends BaseModel
 
     $query = "
       SELECT 
-        pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-        SUM(tre.units*tre.price) as total, 
-        SUM(tre.paid) as paid, 
-        SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+        pa.idpat, CONCAT(pa.surname, ', ', pa.name) AS surname_name,        
+        SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price), 2) ) ) AS total,
+        SUM(tre.paid) AS paid,        
+        SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price), 2) ) ) - SUM(tre.paid) AS rest
       FROM 
         treatments tre
       INNER JOIN 
@@ -176,7 +181,8 @@ class Patients extends BaseModel
       SELECT count(*) AS total
       FROM (
         SELECT 
-          pa.idpat, SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+          pa.idpat,          
+          SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price) , 2) ) ) - SUM(tre.paid) AS rest
         FROM 
           treatments tre
         INNER JOIN 
@@ -207,8 +213,8 @@ class Patients extends BaseModel
         count(*) AS total
       FROM (
         SELECT 
-          CONCAT(pa.surname, ', ', pa.name) AS surname_name,
-          SUM(tre.units*tre.price)-SUM(tre.paid) as rest 
+          CONCAT(pa.surname, ', ', pa.name) AS surname_name,          
+          SUM( tre.units * ( ROUND( ( ( (tre.price * tre.tax) / 100 ) + tre.price) , 2) ) ) - SUM(tre.paid) AS rest
         FROM 
           treatments tre
         INNER JOIN 

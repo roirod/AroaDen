@@ -13,22 +13,22 @@
   </div> </div> </div> </div>
   	
   <div class="row">
-  	<div class="col-sm-12">
+  	<div class="col-sm-10">
   	  <div class="panel panel-default">
         <table class="table table-striped table-bordered table-hover" id="PatientsTable">
           <thead>
-        	  <tr class="fonsi15">
-              <td class="wid290"></td>
-        			<td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+        	  <tr class="fonsi14">
+              <td class="wid230"></td>
+        			<td class="wid230">{{ Lang::get('aroaden.name') }}</td>
         			<td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
         			<td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
         			<td class="wid230">{{ Lang::get('aroaden.city') }}</td>
         		</tr>
           </thead>
           <tfoot>
-            <tr class="fonsi15">
-              <td class="wid290"></td>
-              <td class="wid290">{{ Lang::get('aroaden.name') }}</td>
+            <tr class="fonsi14">
+              <td class="wid230"></td>
+              <td class="wid230">{{ Lang::get('aroaden.name') }}</td>
               <td class="wid110">{{ Lang::get('aroaden.dni') }}</td>
               <td class="wid110">{{ Lang::get('aroaden.tele1') }}</td>
               <td class="wid230">{{ Lang::get('aroaden.city') }}</td>
@@ -40,61 +40,46 @@
   </div>
 
   <script type="text/javascript">
+
     $(document).ready(function() {
       setTimeout(function(){
-        $("#PatientsTable").dataTable(PatientsTable);
+        $("#PatientsTable").dataTable(tableObj);
       }, 180);
 
-      var PatientsTable = {
-        "aaSorting": [[ 1, "asc" ]],
-        'oLanguage': {
-          'sProcessing': 'Procesando...',
-          'sLengthMenu': 'Selecciona _MENU_',
-          'sZeroRecords': 'Pacientes no encontrados',
-          'sInfo': 'De _START_ hasta _END_ de _TOTAL_ pacientes',
-          'sInfoEmpty': 'No hay pacientes',
-          'sInfoFiltered': '(filtrados de _MAX_ total de pacientes)',
-          'sSearch': 'Buscar:',
-          "oPaginate": {
-            "sFirst":    "❮❮",
-            "sLast":     "❯❯",
-            "sNext":     "❯",
-            "sPrevious": "❮"
-          },
-        },
-        "sDom": 
-          "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
-          "<'row'<'col-sm-12'r>>" +
-          "<'row'<'col-sm-7'i><'col-sm-5'p>>" +
-          "<'row'<'col-sm-12't>>" +
-          "<br>" +
-          "<'row'<'col-sm-7'i><'col-sm-5'p>>",
-        "iDisplayStart": 0,
-        "iDisplayLength": iDisplayLength,
-        "bAutoWidth": false,
-        'bPaginate': true,
-        'bLengthChange': true,
-        "sPaginationType": "full_numbers",
-        "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": "{!! $routes['patients'] !!}/list",
-        "sServerMethod": "GET",
-        "aLengthMenu": aLengthMenu,
-        "aoColumnDefs": [
-          {
-            "aTargets": [0],
-            "bSortable": false,
-            "bSearchable": false,
-            "bVisible": false
-          },
-          {
-            "aTargets": [1],
-            "mRender": function (data, type, full) {
-              var resultado = '<a href="{!! $routes['patients'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
-              return resultado;
-            }
-          }
-        ],
+      tableObj.aaSorting = [[1, "asc"]];
+
+      tableObj.oLanguage = {
+        'sProcessing': 'Procesando...',
+        'sLengthMenu': 'Selecciona _MENU_',
+        'sZeroRecords': 'Pacientes no encontrados',
+        'sInfo': 'De _START_ hasta _END_ de _TOTAL_ pacientes',
+        'sInfoEmpty': 'No hay pacientes',
+        'sInfoFiltered': '(filtrados de _MAX_ total de pacientes)',
+        'sSearch': 'Buscar:',
+        "oPaginate": {
+          "sFirst":    "❮❮",
+          "sLast":     "❯❯",
+          "sNext":     "❯",
+          "sPrevious": "❮"
+        }
       };
+
+      tableObj.aoColumnDefs = [
+        {
+          "aTargets": [0],
+          "bSortable": false,
+          "bSearchable": false,
+          "bVisible": false
+        },
+        {
+          "aTargets": [1],
+          "mRender": function (data, type, full) {
+            var resultado = '<a href="{!! $routes['patients'] !!}/'+ full[0] +'" class="pad4" target="_blank">'+ full[1] +'</a>';
+            return resultado;
+          }
+        }
+      ];
+
     });
+
   </script>

@@ -80,14 +80,20 @@
       	   		<div class="box300">
                 <table class="table table-striped table-bordered table-hover">
 
-      		   			<tbody id="budgets_list">   	  	
+      		   			<tbody id="items_list">   	  	
 
-      				   		@foreach ($budgets as $bud)
+      				   		@foreach ($items as $item)
 
-        							<tr class="fonsi12" id="budgetId_{!! $bud->idser !!}">
-        							  <td class="wid180">{!! $bud->name !!}</td>
-        							  <td class="wid70 textcent">{!! $bud->units !!} </td>
-        							  <td class="wid70 textcent">{!! numformat($bud->price) !!} €</td>
+        							<tr class="fonsi12" id="idser_{!! $item->idser !!}">
+        							  <td class="wid180">{!! $item->name !!}</td>
+        							  <td class="wid70 textcent">{!! $item->units !!} </td>
+
+                        @php
+                          $price = calcTotal($item->price, $item->tax);                          
+                        @endphp
+
+                        <td class="wid70 textcent">{!! $price !!} {{ $_SESSION["Alocale"]["currency_symbol"] }}</td>
+
         							  <td class="wid50">
         							    <div class="btn-group"> 
         							    	<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
@@ -96,7 +102,7 @@
         							    	</button>
         							    	<ul class="dropdown-menu" role="menu">
         							  			<li>
-        							  				<button type="button" class="delBudgetLine"> <i class="fa fa-times"></i> Borrar</button>
+        							  				<button class="delLine"> <i class="fa fa-times"></i> Borrar</button>
         							  			</li>
         							  		</ul>  
         							  	</div>	
@@ -109,13 +115,8 @@
                           var budgetArr = [];
 
                         var obj = {
-                          'idpat' : '{!! $bud->idpat !!}',
-                          'uniqid' : '{!! $bud->uniqid !!}',
-                          'idser' : '{!! $bud->idser !!}',
-                          'units' : '{!! $bud->units !!}',
-                          'price' : '{!! $bud->price !!}',
-                          'tax' : '{!! $bud->tax !!}',
-                          'created_at' : '{!! $bud->created_at !!}'
+                          'idser' : '{!! $item->idser !!}',
+                          'units' : '{!! $item->units !!}'
                         };
 
                         budgetArr.push(obj);
@@ -126,7 +127,7 @@
                     <script type="text/javascript">
 
                       onUpdate = true;
-                      budgetArray = budgetArr.slice(0);
+                      itemsArray = budgetArr.slice(0);
 
                     </script>
 
@@ -150,7 +151,7 @@
           <div class="col-sm-6">
     				<div class="form-group"> 
   				    <label class="control-label text-left mar10">Texto:</label>
-  				    <textarea class="form-control" name="budgettext" rows="16">{!! $budgetstext->text !!}</textarea> 
+  				    <textarea class="form-control" name="notes" rows="16">{!! $budgetstext->text !!}</textarea> 
     				</div>
           </div>
 

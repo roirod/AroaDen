@@ -10,13 +10,13 @@ class CreateTreatmentsTable extends Migration
         Schema::create('treatments', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('idtre');
-            $table->Integer('idpat')->unsigned();
-            $table->Integer('idser')->unsigned();
-            $table->tinyInteger('units')->unsigned()->default(1);            
-            $table->mediumInteger('price')->unsigned();
-            $table->mediumInteger('paid')->unsigned()->default(0);
+            $table->mediumInteger('idpat')->unsigned();
+            $table->smallInteger('idser')->unsigned();
+            $table->tinyInteger('units')->unsigned();            
+            $table->decimal('price', 11, 2);
+            $table->decimal('paid', 11, 2);
+            $table->tinyInteger('tax')->unsigned();
             $table->date('day');
-            $table->tinyInteger('tax')->unsigned()->default(0);
             $table->timestamps();
             $table->index('day');
             $table->index('idpat');

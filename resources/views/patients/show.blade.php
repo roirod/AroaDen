@@ -98,9 +98,9 @@
 			 	<table class="table table-striped table-bordered table-hover">
 			     <tr class="fonsi14">
 					  <td class="wid95">{!! @trans("aroaden.hour") !!}</td>
-					  <td class="wid95">{!! @trans("aroaden.day") !!}</td>
-					  <td class="wid50">{!! @trans("aroaden.edit") !!}</td>
-					  <td class="wid50">{!! @trans("aroaden.delete") !!}</td>
+					  <td class="wid95">{!! @trans("aroaden.date") !!}</td>
+					  <td class="wid50 textcent">{!! @trans("aroaden.edit") !!}</td>
+					  <td class="wid50 textcent">{!! @trans("aroaden.delete") !!}</td>
 					  <td class="wid450">{!! @trans("aroaden.notes") !!}</td>
 			     </tr>
 		    </table>
@@ -112,13 +112,13 @@
 
 							<tr class="fonsi13">
 					 			<td class="wid95">{!! mb_substr($appo->hour, 0, -3) !!}</td>
-					 			<td class="wid95">{!!date('d-m-Y', strtotime($appo->day) )!!}</td>
-					 			<td class="wid50">	
+					 			<td class="wid95">{!! date('d-m-Y', strtotime($appo->day)) !!}</td>
+					 			<td class="wid50 textcent">	
 									<a href="{!! url($routes['appointments']."/$appo->idapp/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
 										<i class="fa fa-edit"></i>
 									</a>
 								</td>
-								<td class="wid50"> 	
+								<td class="wid50 textcent"> 	
 									<div class="btn-group">
 									 	<form class="form" action="{!! url($routes['appointments']."/$appo->idapp") !!}" data-removeTr="true" method="POST">
 											<input type="hidden" name="_method" value="DELETE">
@@ -159,7 +159,7 @@
 	<br>
 
 	<div class="row">
-	  <div class="col-sm-12"> 
+	  <div class="col-sm-4"> 
 		  <div class="input-group">
 		  	<span class="input-group-btn pad10">  <p> {!! @trans("aroaden.treatments") !!} </p> </span>
 
@@ -171,7 +171,14 @@
 					</div> 
 				</div> 
 			</div> 
-		</div> 
+		</div>
+
+	  <div class="col-sm-6"> 
+			<p class="text-info pad10"> 
+				{!! @trans("aroaden.no_action_allow_invoice") !!}
+			</p>
+		</div>
+
 	</div>
 
 	<div class="row">
@@ -186,8 +193,8 @@
 					  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.rest") !!}</td>					 
-					  <td class="wid60 textcent">{!! @trans("aroaden.date") !!}</td>
+					  <td class="wid50 textcent text-danger">{!! @trans("aroaden.rest") !!}</td>					 
+					  <td class="wid50 textcent">{!! @trans("aroaden.date") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.edit") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.delete") !!}</td>
 					  <td class="wid95 textcent">{!! @trans("aroaden.staff") !!}</td>
@@ -200,36 +207,72 @@
 				    @foreach($treatments["treatments"] as $treat)
 
 				  		<tr class="fonsi13">
-				    		<td class="wid160">{!! $treat->service_name !!}</td> 
+				    		<td class="wid160">
+				    			{!! $treat->service_name !!}
+
+									@if (in_array($treat->idtre, $invoiceLines))
+										<span class="text-info">
+											(*F)
+										</span>
+									@endif
+				    		</td> 
 								<td class="wid40 textcent">{!! $treat->tax !!} %</td>
-								<td class="wid50 textcent">{!! numformat($treat->price) !!} €</td>
+                <td class="wid50 textcent">
+                	{{ calcTotal($treat->price, $treat->tax) }} {{ $Alocale["currency_symbol"] }}
+                </td>
 								<td class="wid50 textcent">{!! $treat->units !!}</td>
-								<td class="wid50 textcent">{!! numformat($treat->units * $treat->price) !!} €</td>
-								<td class="wid50 textcent">{!! numformat($treat->paid) !!} €</td>
-								<td class="wid50 textcent">{!! numformat(($treat->units * $treat->price) - $treat->paid) !!} €</td>								
-								<td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
+                <td class="wid50 textcent">
+                	{{ numformat(calcTotal($treat->price, $treat->tax, false) * $treat->units) }} {{ $Alocale["currency_symbol"] }}
+                </td>
+								<td class="wid50 textcent">
+									{!! numformat($treat->paid) !!} {{ $Alocale["currency_symbol"] }}
+								</td>
+                <td class="wid50 textcent text-danger">
+                	{{ numformat((calcTotal($treat->price, $treat->tax, false) * $treat->units) - $treat->paid) }} {{ $Alocale["currency_symbol"] }}
+                </td>
+								<td class="wid50 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
 
 								<td class="wid40 textcent">
-									<a href="{!! url($routes['treatments']."/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
-										<i class="fa fa-edit"></i>
-									</a>
+									@if (in_array($treat->idtre, $invoiceLines))
+
+										<button class="btn btn-sm btn-default disabled">
+											<i class="fa fa-ban"></i>
+										</button>
+
+									@else
+
+										<a href="{!! url($routes['treatments']."/$treat->idtre/edit") !!}" class="btn btn-sm btn-success" role="button" title="{!! @trans("aroaden.edit") !!}">
+											<i class="fa fa-edit"></i>
+										</a>
+
+									@endif
 								</td>
 
-								<td class="wid40 textcent"> 	
-									<div class="btn-group">
-									 	<form class="form" action="{!! url($routes['treatments']."/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
-											<input type="hidden" name="_method" value="DELETE">
+								<td class="wid40 textcent">
+									@if (in_array($treat->idtre, $invoiceLines))
 
-											<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
-												<i class="fa fa-times"></i> <span class="caret"></span>  
-											</button>
-											<ul class="dropdown-menu" role="menu"> 
-												<li>
-													@include('includes.delete_button')
-												</li>
-											</ul>			
-								 		</form>
-									</div> 
+										<button class="btn btn-sm btn-default disabled">
+											<i class="fa fa-ban"></i>
+										</button>
+
+									@else
+
+										<div class="btn-group">
+										 	<form action="{!! url($routes['treatments']."/$treat->idtre") !!}" data-removeTr="true" data-htmlContent="true" method="POST">	
+												<input type="hidden" name="_method" value="DELETE">
+
+												<button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown">
+													<i class="fa fa-times"></i> <span class="caret"></span>  
+												</button>
+												<ul class="dropdown-menu" role="menu"> 
+													<li>
+														@include('includes.delete_button')
+													</li>
+												</ul>			
+									 		</form>
+										</div>
+
+									@endif
 								</td>
 
 								<td class="wid95">		
@@ -262,9 +305,8 @@
 
 	    		</table>
 				</div>
-
-			</div> 
-		</div> 
+			</div>
+		</div>
 	</div>		
 
 	<hr> <br>			

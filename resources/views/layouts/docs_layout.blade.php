@@ -8,6 +8,8 @@
 
   <style>
 
+  @if($downloadPdf)
+
     html {
       font-family: 'Helvetica' !important;
       margin: 16mm 16mm 16mm 16mm !important;
@@ -28,17 +30,32 @@
       font-size: 10px !important;
     }
 
+  @endif
+
   </style>
+
+  <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
+  <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
 
 </head>
 
 <body class="bgwi">
 
-  @yield('content')
+  @if($downloadPdf)
+
+  <div class="row">
+
+  @else
+
+  <div class="row pad30">
+
+  @endif
 
 
-  <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
-  <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
-     
+    @yield('content')
+
+
+  </div> 
+
 </body>
 </html>

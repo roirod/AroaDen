@@ -24,10 +24,12 @@
                 <label class="control-label text-left mar10">{{ Lang::get('aroaden.select_service') }}</label>
 
     						<select name="idser_select" id="idser_select" class="form-control" required>
-    							<option value="none" selected disabled></option>
+    							<option value="none" selected disabled>{{ Lang::get('aroaden.none') }}</option>
 
     							@foreach($services as $servi)
-    								<option value="{{ $servi->idser }}">{{ $servi->name }}({{ $servi->price }} €)</option>
+    								<option value="{{ $servi->idser }}">
+                      {{ $servi->name }}({{ calcTotal($servi->price, $servi->tax) }} {{ $Alocale["currency_symbol"] }})
+                    </option>
     							@endforeach
 
     						</select>
@@ -50,7 +52,6 @@
             <form class="form save_form" action="/{{ $main_route }}">
 			        <input type="hidden" name="idpat" value="{{ $id }}">
 			        <input type="hidden" name="idser" value="">
-			        <input type="hidden" name="price" value="">
 
 			        @include('form_fields.common_alternative')
             </form>
@@ -71,15 +72,11 @@
     redirectRoute = '/{{ $routes['patients'].'/'.$id }}';
 
     $('input[name="units"]').on('change', function(evt) {
-      var price = $('input[name="price"]').val();
-      
-      return getPaid(price);
+      return getPaid();
     });
 
     $('#multiply_units_price').click(function (evt) {
-      var price = $('input[name="price"]').val();
-      
-      return getPaid(price);    
+      return getPaid();    
     });
 
     $("#ajax_content").hide();
@@ -116,14 +113,16 @@
             $('input[name="units"]').val(1);
             $('input[name="paid"]').val("");
             $('input[name="idser"]').attr('value', response.idser);
-            $('input[name="price"]').attr('value', response.price);         
-            $('input[name="paid"]').val(response.price);
+            var total = util.calcTotal(response.price, response.tax);
+            $('input[name="paid"]').val(total);
+
+            price = response.price;
+            tax = response.tax;
 
             $('#name_price').empty();
-            var name_price = response.name + '(' + response.price + ' €)';
+            total = util.calcTotal(response.price, response.tax);            
+            var name_price = response.name +'('+ total +' '+ Alocale.currency_symbol +')';
             $("#name_price").text(name_price);
-
-            //$('input[name="day"]').attr('value', util.getTodayDate());
 
             $('#loading').empty();
             $("#ajax_content").hide().fadeIn(300).show(0);

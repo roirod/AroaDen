@@ -9,7 +9,7 @@ class CreateBudgetsTextTable extends Migration
     {
         Schema::create('budgets_text', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('idpat')->unsigned();
+            $table->mediumInteger('idpat')->unsigned();
             $table->string('uniqid', 16);
             $table->text('text')->nullable();
             $table->primary(['uniqid', 'idpat']);

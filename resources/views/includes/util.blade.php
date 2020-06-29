@@ -1,26 +1,21 @@
 
 <script type="text/javascript">
 
-  // datatables staff
-  var aLengthMenu = [
-    [15, 25, 50, 100],
-    [15, 25, 50, 100]
-  ];
-
-  var iDisplayLength = 15;
-  // datatables staff
-
   var routes = <?php echo json_encode($routes); ?>;
+  var Alocale = <?php echo json_encode($Alocale); ?>;
+  var Acurrency = <?php echo json_encode($_SESSION["Acurrency"]); ?>;
 
   var defaulId = 'ajax_content';
   var defaulTableId = 'item_list';
-  var currentId = '';  
+  var currentId = '';
+  var selector = '';
   var currentContent = '';
   var mainUrl = '/' + "{{ $main_route }}";
   var mainUrlAjax = mainUrl + '/ajaxIndex';
   var lastRoute = '';
   var redirectRoute = '';
   var error = false;
+  var msg = false;
 
   $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
     event.preventDefault();
@@ -38,13 +33,19 @@
       return util.redirectTo("/login");
           
     if (thrownError == "Forbidden") {
-      return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false, 2500);
+      return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
     }
 
-    return util.showPopup("ajax Error", false, 2500);
+    return util.showPopup("ajax Error", false);
   });
 
   var util = {
+
+    reload: function() {
+      setTimeout(function(){  
+        return window.location.reload();
+      }, 1600);
+    },
 
     redirectTo: function(string) {
       var string = (string == undefined) ? redirectRoute : string;
@@ -114,26 +115,6 @@
       return $.ajax(ajax_data);
     },
 
-    loadMainUrlContent: function(url) {
-      var _this = this;
-
-      var urlToLoad = (url != undefined) ? url : mainUrlAjax;
-
-      var obj = {
-        url  : urlToLoad,
-      };
-
-      window.history.replaceState('Object', 'Title', mainUrl);
-
-      _this.processAjaxReturnsHtml(obj);
-    },
-
-    restoreMainContent: function() {
-      var _this = this;
-
-      return _this.showContentOnPage(defaulId, currentContent);
-    },
-
     showPopup: function(msg, success, time) {
       var msg = (msg == undefined) ? "{{ Lang::get('aroaden.success_message') }}" : msg;
       var success = (success == undefined) ? true : success;
@@ -141,10 +122,6 @@
 
       console.log('---------------- showPopup msg  ----------------------------');
       console.dir(msg);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- showPopup success  ----------------------------');
-      console.dir(success);
       console.log('--------------------------------------------');
 
       if (success) {
@@ -158,7 +135,7 @@
 
       } else {
 
-        time = 4000;
+        time = 3500;
        
         swal({
           text: msg,
@@ -191,14 +168,6 @@
       console.dir(id);
       console.log('--------------------------------------------');
 
-      console.log('---------------- showContentOnPage error  ----------------------------');
-      console.dir(error);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- showContentOnPage content  ----------------------------');
-      console.dir(content);
-      console.log('--------------------------------------------');
-
       if (error)
         content = '<p class="text-danger">' + content + '</p>';
 
@@ -220,16 +189,8 @@
       console.dir(id);
       console.log('--------------------------------------------');
 
-      console.log('---------------- changeText error  ----------------------------');
-      console.dir(error);
-      console.log('--------------------------------------------');
-
-      console.log('---------------- changeText content  ----------------------------');
-      console.dir(content);
-      console.log('--------------------------------------------');
-
       if (error)
-        return util.showPopup("{{ Lang::get('aroaden.error_message') }}", false, 2500);
+        return _this.showPopup("{{ Lang::get('aroaden.error_message') }}", false);
 
       window.setTimeout(function () {
         $('#'+id).text(content);
@@ -256,10 +217,6 @@
         url  : "/" + routes.settings + "/jsonSettings"
       };
 
-      console.log('---------------- getSettings ajax_data  ----------------------------');
-      console.dir(error);
-      console.log('--------------------------------------------');
-
       _this.processAjaxReturnsJson(ajax_data).done(function(response) {
         document.title = response.page_title;
       });
@@ -269,10 +226,6 @@
       if (document.getElementById('searched')) {
         var searched = ' <span class="label label-primary">{{ Lang::get('aroaden.searched_text') }} ' + $('#string').val() + '</span>';
         $('#searched').prepend(searched);
-
-        console.log('---------------- showSearchText searched  ----------------------------');
-        console.dir(searched);
-        console.log('--------------------------------------------');
       }
     },
 
@@ -293,12 +246,103 @@
       return today;
     },
 
-    multiply: function(num1, num2) {
-      var num1 = parseInt(num1, 10);
-      var num2 = parseInt(num2, 10);
+    multiply: function(num1, num2, printFormat) {
+      var _this = this;
+
+      var printFormat = (printFormat == undefined) ? true : false;
+
+      var num1 = parseFloat(num1);
+      var num2 = parseFloat(num2);
       var total = num1 * num2;
 
+      total = _this.round2Dec(total);
+
+      if (printFormat)
+        return _this.printFormat(total);
+
       return total;
+    },
+
+    round2Dec: function(num) {
+      num = Math.round((num + Number.EPSILON) * 100) / 100;
+
+      return num;
+    },
+
+    calcTotal: function(price, tax, printFormat) {
+      var _this = this;
+
+      var printFormat = (printFormat == undefined) ? true : false;
+
+      tax = parseFloat(tax);
+      price = parseFloat(price);
+      var total = ((price * tax) / 100) + price;
+
+      total = _this.round2Dec(total);
+
+      if (printFormat)
+        total = _this.printFormat(total);
+
+      return total;
+    },
+
+    printFormat: function(number) {
+      var _this = this;
+
+      number = parseFloat(number);
+
+      return _this.numberFormat(number, Alocale.frac_digits, Alocale.decimal_point, Alocale.thousands_sep);
+    },
+
+    convertToOperate: function(number) {
+      var str = number.toString();
+      var res = str.split(Alocale.thousands_sep).join("");
+      res = res.replace(Alocale.decimal_point, ".");
+
+      return res;
+    },
+
+    numberFormat: function(number, decimals, dec_point, thousands_sep) {
+      number = number.toFixed(decimals);
+      var nstr = number.toString();
+      nstr += '';
+      x = nstr.split('.');
+
+      x1 = x[0];
+      x2 = x.length > 1 ? dec_point + x[1] : '';
+      var rgx = /(\d+)(\d{3})/;
+
+      while (rgx.test(x1))
+        x1 = x1.replace(rgx, '$1' + thousands_sep + '$2');
+
+      return x1 + x2;
+    },
+
+    validateCurrency: function(currency) {
+      var _this = this;
+      var regexp = RegExp(Acurrency.regexp);
+
+      try {
+
+        if (!regexp.test(currency))
+          throw "{{ Lang::get('aroaden.currency_format_error') }}";
+
+      } catch (err) {
+
+        msg = err;
+        _this.appendMsg();
+        throw "";
+
+      }
+    },
+
+    appendMsg: function() {
+      var content = '';
+      content = '<div class="alert alert-danger absolute fonsi14">';
+      content +=   msg;
+      content += '</div>';
+
+      return $(content).insertAfter(selector).fadeOut(2600).queue(function() { $(this).remove(); });
     },
 
     onEditResource: function($this) {
@@ -367,7 +411,7 @@
               console.log('--------------------------------------------');
 
               if (response.error)
-                return _this.showPopup(response.msg, false, 3500);
+                return _this.showPopup(response.msg, false);
 
               if (count == 'true')
                 _this.changeText(undefined, response.count);

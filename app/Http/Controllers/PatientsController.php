@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Appointments;
 use App\Models\Treatments;
 use App\Models\Patients;
+use App\Models\Invoices;
 use App\Models\Budgets;
 use App\Models\Record;
 use Carbon\Carbon;
@@ -70,6 +71,8 @@ class PatientsController extends BaseController implements BaseInterface
   public function index(Request $request)
   {   
     $this->setPageTitle(Lang::get('aroaden.patients'));
+
+    $this->view_data["load_js"]["datatables"] = true;
 
     return parent::index($request);
   }
@@ -160,15 +163,16 @@ class PatientsController extends BaseController implements BaseInterface
 
     $patient = $this->model::FirstById($id);
 
-    if ( !isset($patient->idpat) ) {
+    if ( empty($patient->idpat) ) {
       $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_patient_or_deleted'));    
       return redirect($this->main_route);
     }
 
     $this->createDir($id, true);
 
-    $appointments = Appointments::AllByPatientId($id);
+    $appointments = $patient->appointments;
     $treatments = Treatments::AllByPatientId($id);
+    $invoiceLines = $patient->invoiceLines->pluck('idtre')->toArray();
     $treatments_sum = Treatments::SumByPatientId($id);
     $birth = trim($patient->birth);
     $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
@@ -185,6 +189,7 @@ class PatientsController extends BaseController implements BaseInterface
     $this->view_data['object'] = $patient;
     $this->view_data['appointments'] = $appointments;
     $this->view_data['treatments'] = $treatments;
+    $this->view_data['invoiceLines'] = $invoiceLines;    
     $this->view_data['treatments_sum'] = $treatments_sum;
     $this->view_data['id'] = $id;
     $this->view_data['idnav'] = $id;        

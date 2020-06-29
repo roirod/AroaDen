@@ -1,5 +1,5 @@
 
-@extends('layouts.pdf_layout')
+@extends('layouts.docs_layout')
 
 @section('content')
 

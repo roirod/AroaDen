@@ -10,7 +10,6 @@
         "nesbot/carbon": "^1.21",
         "laravelcollective/html": "5.5.*",
         "intervention/image": "^2.3",
-        "predis/predis": "^1.1",
         "doctrine/dbal": "^2.5",
         "barryvdh/laravel-dompdf": "^0.8.6"
     },
@@ -20,7 +19,6 @@
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
-        "codeception/codeception": "^2.4",
         "filp/whoops": "~2.0",
         "barryvdh/laravel-debugbar": "^3.2"        
     },

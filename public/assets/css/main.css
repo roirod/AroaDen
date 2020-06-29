@@ -2,7 +2,11 @@ body {
   background: #333333; 
 }
 
-html,body { height:100%; padding:0; margin:0; }
+html,body { 
+  height:100%; 
+  padding:0; 
+  margin:0; 
+}
 
 @font-face {
 	font-family: 'Ubuntu';
@@ -11,10 +15,15 @@ html,body { height:100%; padding:0; margin:0; }
 	font-style: normal;
 }
 
+.absolute {
+  position: absolute !important;
+  z-index: 11111111 !important;
+}
+
 img.center {
-    display: block;
-    margin: 0 auto;
-    margin-top: 50px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 50px;
 }
 
 .tooltip {
@@ -24,11 +33,11 @@ img.center {
 }
 
 .fa-menusize {
-    font-size: 2.1rem !important;
+  font-size: 1.8rem !important;
 }
 
 .fa-min {
-    font-size: 1.1rem !important;
+  font-size: 1.1rem !important;
 }
 
 .borderradius { 
@@ -36,23 +45,23 @@ img.center {
 }
 
 .mainContainer { 
-  width: 1280px !important; 
-  max-width: 1280px !important; 
-  min-width: 1280px !important;
+  width: 1260px !important; 
+  max-width: 1260px !important; 
+  min-width: 1260px !important;
   min-height: 680px !important;
   overflow: visible !important;
 }
 
 .widCol1 { 
-  width: 100px !important; 
-  max-width: 100px !important; 
-  min-width: 100px !important; 
+  width: 80px !important; 
+  max-width: 80px !important; 
+  min-width: 80px !important; 
 }
 
 .widCol2 { 
-  width: 1180px !important; 
-  max-width: 1180px !important; 
-  min-width: 1180px !important; 
+  width: 1190px !important; 
+  max-width: 1190px !important; 
+  min-width: 1190px !important; 
 }
 
 .minHeight { min-height: 700px !important; }
@@ -115,6 +124,8 @@ a.paginate_active {
 .wid180 { width: 180px !important; }
 .wid160 { width: 160px !important; }
 .wid140 { width: 140px !important; }
+.wid130 { width: 130px !important; }
+.wid120 { width: 120px !important; }
 .wid110 { width: 110px !important; }
 .wid95 { width: 95px !important; }
 .wid70 { width: 70px !important; }
@@ -262,7 +273,10 @@ h1 small, h5 small {
 .mar60 { margin: 60px; }
 .mar70 { margin: 70px; }
 
+.pad2 { padding: 2px; }
 .pad4 { padding: 4px; }
+.pad6 { padding: 6px; }
+.pad8 { padding: 8px; }
 .pad10 { padding: 10px; }
 .pad20 { padding: 20px; }
 .pad30 { padding: 30px; }
@@ -271,13 +285,13 @@ h1 small, h5 small {
 .pad80 { padding: 80px; }
 .pad110 { padding: 110px; }
 
+.padleft5 { padding-left: 5px; }
+.padleft11 { padding-left: 11px; }
+
 .fonbla { color: white !important; }
 .fuengrisoscu { color: rgb(20, 20, 20); }
 
-
-.textshadow { 
-  text-shadow:  2px 2px 0px #000;
-}
+.textshadow { text-shadow:  2px 2px 0px #000; }
 
 .rowcentered {
     text-align:center;
@@ -298,7 +312,7 @@ h1 small, h5 small {
 fieldset{
   min-width:0;
   margin:0;
-  padding: 10px !important;
+  padding: 10px 10px 20px 10px !important;
   border: 1px groove #f4b940 !important;
   border-radius: 8px 8px 8px 8px;
   -moz-border-radius: 8px 8px 8px 8px;

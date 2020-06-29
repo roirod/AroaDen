@@ -10,9 +10,10 @@
       </legend>
 
       <form id="form" class="createServiceForm form" action="{!! $routes['services'] !!}" method="post">
+
         @include('form_fields.common_alternative')
 
-      @include('form_fields.fields.closeform')
+      </form>
     </fieldset>
   </div>
 </div>
@@ -26,19 +27,20 @@
       evt.preventDefault();
       evt.stopPropagation();
 
+      price = $(selector).val().trim();
+      util.validateCurrency(price);
+
       var obj = {
         url  : $(this).attr('action'),
-        data : $(this).serialize(),
+        data : $(this).serialize()
       };
-
-      lastRoute = routes.services + '/ajaxIndex';
 
       util.processAjaxReturnsJson(obj).done(function(response) {
         if (response.error)
           return util.showPopup(response.msg, false);
 
         var obj = {
-          url  : lastRoute
+          url  : routes.services + '/ajaxIndex'
         };
 
         util.processAjaxReturnsHtml(obj);

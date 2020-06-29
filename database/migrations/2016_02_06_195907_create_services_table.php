@@ -9,10 +9,10 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->engine = 'InnoDB';            
-            $table->increments('idser');
+            $table->smallIncrements('idser');
             $table->string('name',111);
-            $table->smallInteger('price');
-            $table->tinyInteger('tax')->default(0);
+            $table->decimal('price', 11, 2);
+            $table->tinyInteger('tax')->unsigned();
             $table->timestamps();
             $table->unique('name');       
         });

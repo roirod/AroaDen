@@ -15,7 +15,7 @@ class CreateStaffWorksTable extends Migration
         Schema::create('staff_works', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('idstwo');
-            $table->Integer('idsta')->unsigned();
+            $table->smallInteger('idsta')->unsigned();
             $table->bigInteger('idtre')->unsigned();
             $table->index('idtre');     
             $table->index('idsta'); 

@@ -82,21 +82,21 @@ class TreatmentsController extends BaseController
     try {
 
       $service = Services::FirstById($idser);     
-      $price = $service->price;
-      $tax = $service->tax;
       $day = $this->convertDmYToYmd($day);
+      $pricetax = $this->calcTotalTax($service->price, $service->tax);
+      $paid = $this->formatCurrencyDB($paid);
 
-      if ($this->checkIfPaidIsHigher($units, $price, $paid))
+      if ($this->checkIfPaidIsHigher($units, $pricetax, $paid))
         throw new Exception(Lang::get('aroaden.paid_is_higher'));
 
       $idtre = Treatments::insertGetId([
         'idpat' => $idpat,
         'idser' => $idser,
-        'price' => $price,
+        'price' => $service->price,
         'units' => $units,
         'paid' => $paid,
         'day' => $day,
-        'tax' => $tax,
+        'tax' => $service->tax,
         'created_at' => date('Y-m-d H:i:s')
       ]);
 
@@ -160,8 +160,10 @@ class TreatmentsController extends BaseController
     try {
 
       $treatment = Treatments::find($id);
+      $pricetax = $this->calcTotalTax($treatment->price, $treatment->tax);
+      $paid = $this->formatCurrencyDB($paid);
 
-      if ($this->checkIfPaidIsHigher($units, $price, $paid))
+      if ($this->checkIfPaidIsHigher($units, $pricetax, $paid))
         throw new Exception(Lang::get('aroaden.paid_is_higher'));
 
       $treatment->units = $units;
@@ -208,7 +210,7 @@ class TreatmentsController extends BaseController
   public function destroy(Request $request, $id)
   {               
     $id = $this->sanitizeData($id);
-    $object = $this->model::find($id);
+    $object = $this->model::FirstById($id);
     $data['error'] = false;
 
     DB::beginTransaction();

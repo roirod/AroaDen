@@ -15,10 +15,11 @@ class StaffPositions extends BaseModel
   protected $table = 'staff_positions';
   protected $fillable = ['name'];
   protected $primaryKey = 'idstpo';
+  public $timestamps = false;
 
   public function scopeAllOrderByName($query)
   {
-      return $query->orderBy('name', 'ASC')
+    return $query->orderBy('name', 'ASC')
                       ->get();
   }
 

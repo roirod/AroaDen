@@ -29,8 +29,9 @@ class ServicesController extends BaseController implements BaseInterface
 
     $fields = [
       'name' => true,
-      'price' => true,
       'tax' => true,
+      'price' => true,
+      'pricetax' => true,
       'save' => true
     ];
 
@@ -133,10 +134,12 @@ class ServicesController extends BaseController implements BaseInterface
 
     try {
 
-      $exists = $this->model::FirstByName($name);         
+      $exists = $this->model::FirstByName($name);
 
       if ( isset($exists->name) )
         throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
+
+      $price = $this->formatCurrencyDB($price);
 
       $this->model::create([
         'name' => $name,
@@ -202,7 +205,7 @@ class ServicesController extends BaseController implements BaseInterface
 
       $object = $this->model::find($id);
       $object->name = $name;
-      $object->price = $price;
+      $object->price = $this->formatCurrencyDB($price);
       $object->tax = $tax;            
       $object->save();
 

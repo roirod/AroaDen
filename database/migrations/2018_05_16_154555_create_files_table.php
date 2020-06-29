@@ -15,7 +15,7 @@ class CreateFilesTable extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->engine = 'InnoDB';    
             $table->bigIncrements('idfiles');
-            $table->Integer('iduser')->unsigned();
+            $table->mediumInteger('iduser')->unsigned();
             $table->string('type', 22);
             $table->text('info');
             $table->string('originalName', 55);

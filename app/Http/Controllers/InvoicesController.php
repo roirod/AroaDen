@@ -4,300 +4,420 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Invoices\Rectification;
 use App\Http\Controllers\Invoices\Complete;
+use App\Http\Controllers\Libs\PdfLib;
 use Illuminate\Http\Request;
+use App\Models\InvoiceLines;
 use App\Models\Treatments;
 use App\Models\Patients;
-use App\Models\Services;
 use App\Models\Invoices;
-use App\Models\Staff;
-use Validator;
+use Exception;
 use Lang;
 use DB;
 
 class InvoicesController extends BaseController
 {
-    const COMPLETE = 'Complete';
-    const RECTIFICATION = 'Rectification';
+  private $invoice_types = [
+    'Complete' => 'complete',
+    //'Rectification' => 'rectification'
+  ];
 
-    /**
-     * @var array $invoice_types  invoice types
-     */
-    private $invoice_types = [];
+  public function __construct(Invoices $invoices)
+  {
+    parent::__construct();
 
-    public function __construct(Invoices $invoices)
-    {
-        parent::__construct();
+    $this->main_route = $this->config['routes']['invoices'];
+    $this->other_route = $this->config['routes']['patients'];             
+    $this->views_folder = $this->config['routes']['invoices'];        
+    $this->model = $invoices;
+  }
 
-        $this->main_route = $this->config['routes']['invoices'];
-        $this->other_route = $this->config['routes']['patients'];             
-        $this->views_folder = $this->config['routes']['invoices'];        
-        $this->model = $invoices;
+  public function index(Request $request)
+  {   
+    $this->setPageTitle(Lang::get('aroaden.invoices'));
 
-        $fields = [      
-            'date2' => true,
-            'no_tax_msg' => true,
-        ];
+    $this->view_data["load_js"]["datatables"] = true;
 
-        $this->form_fields = array_replace($this->form_fields, $fields);
+    return parent::index($request);
+  }
 
-        $complete = '"'.Lang::get('aroaden.complete').'"';
-        $rectification = '"'.Lang::get('aroaden.rectification').'"';
+  public function list(Request $request)
+  {
+    $aColumns = [ 
+      0 =>'pat.idpat', 
+      1 =>'surname_name',
+      2 => 'inv.number',
+      3 => 'inv.serial',
+      4 => 'inv.type',
+      5 => 'inv.exp_date'
+    ];
 
-        $this->invoice_types = [
-            self::COMPLETE => $complete,
-            self::RECTIFICATION => $rectification,
-        ];
+    $iDisplayLength = $this->sanitizeData($request->input('iDisplayLength'));
+    $iDisplayStart = $this->sanitizeData($request->input('iDisplayStart'));
+    $sEcho = $this->sanitizeData($request->input('sEcho'));
+
+    $sLimit = "";
+
+    if (isset( $iDisplayStart ) && $iDisplayLength != '-1')
+      $sLimit = "LIMIT ".$iDisplayStart.",". $iDisplayLength;
+
+    $iSortCol_0 = (int)$this->sanitizeData($request->input('iSortCol_0'));
+
+    if (isset($iSortCol_0)) {
+      $sOrder = " ";
+      $bSortable = $this->sanitizeData($request->input('bSortable_'.$iSortCol_0));
+      $sSortDir_0 = $this->sanitizeData($request->input('sSortDir_0'));
+
+      if ($bSortable == "true")
+        $sOrder = $aColumns[$iSortCol_0] ." ". $sSortDir_0;
+
+      if ($sOrder == " ")
+        $sOrder = "";
     }
 
-    public function show(Request $request, $id = false)
-    {     
-        $this->redirectIfIdIsNull($id, $this->other_route);
-        $idpat = $this->sanitizeData($id);
+    $sWhere = "";
+    $sSearch = $this->sanitizeData($request->input('sSearch'));
 
-        $object = Patients::FirstById($idpat);
+    if ($sSearch != "")
+      $sWhere = $sSearch;
 
-        $this->setPageTitle($object->surname.', '.$object->name);
+    $data = $this->model::FindStringOnField($sLimit, $sWhere, $sOrder);
+    $countTotal = $this->model->CountAll();
+    $countFiltered = $this->model::CountFindStringOnField($sWhere);
+    $countFiltered = (int)$countFiltered[0]->total;
 
-        $this->form_route = 'invoicesFactory';
+    $resultArray = [];
 
-        $this->view_data['request'] = $request;
-        $this->view_data['form_route'] = $this->form_route;
-        $this->view_data['invoice_types'] = $this->invoice_types;
-        $this->view_data['default_type'] = self::COMPLETE;
-        $this->view_data['idpat'] = $idpat;
-        $this->view_data['idnav'] = $idpat;        
-
-        return parent::show($request, $id);
+    foreach ($data as $key => $value) {
+      $resultArray[$key][] = "$this->main_route/$value->idpat";
+      $resultArray[$key][] = $value->surname_name;
+      $resultArray[$key][] = $value->number;
+      $resultArray[$key][] = $value->serial;
+      $resultArray[$key][] = Lang::get('aroaden.'.$value->type);
+      $resultArray[$key][] = $this->convertYmdToDmY($value->exp_date);
     }
 
-    public function invoicesFactory(Request $request)
-    {
-        $type = $request->type;
-        $id = $request->id;
+    $output = [
+      "sEcho" => intval($sEcho),
+      "iTotalRecords" => $countTotal,
+      "iTotalDisplayRecords" => $countFiltered,
+      "aaData" => $resultArray
+    ];
 
-        $this->redirectIfIdIsNull($id, $this->other_route);
-        $id = $this->sanitizeData($id);
-        $type = $this->sanitizeData($type);
+    $this->echoJsonOuptut($output);  
+  }
 
-        switch ($type) {
-            case self::COMPLETE:
-                $object = new Complete($this->model);
-                return $object->createInvoice($request, $id);
-            break;
+  public function show(Request $request, $idpat = false)
+  {     
+    $idpat = $this->sanitizeData($idpat); 
+    $this->redirectIfIdIsNull($idpat, $this->other_route);
 
-            case self::RECTIFICATION:
-                $object = new Rectification($this->model);
-                return $object->createInvoice($request, $id);
-            break;
+    $object = Patients::FirstById($idpat);
+    $items = $this->model->AllByPatient($idpat);   
 
-            default:
-                $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));    
-                return redirect("$this->main_route/$id");
-            break;
-        }
+    $this->setPageTitle($object->surname.', '.$object->name);
+
+    $this->view_data['request'] = $request;
+    $this->view_data['object'] = $object;
+    $this->view_data['items'] = $items;
+    $this->view_data['invoice_types'] = $this->invoice_types;
+    $this->view_data['default_type'] = $this->invoice_types['Complete'];
+    $this->view_data['idpat'] = $idpat;
+    $this->view_data['idnav'] = $idpat;        
+
+    return parent::show($request, $idpat);
+  }
+
+  public function invoicesFactory(Request $request)
+  {
+    $idpat = $this->sanitizeData($request->idpat);
+    $type = $this->sanitizeData($request->type);
+
+    switch ($type) {
+      case $this->invoice_types['Complete']:
+        $object = new Complete($this->model);
+        return $object->createInvoice($request, $idpat);
+        break;
+
+      case $this->invoice_types['Rectification']:
+        $object = new Rectification($this->model);
+        return $object->createInvoice($request, $idpat);
+        break;
+
+      default:
+        $request->session()->flash($this->error_message_name, Lang::get('aroaden.error_message'));    
+        return redirect("$this->main_route/$idpat");
+        break;
+    }
+  }
+
+  public function create(Request $request, $id = false)
+  {    
+    $idpat = $request->idpat;
+    $type = $request->type;
+
+    $patient = Patients::FirstById($idpat);
+    $invoiceLines = $patient->invoiceLines->pluck('idtre')->toArray();
+    $items = Treatments::PaidByPatientId($idpat);
+    $updatedA = Treatments::getUpdatedPaidByPatientId($idpat);
+    $company = $this->getSettings();
+
+    $this->setPageTitle($patient->surname.', '.$patient->name);
+
+    $this->view_data['request'] = $request;
+    $this->view_data['object'] = $patient;
+    $this->view_data['invoiceLines'] = $invoiceLines;
+    $this->view_data['items'] = $items;
+    $this->view_data['type'] = $type;
+    $this->view_data['updatedA'] = $updatedA;
+    $this->view_data['company'] = $company;   
+    $this->view_data['idpat'] = $idpat;
+    $this->view_data['idnav'] = $idpat;        
+
+    return parent::create($request, $idpat);
+  }
+
+  public function preview(Request $request)
+  {
+    $data = [];
+    $data['error'] = false;
+    $data['reload'] = false;
+
+    $this->downloadPdf = false;
+    $this->request = $request;
+
+    try {
+
+      $this->checkData();
+      $this->prepareData();
+
+      $data['htmlContent'] = $this->returnViewString();
+
+    } catch (Exception $e) {
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+      $data['reload'] = true;
+
     }
 
-    public function create(Request $request, $id = false)
-    {    
+    return $this->echoJsonOuptut($data);
+  }
 
+  public function store(Request $request)
+  {
+    $data = [];
+    $data['error'] = false;
+    $data['reload'] = false;
 
+    $this->request = $request;
 
+    try {
 
+      $this->checkData();
+      $this->saveData();
 
+    } catch (Exception $e) {
 
-        $treatments = Treatments::PaidByPatientId($id);
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+      $data['reload'] = true;
 
-
-
-
-
-
-
-        $this->view_data['request'] = $request;
-        $this->view_data['treatments'] = $treatments;
-        $this->view_data['form_fields'] = $this->form_fields;        
-        $this->view_data['idpat'] = $id;
-        $this->view_data['idnav'] = $id;
-
-        return parent::create($request, $id);
     }
 
+    return $this->echoJsonOuptut($data);
+  }
 
-    public function store(Request $request)
-    {
-        $idpat = htmlentities (trim( $request->input('idpat')),ENT_QUOTES,"UTF-8");
-        $idser = htmlentities (trim( $request->input('idser')),ENT_QUOTES,"UTF-8");
-        $precio = htmlentities (trim( $request->input('precio')),ENT_QUOTES,"UTF-8");
-        $canti = htmlentities (trim( $request->input('canti')),ENT_QUOTES,"UTF-8");
-        $factumun = htmlentities (trim( $request->input('factumun')),ENT_QUOTES,"UTF-8");
-        $cod = htmlentities (trim( $request->input('cod')),ENT_QUOTES,"UTF-8");
-        $iva = htmlentities (trim( $request->input('iva')),ENT_QUOTES,"UTF-8");            
+  public function downloadPdf($number)
+  {
+    $number = $this->sanitizeData($number);
 
-        if ( null == $idpat ) {
-            return redirect('Pacientes');
-        }         
-          
-        $validator = Validator::make($request->all(), [
-            'idpat' => 'required',
-            'idser' => 'required',
-            'precio' => 'required',
-            'canti' => 'required',
-            'factumun' => 'factumun',
-            'cod' => 'required',
-            'iva' => 'required',            
+    $this->view_data['number'] = $number;
+
+    $this->prepareData();
+
+    $object = $this->view_data['object'];
+    $pdfName = "$object->name $object->surname $number.pdf";
+    $pdfData = $this->returnViewString();
+    $pdfObj = new PdfLib($pdfData, $pdfName);
+
+    return $pdfObj->downloadPdf();
+  }
+
+  private function checkData()
+  {
+    $idpat = $this->request->idpat;
+    $updatedA = $this->request->updatedA;
+    $updatedNowA = Treatments::getUpdatedPaidByPatientId($idpat);
+
+    $arraysNotEqual = ($updatedA != $updatedNowA);
+
+    if ($arraysNotEqual)
+      throw new Exception(Lang::get('aroaden.error_data_change'));
+  }
+
+  private function prepareData()
+  {
+    if ($this->downloadPdf) {
+
+      $number = $this->view_data['number'];
+      $invoice = $this->model->FirstById($number);
+      $items = InvoiceLines::GetByNumber($number);
+      $object = Patients::FirstById($invoice->idpat);
+
+      $type = $invoice->type;
+      $serial = $invoice->serial;
+      $place = $invoice->place;
+      $exp_date = $this->convertYmdToDmY($invoice->exp_date);
+      $notes = $invoice->notes;
+
+      $this->view_data['idpat'] = $invoice->idpat;
+      $this->view_data['idnav'] = $invoice->idpat;
+
+    } else {
+
+      extract($this->sanitizeRequest($this->request->all()));
+
+      $idtreArray = $this->request->idtreArray;
+
+      $object = Patients::FirstById($idpat);
+      $number = $this->model->GetNextNumber();
+
+      $items = [];
+
+      foreach ($idtreArray as $key => $idtre) {
+        $items[] = Treatments::FirstById($idtre);
+      }
+
+      $this->view_data['number'] = $number;
+    }
+
+    $company = $this->getSettings();
+
+    $this->view_name = 'doc';
+    $this->views_folder .= '.includes';
+
+    $this->view_data['items'] = $items;
+    $this->view_data['object'] = $object;
+    $this->view_data['company'] = $company;
+    $this->view_data['type'] = $type;
+    $this->view_data['serial'] = $serial;
+    $this->view_data['place'] = $place;
+    $this->view_data['exp_date'] = $exp_date;
+    $this->view_data['notes'] = $notes;
+    $this->view_data['has_date'] = true;
+    $this->view_data['downloadPdf'] = $this->downloadPdf;
+  }
+
+  private function saveData()
+  {
+    extract($this->sanitizeRequest($this->request->all()));
+
+    $idtreArray = $this->request->idtreArray;
+    $exp_date = $this->convertDmYToYmd($exp_date);
+    $number = $this->model->GetNextNumber();
+
+    $dataA = [];
+    $dataA['number'] = $number;    
+    $dataA['serial'] = $serial;
+    $dataA['idpat'] = $idpat;
+    $dataA['type'] = $type;
+    $dataA['exp_date'] = $exp_date;
+    $dataA['place'] = $place;
+    $dataA['notes'] = $notes;
+
+    if (isset($parent_num))
+      $dataA['parent_num'] = $parent_num;
+
+    if (isset($parent_serial))
+      $dataA['parent_serial'] = $parent_serial;
+
+    DB::beginTransaction();
+
+    try {
+
+      $this->model::create($dataA);
+
+      foreach ($idtreArray as $key => $idtre) {
+        $item = Treatments::FirstById($idtre);
+
+        InvoiceLines::create([
+          'number' => $number,
+          'idtre' => $item->idtre,
+          'idser' => $item->idser,
+          'price' => $item->price,
+          'units' => $item->units,
+          'paid' => $item->paid,
+          'tax' => $item->tax,
+          'day' => $item->day
         ]);
-            
-        if ($validator->fails()) {
-            return redirect("/Facturas/$idpat/create")
-                         ->withErrors($validator)
-                         ->withInput();
-        } else {
-                
-            facturas::create([
-                'idpat' => $idpat,
-                'idser' => $idser,
-                'precio' => $precio,
-                'canti' => $canti,
-                'factumun' => $factumun,
-                'cod' => $cod,
-                'iva' => $iva,
-            ]);
+      }
 
-            $facturas = DB::table('facturas')
-                    ->join('servicios', 'facturas.idser','=','servicios.idser')
-                    ->select('facturas.*','servicios.nomser')
-                    ->where('idpat', $idpat)
-                    ->where('cod', $cod)
-                    ->orderBy('nomser' , 'ASC')
-                    ->get();  
+      DB::commit();
 
-            $cadena = '';
+    } catch (Exception $e) {
 
-            foreach ($facturas as $factu) {
+      DB::rollBack();
 
-                $cadena .= '<tr>
-                                <td class="wid140">'.$factu->nomser.'</td>
-                                <td class="wid95 textcent">'.$factu->canti.'</td>
-                                <td class="wid95 textcent">'.$factu->precio.' €</td>
+      throw $e;
 
-                                <td class="wid50">
+    }
+  }
 
-                                  <form id="delform">
-                                  
-                                    <input type="hidden" name="idpre" value="'.$factu->idpre.'">
-                                    <input type="hidden" name="cod" value="'.$cod.'">
+  public function edit(Request $request, $number)
+  {
+    $this->view_data['number'] = $this->sanitizeData($number);
 
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-times"></i>  <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                          <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
-                                        </ul> 
-                                    </div>
+    $this->prepareData();
 
-                                  </form>   
-                                </td>
+    $this->views_folder = $this->config['routes']['invoices'];        
 
-                                <td class="wid230"> </td>                            
-                            </tr> ';
-            }
-                             
-            return $cadena;
-        }     
+    return parent::edit($request, $number);  
+  }
+
+  public function update(Request $request, $numberold)
+  {
+    $numberold = $this->sanitizeData($numberold);    
+    $data = [];
+    $data['error'] = false;
+    $data['reload'] = false;
+
+    extract($this->sanitizeRequest($request->all()));
+
+    try {
+
+      if ((int)$numberold !== (int)$number) {
+        $exists = $this->model->FirstById($number);
+
+        if ( isset($exists->number) )
+          throw new Exception(Lang::get('aroaden.number_in_use', ['number' => $number]));
+      }
+
+      $object = $this->model::find($numberold);
+
+      if ((int)$numberold !== (int)$number)
+        $object->number = $number;    
+
+      $object->serial = $serial;    
+      $object->place = $place;
+      $object->exp_date = $this->convertDmYToYmd($exp_date);
+      $object->notes = $notes;
+      $object->save();
+
+    } catch (Exception $e) {
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+      $data['reload'] = true;
+
     }
 
-    public function delcod(Request $request)
-    {
-        $cod = $request->input('cod');
-        $idpat = $request->input('idpat');
+    return $this->echoJsonOuptut($data);
+  }
 
-        if ( null == $cod ) {
-            return redirect('Pacientes');
-        }
-        
-        if ( null == $idpat ) {
-            return redirect('Pacientes');
-        }
-
-        $presup = DB::table('presup')
-                ->where('cod', $cod)
-                ->where('idpat', $idpat)
-                ->delete();
-
-        $prestex = DB::table('prestex')->where('idpat', $idpat)->where('cod', $cod)->delete();
-        
-        return redirect("/Presup/$idpat");
-    }
-
-    public function delid(Request $request)
-    {
-        $idpre = $request->input('idpre');
-
-        if ( null === $idpre ) {
-            return redirect('Pacientes');
-        }   
-
-        $cod = $request->input('cod');            
-
-        if ( null == $cod ) {
-            return redirect('Pacientes');
-        }       
-
-        $presup = DB::table('presup')
-                ->where('cod', $cod)
-                ->first();
-
-        if (is_null($presup)) {
-            $prestex = DB::table('prestex')->where('cod', $cod)->first();
-            $prestex->delete();
-        }
-         
-        $presup = presup::find($idpre);
-      
-        $presup->delete();
-        
-        $presup = DB::table('presup')
-                ->join('servicios', 'presup.idser','=','servicios.idser')
-                ->select('presup.*','servicios.nomser')
-                ->where('cod', $cod)
-                ->orderBy('servicios.nomser' , 'ASC')
-                ->get();  
-
-        $cadena = '';
-
-        foreach ($presup as $presu) {
-            $cadena .= '<tr>
-                            <td class="wid140">'.$presu->nomser.'</td>
-                            <td class="wid95 textcent">'.$presu->canti.'</td>
-                            <td class="wid95 textcent">'.$presu->precio.' €</td>
-
-                            <td class="wid50">
-
-                              <form id="delform">
-                              
-                                <input type="hidden" name="idpre" value="'.$presu->idpre.'">
-                                <input type="hidden" name="cod" value="'.$cod.'">
-
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-times"></i>  <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                      <li> <button type="submit"> <i class="fa fa-times"></i> Borrar</button></li> 
-                                    </ul> 
-                                </div>
-
-                              </form>   
-                            </td>
-
-                            <td class="wid230"> </td>                            
-                        </tr> ';
-        }
-                         
-        return $cadena;
-    }
-
+  public function destroy(Request $request, $id)
+  {      
+    return parent::destroy($request, $id);        
+  }
 
 }
 

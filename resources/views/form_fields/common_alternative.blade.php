@@ -65,6 +65,12 @@
 
 			@endif
 
+			@if ($form_fields['tax'])
+
+				@include('form_fields.fields.tax')
+
+			@endif 
+
 			@if ($form_fields['units'])
 
 				@include('form_fields.fields.units')
@@ -77,17 +83,17 @@
 
 			@endif
 
+			@if ($form_fields['pricetax'])
+
+				@include('form_fields.fields.pricetax')
+
+			@endif			
+
 			@if ($form_fields['paid'])
 
 				@include('form_fields.fields.paid')
 
 			@endif
-
-			@if ($form_fields['tax'])
-
-				@include('form_fields.fields.tax')
-
-			@endif 
 
 			@if ($form_fields['hour'])
 

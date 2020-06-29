@@ -7,23 +7,23 @@
   @include('includes.messages')
   
   <div class="col-sm-12 pad10">
-      @include('form_fields.show.name')
+    @include('form_fields.show.name')
   </div>
 
   <div class="row">
     <div class="col-sm-12">
+      <div class="mar10"></div>
+
       <fieldset>
         <legend>
-          <div class="input-group"> 
-            <span class="input-group-btn pad10">  <p>{!! @trans('aroaden.record') !!}</p> </span>
-            <div class="btn-toolbar pad4" role="toolbar">
-               <div class="btn-group">
-                  <a href="{!! url("/$main_route/$id/$form_route") !!}" role="button" class="btn btn-sm btn-success">
-                     <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
-                  </a>
-               </div> 
-            </div> 
-          </div> 
+          <div>
+            {!! @trans('aroaden.record') !!}
+            <span class="mar4">
+              <a href="{!! url("/$main_route/$id/$form_route") !!}" role="button" class="btn btn-sm btn-success">
+                 <i class="fa fa-edit"></i> {!! @trans('aroaden.edit') !!}
+              </a>
+            </span>
+          </div>
         </legend>
 
         <br>

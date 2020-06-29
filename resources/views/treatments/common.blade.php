@@ -1,5 +1,4 @@
 
-
   <script type="text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script>
   <script type="text/javascript" src="{{ asset('assets/js/areyousure.js') }}"></script>
   <script type="text/javascript" src="{{ asset('assets/js/forgetChanges.js') }}"></script>
@@ -16,23 +15,29 @@
 
   <script type="text/javascript">
 
+    selector = 'input[name="paid"]';
+
     var msg = "{{ Lang::get('aroaden.multiply_units_price') }}";
     var append = ' <a id="multiply_units_price" class="pad4 bgwi fuengrisoscu" title="'+msg+'"><i class="fa fa-lg fa-close"></i></a>';
-    $('input[name="paid"]').parent().find('label').append(append);
+    $(selector).parent().find('label').append(append);
 
     var msg = "{{ Lang::get('aroaden.put_zero') }}";
     var append = ' <a id="put_zero" class="pad4 bgwi fuengrisoscu" title="'+msg+'"><i class="fa fa-close fa-lg text-danger"></i></a>';
-    $('input[name="paid"]').parent().find('label').append(append);
+    $(selector).parent().find('label').append(append);
 
     $('#put_zero').click(function () {
-      $('input[name="paid"]').val(0);
+      $(selector).val(0);
     });
 
-    function getPaid(price) {
-      var units = $('input[name="units"]').val();
-      var paid = util.multiply(units, price);    
+    var price;
+    var tax;
 
-      $('input[name="paid"]').val(paid);
+    function getPaid() {
+      var units = $('input[name="units"]').val();
+      var total_amount = util.calcTotal(price, tax, false);
+      var paid = util.multiply(units, total_amount);    
+
+      $(selector).val(paid);
     }
 
     $('form.save_form').submit(function (evt) {
@@ -45,6 +50,9 @@
     function saveData() {
       var data = $("form.save_form").serialize();
       var action = $("form.save_form").attr('action');
+
+      var paid = $(selector).val();
+      util.validateCurrency(paid);
 
       var ajax_data = {
         url  : action,

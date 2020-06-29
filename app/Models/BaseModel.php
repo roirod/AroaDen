@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\DB;
 
 class BaseModel extends Model
 {
-
-  protected $whereRaw;  
-  protected $selectRaw;
-  protected $type;
+  
   protected $query;
+  protected $var;
+  protected $toSql = false;
+  protected $selectRaw;
+  protected $whereRaw;  
+  protected $type; // get first find count
 
   public function scopeFirstWhereRaw($query)
   {
@@ -21,12 +23,27 @@ class BaseModel extends Model
     return $res->first();
   }
 
-  private function queryRaw($res)
+  public function queryRaw()
   {
+    if (isset($this->selectRaw))
+      $this->query->selectRaw($this->selectRaw);
 
-    return $query->count();
+    if (isset($this->whereRaw))
+      $this->query->whereRaw($this->whereRaw);
+
+    if ($this->toSql)
+      return $this->query->toSql();
+
+    if (empty($this->type))
+      $this->type = 'first';
+
+    $type = $this->type;
+
+    if (isset($this->var))
+      return $this->query->$type($this->var);
+
+    return $this->query->$type();
   }
-
 
   public function scopeCountAll($query)
   {

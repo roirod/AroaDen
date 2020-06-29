@@ -5,94 +5,120 @@
 	@include('includes.patients_nav')
 
 	@include('includes.messages')
+
+  @include('invoices.includes.commonJs')
 	
+  <div class="row">
+    <div class="col-sm-12 pad10">
+      @include('form_fields.show.name')
+    </div>
+  </div>
 
-	{!! addText("Crear factura") !!}
+  <div class="row">
+    <div class="col-sm-12">
+      <fieldset>
+        <legend>
+          {!! @trans('aroaden.create_invoice') !!}
+        </legend>
 
-	<div class="row">
-	 <div class="col-sm-12">
-	 <div class="panel panel-default">
-	  <table class="table"> 
-		  <tr class="fonsi15 success">
-			  <td class="wid140">{!! @trans("aroaden.service") !!}</td>
-			  <td class="wid70 textcent">{!! @trans("aroaden.price") !!}</td>
-			  <td class="wid70 textcent">{!! @trans("aroaden.units") !!}</td>
-			  <td class="wid70">{!! @trans("aroaden.date") !!}</td>
-			  <td class="wid140 textcent"></td>	  
-			  <td class="wid230"></td>
-		   </tr> 
-	   </table> 
-	   <div class="box260">
-	   <table class="table table-striped">
+			  <div class="row">
+			    <div class="col-sm-11">
 
-	    @foreach($treatments as $treat)
-	    	<tr>
-	    		<td class="wid140">{!! $treat->service_name !!}</td> 
-				<td class="wid70 textcent">{!! numformat($treat->price) !!} €</td>
-				<td class="wid70 textcent">{!! $treat->units !!}</td>
-				<td class="wid70">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>
-				<td class="wid140 textcent" id="treat_{!! $treat->idtre !!}"> 	
-					<button class="btn btn-sm btn-info add_to_invoice" title="{!! @trans("aroaden.add_to_invoice") !!}">
-						<i class="fa fa-plus"></i>
-					</button>
-					<button class="btn btn-sm btn-danger remove_from_invoice" title="{!! @trans("aroaden.remove_from_invoice") !!}" style="display:none;">
-						<i class="fa fa-close"></i>
-					</button>
-				</td>
-				<td class="wid230"></td>
-			</tr>
+						@include('invoices.includes.type')
 
-			<script type="text/javascript">
-				var idtre_{!! $treat->idtre !!} = {
-					price: {!! $treat->price !!},
-					units: {!! $treat->units !!},
-					tax: {!! $treat->tax !!},
-					price: {!! $treat->price !!},
-					day: "{!! $treat->day !!}"
-				};
+						@include('invoices.includes.serial')
 
-			</script>
-			
-		@endforeach
+						@include('invoices.includes.place')
 
-	    </table>
+						@include('invoices.includes.exp_date')
 
-	</div> </div> </div> </div>		
+			    </div>
 
-	<hr> <br>	
+          @include('invoices.includes.data_section')
 
+			  </div>
 
+			  <br>
+
+				<div class="row fonsi12">
+
+					<div class="col-sm-6">
+            <p class="fonsi14">
+              {!! @trans("aroaden.treatments_paid") !!}             
+            </p>
+
+						<div class="panel panel-default">
+							<table class="table table-striped table-bordered table-hover">				  	
+							  <tr class="">
+								  <td class="wid120">{!! @trans("aroaden.treatment") !!}</td>
+                  <td class="wid60 textcent">{!! @trans("aroaden.date") !!}</td>                  
+								  <td class="wid40 textcent">{!! @trans("aroaden.units") !!}</td>	 
+								  <td class="wid40 textcent">{!! @trans("aroaden.add") !!}</td>
+							  </tr>
+						  </table>
+
+							<div class="box260">
+								<table class="table table-striped table-bordered table-hover">
+
+								  @foreach($items as $item)
+
+                    @if (!in_array($item->idtre, $invoiceLines))
+
+  								  	<tr>
+  								  		<td class="wid120">{!! $item->service_name !!}</td>
+                        <td class="wid60 textcent">{!! date ('d-m-Y', strtotime ($item->day) ) !!}</td>                      
+  											<td class="wid40 textcent">{!! $item->units !!}</td>				
+  											<td class="wid40 textcent">
+          						  	<button type="button" class="btn btn-sm btn-info addLine" data-idtre="{!! $item->idtre !!}" data-name="{!! $item->service_name !!}" data-units="{!! $item->units !!}" data-day="{!! date('d-m-Y', strtotime($item->day)) !!}">
+          						  		<i class="fa fa-plus"></i>
+          						  	</button>
+  											</td>
+  										</tr>
+
+                    @endif
+
+									@endforeach
+
+				    		</table>
+				    	</div>
+				    </div>
+				  </div>
+
+         	<div class="col-sm-6">
+            <p class="fonsi14">
+              {!! @trans("aroaden.treatments_added") !!}    
+            </p>
+
+           	<div class="panel panel-default">
+              <table class="table table-striped table-bordered table-hover">
+        		    <tr class="">
+								  <td class="wid120">{!! @trans("aroaden.treatment") !!}</td> 
+                  <td class="wid60 textcent">{!! @trans("aroaden.date") !!}</td>
+								  <td class="wid40 textcent">{!! @trans("aroaden.units") !!}</td> 
+								  <td class="wid40 textcent">{!! @trans("aroaden.remove") !!}</td>
+        		    </tr>
+            	</table>
+
+           		<div class="box260">
+                <table class="table table-striped table-bordered table-hover">
+        	   			<tbody id="items_list">
+        	   			</tbody>
+        	   		</table>
+        	   	</div>
+            </div> 
+          </div>
+
+					@include('invoices.includes.notes')
+
+				</div>
+
+				@include('invoices.includes.buttons')
+
+      </fieldset>
+	  </div>
+	</div>		
+
+	@include('invoices.includes.scripts')
 
 @endsection
 
-@section('js')
-    @parent   
-	  <script type="text/javascript" src="{!! asset('assets/js/modernizr.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/minified/polyfiller.js') !!}"></script>
-	  <script type="text/javascript" src="{!! asset('assets/js/webshims.js') !!}"></script>
-
-
-		<script type="text/javascript">
-
-				console.log('javascript  javascript a');
-
-
-
-			$('button.add_to_invoice').on('click', function(e){
-				e.preventDefault();
-
-				console.log('dasfasf asfsda a');
-
-
-
-				onAdd(this);
-			});
-
-			function onAdd(this) {
-				console.dir(this);
-			}
-		</script>
-
-
-
-@endsection

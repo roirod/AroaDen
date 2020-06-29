@@ -75,4 +75,30 @@ class Services extends BaseModel
     return $result;
   }
 
+  public static function getUpdated()
+  {
+    $collection = DB::table('services')
+                    ->select('services.*')
+                    ->get();
+
+    $array_data = [];
+
+    foreach ($collection as $collect) {
+      if ($collect->updated_at != NULL) {
+
+        $updated_at = $collect->updated_at;
+
+      } else {
+
+        $updated_at = 'false';
+
+      }
+
+      $array_data[] = $updated_at;
+
+    }
+
+    return $array_data;
+  }
+
 }

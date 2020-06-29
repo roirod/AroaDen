@@ -10,16 +10,16 @@ class CreatePatientsTable extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('idpat');
+            $table->mediumIncrements('idpat');
             $table->string('surname', 111);
             $table->string('name', 111);
-            $table->string('address', 111)->nullable()->default(' ');
-            $table->string('city', 111)->nullable()->default(' '); 
+            $table->string('address', 111)->nullable();
+            $table->string('city', 111)->nullable(); 
             $table->string('dni', 18);
-            $table->string('tel1', 18)->nullable()->default(' ');
-            $table->string('tel2', 18)->nullable()->default(' ');
-            $table->string('tel3', 18)->nullable()->default(' ');
-            $table->string('sex', 9)->nullable()->default(' ');
+            $table->string('tel1', 18)->nullable();
+            $table->string('tel2', 18)->nullable();
+            $table->string('tel3', 18)->nullable();
+            $table->string('sex', 9)->nullable();
             $table->date('birth')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

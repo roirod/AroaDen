@@ -14,7 +14,6 @@ class PaysController extends BaseController
 
     $this->main_route = $this->config['routes']['pays'];
     $this->other_route = $this->config['routes']['patients'];
-    $this->view_data['pays_route'] = $this->config['routes']['pays'];
     $this->views_folder = $this->config['routes']['pays'];
     $this->form_route = 'list';        
     $this->model = $patients;      
@@ -23,6 +22,8 @@ class PaysController extends BaseController
   public function index(Request $request)
   {
     $this->setPageTitle(Lang::get('aroaden.payments'));
+
+    $this->view_data["load_js"]["datatables"] = true;
 
     return parent::index($request);
   }
@@ -77,9 +78,9 @@ class PaysController extends BaseController
     foreach ($data as $key => $value) {
         $resultArray[$key][] = "$this->other_route/$value->idpat";
         $resultArray[$key][] = $value->surname_name;
-        $resultArray[$key][] = $this->formatNumber($value->total);
-        $resultArray[$key][] = $this->formatNumber($value->paid);
-        $resultArray[$key][] = $this->formatNumber($value->rest);
+        $resultArray[$key][] = $this->formatCurrency($value->total);
+        $resultArray[$key][] = $this->formatCurrency($value->paid);
+        $resultArray[$key][] = $this->formatCurrency($value->rest);
     }
 
     $output = [

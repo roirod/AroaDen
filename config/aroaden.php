@@ -3,7 +3,15 @@
 return [
 
   'files' => [
-    'file_max_size' => 3,
+    'file_max_size' => 3
+  ],
+
+  'currency' => [
+    'db_decimals' => 2,
+    'db_dec_point' => '.',
+    'db_thousands_sep' => '',
+    'locale_code' => 'es_ES.utf8',
+    'regexp' => "^\d+(\.\d{3})*(,\d{0,2})?$"
   ],
 
   'routes' => [
@@ -43,6 +51,7 @@ return [
     'tel3' => false,
     'units' => false,
     'price' => false,
+    'pricetax' => false,
     'paid' => false,            
     'tax' => false,
     'hour' => false,
@@ -267,17 +276,6 @@ return [
      'rows'  => ""
     ],
     [ 
-     'name'  => "company_notes",
-     'settting_type'  => "company_data",           
-     'type'  => "textarea",
-     'maxlength'  => "",
-     'col'  => "col-sm-12",
-     'autofocus'  => "",
-     'required'  => "",
-     'pattern'  => "",
-     'rows'  => "4"
-    ],
-    [ 
      'name'  => "budget_text",
      'settting_type'  => "company_data",           
      'type'  => "textarea",
@@ -288,8 +286,6 @@ return [
      'pattern'  => "",
      'rows'  => "4"
     ],
-
-/*
     [ 
      'name'  => "invoice_text",
      'settting_type'  => "company_data",
@@ -300,8 +296,6 @@ return [
      'required'  => "",
      'pattern'  => "",
      'rows'  => "4"
-    ],
-*/
-
+    ]
   ]
 ];

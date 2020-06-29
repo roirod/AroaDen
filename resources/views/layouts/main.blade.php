@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
   @section('head')
 
@@ -24,11 +24,13 @@
 
     @include('includes.util')
 
+    @if ($load_js["datatables"])
+      @include('includes.js.datatables')
+    @endif
+
     <script type="text/javascript">
       $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
       });
 
       $(document).ready(function(){
@@ -53,18 +55,11 @@
 
       <div class="col-sm-1 widCol1 textcent">
         <div class="affix">
+        
+          <div class="mar20"></div>
 
-          <h5 class="pad10 login_text bglogo borderradius">
-            <i class="fa fa-child"></i>
-            <br>
-            {!! $app_name !!}
-          </h5>
-          
           <nav class="navbar navbar-default" role="navigation">   
             <ul class="nav nav-pills nav-stacked"> 
-              <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.company") !!}</b>">
-                <a href="{!! url($routes['company'])!!}"><i class="fa fa-building-o fa-menusize"></i></a>
-              </li>
               <li data-toggle="menuTooltip" title="<b>{!! @trans("aroaden.accounting") !!}</b>">
                 <a href="{!! url($routes['accounting'])!!}"><i class="fa fa-pie-chart fa-menusize"></i></a>
               </li>
