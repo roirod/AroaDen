@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Libs;
 
 use Lang;
 use PDF;
+use App;
 
 class PdfLib
 {
@@ -45,7 +46,8 @@ class PdfLib
 
   private function renderPdf()
   {
-    $this->pdfObj = PDF::loadHTML($this->pdfData, $this->options['charset']);
+    $this->pdfObj = App::make('dompdf.wrapper');
+    $this->pdfObj->loadHTML($this->pdfData, $this->options['charset']);
     $dom_pdf = $this->pdfObj->getDomPDF();
     $canvas = $dom_pdf->get_canvas();
 

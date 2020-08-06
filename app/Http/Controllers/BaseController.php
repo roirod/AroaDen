@@ -208,13 +208,16 @@ class BaseController extends Controller
    */
   public function __construct()
   {
+    error_reporting(error_reporting() & ~E_DEPRECATED);
+    
     $this->config = Config::get('aroaden');
     $locale_code = $this->config['currency']['locale_code'];
 
     setlocale(LC_ALL, $locale_code);
     date_default_timezone_set(env('APP_TIMEZONE'));
 
-    $this->Alocale = localeconv();
+    $this->Alocale = Config::get('currencies')[$locale_code];
+
     $_SESSION["Alocale"] = $this->Alocale;
     $_SESSION["Acurrency"] = $this->config['currency'];
 

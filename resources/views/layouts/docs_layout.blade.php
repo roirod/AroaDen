@@ -3,57 +3,62 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css" >
-  <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css" >
-
-  <style>
 
   @if($downloadPdf)
 
-    html {
-      font-family: 'Helvetica' !important;
-      margin: 16mm 16mm 16mm 16mm !important;
-    }
+    <link href="{{ public_path('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ public_path('assets/css/main.min.css') }}" rel="stylesheet" type="text/css" />
 
-    body {
-      font-family: 'Helvetica' !important;
-      font-size: 10px !important;      
-    }
+    <script type="text/javascript" src="{!! public_path('assets/js/jquery.min.js') !!}"></script>
+    <script type="text/javascript" src="{!! public_path('assets/js/bootstrap.min.js') !!}"></script>
 
-    p {
-      font-family: 'Helvetica' !important;
-      font-size: 10px !important;
-    }
+    <style rel="stylesheet" type="text/css" media="all">
+      html {
+        font-family: 'Helvetica' !important;
+        margin: 16mm 16mm 16mm 16mm !important;
+      }
 
-    table td {
-      font-family: 'Helvetica' !important;
-      font-size: 10px !important;
-    }
+      body {
+        font-family: 'Helvetica' !important;
+        font-size: 10px !important;      
+      }
+
+      p {
+        font-family: 'Helvetica' !important;
+        font-size: 10px !important;
+      }
+
+      table td {
+        font-family: 'Helvetica' !important;
+        font-size: 10px !important;
+      }
+    </style>
+
+  @else
+
+    <link href="{!! asset('assets/css/bootstrap.min.css') !!}" rel="stylesheet" type="text/css" media="all">
+    <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css" media="all">
+
+    <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
+    <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
 
   @endif
-
-  </style>
-
-  <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
-  <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
 
 </head>
 
 <body class="bgwi">
 
-  @if($downloadPdf)
+  @if(!$downloadPdf)
 
-  <div class="row">
+    <div class="pad30">
 
   @else
 
-  <div class="row pad30">
+    <div>
 
   @endif
 
-
     @yield('content')
-
 
   </div> 
 

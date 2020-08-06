@@ -166,7 +166,7 @@ class StaffController extends BaseController implements BaseInterface
 
     $staffPositionsEntries = StaffPositionsEntries::AllByStaffIdWithName($id);
     $staffPositionsEntries = array_column($staffPositionsEntries, 'name');
-    $staffPositionsEntries = implode($staffPositionsEntries, ', ');
+    $staffPositionsEntries = implode(', ', $staffPositionsEntries);
 
     $this->view_data['object'] = $staff;
     $this->view_data['treatments'] = StaffWorks::AllByStaffId($id);

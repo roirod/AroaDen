@@ -1,0 +1,70 @@
+version: '3'
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+  phpdata:
+    driver: local
+
+services:
+
+  mariadb:
+    image: yobasystems/alpine-mariadb
+    container_name: mariadb
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      SERVICE_NAME: mariadb      
+      MYSQL_DATABASE: aroaden
+      MYSQL_USER: aroaden
+      MYSQL_PASSWORD: aroaden
+      MYSQL_ROOT_PASSWORD: aroaden
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_general_ci
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - mynet
+
+  php:
+    image: phpmyadmin/phpmyadmin:5.0.2-fpm
+    container_name: php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: php
+      PMA_HOST: mariadb
+      PMA_ARBITRARY: 1
+    volumes:
+      - /var/www/AroaDen:/var/www/AroaDen
+      - phpdata:/var/www/html/     
+      - ./php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - mariadb
+    networks:
+      - mynet
+
+  nginx:
+    image: nginx:1.13-alpine
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: nginx
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/www/AroaDen:/var/www/AroaDen
+      - phpdata:/var/www/html/:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+    networks:
+      - mynet
