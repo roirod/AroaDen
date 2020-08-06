@@ -14,7 +14,7 @@
         $thumb_file = $thumb_dir.'/'.$fsFilenameNoExt.'.'.$default_img_type;
       ?>
 
-      <div class="col-sm-2 pad10 pad_top_bot text-center">
+      <div class="col-sm-2 pad_top_bot textcent">
 
         @if ( in_array($extension, $img_extensions) )
 
