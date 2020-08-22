@@ -48,31 +48,26 @@ class Patients extends BaseModel
 
   public function scopeFirstById($query, $id)
   {
+    $this->query = $query;    
     $this->whereRaw = "$this->primaryKey = '$id'";
 
-    return $this->scopeFirstWhereRaw($query);
+    return $this->queryRaw();
   }
 
   public function scopeFirstByDni($query, $dni)
   {
+    $this->query = $query;    
     $this->whereRaw = "dni = '$dni'";
 
-    return $this->scopeFirstWhereRaw($query);
+    return $this->queryRaw();
   }
 
   public function scopeCheckIfDniExistsOnUpdate($query, $id, $dni)
   {
+    $this->query = $query;    
     $this->whereRaw = "$this->primaryKey != '$id' AND dni = '$dni'";
 
-    return $this->scopeFirstWhereRaw($query);
-  }
-
-  public function scopeAllOrderBySurname($query, $num_paginate)
-  {
-    return $query->select('idpat', 'surname', 'name', 'dni', 'tel1', 'city')
-                    ->orderBy('surname', 'ASC')
-                    ->orderBy('name', 'ASC')
-                    ->paginate($num_paginate);
+    return $this->queryRaw();
   }
 
   public static function checkDestroy($id)

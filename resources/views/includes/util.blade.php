@@ -41,6 +41,16 @@
 
   var util = {
 
+    renderTable: function(obj) {
+      setTimeout(function(){
+        defaulTableId.dataTable(obj);
+      }, 180);
+    },
+
+    destroyTable: function() {
+      defaulTableId.dataTable().fnDestroy();
+    },
+
     reload: function() {
       setTimeout(function(){  
         return window.location.reload();

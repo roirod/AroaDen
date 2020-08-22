@@ -55,7 +55,7 @@ Route::group(['middleware' => ['web']], function () use ($route) {
 		Route::get($route["company"].'/ajaxIndex', 'CompanyController@ajaxIndex');
 		Route::get($route["company"], 'CompanyController@index');
 
-		Route::post($route["appointments"].'/list', 'AppointmentsController@list');
+		Route::get($route["appointments"].'/list', 'AppointmentsController@list');
 		Route::get($route["appointments"].'/{idpat}/create', 'AppointmentsController@create');
 		Route::get($route["appointments"].'/{id}/edit', 'AppointmentsController@edit');
 		Route::delete($route["appointments"].'/{id}', 'AppointmentsController@destroy');	

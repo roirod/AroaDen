@@ -28,6 +28,10 @@
       @include('includes.js.datatables')
     @endif
 
+    @if ($load_js["datetimepicker"])
+      @include('includes.js.datetimepicker')
+    @endif
+
     <script type="text/javascript">
       $.ajaxSetup({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }

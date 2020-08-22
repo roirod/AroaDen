@@ -95,8 +95,8 @@ class PatientsController extends BaseController implements BaseInterface
   public function list(Request $request)
   {
     $aColumns = [ 
-      0 =>'idpat', 
-      1 =>'surname_name',
+      0 => 'idpat', 
+      1 => 'surname_name',
       2 => 'dni',
       3 => 'tel1',
       4 => 'city'
@@ -163,7 +163,7 @@ class PatientsController extends BaseController implements BaseInterface
 
     $patient = $this->model::FirstById($id);
 
-    if ( empty($patient->idpat) ) {
+    if (empty($patient->idpat)) {
       $request->session()->flash($this->error_message_name, Lang::get('aroaden.no_patient_or_deleted'));    
       return redirect($this->main_route);
     }
@@ -254,7 +254,7 @@ class PatientsController extends BaseController implements BaseInterface
 
     }
 
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
+    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
     return redirect("$this->main_route/$insertedId"); 
   }
 

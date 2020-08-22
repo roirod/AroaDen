@@ -28,4 +28,6 @@
           ]
         };
 
+        tableObj.oSearch = {"sSearch": ""};
+
       </script>
