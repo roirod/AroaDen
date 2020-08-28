@@ -225,7 +225,7 @@ class BaseController extends Controller
     $this->file_max_size = 1024 * 1024 * $file_max_size;
 
     $this->view_data["load_js"]["datatables"] = false;
-    $this->view_data["load_js"]["datetimepicker"] = false;    
+    $this->view_data["load_js"]["datetimepicker"] = false;
 
     if (env('CREATE_SYMLINKS'))
       $this->createSymlinks();

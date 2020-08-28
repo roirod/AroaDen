@@ -50,6 +50,8 @@ class PatientsController extends BaseController implements BaseInterface
     $this->has_odontogram = true;
     $this->user_type = $this->config['routes']['patients'];
 
+    $this->view_data["load_js"]["datetimepicker"] = true;
+
     $fields = [
       'surname' => true,
       'name' => true,
@@ -204,22 +206,40 @@ class PatientsController extends BaseController implements BaseInterface
   {
     $this->setPageTitle(Lang::get('aroaden.create_patient'));
 
+    $this->view_data["legend"] = Lang::get('aroaden.create_patient');
+    $this->view_data["load_js"]["datetimepicker"] = true;
+
     return parent::create($request);
   }
 
   public function store(Request $request)
   {
-    extract($this->sanitizeRequest($request->all()));
+    $data = [];
+    $data['error'] = false;
 
-    $route = "$this->main_route/create";
+    $this->validate($request, [
+      'name' => $this->config['validates']['name'][0],
+      'surname' => $this->config['validates']['surname'][0],
+      'dni' => $this->config['validates']['dni'][0],
+      'tel1' => $this->config['validates']['tel1'][0],
+      'tel2' => $this->config['validates']['tel2'][0],
+      'tel3' => $this->config['validates']['tel3'][0],
+      'sex' => $this->config['validates']['sex'][0],
+      'address' => $this->config['validates']['address'][0],
+      'city' => $this->config['validates']['city'][0],
+      'birth' => $this->config['validates']['birth'][0],
+      'notes' => $this->config['validates']['notes'][0]
+    ]);
 
     DB::beginTransaction();
 
     try {
 
+      extract($this->sanitizeRequest($request->all()));
+
       $exists = $this->model::FirstByDni($dni);
 
-      if ( isset($exists->dni) ) {
+      if (isset($exists->dni)) {
         $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
         throw new Exception($msg);
       }
@@ -243,19 +263,20 @@ class PatientsController extends BaseController implements BaseInterface
 
       Record::create(['idpat' => $insertedId]);
 
+      $data['redirectTo'] = "/$this->main_route/$insertedId";
+
       DB::commit();
 
     } catch (\Exception $e) {
 
       DB::rollBack();
 
-      $request->session()->flash($this->error_message_name, $e->getMessage()); 
-      return redirect($route)->withInput();
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
 
     }
 
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
-    return redirect("$this->main_route/$insertedId"); 
+    $this->echoJsonOuptut($data);
   }
 
   public function edit(Request $request, $id)
@@ -266,6 +287,8 @@ class PatientsController extends BaseController implements BaseInterface
     $object = $this->model::FirstById($id);
     $this->setPageTitle($object->surname.', '.$object->name);
 
+    $this->view_data["load_js"]["datetimepicker"] = true;
+    $this->view_data["legend"] = Lang::get('aroaden.edit_patient');
     $this->view_data['id'] = $id;
     $this->view_data['idnav'] = $id;        
     $this->view_data['object'] = $object;
@@ -275,21 +298,39 @@ class PatientsController extends BaseController implements BaseInterface
 
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);
-    $this->redirectIfIdIsNull($id, $this->main_route);
-    $route = "$this->main_route/$id/edit";
+    $data = [];
+    $data['error'] = false;
 
-    extract($this->sanitizeRequest($request->all()));
+    $id = $this->sanitizeData($id);
+
+    $this->validate($request, [
+      'name' => $this->config['validates']['name'][0],
+      'surname' => $this->config['validates']['surname'][0],
+      'dni' => $this->config['validates']['dni'][0],
+      'tel1' => $this->config['validates']['tel1'][0],
+      'tel2' => $this->config['validates']['tel2'][0],
+      'tel3' => $this->config['validates']['tel3'][0],
+      'sex' => $this->config['validates']['sex'][0],
+      'address' => $this->config['validates']['address'][0],
+      'city' => $this->config['validates']['city'][0],
+      'birth' => $this->config['validates']['birth'][0],
+      'notes' => $this->config['validates']['notes'][0]      
+    ]);
 
     try {
 
-      $patient = $this->model::FirstById($id);
+      extract($this->sanitizeRequest($request->all()));
+
+      $data['redirectTo'] = "/$this->main_route/$id";
+
       $exists = $this->model::CheckIfDniExistsOnUpdate($id, $dni);
 
-      if ( isset($exists->dni) ) {
+      if (isset($exists->dni)) {
         $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
         throw new Exception($msg);
       }
+
+      $patient = $this->model::FirstById($id);
 
       $birth = $this->convertDmYToYmd($birth);
 
@@ -309,13 +350,12 @@ class PatientsController extends BaseController implements BaseInterface
 
     } catch (\Exception $e) {
 
-      $request->session()->flash($this->error_message_name, $e->getMessage());  
-      return redirect($route)->withInput();
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
 
     }
 
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-    return redirect("$this->main_route/$id");
+    $this->echoJsonOuptut($data);
   }
 
   public function record(Request $request, $id)
