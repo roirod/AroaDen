@@ -174,3 +174,5 @@
 	@include('form_fields.fields.closeform')
 
 @include('form_fields.fields.closediv')
+
+@include('form_fields.form_js')

@@ -142,3 +142,5 @@
 			@endif
 		  </div>
 		</div>
+
+		@include('form_fields.form_js')

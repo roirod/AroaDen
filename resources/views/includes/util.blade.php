@@ -1,4 +1,14 @@
 
+@if ($is_create_view)
+  <script type="text/javascript">
+    var is_create_view = true;
+  </script>
+@else
+  <script type="text/javascript">
+    var is_create_view = false;
+  </script>
+@endif
+
 <script type="text/javascript">
 
   var routes = <?php echo json_encode($routes); ?>;
@@ -17,21 +27,34 @@
   var error = false;
   var msg = false;
 
+  axios.interceptors.response.use(function (res) {
+    return res;
+  }, function (err) {
+    if (err.response.status == 422) {
+      vm_form_errors.object = err.response.data.errors;
+    }
+  });
+
   $(document).ajaxError(function(event, jqXHR, settings, thrownError) {
     event.preventDefault();
     event.stopPropagation();
 
     console.log('---------------- ajaxError thrownError  ----------------------------');
     console.dir(thrownError);
-    console.log('--------------------------------------------');
 
     console.log('---------------- ajaxError jqXHR.status  ----------------------------');
     console.dir(jqXHR.status);
-    console.log('--------------------------------------------');
+
+    console.log('---------------- ajaxError jqXHR  ----------------------------');
+    console.dir(jqXHR);
 
     if (jqXHR.status == 401)
       return util.redirectTo("/login");
-          
+
+    if (jqXHR.status == 422) {
+      return util.showPopup("{{ Lang::get('aroaden.deny_access') }}: "+ jqXHR.errors, false);
+    }
+
     if (thrownError == "Forbidden") {
       return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
     }

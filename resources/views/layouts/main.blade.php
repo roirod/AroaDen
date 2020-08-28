@@ -13,7 +13,8 @@
     <link href="{!! asset('assets/css/main.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('assets/font-awe/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{!! asset('assets/css/sweetalert2.min.css') !!}">
-    
+    <link rel="stylesheet" type="text/css" href="{!! asset('assets/css/animate.min.css') !!}">
+
   @show
   
   @section('js')
@@ -21,6 +22,8 @@
     <script type="text/javascript" src="{!! asset('assets/js/jquery.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/bootstrap.min.js') !!}"></script>
     <script type="text/javascript" src="{!! asset('assets/js/sweetalert2.min.js') !!}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/axios.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/vue.js') }}"></script>
 
     @include('includes.util')
 

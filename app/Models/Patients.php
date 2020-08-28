@@ -28,7 +28,7 @@ class Patients extends BaseModel
 
   public function appointments()
   {
-    return $this->hasMany('App\Models\Appointments', 'idpat', 'idpat');
+    return $this->hasMany('App\Models\Appointments', 'idpat', 'idpat')->orderBy('day', 'DESC')->orderBy('hour', 'DESC');
   }
 
   public function invoices()

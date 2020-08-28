@@ -6,7 +6,6 @@ return [
   'aroaden_desc'   => 'Dental clinic software',
 
   'login'   => 'Iniciar sesión',
-
   'are_you_sure'   => 'Estás seguro?',
   'yes'   => 'Sí',
   'no'   => 'No',
@@ -16,6 +15,7 @@ return [
   'edit_user'   => 'Editar usuario',
   'del_user'   => 'Eliminar usuario',
   'form_field_required'   => 'Dato/s de formulario no introducidos',
+  'form_errors'   => 'Errores en datos introducidos:',
   'new_pass'   => 'Contraseña nueva',
   'change_pass'   => 'Cambiar contraseña',
   'password'   => 'Contraseña',
@@ -133,6 +133,8 @@ return [
 
   'currency_format_error' => 'Error en formato de moneda.',
 
+  'error' => 'Error, fallo interno.',
+
   'company' => 'Empresa',
   'company_data' => 'Datos empresa',
   'company_edit_data' => 'Editar datos empresa',
@@ -147,7 +149,6 @@ return [
   'company_notes' => 'Notas',
   'invoice_text' => 'Texto de facturas',    
   'budget_text' => 'Texto de presupuestos',
-
 
   'staff_positions'   => 'Cargos de personal',
   'position' => 'Cargo',

@@ -52,7 +52,7 @@
       <div class="col-xs-12">
         <br>
 
-        <msg-label v-bind="msg" :msg="msg"></msg-label>
+        <msg-label v-bind:msg="msg"></msg-label>
       </div>
 
     </div>
@@ -91,15 +91,10 @@
 
 @section('footer_script')
 
-  <script type="text/javascript" src="{{ asset('assets/js/vue.js') }}"></script>
+  @include('includes.compo_vue.msg-label')
 
   <script type="text/javascript">
     (function (){
-      Vue.component('msg-label', {
-        props: ['msg'],
-        template: '<p class="label label-success fonsi15"> @{{ msg }} </p>'
-      });
-
       defaulTableId = $("#itemsTable");
       var today = moment();
       var add1month = moment().add(1, 'M');

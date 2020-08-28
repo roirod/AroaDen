@@ -69,120 +69,56 @@ return [
 
   'default_users' => [
     [
-        'username' => 'admin',
-        'password' => 'admin',
-        'type' => 'normal',
-        'full_name' => 'admin'
+      'username' => 'admin',
+      'password' => 'admin',
+      'type' => 'normal',
+      'full_name' => 'admin'
     ],
     [
-        'username' => 'normal',
-        'password' => 'normal',
-        'type' => 'normal',
-        'full_name' => 'normal'
+      'username' => 'normal',
+      'password' => 'normal',
+      'type' => 'normal',
+      'full_name' => 'normal'
     ],
     [
-        'username' => 'basic',
-        'password' => 'basic',
-        'type' => 'basic',
-        'full_name' => 'basic'
+      'username' => 'basic',
+      'password' => 'basic',
+      'type' => 'basic',
+      'full_name' => 'basic'
     ]
   ],
 
-  'permissions' => [
-    "normal" => [
-      'patients'  => [
-        'create'  => true,
-        'edit'  => true,
-        'delete'  => false,
-        'deleteFile'  => true,
-        'editRecord'  => true,
-        'uploadOdontogram'  => true,
-        'resetOdontogram'  => true,
-        'uploadProfilePhoto'  => true,
-      ],
-      'staff'  => [
-        'create'  => true,
-        'edit'  => true,
-        'delete'  => false,
-        'deleteFile'  => true,
-        'uploadProfilePhoto'  => true,
-      ],
-      'staff_positions'  => [
-        'create'  => true,
-        'edit'  => true,
-        'delete'  => false
-      ],
-      'services'  => [
-        'create'  => true,
-        'edit'  => true,
-        'delete'  => false
-      ],
-      'appointments'  => [
-        'edit'  => true,
-        'delete'  => true
-      ],
-      'treatments'  => [
-        'edit'  => true,
-        'delete'  => true
-      ],
-      'budgets'  => [
-        'edit'  => true,
-        'delete'  => true
-      ],
-      'company'  => [
-        'edit'  => false
-      ],
-      'settings'  => [
-        'edit'  => false
-      ],
-    ],
+  'validates' => [
+    'name' => ['required|string|max:111', '111'],
+    'surname' => ['required|string|max:111', '111'],
+    'dni' => ['required|alpha_num|max:9', '9'],
+    'tel1' => ['nullable|string|max:18', '18'],
+    'tel2' => ['nullable|string|max:18', '18'],
+    'tel3' => ['nullable|string|max:18', '18'],
+    'sex' => ['required|string|max:9', '9'],
+    'address' => ['required|string|max:111', '111'],
+    'city' => ['required|string|max:111', '111'],
+    'birth' => ['required|date_format:d-m-Y'],
+    'day' => ['required|date_format:d-m-Y'],
+    'hour' => ['required|date_format:H:i'],
+    'units' => ['required|integer|digits_between:0,255', '255'],
+    'paid' => ['required|numeric|between:0,99999999999.99', '11, 2'],
+    'price' => ['required|numeric|between:0,99999999999.99', '11, 2'],
+    'tax' => ['required|integer|digits_between:0,255', '255'],
+    'uniqid' => ['required|string|max:16', '16'],
+    'username' => ['required|alpha_num|max:40', '40'],
+    'password' => ['required|alpha_num|max:40', '40'],
+    'type' => ['required|string|max:30', '30'],
+    'full_name' => ['required|string|max:111', '111'],
+    'notes' => ['nullable|string|max:111', '111'],
 
-    "basic" => [
-      'patients'  => [
-        'create'  => true,
-        'edit'  => false,
-        'delete'  => false,
-        'deleteFile'  => false,
-        'editRecord'  => false,
-        'uploadOdontogram'  => false,
-        'resetOdontogram'  => false,
-      ],
-      'staff'  => [
-        'create'  => true,
-        'edit'  => false,
-        'delete'  => false,
-        'deleteFile'  => false
-      ],
-      'staff_positions'  => [
-        'create'  => true,
-        'edit'  => false,
-        'delete'  => false
-      ],
-      'services'  => [
-        'create'  => true,
-        'edit'  => false,
-        'delete'  => false
-      ],
-      'appointments'  => [
-        'create'  => true,
-        'edit'  => true,
-        'delete'  => false
-      ],
-      'treatments'  => [
-        'edit'  => true,
-        'delete'  => false
-      ],
-      'budgets'  => [
-        'edit'  => false,
-        'delete'  => false
-      ],
-      'company'  => [
-        'edit'  => false
-      ],
-      'settings'  => [
-        'edit'  => false
-      ],
-    ]
+    'idpat' => ['required|integer'],
+    'idser' => ['required|integer'],
+
+    'position' => false,
+    'issue_date' => false,
+    'no_tax_msg' => false,
+    'staff' => false,            
   ],
 
   'settings_fields' => [

@@ -99,6 +99,35 @@ return [
     |
     */
     'attributes' => [
-        //
+        'password'   => 'Contraseña',
+        'name'   => 'Nombre',
+        'full_name'   => 'Nombre completo',
+        'surname'   => 'Apellidos',
+        'price'   => 'Precio(pvp)',
+        'price_no_tax'   => 'Precio sin iva',
+        'tax'   => 'IVA',
+        'dni'   => 'DNI',
+        'nif'   => 'NIF/CIF',
+        'number'   => 'Número',
+        'sex'   => 'Sexo',
+        'user'   => 'Usuario',
+        'tel1'   => 'Telefóno1',
+        'tel2'   => 'Telefóno2',
+        'tel3'   => 'Telefóno3',    
+        'city'   => 'Población',
+        'paid' => 'Pagado',
+        'units' => 'Cantidad',
+        'address' => 'Dirección',
+        'birth' => 'F. nacimiento',
+        'place'   => 'Lugar',
+        'age'   => 'Edad',
+        'hour' => 'Hora',
+        'day' => 'Día',
+        'date'   => 'Fecha',
+        'notes' => 'Notas',
+        'company_name' => 'Nombre',
+        'company_city' => 'Población',
+        'company_address' => 'Dirección',
+        'company_nif' => 'NIF/CIF'
     ],
 ];
