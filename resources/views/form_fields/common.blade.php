@@ -3,6 +3,12 @@
 	@include('form_fields.fields.openform')
 
 		<div>
+			@if ($form_fields['hidden_idpat'])
+
+        <input type="hidden" name="idpat" value="{{ $idnav }}">
+
+			@endif
+			
 			@if ($form_fields['surname'])
 
 				@include('form_fields.fields.surname')

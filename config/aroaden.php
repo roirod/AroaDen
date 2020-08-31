@@ -38,6 +38,7 @@ return [
   ],
 
   'form_fields' => [
+    'hidden_idpat' => false,
     'surname' => false,
     'name' => false,
     'position' => false,
@@ -91,7 +92,7 @@ return [
   'validates' => [
     'name' => ['required|string|max:111', '111'],
     'surname' => ['required|string|max:111', '111'],
-    'dni' => ['required|alpha_num|max:9', '9'],
+    'dni' => ['required|alpha_num|min:9|max:9', '9'],
     'tel1' => ['nullable|string|max:18', '18'],
     'tel2' => ['nullable|string|max:18', '18'],
     'tel3' => ['nullable|string|max:18', '18'],
@@ -110,7 +111,7 @@ return [
     'password' => ['required|alpha_num|max:40', '40'],
     'type' => ['required|string|max:30', '30'],
     'full_name' => ['required|string|max:111', '111'],
-    'notes' => ['nullable|string|max:111', '111'],
+    'notes' => ['nullable|string|max:65000'],
 
     'idpat' => ['required|integer'],
     'idser' => ['required|integer'],

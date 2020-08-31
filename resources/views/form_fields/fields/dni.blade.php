@@ -2,11 +2,11 @@
 	<label class="control-label text-left mar10">{{ @trans('aroaden.dni') }}</label>
 	@if ($is_create_view)
 
-		<input type="text" class="form-control" name="dni" pattern="[A-Z0-9]{9}" maxlength="9" value="{{ old('dni') }}" required>
+		<input type="text" class="form-control" name="dni" value="{{ old('dni') }}" maxlength="9" required>
 
 	@else
 
-		<input type="text" class="form-control" name="dni" pattern="[A-Z0-9]{9}" maxlength="9" value="{!! $object->dni !!}" required>
+		<input type="text" class="form-control" name="dni" value="{!! $object->dni !!}" maxlength="9" required>
 
 	@endif
 </div>

@@ -114,6 +114,7 @@ class AppointmentsController extends BaseController implements BaseInterface
     $object = $this->model2->FirstById($id);
     $this->setPageTitle($object->surname.', '.$object->name);
 
+    $this->form_fields["hidden_idpat"] = true;
     $this->view_data["legend"] = Lang::get('aroaden.create_appointment');
     $this->view_data['id'] = $id;
     $this->view_data['idnav'] = $object->idpat;

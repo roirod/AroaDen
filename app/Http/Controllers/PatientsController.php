@@ -50,8 +50,6 @@ class PatientsController extends BaseController implements BaseInterface
     $this->has_odontogram = true;
     $this->user_type = $this->config['routes']['patients'];
 
-    $this->view_data["load_js"]["datetimepicker"] = true;
-
     $fields = [
       'surname' => true,
       'name' => true,

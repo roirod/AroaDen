@@ -5,6 +5,6 @@
 
 	@include('includes.patients_nav')
 
-  @include('patients.includes.create_edit')
+  @include('form_fields.create_edit')
 
 @endsection

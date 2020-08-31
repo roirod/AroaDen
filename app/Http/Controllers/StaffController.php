@@ -182,87 +182,83 @@ class StaffController extends BaseController implements BaseInterface
   public function create(Request $request, $id = false)
   {
     $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
-    $this->view_data['misc_text'] = Lang::get('aroaden.add_staff');
+    $this->view_data['legend'] = Lang::get('aroaden.add_staff');
+
+    $this->view_data["load_js"]["datetimepicker"] = true;
 
     return parent::create($request);
   }
 
   public function store(Request $request)
   {
-    extract($this->sanitizeRequest($request->all()));
-    
-    $route = "$this->main_route/create";
+    $data = [];
+    $data['error'] = false;
 
-    $exists = $this->model::FirstByDni($dni);
-
-    if ( isset($exists->dni) ) {
-      $messa = 'Repetido. El dni: '.$dni.', pertenece a: '.$exists->surname.', '.$exists->name;
-      $request->session()->flash($this->error_message_name, $messa);
-      return redirect($route)->withInput();
-    }
-
-    $validator = Validator::make($request->all(),[
-      'name' => 'required|max:111',
-      'surname' => 'required|max:111',
-      'dni' => 'unique:'. $this->model->getTableName() .'|max:12',
-      'tel1' => 'max:11',
-      'tel2' => 'max:11',
-      'address' => 'max:111',
-      'city' => 'max:111',
-      'birth' => 'date',
-      'notes' => ''
+    $this->validate($request, [
+      'name' => $this->config['validates']['name'][0],
+      'surname' => $this->config['validates']['surname'][0],
+      'dni' => $this->config['validates']['dni'][0],
+      'tel1' => $this->config['validates']['tel1'][0],
+      'tel2' => $this->config['validates']['tel2'][0],
+      'address' => $this->config['validates']['address'][0],
+      'city' => $this->config['validates']['city'][0],
+      'birth' => $this->config['validates']['birth'][0],
+      'notes' => $this->config['validates']['notes'][0]
     ]);
-        
-    if ($validator->fails()) {
-      return redirect($route)
-                   ->withErrors($validator)
-                   ->withInput();
-    } else {
 
-      DB::beginTransaction();
+    DB::beginTransaction();
 
-      try {
+    try {
 
-        $birth = $this->convertDmYToYmd($birth);
+      extract($this->sanitizeRequest($request->all()));
 
-        $idsta = $this->model::insertGetId([
-          'name' => $name,
-          'surname' => $surname,
-          'dni' => $dni,
-          'tel1' => $tel1,
-          'tel2' => $tel2,
-          'address' => $address,
-          'city' => $city,
-          'birth' => $birth,
-          'notes' => $notes,
-          'created_at' => date('Y-m-d H:i:s')
-        ]);
+      $exists = $this->model::FirstByDni($dni);
 
-        $positions = $request->positions;
-
-        if (is_array($positions) && count($positions) > 0) {
-          foreach ($positions as $idstpo) {
-            StaffPositionsEntries::create([
-              'idsta' => (int)$idsta,
-              'idstpo' => (int)$idstpo
-            ]);
-          }
-        }
-
-        DB::commit();
-
-      } catch (\Exception $e) {
-
-        DB::rollBack();
-
-        $request->session()->flash($this->error_message_name, $e->getMessage());  
-        return redirect($route)->withInput();
-
+      if (isset($exists->dni)) {
+        $msg = Lang::get('aroaden.dni_in_use', ['dni' => $dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+        throw new Exception($msg);
       }
 
-      $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
-      return redirect("/$this->main_route/$idsta");
-    } 
+      $birth = $this->convertDmYToYmd($birth);
+
+      $insertedId = $this->model::insertGetId([
+        'name' => $name,
+        'surname' => $surname,
+        'dni' => $dni,
+        'tel1' => $tel1,
+        'tel2' => $tel2,
+        'address' => $address,
+        'city' => $city,
+        'birth' => $birth,
+        'notes' => $notes,
+        'created_at' => date('Y-m-d H:i:s')
+      ]);
+
+      $positions = $request->input('positions');
+
+      if (is_array($positions) && count($positions) > 0) {
+        foreach ($positions as $idstpo) {
+          StaffPositionsEntries::create([
+            'idsta' => (int)$insertedId,
+            'idstpo' => (int)$idstpo
+          ]);
+        }
+      }
+
+      $data['redirectTo'] = "/$this->main_route/$insertedId";
+
+      DB::commit();
+
+    } catch (\Exception $e) {
+
+      DB::rollBack();
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
+    }
+
+    $this->echoJsonOuptut($data);
   }
 
   public function edit(Request $request, $id)
@@ -272,12 +268,14 @@ class StaffController extends BaseController implements BaseInterface
 
     $object = $this->model::FirstById($id);
 
+    $this->view_data["load_js"]["datetimepicker"] = true;
+
     $this->view_data['object'] = $object;
     $this->view_data['idnav'] = $id;       
     $this->view_data['id'] = $id;
     $this->view_data['staffPositions'] = StaffPositions::AllOrderByName();
     $this->view_data['staffPositionsEntries'] = StaffPositionsEntries::AllByStaffId($id);
-    $this->view_data['misc_text'] = Lang::get('aroaden.edit_staff');
+    $this->view_data['legend'] = Lang::get('aroaden.edit_staff');
 
     $this->setPageTitle($object->surname.', '.$object->name);
 
@@ -286,86 +284,78 @@ class StaffController extends BaseController implements BaseInterface
 
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);
-    $this->redirectIfIdIsNull($id, $this->main_route);
-    $route = "/$this->main_route/$id/edit";
+    $data = [];
+    $data['error'] = false;
 
-    extract($this->sanitizeRequest($request->all()));
-
-    $exists = $this->model::CheckIfDniExistsOnUpdate($id, $dni);
-
-    if ( isset($exists->dni) ) {
-      $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
-      $request->session()->flash($this->error_message_name, $msg);
-      return redirect($route)->withInput();
-    }
-          
-    $validator = Validator::make($request->all(),[
-      'name' => 'required|max:111',
-      'surname' => 'required|max:111',
-      'dni' => 'required|max:12',
-      'tel1' => 'max:11',
-      'tel2' => 'max:11',
-      'notes' => '',
-      'address' => 'max:111',
-      'city' => 'max:111',
-      'birth' => 'date'
+    $this->validate($request, [
+      'name' => $this->config['validates']['name'][0],
+      'surname' => $this->config['validates']['surname'][0],
+      'dni' => $this->config['validates']['dni'][0],
+      'tel1' => $this->config['validates']['tel1'][0],
+      'tel2' => $this->config['validates']['tel2'][0],
+      'address' => $this->config['validates']['address'][0],
+      'city' => $this->config['validates']['city'][0],
+      'birth' => $this->config['validates']['birth'][0],
+      'notes' => $this->config['validates']['notes'][0]
     ]);
-        
-    if ($validator->fails()) {
-      return redirect($route)
-                 ->withErrors($validator)
-                 ->withInput();
-    } else {
 
-      DB::beginTransaction();
+    DB::beginTransaction();
 
-      try {
+    try {
 
-        $birth = $this->convertDmYToYmd($birth);
+      extract($this->sanitizeRequest($request->all()));
 
-        $staff = $this->model::FirstById($id);
-       
-        $staff->name = $name;
-        $staff->surname = $surname;
-        $staff->dni = $dni;
-        $staff->tel1 = $tel1;
-        $staff->tel2 = $tel2;
-        $staff->address = $address;
-        $staff->city = $city;
-        $staff->birth = $birth;
-        $staff->notes = $notes;
-        $staff->updated_at = date('Y-m-d H:i:s');
+      $id = $this->sanitizeData($id);
+      $exists = $this->model::CheckIfDniExistsOnUpdate($id, $dni);
 
-        $staff->save();
-
-        StaffPositionsEntries::where('idsta', $id)->delete();
-
-        $positions = $request->positions;
-
-        if (is_array($positions) && count($positions) > 0) {
-          foreach ($positions as $idstpo) {
-            StaffPositionsEntries::create([
-              'idsta' => (int)$id,
-              'idstpo' => (int)$idstpo
-            ]);
-          }
-        }
-
-        DB::commit();
-
-      } catch (\Exception $e) {
-
-        DB::rollBack();
-
-        $request->session()->flash($this->error_message_name, $e->getMessage());  
-        return redirect($route);
-
+      if (isset($exists->dni)) {
+        $msg = Lang::get('aroaden.dni_in_use', ['dni' => $exists->dni, 'surname' => $exists->surname, 'name' => $exists->name]);
+        throw new Exception($msg);
       }
 
-      $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );      
-      return redirect("/$this->main_route/$id");
+      $birth = $this->convertDmYToYmd($birth);
+
+      $staff = $this->model::FirstById($id);
+     
+      $staff->name = $name;
+      $staff->surname = $surname;
+      $staff->dni = $dni;
+      $staff->tel1 = $tel1;
+      $staff->tel2 = $tel2;
+      $staff->address = $address;
+      $staff->city = $city;
+      $staff->birth = $birth;
+      $staff->notes = $notes;
+      $staff->updated_at = date('Y-m-d H:i:s');
+      $staff->save();
+
+      StaffPositionsEntries::where('idsta', $id)->delete();
+
+      $positions = $request->input('positions');
+
+      if (is_array($positions) && count($positions) > 0) {
+        foreach ($positions as $idstpo) {
+          StaffPositionsEntries::create([
+            'idsta' => (int)$id,
+            'idstpo' => (int)$idstpo
+          ]);
+        }
+      }
+
+      $data['redirectTo'] = "/$this->main_route/$id";
+
+      DB::commit();
+
+    } catch (\Exception $e) {
+
+      DB::rollBack();
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
     }
+
+    $this->echoJsonOuptut($data);
   }
 
   public function file(Request $request, $id)
