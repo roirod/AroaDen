@@ -3,11 +3,11 @@
 
 	@if ($is_create_view)
 
-		<input type="text" class="form-control" name="tel2" maxlength="11" value="{{ old('tel2') }}">
+		<input type="text" class="form-control" name="tel2" value="{{ old('tel2') }}">
 
 	@else
 
-		<input type="text" class="form-control" name="tel2" maxlength="11" value="{!! $object->tel2 !!}">
+		<input type="text" class="form-control" name="tel2" value="{!! $object->tel2 !!}">
 
 	@endif
 </div>

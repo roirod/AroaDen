@@ -429,9 +429,22 @@ class BaseController extends Controller
     $this->createDefaultCompanyData();
 
     if (env('REDIS_SERVER_IS_ON')) 
-        return json_decode(Redis::get('settings'));
+      return json_decode(Redis::get('settings'));
 
     return Settings::getObject();
+  }
+
+  protected function validateInputs()
+  {
+    $arr = [];
+
+    foreach ($this->form_fields as $key => $val) {
+      if ($val && isset($this->config['validates'][$key])) {
+        $arr[$key] = $this->config['validates'][$key][0];
+      }
+    }
+
+    return $this->validate($this->request, $arr);
   }
 
   /**

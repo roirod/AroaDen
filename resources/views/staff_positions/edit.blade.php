@@ -3,6 +3,8 @@
 
 @section('content')
 
-  @include('staff_positions.common')
+  @include('includes.staff_positions_nav')
+
+  @include('form_fields.create_edit')
 
 @endsection

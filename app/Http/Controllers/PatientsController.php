@@ -214,20 +214,9 @@ class PatientsController extends BaseController implements BaseInterface
   {
     $data = [];
     $data['error'] = false;
+    $this->request = $request;
 
-    $this->validate($request, [
-      'name' => $this->config['validates']['name'][0],
-      'surname' => $this->config['validates']['surname'][0],
-      'dni' => $this->config['validates']['dni'][0],
-      'tel1' => $this->config['validates']['tel1'][0],
-      'tel2' => $this->config['validates']['tel2'][0],
-      'tel3' => $this->config['validates']['tel3'][0],
-      'sex' => $this->config['validates']['sex'][0],
-      'address' => $this->config['validates']['address'][0],
-      'city' => $this->config['validates']['city'][0],
-      'birth' => $this->config['validates']['birth'][0],
-      'notes' => $this->config['validates']['notes'][0]
-    ]);
+    $this->validateInputs();
 
     DB::beginTransaction();
 
@@ -298,26 +287,14 @@ class PatientsController extends BaseController implements BaseInterface
   {
     $data = [];
     $data['error'] = false;
+    $this->request = $request;
 
-    $id = $this->sanitizeData($id);
-
-    $this->validate($request, [
-      'name' => $this->config['validates']['name'][0],
-      'surname' => $this->config['validates']['surname'][0],
-      'dni' => $this->config['validates']['dni'][0],
-      'tel1' => $this->config['validates']['tel1'][0],
-      'tel2' => $this->config['validates']['tel2'][0],
-      'tel3' => $this->config['validates']['tel3'][0],
-      'sex' => $this->config['validates']['sex'][0],
-      'address' => $this->config['validates']['address'][0],
-      'city' => $this->config['validates']['city'][0],
-      'birth' => $this->config['validates']['birth'][0],
-      'notes' => $this->config['validates']['notes'][0]      
-    ]);
+    $this->validateInputs();
 
     try {
 
       extract($this->sanitizeRequest($request->all()));
+      $id = $this->sanitizeData($id);
 
       $data['redirectTo'] = "/$this->main_route/$id";
 

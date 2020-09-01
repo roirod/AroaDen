@@ -4,11 +4,11 @@
 
 	@if ($is_create_view)
         
-    	<input type='text' name="birth" class="form-control" required/>
+    	<input type='text' name="birth" class="form-control"/>
 
 	@else
 
-		<input type="text" name="birth" value="{!! convertYmdToDmY($object->birth) !!}" class="form-control" required>
+		<input type="text" name="birth" value="{!! convertYmdToDmY($object->birth) !!}" class="form-control">
 
 	@endif
 

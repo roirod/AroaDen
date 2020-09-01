@@ -4,11 +4,11 @@
         
 	@if ($is_create_view)
 
-		<input type="text" name="hour" class="form-control" @if($autofocus == 'hour') autofocus @endif required>
+		<input type="text" name="hour" class="form-control" @if($autofocus == 'hour') autofocus @endif>
 
 	@else
 
-		<input type="text" name="hour" value="{!! substr($object->hour, 0, -3) !!}" class="form-control" @if($autofocus == 'hour') autofocus @endif required>
+		<input type="text" name="hour" value="{!! substr($object->hour, 0, -3) !!}" class="form-control" @if($autofocus == 'hour') autofocus @endif>
 
 	@endif
 

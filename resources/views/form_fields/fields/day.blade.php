@@ -4,21 +4,11 @@
 
 	@if ($is_create_view)
         
-    <input type='text' name="day" class="form-control" required/>
+    <input type="text" name="day" class="form-control"/>
 
 	@else
 
-    @php
-      $day = convertYmdToDmY($object->day);
-    @endphp
-
-		<input type="text" name="day" value="" class="form-control" required>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-          $('input[name="day"]').val('{{ $day }}');
-        });
-    </script>
+    <input type="text" name="day" value="{!! convertYmdToDmY($object->day) !!}" class="form-control">
 
 	@endif
 

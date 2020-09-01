@@ -127,13 +127,9 @@ class AppointmentsController extends BaseController implements BaseInterface
   {
     $data = [];
     $data['error'] = false;
+    $this->request = $request;
 
-    $this->validate($request, [
-      'idpat' => $this->config['validates']['idpat'][0],
-      'day' => $this->config['validates']['day'][0],
-      'hour' => $this->config['validates']['hour'][0],
-      'notes' => $this->config['validates']['notes'][0]
-    ]);
+    $this->validateInputs();
 
     try {
 
@@ -181,19 +177,15 @@ class AppointmentsController extends BaseController implements BaseInterface
 
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);
-
-    $this->validate($request, [
-      'day' => $this->config['validates']['day'][0],
-      'hour' => $this->config['validates']['hour'][0],
-      'notes' => $this->config['validates']['notes'][0]
-    ]);
-      
     $data = [];
     $data['error'] = false;
+    $this->request = $request;
+
+    $this->validateInputs();
 
     try {
 
+      $id = $this->sanitizeData($id);
       $exists = $this->model::CheckIfIdExists($id);
 
       if (!$exists)

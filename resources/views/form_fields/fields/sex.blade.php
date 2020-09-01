@@ -4,7 +4,7 @@
 	@if ($is_create_view)
 
  		<option value="male" selected>{{ @trans('aroaden.male') }}</option>
-  		<option value="female">{{ @trans('aroaden.female') }}</option> 
+  	<option value="female">{{ @trans('aroaden.female') }}</option> 
 
 	@else
 

@@ -114,12 +114,7 @@ return [
     'notes' => ['nullable|string|max:65000'],
 
     'idpat' => ['required|integer'],
-    'idser' => ['required|integer'],
-
-    'position' => false,
-    'issue_date' => false,
-    'no_tax_msg' => false,
-    'staff' => false,            
+    'idser' => ['required|integer']
   ],
 
   'settings_fields' => [

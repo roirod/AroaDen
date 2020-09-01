@@ -51,6 +51,10 @@ class StaffPositionsController extends BaseController
    */
   public function create(Request $request, $id = false)
   {
+    $this->setPageTitle(Lang::get('aroaden.create_position'));
+
+    $this->view_data["legend"] = Lang::get('aroaden.create_position');
+
     return parent::create($request);
   }
 
@@ -62,11 +66,17 @@ class StaffPositionsController extends BaseController
    */
   public function store(Request $request)
   {
-    $name = $this->sanitizeData($request->name);
-    $route = "$this->main_route/create";
+    $data = [];
+    $data['error'] = false;
+    $data['redirectTo'] = "/$this->main_route";
+    
+    $this->request = $request;
+
+    $this->validateInputs();
 
     try {
 
+      $name = $this->sanitizeData($request->name);
       $exists = $this->model::FirstByName($name);         
 
       if ( isset($exists->name) )
@@ -78,13 +88,12 @@ class StaffPositionsController extends BaseController
     
     } catch (Exception $e) {
 
-      $request->session()->flash($this->error_message_name, $e->getMessage());
-      return redirect($route);
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
 
     }
-    
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-    return redirect("$this->main_route");
+
+    $this->echoJsonOuptut($data);
   }
 
   /**
@@ -98,8 +107,10 @@ class StaffPositionsController extends BaseController
     $this->redirectIfIdIsNull($id, $this->main_route);
     $id = $this->sanitizeData($id);
 
-    $this->autofocus = 'name';
+    $this->setPageTitle(Lang::get('aroaden.edit_position'));
 
+    $this->autofocus = 'name';
+    $this->view_data["legend"] = Lang::get('aroaden.edit_position');
     $this->view_data['id'] = $id;
     $this->view_data['object'] = $this->model::find($id);
 
@@ -115,16 +126,21 @@ class StaffPositionsController extends BaseController
    */
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);    
-    $this->redirectIfIdIsNull($id, $this->main_route);
-    $name = $this->sanitizeData($request->name);
-    $route = "$this->main_route/$id/edit";
+    $data = [];
+    $data['error'] = false;
+    $data['redirectTo'] = "/$this->main_route";
+
+    $this->request = $request;
+
+    $this->validateInputs();
 
     try {
 
+      $id = $this->sanitizeData($id);    
+      $name = $this->sanitizeData($request->name);
       $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
 
-      if ( isset($exists->name) )
+      if (isset($exists->name))
         throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
 
       $object = $this->model::find($id);
@@ -133,13 +149,12 @@ class StaffPositionsController extends BaseController
 
     } catch (Exception $e) {
 
-      $request->session()->flash($this->error_message_name, $e->getMessage());
-      return redirect($route);
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
 
     }
 
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-    return redirect("$this->main_route");
+    $this->echoJsonOuptut($data);
   }
 
   /**

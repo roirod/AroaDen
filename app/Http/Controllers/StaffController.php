@@ -193,18 +193,9 @@ class StaffController extends BaseController implements BaseInterface
   {
     $data = [];
     $data['error'] = false;
+    $this->request = $request;
 
-    $this->validate($request, [
-      'name' => $this->config['validates']['name'][0],
-      'surname' => $this->config['validates']['surname'][0],
-      'dni' => $this->config['validates']['dni'][0],
-      'tel1' => $this->config['validates']['tel1'][0],
-      'tel2' => $this->config['validates']['tel2'][0],
-      'address' => $this->config['validates']['address'][0],
-      'city' => $this->config['validates']['city'][0],
-      'birth' => $this->config['validates']['birth'][0],
-      'notes' => $this->config['validates']['notes'][0]
-    ]);
+    $this->validateInputs();
 
     DB::beginTransaction();
 
@@ -221,7 +212,7 @@ class StaffController extends BaseController implements BaseInterface
 
       $birth = $this->convertDmYToYmd($birth);
 
-      $insertedId = $this->model::insertGetId([
+      $id = $this->model::insertGetId([
         'name' => $name,
         'surname' => $surname,
         'dni' => $dni,
@@ -239,13 +230,13 @@ class StaffController extends BaseController implements BaseInterface
       if (is_array($positions) && count($positions) > 0) {
         foreach ($positions as $idstpo) {
           StaffPositionsEntries::create([
-            'idsta' => (int)$insertedId,
+            'idsta' => (int)$id,
             'idstpo' => (int)$idstpo
           ]);
         }
       }
 
-      $data['redirectTo'] = "/$this->main_route/$insertedId";
+      $data['redirectTo'] = "/$this->main_route/$id";
 
       DB::commit();
 
@@ -286,18 +277,9 @@ class StaffController extends BaseController implements BaseInterface
   {
     $data = [];
     $data['error'] = false;
+    $this->request = $request;
 
-    $this->validate($request, [
-      'name' => $this->config['validates']['name'][0],
-      'surname' => $this->config['validates']['surname'][0],
-      'dni' => $this->config['validates']['dni'][0],
-      'tel1' => $this->config['validates']['tel1'][0],
-      'tel2' => $this->config['validates']['tel2'][0],
-      'address' => $this->config['validates']['address'][0],
-      'city' => $this->config['validates']['city'][0],
-      'birth' => $this->config['validates']['birth'][0],
-      'notes' => $this->config['validates']['notes'][0]
-    ]);
+    $this->validateInputs();
 
     DB::beginTransaction();
 

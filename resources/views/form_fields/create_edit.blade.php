@@ -10,7 +10,7 @@
         @include('form_fields.show.form_errors')
 
         <div id="saveform">
-          <form class="form" v-on:submit.prevent="onSubmit">
+          <form class="saveform" v-on:submit.prevent="onSubmit">
             {!! csrf_field() !!}
 
             @if (!$is_create_view)
@@ -45,7 +45,7 @@
       el: '#saveform',
       methods: {
         onSubmit: function() {
-          var data = $("form.form").serialize();
+          var data = $("form.saveform").serialize();
 
           axios.post(rq_url, data).then(function (res) {
             if (res.data.error)
