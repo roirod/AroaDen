@@ -8,13 +8,16 @@
 	
 	<div class="row">
 
+    @include('form_fields.show.form_errors')
+
 		<div class="col-sm-3">
 	    <fieldset>
 	      <legend>
 	        {!! @trans('aroaden.create_user') !!}
 	      </legend>
 
-				@include('form_fields.common')
+        @include('users.common')
+
 			</fieldset>
 		</div>
 

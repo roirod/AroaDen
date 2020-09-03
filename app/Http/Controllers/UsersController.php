@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
+use Exception;
 use Lang;
 
 class UsersController extends BaseController
@@ -20,10 +21,10 @@ class UsersController extends BaseController
     $this->model = $users;
 
     $fields = [
-      'user' => true,
+      'username' => true,
       'password' => true,
       'full_name' => true,
-      'scopes' => true,
+      'type' => true,
       'save' => true
     ];
 
@@ -40,37 +41,28 @@ class UsersController extends BaseController
   }    
 
   public function store(Request $request)
-  {             
-    $password = trim($request->input('password'));
-    $username = $this->sanitizeData($request->input('username')); 
-    $type = $this->sanitizeData($request->input('type'));
-    $full_name = $this->sanitizeData($request->input('full_name'));
+  {
+    $data = [];
+    $data['error'] = false;
+    $data['redirectTo'] = "/$this->main_route";
 
-    if ($username == 'admin') {
-      $request->session()->flash($this->error_message_name, 'Nombre de usuario no permitido, use cualquier otro.');   
-      return redirect($this->main_route);
-    }   
+    $this->request = $request;
+    $this->validateInputs();
 
-    $exists = $this->model::CheckIfExists($username);
+    try {
 
-    if ($exists) {
-      $request->session()->flash($this->error_message_name, "Nombre de usuario: $username - en uso, use cualquier otro.");
-      return redirect($this->main_route);
-    }
+      extract($this->sanitizeRequest($request->all()));
 
-    $validator = Validator::make($request->all(),[
-      'username' => 'required|unique:users|max:44',
-      'password' => 'required|max:44',
-      'type' => 'required|max:44',
-      'full_name' => 'required|max:77'
-    ]);
-        
-    if ($validator->fails()) {
-       return redirect($this->main_route)
-                   ->withErrors($validator)
-                   ->withInput();
-    } else {        
+      if ($username == 'admin')
+        throw new Exception(Lang::get('aroaden.name_in_use'));
+
+      $exists = $this->model::CheckIfExists($username);
+
+      if ($exists)
+        throw new Exception(Lang::get('aroaden.name_in_use'));
                             
+      $password = trim($request->input('password'));
+
       $this->model::create([
         'username' => $username,
         'password' => bcrypt($password),
@@ -78,10 +70,14 @@ class UsersController extends BaseController
         'full_name' => $full_name
       ]);
     
-      $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') ); 
-                  
-      return redirect($this->main_route);
-    }      
+    } catch (\Exception $e) {
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
+    }
+
+    $this->echoJsonOuptut($data);
   }
   
   public function edit(Request $request, $id)
@@ -101,6 +97,58 @@ class UsersController extends BaseController
     return $this->loadView();
   }
 
+  public function update(Request $request, $id)
+  {
+    $data = [];
+    $data['error'] = false;
+    $data['redirectTo'] = "/$this->main_route";
+
+    $id = $this->sanitizeData($id);
+    $user = $this->model::find($id);
+
+    if ($user->username == 'admin') {
+      $this->form_fields['full_name'] = false;
+      $this->form_fields['type'] = false;
+    }
+
+    $this->request = $request;
+    $this->validateInputs();
+
+    try {
+
+      extract($this->sanitizeRequest($request->all()));
+
+      if ($user->username != 'admin') {
+        $exists = $this->model::CheckIfExistsOnUpdate($id, $username);
+
+        if ($exists)
+          throw new Exception(Lang::get('aroaden.name_in_use'));
+
+        if ($username != $user->username)
+          $user->username = $username;
+
+        if ($full_name != $user->full_name)
+          $user->full_name = $full_name;
+
+        if ($type != $user->type)
+          $user->type = $type;
+      }
+
+      $password = trim($request->input('password'));
+
+      $user->password = bcrypt($password);
+      $user->save();
+
+    } catch (\Exception $e) {
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
+    }
+
+    $this->echoJsonOuptut($data);
+  }
+
   public function deleteView(Request $request)
   {
     $this->view_name = 'deleteView';
@@ -113,86 +161,30 @@ class UsersController extends BaseController
     return $this->loadView();
   }
 
-  public function update(Request $request, $id)
-  {
-    $id = $this->sanitizeData($id);    
-    $this->redirectIfIdIsNull($id, $this->main_route);
-    $route = "$this->main_route/$id/edit";
-    $user = $this->model::find($id);
-
-    $password = trim($request->input('password'));
-    $username = $this->sanitizeData($request->input('username'));        
-    $full_name = $this->sanitizeData($request->input('full_name'));        
-    $type = $this->sanitizeData($request->input('type'));
-
-    if ($user->username == 'admin') {
-
-      if ($password == '') {
-        $request->session()->flash($this->error_message_name, 'La contraseña es obligatoria.');   
-        return redirect($route);
-      }
-
-      $user->password = bcrypt($password);
-
-    } else {
-
-      if ($username == '') {
-        $request->session()->flash($this->error_message_name, 'El Usuario es obligatorio.');   
-        return redirect($route);
-      }
-
-      $CheckIfExistsOnUpdate = $this->model::CheckIfExistsOnUpdate($id, $username);
-
-      if ($CheckIfExistsOnUpdate) {
-        $request->session()->flash($this->error_message_name,  "Nombre de usuario: $username - en uso, use cualquier otro.");   
-        return redirect($route);
-      }
-
-      if ($username != $user->username)
-          $user->username = $username;
-
-      if ($password != '')
-          $user->password = bcrypt($password);            
-
-      if ($full_name == '') {
-        $request->session()->flash($this->error_message_name, 'El Nombre completo es obligatorio.');   
-        return redirect($route);
-      }
-
-      if ($full_name != $user->full_name)
-        $user->full_name = $full_name;
-
-      if ($type == '') {
-        $request->session()->flash($this->error_message_name, 'El campo Permisos es obligatorio.');   
-        return redirect($route);
-      }
-
-      if ($type != $user->type)
-        $user->type = $type;
-    }
-
-    $user->save();
-        
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message'));
-    return redirect($this->main_route);
-  }
-
   public function userDelete(Request $request)
   {
-    $uid = $this->sanitizeData($request->input('uid'));
-    $this->redirectIfIdIsNull($uid, $this->main_route);
-    
-    $user = $this->model::find($uid);
+    $data = [];
+    $data['error'] = false;
+    $data['redirectTo'] = "/$this->main_route";
 
-    if ($user->username == 'admin') {
-      $request->session()->flash($this->error_message_name, 'No se puede eliminar el usuario admin.');   
-      return redirect($this->main_route.'/deleteView');
+    try {
+
+      $uid = $this->sanitizeData($request->input('uid'));      
+      $user = $this->model::find($uid);
+
+      if ($user->username == 'admin')
+        throw new Exception(Lang::get('aroaden.del_user_error'));
+
+      $user->delete();
+
+    } catch (\Exception $e) {
+
+      $data['error'] = true;
+      $data['msg'] = $e->getMessage();
+
     }
 
-    $user->delete();
-
-    $request->session()->flash($this->success_message_name, Lang::get('aroaden.success_message') );
-    return redirect($this->main_route);
+    $this->echoJsonOuptut($data);
   }
 
 }

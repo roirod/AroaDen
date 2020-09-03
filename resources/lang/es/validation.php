@@ -101,6 +101,7 @@ return [
     'attributes' => [
         'password'   => 'Contraseña',
         'name'   => 'Nombre',
+        'username'   => 'Usuario',
         'full_name'   => 'Nombre completo',
         'surname'   => 'Apellidos',
         'price'   => 'Precio sin iva',

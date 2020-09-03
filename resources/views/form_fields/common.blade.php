@@ -141,9 +141,9 @@
 
 			@endif
 
-			@if ($form_fields['user'])
+			@if ($form_fields['username'])
 
-				@include('form_fields.fields.user')
+				@include('form_fields.fields.username')
 
 			@endif
 
@@ -159,9 +159,9 @@
 
 			@endif
 
-			@if ($form_fields['scopes'])
+			@if ($form_fields['type'])
 
-				@include('form_fields.fields.scopes')
+				@include('form_fields.fields.type')
 
 			@endif
 

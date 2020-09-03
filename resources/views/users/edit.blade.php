@@ -4,7 +4,7 @@
 
 	@include('includes.users_nav')
 
-	@include('includes.messages')
+  @include('form_fields.show.form_errors')
 
 	<div class="col-sm-5">
     <fieldset>
@@ -12,7 +12,8 @@
 			  {!! @trans('aroaden.edit_user') !!}
 			</legend>
 
-			@include('form_fields.common')
+      @include('users.common')
+
 		</fieldset>
 	</div>
 

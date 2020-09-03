@@ -9,11 +9,14 @@ return [
   'are_you_sure'   => 'Estás seguro?',
   'yes'   => 'Sí',
   'no'   => 'No',
+
   'user'   => 'Usuario',
   'users'   => 'Usuarios',
   'create_user'   => 'Crear usuario',
   'edit_user'   => 'Editar usuario',
   'del_user'   => 'Eliminar usuario',
+  'del_user_error'   => 'No se puede eliminar el usuario',
+
   'form_field_required'   => 'Dato/s de formulario no introducidos',
   'form_errors'   => 'Errores en datos introducidos:',
   'new_pass'   => 'Contraseña nueva',

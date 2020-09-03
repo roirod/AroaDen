@@ -62,10 +62,10 @@ return [
     'no_tax_msg' => false,
     'staff' => false,            
     'notes' => false,
-    'user' => false,            
+    'username' => false,            
     'password' => false,
     'full_name' => false,
-    'scopes' => false,
+    'type' => false,
     'save' => false
   ],
 
@@ -106,15 +106,14 @@ return [
     'units' => ['required|integer|digits_between:0,255', '255'],
     'tax' => ['required|integer|digits_between:0,255', '255'],
     'uniqid' => ['required|string|max:16', '16'],
+    'notes' => ['nullable|string|max:65000'],
+    'paid' => ["required|min:0", '11, 2'],
+    'price' => ["required|min:0", '11, 2'],
+    
     'username' => ['required|alpha_num|max:40', '40'],
     'password' => ['required|alpha_num|max:40', '40'],
     'type' => ['required|string|max:30', '30'],
     'full_name' => ['required|string|max:111', '111'],
-    'notes' => ['nullable|string|max:65000'],
-
-    // validate euro format
-    'paid' => ["required|min:0", '11, 2'],
-    'price' => ["required|min:0", '11, 2'],
 
     'idpat' => ['required|integer'],
     'idser' => ['required|integer']

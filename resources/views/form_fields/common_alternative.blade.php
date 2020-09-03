@@ -137,6 +137,30 @@
 
 			@endif
 
+			@if ($form_fields['username'])
+
+				@include('form_fields.fields.username')
+
+			@endif
+
+			@if ($form_fields['password'])
+
+				@include('form_fields.fields.password')
+
+			@endif
+
+			@if ($form_fields['full_name'])
+
+				@include('form_fields.fields.full_name')
+
+			@endif
+
+			@if ($form_fields['type'])
+
+				@include('form_fields.fields.type')
+
+			@endif
+
 		</div>
 
 		<div class="row">
