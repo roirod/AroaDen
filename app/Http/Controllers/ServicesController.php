@@ -112,6 +112,7 @@ class ServicesController extends BaseController implements BaseInterface
   {
     $this->autofocus = 'name';
     $this->view_data['tax_types'] = $this->tax_types;
+    $this->view_data["legend"] = Lang::get('aroaden.create_service');
 
     $this->setPageTitle(Lang::get('aroaden.create_service'));
 
@@ -127,16 +128,21 @@ class ServicesController extends BaseController implements BaseInterface
    */
   public function store(Request $request)
   {
-    extract($this->sanitizeRequest($request->all()));
-
     $data = [];
-    $data['error'] = false; 
+    $data['error'] = false;
+
+    $this->request = $request;
+    $this->validateInputs();
 
     try {
 
+      extract($this->sanitizeRequest($request->all()));
+
+      $this->validateCurrency($price);
+
       $exists = $this->model::FirstByName($name);
 
-      if ( isset($exists->name) )
+      if (isset($exists->name))
         throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
 
       $price = $this->formatCurrencyDB($price);
@@ -168,14 +174,13 @@ class ServicesController extends BaseController implements BaseInterface
   public function edit(Request $request, $id)
   {
     $id = $this->sanitizeData($id);
-    $this->redirectIfIdIsNull($id, $this->main_route);
-
     $object = $this->model::find($id);
-    $this->autofocus = 'name';
 
+    $this->autofocus = 'name';
     $this->view_data['id'] = $id;
     $this->view_data['object'] = $object;
     $this->view_data['tax_types'] = $this->tax_types;
+    $this->view_data["legend"] = Lang::get('aroaden.edit_service');
 
     $this->setPageTitle(Lang::get('aroaden.edit_service'));
 
@@ -188,19 +193,22 @@ class ServicesController extends BaseController implements BaseInterface
    */
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);
-    $this->redirectIfIdIsNull($id, $this->main_route);
-
-    extract($this->sanitizeRequest($request->all()));
-
     $data = [];
-    $data['error'] = false; 
+    $data['error'] = false;
+
+    $this->request = $request;
+    $this->validateInputs();
 
     try {
 
+      extract($this->sanitizeRequest($request->all()));
+
+      $this->validateCurrency($price);
+
+      $id = $this->sanitizeData($id);
       $exists = $this->model::CheckIfExistsOnUpdate($id, $name);         
 
-      if ( isset($exists->name) )
+      if (isset($exists->name))
         throw new Exception(Lang::get('aroaden.name_in_use', ['name' => $name]));
 
       $object = $this->model::find($id);

@@ -11,7 +11,8 @@ return [
     'db_dec_point' => '.',
     'db_thousands_sep' => '',
     'locale_code' => 'es_ES.utf8',
-    'regexp' => "^\d+(\.\d{3})*(,\d{0,2})?$"
+    'regexp' => "^\d+(\.\d{3})*(,\d{0,2})?$",
+    'max' => '99999999999.99'
   ],
 
   'routes' => [
@@ -103,8 +104,6 @@ return [
     'day' => ['required|date_format:d-m-Y'],
     'hour' => ['required|date_format:H:i'],
     'units' => ['required|integer|digits_between:0,255', '255'],
-    'paid' => ['required|numeric|between:0,99999999999.99', '11, 2'],
-    'price' => ['required|numeric|between:0,99999999999.99', '11, 2'],
     'tax' => ['required|integer|digits_between:0,255', '255'],
     'uniqid' => ['required|string|max:16', '16'],
     'username' => ['required|alpha_num|max:40', '40'],
@@ -112,6 +111,10 @@ return [
     'type' => ['required|string|max:30', '30'],
     'full_name' => ['required|string|max:111', '111'],
     'notes' => ['nullable|string|max:65000'],
+
+    // validate euro format
+    'paid' => ["required|min:0", '11, 2'],
+    'price' => ["required|min:0", '11, 2'],
 
     'idpat' => ['required|integer'],
     'idser' => ['required|integer']

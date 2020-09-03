@@ -132,6 +132,7 @@ return [
   'type' => 'Tipo',
 
   'currency_format_error' => 'Error en formato de moneda.',
+  'currency_limit_error' => 'Error, la cifra: :num, supera el límite: :max',
 
   'error' => 'Error, fallo interno.',
 

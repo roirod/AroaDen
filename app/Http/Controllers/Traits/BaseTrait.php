@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Traits;
 
+use Exception;
+use Lang;
+
 trait BaseTrait {
 
   /**
@@ -77,6 +80,26 @@ trait BaseTrait {
     $res = str_replace($this->Alocale["decimal_point"], $currency["db_dec_point"], $str);
     
     return $res;
+  }
+
+  protected function validateCurrency($num)
+  {
+    $currency = $this->config['currency'];
+    $regexp = "#".$currency['regexp']."#";
+    $max = $currency['max'];
+    $num_str = $num;
+
+    if (!preg_match($regexp, $num)) {
+      throw new Exception(Lang::get('aroaden.currency_format_error'));
+    }
+
+    $num = $this->formatCurrencyDB($num);
+    $num = floatval($num);
+    $max = floatval($max);
+
+    if($num > $max) {
+      throw new Exception(Lang::get('aroaden.currency_limit_error', ['num' => $num_str, 'max' => $max]));
+    }
   }
 
   /**

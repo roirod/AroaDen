@@ -52,14 +52,14 @@
       return util.redirectTo("/login");
 
     if (jqXHR.status == 422) {
-      return util.showPopup("{{ Lang::get('aroaden.deny_access') }}: "+ jqXHR.errors, false);
+      vm_form_errors.object = jqXHR.responseJSON.errors;
     }
 
     if (thrownError == "Forbidden") {
       return util.showPopup("{{ Lang::get('aroaden.deny_access') }}", false);
     }
 
-    return util.showPopup("ajax Error", false);
+    //return util.showPopup("ajax Error", false);
   });
 
   var util = {
