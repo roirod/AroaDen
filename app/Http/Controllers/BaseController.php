@@ -363,7 +363,7 @@ class BaseController extends Controller
     View::share('form_route', $this->form_route);        
     View::share('form_fields', $this->form_fields);        
     View::share('Alocale', $this->Alocale);
-
+    View::share('validates', $this->config['validates']);
     View::share('routes', $this->config['routes']);
   }
 

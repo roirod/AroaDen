@@ -31,8 +31,8 @@ class PaysController extends BaseController
   public function list(Request $request)
   {
     $aColumns = [ 
-        0 =>'idpat', 
-        1 =>'surname_name',
+        0 => 'idpat', 
+        1 => 'surname_name',
         2 => 'total',
         3 => 'paid',
         4 => 'rest'

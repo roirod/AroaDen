@@ -31,7 +31,13 @@
     return res;
   }, function (err) {
     if (err.response.status == 422) {
-      vm_form_errors.object = err.response.data.errors;
+      location.href = "#form_errors";
+
+      util.resetFormErrors();
+
+      setTimeout(function(){
+        vm_form_errors.object = err.response.data.errors;
+      }, 200);
     }
   });
 
@@ -45,14 +51,17 @@
     console.log('---------------- ajaxError jqXHR.status  ----------------------------');
     console.dir(jqXHR.status);
 
-    console.log('---------------- ajaxError jqXHR  ----------------------------');
-    console.dir(jqXHR);
-
     if (jqXHR.status == 401)
       return util.redirectTo("/login");
 
     if (jqXHR.status == 422) {
-      vm_form_errors.object = jqXHR.responseJSON.errors;
+      location.href = "#form_errors";
+
+      util.resetFormErrors();
+
+      setTimeout(function(){
+        vm_form_errors.object = jqXHR.responseJSON.errors;
+      }, 200);
     }
 
     if (thrownError == "Forbidden") {
@@ -63,6 +72,11 @@
   });
 
   var util = {
+
+    resetFormErrors: function() {
+      if (vm_form_errors.object != false)
+        vm_form_errors.object = false;
+    },
 
     renderTable: function(obj) {
       setTimeout(function(){

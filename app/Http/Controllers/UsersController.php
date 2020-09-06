@@ -24,7 +24,7 @@ class UsersController extends BaseController
       'username' => true,
       'password' => true,
       'full_name' => true,
-      'type' => true,
+      'user_type' => true,
       'save' => true
     ];
 
@@ -66,7 +66,7 @@ class UsersController extends BaseController
       $this->model::create([
         'username' => $username,
         'password' => bcrypt($password),
-        'type' => $type,
+        'user_type' => $user_type,
         'full_name' => $full_name
       ]);
     
@@ -108,7 +108,7 @@ class UsersController extends BaseController
 
     if ($user->username == 'admin') {
       $this->form_fields['full_name'] = false;
-      $this->form_fields['type'] = false;
+      $this->form_fields['user_type'] = false;
     }
 
     $this->request = $request;
@@ -130,8 +130,8 @@ class UsersController extends BaseController
         if ($full_name != $user->full_name)
           $user->full_name = $full_name;
 
-        if ($type != $user->type)
-          $user->type = $type;
+        if ($user_type != $user->user_type)
+          $user->user_type = $user_type;
       }
 
       $password = trim($request->input('password'));

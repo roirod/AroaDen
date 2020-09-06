@@ -10,9 +10,9 @@ class NormalMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $type = Auth::user()->type;
+        $user_type = Auth::user()->user_type;
          
-        if ($type != 'normal') {
+        if ($user_type != 'normal') {
             if($request->ajax())
                 return response('Forbidden', 403);
 

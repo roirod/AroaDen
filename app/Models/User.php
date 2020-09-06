@@ -12,7 +12,7 @@ class User extends Authenticatable
     use Notifiable,GetTableNameTrait;
     
 	protected $table = 'users';
-    protected $fillable = ['username','password','type', 'full_name'];
+    protected $fillable = ['username', 'password', 'user_type', 'full_name'];
     protected $hidden = ['password'];
     protected $primaryKey = 'uid';
 

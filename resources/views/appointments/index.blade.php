@@ -194,8 +194,11 @@
             if (date_from_db > date_to_db)
               return util.showPopup(msg, false);
 
-            msg = "Citas entre "+ date_from +" y "+ date_to;
+            var msg = '';
             this.msg = msg;
+
+            msg = "Citas entre "+ date_from +" y "+ date_to;
+            setmsg(msg);
 
             setsSearch(date_from_db, date_to_db);
 
@@ -204,6 +207,12 @@
           }
         }
       });
+
+      function setmsg (msg) {
+        setTimeout(function(){
+          vmsearchDates.msg = msg;
+        }, 400);
+      }
 
     })();
 

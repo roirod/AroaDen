@@ -55,6 +55,8 @@
         @php
           {{ $object = $treatment; }}
         @endphp
+        
+        @include('form_fields.show.form_errors')
 
         <form class="form save_form" action="/{{ $main_route.'/'.$id }}">
           <input type="hidden" name="_method" value="PUT">

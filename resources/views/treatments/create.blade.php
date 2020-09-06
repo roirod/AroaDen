@@ -49,6 +49,8 @@
             <div class="mar10"></div>
             <br>
 
+            @include('form_fields.show.form_errors')
+
             <form class="form save_form" action="/{{ $main_route }}">
 			        <input type="hidden" name="idpat" value="{{ $id }}">
 			        <input type="hidden" name="idser" value="">
@@ -63,9 +65,7 @@
     </div>
   </div>
 
-
   @include('treatments.common')
-
 
   <script type="text/javascript">
     
@@ -92,6 +92,8 @@
           util.showLoadingGif('loading');
 
           Module.processSelect();
+
+          util.resetFormErrors();
 
         } else {
 

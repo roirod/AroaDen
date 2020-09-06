@@ -49,6 +49,7 @@ class TreatmentsController extends BaseController
     $this->view_data['object'] = $object;
     $this->view_data['services'] = Services::AllOrderByName();
     $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
+    $this->view_data["load_js"]["datetimepicker"] = true;
 
     $this->setPageTitle($object->surname.', '.$object->name);
 
@@ -72,14 +73,17 @@ class TreatmentsController extends BaseController
 
   public function store(Request $request)
   {
-    extract($this->sanitizeRequest($request->all()));
-
-    $staff = $request->staff;
+    $data = [];
     $data['error'] = false;
+
+    $this->request = $request;
+    $this->validateInputs();
 
     DB::beginTransaction();
 
     try {
+
+      extract($this->sanitizeRequest($request->all()));
 
       $service = Services::FirstById($idser);     
       $day = $this->convertDmYToYmd($day);
@@ -99,6 +103,8 @@ class TreatmentsController extends BaseController
         'tax' => $service->tax,
         'created_at' => date('Y-m-d H:i:s')
       ]);
+
+      $staff = $request->staff;
 
       if (is_array($staff) && count($staff) > 0) {
         foreach ($staff as $idsta) {
@@ -132,14 +138,14 @@ class TreatmentsController extends BaseController
     $object = Patients::FirstById($treatment->idpat);
 
     $this->autofocus = 'units';
-
     $this->view_data['id'] = $id;
     $this->view_data['idnav'] = $object->idpat;        
     $this->view_data['object'] = $object;
     $this->view_data['treatment'] = $treatment;
     $this->view_data['staff_works'] = StaffWorks::AllById($id)->toArray();
     $this->view_data['staff'] = Staff::AllOrderBySurnameNoPagination();
-    
+    $this->view_data["load_js"]["datetimepicker"] = true;
+
     $this->setPageTitle($object->surname.', '.$object->name);
 
     return parent::edit($request, $id);
@@ -147,24 +153,27 @@ class TreatmentsController extends BaseController
 
   public function update(Request $request, $id)
   {
-    $id = $this->sanitizeData($id);
+    $data = [];
     $data['error'] = false;
 
-    extract($this->sanitizeRequest($request->all()));
-
-    $day = $this->convertDmYToYmd($day);
-    $staff = $request->staff;
+    $this->request = $request;
+    $this->validateInputs();
 
     DB::beginTransaction();
 
     try {
 
+      extract($this->sanitizeRequest($request->all()));
+      
+      $id = $this->sanitizeData($id);
       $treatment = Treatments::find($id);
       $pricetax = $this->calcTotalTax($treatment->price, $treatment->tax);
       $paid = $this->formatCurrencyDB($paid);
 
       if ($this->checkIfPaidIsHigher($units, $pricetax, $paid))
         throw new Exception(Lang::get('aroaden.paid_is_higher'));
+
+      $day = $this->convertDmYToYmd($day);
 
       $treatment->units = $units;
       $treatment->paid = $paid;
@@ -173,6 +182,8 @@ class TreatmentsController extends BaseController
       $treatment->save();
 
       StaffWorks::where('idtre', $id)->delete();
+
+      $staff = $request->staff;
 
       if (is_array($staff) && count($staff) > 0) {
         foreach ($staff as $idsta) {

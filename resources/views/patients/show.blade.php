@@ -47,13 +47,13 @@
 
 					@include('form_fields.show.name')
 
-					@include('form_fields.show.city')
-
-					@include('form_fields.show.address')
-
 					@include('form_fields.show.dni')
 
 					@include('form_fields.show.sex')
+
+					@include('form_fields.show.address')
+
+					@include('form_fields.show.city')
 
 					@include('form_fields.show.tel1')
 
@@ -187,13 +187,13 @@
 
 				<table class="table table-striped table-bordered table-hover">				  	
 				  <tr class="fonsi14">
-					  <td class="wid160">{!! @trans("aroaden.service") !!}</td>
+					  <td class="wid140">{!! @trans("aroaden.service") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.tax") !!}</td>			  
 					  <td class="wid50 textcent">{!! @trans("aroaden.price") !!}</td>
 					  <td class="wid50 textcent">{!! @trans("aroaden.units") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.total") !!}</td>
-					  <td class="wid50 textcent">{!! @trans("aroaden.paid") !!}</td>
-					  <td class="wid50 textcent text-danger">{!! @trans("aroaden.rest") !!}</td>					 
+					  <td class="wid60 textcent">{!! @trans("aroaden.total") !!}</td>
+					  <td class="wid60 textcent">{!! @trans("aroaden.paid") !!}</td>
+					  <td class="wid60 textcent text-danger">{!! @trans("aroaden.rest") !!}</td>					 
 					  <td class="wid50 textcent">{!! @trans("aroaden.date") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.edit") !!}</td>
 					  <td class="wid40 textcent">{!! @trans("aroaden.delete") !!}</td>
@@ -207,7 +207,7 @@
 				    @foreach($treatments["treatments"] as $treat)
 
 				  		<tr class="fonsi13">
-				    		<td class="wid160">
+				    		<td class="wid140">
 				    			{!! $treat->service_name !!}
 
 									@if (in_array($treat->idtre, $invoiceLines))
@@ -221,13 +221,13 @@
                 	{{ calcTotal($treat->price, $treat->tax) }} {{ $Alocale["currency_symbol"] }}
                 </td>
 								<td class="wid50 textcent">{!! $treat->units !!}</td>
-                <td class="wid50 textcent">
+                <td class="wid60 textcent">
                 	{{ numformat(calcTotal($treat->price, $treat->tax, false) * $treat->units) }} {{ $Alocale["currency_symbol"] }}
                 </td>
-								<td class="wid50 textcent">
+								<td class="wid60 textcent">
 									{!! numformat($treat->paid) !!} {{ $Alocale["currency_symbol"] }}
 								</td>
-                <td class="wid50 textcent text-danger">
+                <td class="wid60 textcent text-danger">
                 	{{ numformat((calcTotal($treat->price, $treat->tax, false) * $treat->units) - $treat->paid) }} {{ $Alocale["currency_symbol"] }}
                 </td>
 								<td class="wid50 textcent">{!! date ('d-m-Y', strtotime ($treat->day) ) !!}</td>

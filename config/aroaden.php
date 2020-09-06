@@ -65,7 +65,7 @@ return [
     'username' => false,            
     'password' => false,
     'full_name' => false,
-    'type' => false,
+    'user_type' => false,
     'save' => false
   ],
 
@@ -93,18 +93,18 @@ return [
   'validates' => [
     'name' => ['required|string|max:111', '111'],
     'surname' => ['required|string|max:111', '111'],
-    'dni' => ['required|alpha_num|min:9|max:9', '9'],
+    'dni' => ['required|alpha_num|min:9|max:10', '10'],
+    'sex' => ['nullable|string|max:9', '9'],    
     'tel1' => ['nullable|string|max:18', '18'],
     'tel2' => ['nullable|string|max:18', '18'],
     'tel3' => ['nullable|string|max:18', '18'],
-    'sex' => ['required|string|max:9', '9'],
-    'address' => ['required|string|max:111', '111'],
-    'city' => ['required|string|max:111', '111'],
-    'birth' => ['required|date_format:d-m-Y'],
+    'address' => ['nullable|string|max:111', '111'],
+    'city' => ['nullable|string|max:111', '111'],
+    'birth' => ['nullable|date_format:d-m-Y'],
     'day' => ['required|date_format:d-m-Y'],
     'hour' => ['required|date_format:H:i'],
-    'units' => ['required|integer|digits_between:0,255', '255'],
-    'tax' => ['required|integer|digits_between:0,255', '255'],
+    'units' => ['required|integer||min:1|max:255', '255'],
+    'tax' => ['required|integer||min:1|max:255', '255'],
     'uniqid' => ['required|string|max:16', '16'],
     'notes' => ['nullable|string|max:65000'],
     'paid' => ["required|min:0", '11, 2'],
@@ -112,7 +112,7 @@ return [
     
     'username' => ['required|alpha_num|max:40', '40'],
     'password' => ['required|alpha_num|max:40', '40'],
-    'type' => ['required|string|max:30', '30'],
+    'user_type' => ['required|string|max:30', '30'],
     'full_name' => ['required|string|max:111', '111'],
 
     'idpat' => ['required|integer'],

@@ -174,13 +174,12 @@ class PatientsController extends BaseController implements BaseInterface
     $treatments = Treatments::AllByPatientId($id);
     $invoiceLines = $patient->invoiceLines->pluck('idtre')->toArray();
     $treatments_sum = Treatments::SumByPatientId($id);
-    $birth = trim($patient->birth);
     $profile_photo_dir = "$this->files_dir/$id/$this->profile_photo_dir";
     $profile_photo = url($this->getFirstJpgOnDir($profile_photo_dir));
-    $age = 0;
+    $age = '';
 
-    if (isset($birth)) {
-      $date = explode("-", $birth, 3);          
+    if (isset($patient->birth)) {
+      $date = explode("-", $patient->birth, 3);          
       $age = Carbon::createFromDate($date[0], $date[1], $date[2])->age;
     }
 

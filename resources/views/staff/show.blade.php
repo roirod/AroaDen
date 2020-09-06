@@ -45,13 +45,13 @@
 
 					@include('form_fields.show.name')
 
-					@include('form_fields.show.position')
+					@include('form_fields.show.dni')
 
-					@include('form_fields.show.city')
+					@include('form_fields.show.position')
 
 					@include('form_fields.show.address')
 
-					@include('form_fields.show.dni')
+					@include('form_fields.show.city')
 
 					@include('form_fields.show.tel1')
 
