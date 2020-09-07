@@ -73,6 +73,10 @@
 
   var util = {
 
+    setPageTitle: function(page_title) {
+      document.title = page_title;
+    },
+
     resetFormErrors: function() {
       if (vm_form_errors.object != false)
         vm_form_errors.object = false;

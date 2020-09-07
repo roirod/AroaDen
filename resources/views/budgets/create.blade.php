@@ -60,7 +60,7 @@
           					  <td class="wid180">{!! $item->name !!}</td>
           					  <td class="wid50 textcent">
           					  	 	<div class="form-group">
-          					  			<input type="number" min="1" step="1" value="1" class="form-control" name="units" required>
+          					  			<input type="number" min="1" max="{{ $validates['units'][1] }}" step="1" value="1" class="form-control" name="units" required>
           					  		</div>
           					  </td>
           					  <td class="wid50">

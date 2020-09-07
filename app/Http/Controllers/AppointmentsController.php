@@ -46,6 +46,17 @@ class AppointmentsController extends BaseController implements BaseInterface
   
   public function list(Request $request)
   {
+    $sWhere = $this->sanitizeData($request->input('sSearch'));
+    $dates = explode(",", $sWhere);
+
+    if (!$this->validateDateYYYYMMDD($dates[0]) || !$this->validateDateYYYYMMDD($dates[1])) {
+      return response()->json(array(
+        'success' => false,
+        'message' => '',
+        'errors' => ['date' => [Lang::get('aroaden.date_format_fail')]]
+      ), 422);
+    }
+
     $aColumns = [
       0 => 'idpat', 
       1 => 'surname_name',
@@ -58,6 +69,7 @@ class AppointmentsController extends BaseController implements BaseInterface
     $iDisplayStart = $this->sanitizeData($request->input('iDisplayStart'));
     $sEcho = $this->sanitizeData($request->input('sEcho'));
 
+    $soffset = "";
     $sLimit = "";
 
     if (isset( $iDisplayStart ) && $iDisplayLength != '-1') {
