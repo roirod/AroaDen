@@ -101,10 +101,6 @@
     redirectTo: function(string) {
       var string = (string == undefined) ? redirectRoute : string;
 
-      console.log('---------------- redirectTo string  ----------------------------');
-      console.dir(string);
-      console.log('--------------------------------------------');
-
       setTimeout(function(){  
         return window.location.href = string;
       }, 1200);

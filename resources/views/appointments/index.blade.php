@@ -102,11 +102,7 @@
       add1month_db = add1month.format('YYYY-MM-DD');
       today_es = today.format('DD-MM-YYYY');
       add1month_es = add1month.format('DD-MM-YYYY');
-      var msg = "Citas entre "+ today_es +" y "+ add1month_es;
-
-      function setsSearch (date_from, date_to) {
-        tableObj.oSearch['sSearch'] = date_from +","+ date_to;
-      }
+      var msg = getMsg(today_es, add1month_es);
 
       setsSearch(today_db, add1month_db);
 
@@ -193,22 +189,20 @@
             date1 = moment(date_from, 'DD-MM-YYYY', true).isValid();
             date2 = moment(date_to, 'DD-MM-YYYY', true).isValid();
 
-            if (!date1 || !date2) {
+            if (!date1 || !date2)
               return util.showPopup('{{ @trans('aroaden.date_format_fail') }}', false);
-            }
 
             date_from_db = moment(date_from, "DD-MM-YYYY").format('YYYY-MM-DD');
             date_to_db = moment(date_to, "DD-MM-YYYY").format('YYYY-MM-DD');
 
-            msg = "La fecha "+ date_from +" es posterior a "+ date_to;
-
-            if (date_from_db > date_to_db)
+            if (date_from_db > date_to_db) {
+              msg = "La fecha "+ date_from +" es posterior a "+ date_to;
               return util.showPopup(msg, false);
+            }
 
             this.msg = '';
-
-            msg = "Citas entre "+ date_from +" y "+ date_to;
-            setmsg(msg);
+            msg = getMsg(date_from, date_to);
+            delayMsg(msg);
 
             util.setPageTitle(msg);
 
@@ -220,12 +214,25 @@
         }
       });
 
-      function setmsg (msg) {
+      function getMsg(date_from, date_to) {
+        msg = "Citas entre el "+ date_from +" y el "+ date_to;
+
+        if (date_from == date_to)
+          msg = "Citas del "+ date_from;
+
+        return msg;
+      }
+
+      function delayMsg(msg) {
         setTimeout(function(){
           vmsearchDates.msg = msg;
         }, 400);
       }
 
+      function setsSearch(date_from, date_to) {
+        tableObj.oSearch['sSearch'] = date_from +","+ date_to;
+      }
+      
     })();
 
   </script>

@@ -105,7 +105,7 @@ return [
     'hour' => ['required|date_format:H:i'],
     'units' => ['required|integer||min:1|max:255', '255'],
     'tax' => ['required|integer||min:1|max:255', '255'],
-    'uniqid' => ['required|string|max:16', '16'],
+    'uniqid' => ['required|alpha_num|max:16', '16'],
     'notes' => ['nullable|string|max:65000'],
     'paid' => ["required|min:0", '11, 2'],
     'price' => ["required|min:0", '11, 2'],
