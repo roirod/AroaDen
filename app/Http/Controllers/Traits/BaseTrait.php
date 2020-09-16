@@ -84,7 +84,7 @@ trait BaseTrait {
 
   protected function validateCurrency($num)
   {
-    $currency = $this->config['currency'];
+    $currency = $this->Alocale;
     $regexp = "#".$currency['regexp']."#";
     $max = $currency['max'];
     $num_str = $num;

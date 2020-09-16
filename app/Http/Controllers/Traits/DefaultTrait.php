@@ -28,7 +28,7 @@ trait DefaultTrait {
         User::insert([
           'username' => $user["username"],
           'password' => bcrypt($user["password"]),
-          'type' => $user["type"],
+          'user_type' => $user["user_type"],
           'full_name' => $user["full_name"]
         ]);                
           

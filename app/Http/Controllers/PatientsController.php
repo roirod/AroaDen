@@ -12,7 +12,6 @@ use App\Models\Invoices;
 use App\Models\Budgets;
 use App\Models\Record;
 use Carbon\Carbon;
-use Validator;
 use Exception;
 use Storage;
 use Image;
@@ -492,7 +491,6 @@ class PatientsController extends BaseController implements BaseInterface
   {  
     $id = $this->sanitizeData($id);
     $dir = "$this->files_dir/$id/$this->odontogram_dir";
-    $this->view_name = 'odontogram';
 
     try {
          
@@ -503,15 +501,14 @@ class PatientsController extends BaseController implements BaseInterface
       $default_odontogram = "$this->img_folder/$this->odontogram".'.'.$this->default_img_type;
 
       Storage::copy($default_odontogram, $odontogram);
-        
-      return redirect("/$this->main_route/$id/$this->view_name");
 
     } catch (Exception $e) {
 
       $request->session()->flash($this->error_message_name, $e->getMessage());
-      return redirect("/$this->main_route/$id/$this->view_name");
 
-    }   
+    }
+
+    return redirect("/$this->main_route/$id/odontogram");
   }
 
   public function budgets(Request $request, $id)

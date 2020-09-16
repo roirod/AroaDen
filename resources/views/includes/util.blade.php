@@ -367,7 +367,7 @@
 
     validateCurrency: function(currency) {
       var _this = this;
-      var regexp = RegExp(Acurrency.regexp);
+      var regexp = RegExp(Alocale.regexp);
 
       try {
 

@@ -9,10 +9,7 @@ return [
   'currency' => [
     'db_decimals' => 2,
     'db_dec_point' => '.',
-    'db_thousands_sep' => '',
-    'locale_code' => 'es_ES.utf8',
-    'regexp' => "^\d+(\.\d{3})*(,\d{0,2})?$",
-    'max' => '99999999999.99'
+    'db_thousands_sep' => ''
   ],
 
   'routes' => [
@@ -73,19 +70,19 @@ return [
     [
       'username' => 'admin',
       'password' => 'admin',
-      'type' => 'normal',
+      'user_type' => 'normal',
       'full_name' => 'admin'
     ],
     [
       'username' => 'normal',
       'password' => 'normal',
-      'type' => 'normal',
+      'user_type' => 'normal',
       'full_name' => 'normal'
     ],
     [
       'username' => 'basic',
       'password' => 'basic',
-      'type' => 'basic',
+      'user_type' => 'basic',
       'full_name' => 'basic'
     ]
   ],

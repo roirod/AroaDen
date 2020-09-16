@@ -211,7 +211,7 @@ class BaseController extends Controller
     error_reporting(error_reporting() & ~E_DEPRECATED);
     
     $this->config = Config::get('aroaden');
-    $locale_code = $this->config['currency']['locale_code'];
+    $locale_code = env('LOCALE_CODE');
 
     setlocale(LC_ALL, $locale_code);
     date_default_timezone_set(env('APP_TIMEZONE'));
