@@ -72,8 +72,6 @@
 
   <script type="text/javascript">
 
-    redirectRoute = '/{{ $routes['patients'].'/'.$idnav }}';
-    
     $(document).ready(function() {
       $('#multiply_units_price').click(function (evt) {
         price = '{{ $treatment->price }}';

@@ -21,6 +21,8 @@
 
   <script type="text/javascript">
 
+    redirectRoute = '/{{ $routes['patients'].'/'.$idnav.'#treatments' }}';
+
     selector = 'input[name="paid"]';
 
     var msg = "{{ Lang::get('aroaden.multiply_units_price') }}";

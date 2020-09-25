@@ -69,8 +69,6 @@
 
   <script type="text/javascript">
     
-    redirectRoute = '/{{ $routes['patients'].'/'.$id }}';
-
     $('input[name="units"]').on('change', function(evt) {
       return getPaid();
     });

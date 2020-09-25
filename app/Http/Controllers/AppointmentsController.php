@@ -147,7 +147,7 @@ class AppointmentsController extends BaseController implements BaseInterface
 
       extract($this->sanitizeRequest($request->all()));
 
-      $data['redirectTo'] = "/$this->other_route/$idpat";
+      $data['redirectTo'] = "/$this->other_route/$idpat#appointments";
 
       $day = $this->convertDmYToYmd($day);
 
@@ -205,7 +205,7 @@ class AppointmentsController extends BaseController implements BaseInterface
           
       $object = $this->model::find($id);
 
-      $data['redirectTo'] = "/$this->other_route/$object->idpat";
+      $data['redirectTo'] = "/$this->other_route/$object->idpat#appointments";
 
       extract($this->sanitizeRequest($request->all()));
 

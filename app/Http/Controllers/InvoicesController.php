@@ -112,7 +112,7 @@ class InvoicesController extends BaseController
     $this->redirectIfIdIsNull($idpat, $this->other_route);
 
     $object = Patients::FirstById($idpat);
-    $items = $this->model->AllByPatient($idpat);   
+    $items = $this->model->AllByPatient($idpat);
 
     $this->setPageTitle($object->surname.', '.$object->name);
 
@@ -151,13 +151,19 @@ class InvoicesController extends BaseController
   }
 
   public function create(Request $request, $id = false)
-  {    
+  {
     $idpat = $request->idpat;
     $type = $request->type;
 
     $patient = Patients::FirstById($idpat);
     $invoiceLines = $patient->invoiceLines->pluck('idtre')->toArray();
     $items = Treatments::PaidByPatientId($idpat);
+
+    if ( empty($items) || count($items) == count($invoiceLines) ) {
+      $request->session()->flash($this->error_message_name, Lang::get('aroaden.force_add_treatments'));    
+      return redirect("$this->other_route/$idpat#treatments");
+    }
+
     $updatedA = Treatments::getUpdatedPaidByPatientId($idpat);
     $company = $this->getSettings();
 

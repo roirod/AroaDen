@@ -70,20 +70,19 @@ class Treatments extends Model
 
   public static function PaidByPatientId($id)
   {
-    $collection = DB::table('treatments')
+    $treatments = DB::table('treatments')
       ->join('services','treatments.idser','=','services.idser')
       ->select('treatments.*','services.name as service_name', 
-        DB::raw('treatments.units * ( ROUND( ((treatments.price * treatments.tax) / 100) + treatments.price , 2) ) AS total')
-      )
+        DB::raw('treatments.units * ( ROUND( ((treatments.price * treatments.tax) / 100) + treatments.price , 2) ) AS total'))
       ->where('idpat', $id)
       ->orderBy('day','DESC')
       ->get();
 
     $array_data = [];
 
-    foreach ($collection as $collect) {
-      if ($collect->paid === $collect->total)
-        $array_data[] = $collect;
+    foreach ($treatments as $treat) {
+      if ($treat->paid == $treat->total)
+        $array_data[] = $treat;
     }
 
     return $array_data;
@@ -91,18 +90,18 @@ class Treatments extends Model
 
   public static function getUpdatedPaidByPatientId($id)
   {
-    $collection = DB::table('treatments')
+    $treatments = DB::table('treatments')
                 ->select('treatments.*', DB::raw('units * ( ROUND( (((price * tax) / 100) + price), 2) ) AS total'))
                 ->where('idpat', $id)
                 ->get();
 
     $array_data = [];
 
-    foreach ($collection as $collect) {
-      if ($collect->paid === $collect->total) {
-        if ($collect->updated_at != NULL) {
+    foreach ($treatments as $treat) {
+      if ($treat->paid == $treat->total) {
+        if ($treat->updated_at != NULL) {
 
-          $updated_at = $collect->updated_at;
+          $updated_at = $treat->updated_at;
 
         } else {
 

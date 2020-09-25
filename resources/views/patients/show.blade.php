@@ -76,7 +76,7 @@
 	<hr> 
 	<br>
 
-	<div class="row">
+	<div class="row" id="appointments">
 	  <div class="col-sm-12"> 
 	  	<div class="input-group">
 	   		<span class="input-group-btn pad10"> <p> {!! @trans("aroaden.appointments") !!} </p> </span>
@@ -158,7 +158,7 @@
 	<hr> 
 	<br>
 
-	<div class="row">
+	<div class="row" id="treatments">
 	  <div class="col-sm-4"> 
 		  <div class="input-group">
 		  	<span class="input-group-btn pad10">  <p> {!! @trans("aroaden.treatments") !!} </p> </span>

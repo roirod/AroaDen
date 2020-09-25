@@ -224,6 +224,7 @@ return [
   'no_add_treatments' => 'No has añadido ningún tratamiento.',
   'treatments_added'   => 'Tratamientos añadidos',
   'treatments_paid'   => 'Tratamientos pagados',
+  'force_add_treatments' => 'No hay ningún tratamiento pagado para crear la factura.',
 
   'budgets' => 'Presupuestos',
   'create_budget' => 'Crear presupuesto',
