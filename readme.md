@@ -1,21 +1,11 @@
-### Donate
+### AroaDen, dental clinic software
 
-https://www.patreon.com/RoiRodrigo
-
-
-### AroaDen
-
-Dental clinic software
-
-#### License
-
-Software licensed under the GPL
-
-#### Install
-
-https://github.com/roirod/AroaDen/wiki/Install-AroaDen-v1.5
+#### Commercial use: 200 euros per year, for one computer.
 
 #### Videos
 
 https://www.youtube.com/channel/UCegtqSZJWwyppeSVovo6RxQ
 
+### Donate
+
+https://www.patreon.com/RoiRodrigo
